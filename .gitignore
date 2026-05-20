@@ -1,0 +1,19 @@
+# Power Query / Excel transient files
+~$*
+*.tmp
+*.bak
+*.backup.*
+
+# Logs and local diagnostics
+*.log
+logs/
+**/audit/*
+!**/audit/.gitkeep
+
+# Local tool configuration and generated symbols
+.vscode/excel-pq-symbols/
+.codex/config.toml
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db

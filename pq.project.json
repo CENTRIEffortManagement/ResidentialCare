@@ -1,0 +1,15 @@
+{
+  "projectName": "ResidentialCare",
+  "defaultWorkflow": "ResidentialCare",
+  "workbookRootFolders": [],
+  "refresh": {
+    "workbookSequence": "Workflows/ResidentialCare/AutoRefresh/ResidentialCare-WorkbookSequence.psd1",
+    "logFolder": "Workflows/ResidentialCare/audit"
+  },
+  "powerQuery": {
+    "sourceRoots": [
+      "Workflows"
+    ]
+  }
+}
+
