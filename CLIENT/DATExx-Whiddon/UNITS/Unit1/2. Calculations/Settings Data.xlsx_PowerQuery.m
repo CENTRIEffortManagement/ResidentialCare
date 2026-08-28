@@ -1,6 +1,6 @@
 // Power Query from: Settings Data.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\Settings Data.xlsx
-// Extracted: 2026-05-18T06:14:28.949Z
+// Pathname: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\Settings Data.xlsx
+// Extracted: 2026-08-27T06:57:45.754Z
 
 section Section1;
 
@@ -20,12 +20,6 @@ shared #"Min Date" = let
     Date = Custom1[Date]
 in
     Date;
-
-shared #"Max Date" = let
-    Source = #"Dates Listed",
-    Custom1 = Table.Max(Source,"Date")
-in
-    Custom1;
 
 shared DateList = let
     Source = #"Dates Listed",
@@ -79,18 +73,14 @@ in
     #"Grouped Rows";
 
 shared Folder = let
-    Source = UnitL1PathTABLE,
-    RootPath = Source{[Variable Name = "Root Path"]}[Value],
-    UnitFolder = if Text.Contains(RootPath, "\2. Calculations") then Text.BeforeDelimiter(RootPath, "\2. Calculations", {0, RelativePosition.FromEnd}) else RootPath
+    Source = Unit1Path
 in
-    UnitFolder;
+    Source;
 
 shared AllocationExtracted = let
-    Source1 = Folder,
     Source = Excel.Workbook(File.Contents(Folder & "\1. Input\1-AllocationExtracted.xlsx"), null, true),
-    AllocationExtracted_Sheet = Source{[Item="AllocationExtracted",Kind="Sheet"]}[Data],
-    #"Promoted Headers" = Table.PromoteHeaders(AllocationExtracted_Sheet, [PromoteAllScalars=true]),
-    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type date}, {"Start", type time}, {"End", type time}, {"Break Time", type time}, {"Hours", type number}, {"Name", type text}, {"Code", Int64.Type}})
+    AllocationExtracted_Table = Source{[Item="AllocationExtracted",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(AllocationExtracted_Table,{{"Date", type date}, {"Start", type time}, {"End", type time}, {"Break", Int64.Type}, {"Hours", type number}, {"Name", type text}, {"Code", Int64.Type}, {"Role", type text}})
 in
     #"Changed Type";
 
@@ -101,13 +91,6 @@ shared Roles = let
 in
     ROLES;
 
-shared Unit = let
-    Source = Excel.CurrentWorkbook(){[Name="Unit"]}[Content],
-    #"Changed Type" = Table.TransformColumnTypes(Source,{{"UNITS", type text}}),
-    WARDS = #"Changed Type"[UNITS]
-in
-    WARDS;
-
 shared Shifts = let
     Source = Excel.CurrentWorkbook(){[Name="Shifts"]}[Content],
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"Shifts", type text}}),
@@ -116,11 +99,6 @@ shared Shifts = let
 in
     Shifts1;
 
-shared Query1 = let
-    Source = Folder
-in
-    Source;
-
 shared DateFrom = let
     Source = Excel.CurrentWorkbook(){[Name="DateFrom"]}[Content],
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"DateFrom", type date}}),
@@ -128,105 +106,21 @@ shared DateFrom = let
 in
     DateFrom1;
 
-shared IMPORTRootPath = let
-    Source = Table.FromColumns({Lines.FromBinary(File.Contents("C:\Users\Alex\Centri\4. Production - Documents\WFEffectiveness\4.1.1 AGED CARE\RootPath.txt"), null, null, 1252)}),
-    Column1 = Source{0}[Column1]
-in
-    Column1;
-
-[ Description = "BUFFER" ]
-shared #"INPUT FilePath B" = let
-    Source = Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
-    #"Renamed Columns" = Table.RenameColumns(Source,{{"FilePathUrl", "String"}})
-in
-    #"Renamed Columns";
-
-shared Client = let
-    Source = #"INPUT FilePath B",
-    #"Extracted Text After Delimiter1" = Table.TransformColumns(Source, {{"String", each Text.AfterDelimiter(_, "/", 7), type text}}),
-    #"Extracted Text Before Delimiter1" = Table.TransformColumns(#"Extracted Text After Delimiter1", {{"String", each Text.BeforeDelimiter(_, "/"), type text}}),
-    String = #"Extracted Text Before Delimiter1"{0}[String]
-in
-    String;
-
-shared Date = let
-    Source = #"INPUT FilePath B",
-    #"Extracted Text After Delimiter1" = Table.TransformColumns(Source, {{"String", each Text.AfterDelimiter(_, "/", 8), type text}}),
-    #"Extracted Text Before Delimiter1" = Table.TransformColumns(#"Extracted Text After Delimiter1", {{"String", each Text.BeforeDelimiter(_, "/"), type text}}),
-    String = #"Extracted Text Before Delimiter1"{0}[String]
-in
-    String;
-
-shared Facility = let
-    Source = #"INPUT FilePath B",
-    #"Extracted Text After Delimiter1" = Table.TransformColumns(Source, {{"String", each Text.AfterDelimiter(_, "/", 10), type text}}),
-    #"Extracted Text Before Delimiter1" = Table.TransformColumns(#"Extracted Text After Delimiter1", {{"String", each Text.BeforeDelimiter(_, "/"), type text}}),
-    String = #"Extracted Text Before Delimiter1"{0}[String]
-in
-    String;
-
-shared #"FilePath-Facility" = let
-    Source = IMPORTRootPath&"\"&Client&"\"&Date&"\"&"FACILITIES"&"\"&Facility
-in
-    Source;
-
-shared FileName = let
-    Source = #"INPUT FilePath B",
-    #"Extracted Text After Delimiter" = Table.TransformColumns(Source, {{"String", each Text.AfterDelimiter(_, "/", {0, RelativePosition.FromEnd}), type text}}),
-    #"Extracted Text Before Delimiter" = Table.TransformColumns(#"Extracted Text After Delimiter", {{"String", each Text.BeforeDelimiter(_, "]"), type text}}),
-    #"Replaced Value" = Table.ReplaceValue(#"Extracted Text Before Delimiter","[","",Replacer.ReplaceText,{"String"}),
-    String = #"Replaced Value"{0}[String]
-in
-    String;
-
-shared #"File Path Data" = let
-   
-
-    // Create the table with variable names and their corresponding values
-    Source = #table(
-        {"Variable Name", "Value"},
-        {
-            {"Root Path", #"IMPORTRootPath"},
-            {"FilePath", #"FilePath-Facility"},
-            {"Client", Client},
-            {"Date", Date},
-            {"Facility", Facility},
-            {"FileName", FileName}
-            
-            
-            
-            
-            
-            
-        }
-    )
-in
-    Source;
-
-shared #"PermutationDimensions (2)" = let
-    Source = #"DateList",
-    #"Added SHIFTS" = Table.AddColumn(Source, "Shifts", each Shifts),
-    #"Expanded Shifts" = Table.ExpandListColumn(#"Added SHIFTS", "Shifts"),
-    #"Added Index" = Table.AddIndexColumn(#"Expanded Shifts", "Period", 1, 1, Int64.Type),
-    #"ADD ROLES" = Table.AddColumn(#"Added Index", "RolesList", each Roles),
-    #"Expanded RolesList" = Table.ExpandListColumn(#"ADD ROLES", "RolesList"),
-    #"Sorted Rows" = Table.Sort(#"Expanded RolesList",{{"Date", Order.Ascending}, {"Period", Order.Ascending}, {"RolesList", Order.Ascending}})
-in
-    #"Sorted Rows";
-
 shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
 let
     FilePathUrl =
     let
-        Source = try Excel.CurrentWorkbook(){[Name="FilePAthUrl"]}[Content] otherwise Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
-        FirstColumn = Table.ColumnNames(Source){0},
-        RenamedColumns = if FirstColumn = "FilePath" then Source else Table.RenameColumns(Source, {{FirstColumn, "FilePath"}}, MissingField.Ignore),
-        ReplacedValue = Table.TransformColumns(RenamedColumns, {{"FilePath", each Text.Replace(Text.From(_), "/", "\"), type text}}),
-        BufferedTable = Table.Buffer(ReplacedValue)
+        Source = Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
+        SelectedColumns = Table.SelectColumns(Source, {"FilePath"}),
+        ChangedType = Table.TransformColumnTypes(SelectedColumns, {{"FilePath", type text}}),
+        ReplacedValue = Table.TransformColumns(ChangedType, {{"FilePath", each if _ = null then null else Text.Replace(_, "/", "\"), type text}}),
+        ValidatedTable = if Table.RowCount(ReplacedValue) = 1 then ReplacedValue else error "FilePathUrl must contain exactly one data row.",
+        BufferedTable = Table.Buffer(ValidatedTable)
     in
         BufferedTable,
 
-    RawFilePath = FilePathUrl{0}[FilePath],
+    RawFilePathValue = FilePathUrl{0}[FilePath],
+    RawFilePath = if RawFilePathValue = null or Text.Trim(RawFilePathValue) = "" then error "FilePathUrl[FilePath] must contain the current workbook path." else RawFilePathValue,
     CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
     CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
     CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
@@ -257,6 +151,7 @@ let
             and [SyncedFolderRootPath] <> null
             and Text.Trim([SyncedFolderRootPath]) <> ""
             and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
+            and (Text.Length(FilePath) = [MatchRootLength] or Text.Range(FilePath, [MatchRootLength], 1) = "\")
     ),
     SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
     BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
@@ -291,5 +186,17 @@ let
 in
     BUFFER;
 
-
+shared Unit1Path = let
+    Source = UnitL1PathTABLE,
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
+    WorkbookFolder = #"Filtered Rows"{0}[Value],
+    UnitFolder =
+        if Text.EndsWith(WorkbookFolder, "\1. Input", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\1. Input"))
+        else if Text.EndsWith(WorkbookFolder, "\2. Calculations", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\2. Calculations"))
+        else
+            error "Root Path did not end in an expected Unit1 workbook folder: " & WorkbookFolder
+in
+    UnitFolder;
 

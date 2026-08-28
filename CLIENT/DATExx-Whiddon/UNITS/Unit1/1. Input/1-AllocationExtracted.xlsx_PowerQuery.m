@@ -1,5 +1,5 @@
 // Power Query from: 1-AllocationExtracted.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\1. Input\1-AllocationExtracted.xlsx
+// Pathname: CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\1-AllocationExtracted.xlsx
 // Extracted: 2026-08-26T09:58:02.786Z
 
 section Section1;
@@ -102,127 +102,9 @@ shared AllocationExtracted = let
 in
     #"Removed Columns";
 
-shared PathTABLE = // Version 25.00    250107 
-// Updated 250107
+shared PathTABLE = UnitL1PathTABLE;
 
-let
-
-    // PART A - Define FilePathUrl and Replaced Value
-    FilePathUrl = 
-    let
-        Source = Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
-        #"Renamed Columns" = Table.RenameColumns(Source, {{"Column1", "FilePath"}}),
-        ReplacedValue = Table.ReplaceValue(#"Renamed Columns", "/", "\", Replacer.ReplaceText, {"FilePath"}),
-        BufferedTable = Table.Buffer(ReplacedValue) // Buffer the table for better performance
-    in 
-        BufferedTable,
-
-    // PART B - RootPath
-    IMPORTRootPath =
-    let
-        // Step 1: Import CentriSyncPaths
-        CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
-
-        CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
-        CentriSyncPaths_ChangedType = Table.TransformColumnTypes(CentriSyncPaths_Table, {{"User", type text}, {"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
-
-        // Step 2: UrlSite - Use buffered FilePathUrl
-        UrlSite_ExtractedTextAfterDelimiter = Table.TransformColumns(FilePathUrl, {{"FilePath", each Text.AfterDelimiter(_, "sites\"), type text}}),
-        UrlSite_ExtractedTextBeforeDelimiter = Table.TransformColumns(UrlSite_ExtractedTextAfterDelimiter, {{"FilePath", each Text.BeforeDelimiter(_, "\"), type text}}),
-        RenamedColumns1 = Table.RenameColumns(UrlSite_ExtractedTextBeforeDelimiter, {{"FilePath", "Site"}}),
-
-        // Step 3: Prefix
-        Prefix_NestedJoin = Table.NestedJoin(RenamedColumns1, {"Site"}, CentriSyncPaths_ChangedType, {"Site"}, "CentriSyncPaths", JoinKind.LeftOuter),
-        Prefix_Expanded = Table.ExpandTableColumn(Prefix_NestedJoin, "CentriSyncPaths", {"SyncedFolderRootPath"}, {"Prefix"}),
-        Prefix = Prefix_Expanded{0}[Prefix],
-
-        // Step 4: Core
-        Core_ExtractedTextAfterDelimiter = Table.TransformColumns(FilePathUrl, {{"FilePath", each Text.AfterDelimiter(_, "Shared Documents\"), type text}}),
-        Core_ExtractedTextBeforeDelimiter = Table.TransformColumns(Core_ExtractedTextAfterDelimiter, {{"FilePath", each Text.BeforeDelimiter(_, "\", {1, RelativePosition.FromEnd}), type text}}),
-        Core = Core_ExtractedTextBeforeDelimiter{0}[FilePath],
-
-        // Step 5: FilePath
-        FilePath = Prefix & "\" & Core,
-        ConvertedToTable = #table(1, {{FilePath}}),
-        RenamedColumns = Table.RenameColumns(ConvertedToTable, {{"Column1", "FilePath"}})
-    in  
-        RenamedColumns,
-
-    // PART C - Dimensions
-    // Extract UserName directly
-    UserName = 
-    let
-        Source = IMPORTRootPath,
-        Extracted = Text.BeforeDelimiter(Text.AfterDelimiter(Source[FilePath]{0}, "\", 1), "\")
-    in
-        Extracted,
-
-    // Extract Client directly
-    Client = 
-    let
-        Source = FilePathUrl,
-        FilePath = Source[FilePath]{0}, // Extract the first row's FilePath value
-        AfterDocuments = Text.AfterDelimiter(FilePath, "HomeCare\"), // Extract everything after "Documents\"
-        Extracted = Text.BeforeDelimiter(
-                        Text.AfterDelimiter(
-                            Text.BeforeDelimiter(
-                                AfterDocuments, "\", {0, RelativePosition.FromEnd}),
-                        "\",{3, RelativePosition.FromEnd}), // Extract the unit before the last delimiter
-                    "\")
-    in
-        Extracted,
-
-    // Extract Unit directly
-    Date = 
-    let
-        Source = FilePathUrl,
-        FilePath = Source[FilePath]{0}, // Extract the first row's FilePath value
-        AfterDocuments = Text.AfterDelimiter(FilePath, "HomeCare\"), // Extract everything after "Documents\"
-        Extracted = Text.BeforeDelimiter(
-                        Text.AfterDelimiter(
-                            Text.BeforeDelimiter(
-                                AfterDocuments, "\", {1, RelativePosition.FromEnd}),
-                        "\",{0, RelativePosition.FromEnd}), 
-                    "\")
-    in
-        Extracted,
-
-    // Extract Filename
-    FileName = 
-    let
-        Source = FilePathUrl,
-        #"Extracted Text After Delimiter" = Table.TransformColumns(Source, {{"FilePath", each Text.AfterDelimiter(_, "\", {0, RelativePosition.FromEnd}), type text}}),
-        #"Extracted Text Before Delimiter" = Table.TransformColumns(#"Extracted Text After Delimiter", {{"FilePath", each Text.BeforeDelimiter(_, "]"), type text}}),
-        #"Replaced Value" = Table.ReplaceValue(#"Extracted Text Before Delimiter","[","",Replacer.ReplaceText,{"FilePath"}),
-        String = #"Replaced Value"{0}[FilePath]
-    in 
-        String,
-
-    // PART D - Table
-    // Create the table with variable names and their corresponding values
-    TABLE = #table(
-        {"Variable Name", "Value"},
-        {
-            {"UserName", UserName},
-            {"Root Path", IMPORTRootPath{0}[FilePath]},
-            {"FilePathUrl", FilePathUrl{0}[FilePath]},
-            {"Client", Client},
-            {"Date", Date},
-            {"FileName", FileName}
-        }
-    )
-in
-    TABLE;
-
-shared Path = let
-    Source = #"PathTABLE",
-    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
-    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Variable Name"}),
-    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Value", "Folder"}}),
-    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","\2. Calculations","",Replacer.ReplaceText,{"Folder"}),
-    Folder = #"Replaced Value"{0}[Folder]
-in
-    Folder;
+shared Path = Unit1Path;
 
 shared DayAdjustment = let
     Source = Excel.CurrentWorkbook(){[Name="DayAdjustment"]}[Content],
@@ -232,7 +114,7 @@ in
     DayAdjustment1;
 
 shared #"IMPORT Roster" = let
-    Source = Excel.Workbook(File.Contents(Unit1Path & "\Allocation\BD,TE,JE,RY Published Roster Data 20.07.26-16.08.26.xlsx"), null, true),
+    Source = Excel.Workbook(File.Contents(Unit1Path & "\1. Input\Allocation\BD,TE,JE,RY Published Roster Data 20.07.26-16.08.26.xlsx"), null, true),
     Beaudesert_Sheet = Source{[Item="Beaudesert",Kind="Sheet"]}[Data],
     #"Promoted Headers" = Table.PromoteHeaders(Beaudesert_Sheet, [PromoteAllScalars=true]),
     #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", Int64.Type}})
@@ -291,15 +173,17 @@ shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
 let
     FilePathUrl =
     let
-        Source = try Excel.CurrentWorkbook(){[Name="FilePAthUrl"]}[Content] otherwise Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
-        FirstColumn = Table.ColumnNames(Source){0},
-        RenamedColumns = if FirstColumn = "FilePath" then Source else Table.RenameColumns(Source, {{FirstColumn, "FilePath"}}, MissingField.Ignore),
-        ReplacedValue = Table.TransformColumns(RenamedColumns, {{"FilePath", each Text.Replace(Text.From(_), "/", "\"), type text}}),
-        BufferedTable = Table.Buffer(ReplacedValue)
+        Source = Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
+        SelectedColumns = Table.SelectColumns(Source, {"FilePath"}),
+        ChangedType = Table.TransformColumnTypes(SelectedColumns, {{"FilePath", type text}}),
+        ReplacedValue = Table.TransformColumns(ChangedType, {{"FilePath", each if _ = null then null else Text.Replace(_, "/", "\"), type text}}),
+        ValidatedTable = if Table.RowCount(ReplacedValue) = 1 then ReplacedValue else error "FilePathUrl must contain exactly one data row.",
+        BufferedTable = Table.Buffer(ValidatedTable)
     in
         BufferedTable,
 
-    RawFilePath = FilePathUrl{0}[FilePath],
+    RawFilePathValue = FilePathUrl{0}[FilePath],
+    RawFilePath = if RawFilePathValue = null or Text.Trim(RawFilePathValue) = "" then error "FilePathUrl[FilePath] must contain the current workbook path." else RawFilePathValue,
     CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
     CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
     CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
@@ -330,6 +214,7 @@ let
             and [SyncedFolderRootPath] <> null
             and Text.Trim([SyncedFolderRootPath]) <> ""
             and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
+            and (Text.Length(FilePath) = [MatchRootLength] or Text.Range(FilePath, [MatchRootLength], 1) = "\")
     ),
     SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
     BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
@@ -354,6 +239,7 @@ let
         {
             {"UserName", UserName},
             {"Root Path", RootPath},
+            {"FilePathUrl", FilePath},
             {"Client", Client},
             {"Date", Date},
             {"Unit", Unit},
@@ -364,95 +250,24 @@ let
 in
     BUFFER;
 
-shared #"UnitL1PathTABLE (2)" = // Version 25.02 flexible ResidentialCare
-let
-    FilePathUrl =
-    let
-        Source = try Excel.CurrentWorkbook(){[Name="FilePAthUrl"]}[Content] otherwise Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
-        FirstColumn = Table.ColumnNames(Source){0},
-        RenamedColumns = if FirstColumn = "FilePath" then Source else Table.RenameColumns(Source, {{FirstColumn, "FilePath"}}, MissingField.Ignore),
-        ReplacedValue = Table.TransformColumns(RenamedColumns, {{"FilePath", each Text.Replace(Text.From(_), "/", "\"), type text}}),
-        BufferedTable = Table.Buffer(ReplacedValue)
-    in
-        BufferedTable,
-
-    RawFilePath = FilePathUrl{0}[FilePath],
-    CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
-    CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
-    CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
-    NormalizePath = (value as nullable text) as nullable text =>
-        let
-            TextValue = if value = null then null else Text.From(value),
-            SlashNormalized = if TextValue = null then null else Text.Replace(TextValue, "/", "\"),
-            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
-        in
-            Trimmed,
-    FilePath = NormalizePath(RawFilePath),
-    CentriSyncPaths_Normalized = Table.TransformColumns(
-        CentriSyncPaths_ChangedType,
-        {
-            {"SharepointRootUrl", each NormalizePath(_), type text},
-            {"SyncedFolderRootPath", each NormalizePath(_), type text}
-        }
-    ),
-    SharePointCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SharepointRootUrl], type text),
-    SharePointDocumentsCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each if [SharepointRootUrl] = null then null else [SharepointRootUrl] & "\Shared Documents", type text),
-    LocalCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SyncedFolderRootPath], type text),
-    MatchCandidates = Table.Combine({SharePointCandidates, SharePointDocumentsCandidates, LocalCandidates}),
-    MatchCandidates_WithLength = Table.AddColumn(MatchCandidates, "MatchRootLength", each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]), Int64.Type),
-    MatchingRows = Table.SelectRows(
-        MatchCandidates_WithLength,
-        each [MatchRoot] <> null
-            and Text.Trim([MatchRoot]) <> ""
-            and [SyncedFolderRootPath] <> null
-            and Text.Trim([SyncedFolderRootPath]) <> ""
-            and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
-    ),
-    SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
-    BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
-    RelativePath = Text.Range(FilePath, BestMatch[MatchRootLength]),
-    RelativePath_Trimmed = Text.TrimStart(RelativePath, "\"),
-    LocalFullPath =
-        if RelativePath_Trimmed = "" then
-            BestMatch[SyncedFolderRootPath]
-        else
-            BestMatch[SyncedFolderRootPath] & "\" & RelativePath_Trimmed,
-    RootPath = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
-    Segments = List.Select(Text.Split(RootPath, "\"), each _ <> ""),
-    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare"),
-    UnitsIndex = List.PositionOf(Segments, "UNITS"),
-    UserName = try Text.BeforeDelimiter(Text.AfterDelimiter(RootPath, "C:\Users\"), "\") otherwise null,
-    Client = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 1 then Segments{ResidentialCareIndex + 1} else null,
-    Date = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 2 then Segments{ResidentialCareIndex + 2} else null,
-    Unit = if UnitsIndex >= 0 and List.Count(Segments) > UnitsIndex + 1 then Segments{UnitsIndex + 1} else null,
-    FileName = try Text.BetweenDelimiters(LocalFullPath, "[", "]") otherwise Text.AfterDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
-    TABLE = #table(
-        {"Variable Name", "Value"},
-        {
-            {"UserName", UserName},
-            {"Root Path", RootPath},
-            {"Client", Client},
-            {"Date", Date},
-            {"Unit", Unit},
-            {"FileName", FileName}
-        }
-    ),
-    BUFFER = Table.Buffer(TABLE)
-in
-    BUFFER;
+shared #"UnitL1PathTABLE (2)" = UnitL1PathTABLE;
 
 shared Unit1Path = let
-    Source = #"UnitL1PathTABLE (2)",
+    Source = UnitL1PathTABLE,
     #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
-    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Variable Name"}),
-    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Value", "Folder"}}),
-    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","\2. Calculations","",Replacer.ReplaceText,{"Folder"}),
-    Folder = #"Replaced Value"{0}[Folder]
+    WorkbookFolder = #"Filtered Rows"{0}[Value],
+    UnitFolder =
+        if Text.EndsWith(WorkbookFolder, "\1. Input", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\1. Input"))
+        else if Text.EndsWith(WorkbookFolder, "\2. Calculations", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\2. Calculations"))
+        else
+            error "Root Path did not end in an expected Unit1 workbook folder: " & WorkbookFolder
 in
-    Folder;
+    UnitFolder;
 
 shared Unit = let
-    Source = #"UnitL1PathTABLE (2)",
+    Source = UnitL1PathTABLE,
     #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Unit")),
     Value = #"Filtered Rows"{0}[Value]
 in

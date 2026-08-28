@@ -397,7 +397,7 @@ in
 shared Table_AllocationExtracted = let
 Source = Excel.Workbook(File.Contents(#"FilePath-1Input"& "\1-AllocationExtracted.xlsx"), null, true),
     AllocationExtracted_Table = Source{[Item="AllocationExtracted",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(AllocationExtracted_Table,{{"Code", Int64.Type}, {"Date", type date}, {"Start", type datetime}, {"End", type datetime}, {"Break", Int64.Type}, {"Break Time", type datetime}, {"Hours", type number}, {"Location", type text}, {"Department", type text}, {"Area", type text}, {"Role", type text}, {"Unit", type any}, {"Name", type text}})
+    #"Changed Type" = Table.TransformColumnTypes(AllocationExtracted_Table,{{"Code", Int64.Type}, {"Date", type date}, {"Start", type datetime}, {"End", type datetime}, {"Break", Int64.Type}, {"Hours", type number}, {"Location", type text}, {"Department", type text}, {"Area", type text}, {"Role", type text}, {"Unit", type any}, {"Name", type text}})
 in
     #"Changed Type";
 
