@@ -767,7 +767,20 @@ in
 shared MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK =
 let
     Tolerance = 0.000001,
-    Source = #"MW DayShift Allocation",
+    // This check consumes the allocation more than once. Buffer only the
+    // required scalar columns so the external history pipeline is evaluated
+    // once without retaining unused shift-level fields in memory.
+    Source = Table.Buffer(
+        Table.SelectColumns(
+            #"MW DayShift Allocation",
+            {
+                "Facility", "MinuteCategory", "Role", "QFR Category", "Direct Care %",
+                "RoleDailyTargetMinutes", "RoleTargetMinutes", "DayOfWeek",
+                "LocRoleDayShift%", "WeekdayShiftTargetMinutes",
+                "WeekdayShiftRosterMinutes", "FTE"
+            }
+        )
+    ),
     Weekdays = #table(
         type table [DayOfWeek = Int64.Type, #"Week Day" = text],
         {
@@ -861,8 +874,12 @@ let
             "AllocatedDayRosterMinutes", "DayFTEShiftTotal"
         }
     ),
+    // The completed daily table is small (seven rows per allocated role) and
+    // feeds both the weekly totals and the detail join. Buffer it once to avoid
+    // rebuilding the cross-join and daily aggregation for each branch.
+    BufferedDailyAllocation = Table.Buffer(#"Replaced Missing Days With Zero"),
     WeeklyTotals = Table.Group(
-        #"Replaced Missing Days With Zero",
+        BufferedDailyAllocation,
         {"Facility", "MinuteCategory", "Role"},
         {
             {
@@ -895,7 +912,7 @@ let
         }
     ),
     #"Merged Weekly Totals" = Table.NestedJoin(
-        #"Replaced Missing Days With Zero",
+        BufferedDailyAllocation,
         {"Facility", "MinuteCategory", "Role"},
         WeeklyTotals,
         {"Facility", "MinuteCategory", "Role"},
@@ -965,8 +982,64 @@ let
                 "ERROR",
         type text
     ),
-    #"Sorted For Cumulative Check" = Table.Sort(
+    CumulativeGroupKeys = {"Facility", "MinuteCategory", "Role"},
+    CumulativeInputColumns = Table.ColumnNames(#"Added Check Status"),
+    CumulativeExpandColumns =
+        List.RemoveItems(CumulativeInputColumns, CumulativeGroupKeys) &
+        {"CumulativeWeekProductiveMinutes"},
+    // Calculate the running total inside each seven-row role group. The former
+    // row-by-row self-filter scanned the complete result for every output row
+    // and could repeatedly trigger the full external-history dependency chain.
+    #"Grouped For Cumulative Check" = Table.Group(
         #"Added Check Status",
+        CumulativeGroupKeys,
+        {
+            {
+                "RoleDays",
+                (RoleRows as table) as table =>
+                    let
+                        SortedRoleDays = Table.Sort(
+                            RoleRows,
+                            {{"DayOfWeek", Order.Ascending}}
+                        ),
+                        DailyProductiveMinutes = List.Buffer(
+                            SortedRoleDays[AllocatedDayProductiveMinutes]
+                        ),
+                        IndexedRoleDays = Table.AddIndexColumn(
+                            SortedRoleDays,
+                            "CumulativeDayIndex",
+                            1,
+                            1,
+                            Int64.Type
+                        ),
+                        AddedRoleCumulativeMinutes = Table.AddColumn(
+                            IndexedRoleDays,
+                            "CumulativeWeekProductiveMinutes",
+                            each List.Sum(
+                                List.FirstN(
+                                    DailyProductiveMinutes,
+                                    [CumulativeDayIndex]
+                                )
+                            ),
+                            type number
+                        ),
+                        Result = Table.RemoveColumns(
+                            AddedRoleCumulativeMinutes,
+                            {"CumulativeDayIndex"}
+                        )
+                    in
+                        Result
+            }
+        }
+    ),
+    #"Expanded Cumulative Check" = Table.ExpandTableColumn(
+        #"Grouped For Cumulative Check",
+        "RoleDays",
+        CumulativeExpandColumns,
+        CumulativeExpandColumns
+    ),
+    #"Sorted Cumulative Check" = Table.Sort(
+        #"Expanded Cumulative Check",
         {
             {"Facility", Order.Ascending},
             {"MinuteCategory", Order.Ascending},
@@ -974,32 +1047,8 @@ let
             {"DayOfWeek", Order.Ascending}
         }
     ),
-    // The cumulative column ends at AllocatedWeeklyProductiveMinutes on Sunday,
-    // making the weekly reconciliation easy to chart and visually inspect.
-    #"Added Cumulative Week Minutes" = Table.AddColumn(
-        #"Sorted For Cumulative Check",
-        "CumulativeWeekProductiveMinutes",
-        each
-            let
-                CurrentFacility = [Facility],
-                CurrentCategory = [MinuteCategory],
-                CurrentRole = [Role],
-                CurrentDay = [DayOfWeek]
-            in
-                List.Sum(
-                    Table.SelectRows(
-                        #"Sorted For Cumulative Check",
-                        (CheckRow) =>
-                            CheckRow[Facility] = CurrentFacility and
-                            CheckRow[MinuteCategory] = CurrentCategory and
-                            CheckRow[Role] = CurrentRole and
-                            CheckRow[DayOfWeek] <= CurrentDay
-                    )[AllocatedDayProductiveMinutes]
-                ),
-        type number
-    ),
     #"Added Cumulative Weekly Target Percentage" = Table.AddColumn(
-        #"Added Cumulative Week Minutes",
+        #"Sorted Cumulative Check",
         "CumulativeWeeklyTarget%",
         each
             if [ExpectedWeeklyProductiveMinutes] = null or [ExpectedWeeklyProductiveMinutes] = 0 then
@@ -1035,6 +1084,222 @@ let
     )
 in
     #"Selected Check Columns";
+
+// Query: MinuteWorkersFTE_CATEGORY_DAILY_CHECK
+// Purpose: Reconciles RN and OTHERS daily productive minutes after summing all roles in each category.
+// Inputs: MW TargetMinutes Prepare and MW DayShift Allocation.
+// Output: Seven rows per facility/category, with weekday totals and the seven-day average compared with the daily target.
+// Notes: Use this category-grain output instead of averaging role/day rows; daily allocations may vary while their seven-day average must match the target.
+shared MinuteWorkersFTE_CATEGORY_DAILY_CHECK =
+let
+    Tolerance = 0.000001,
+    Weekdays = #table(
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text],
+        {
+            {1, "Monday"},
+            {2, "Tuesday"},
+            {3, "Wednesday"},
+            {4, "Thursday"},
+            {5, "Friday"},
+            {6, "Saturday"},
+            {7, "Sunday"}
+        }
+    ),
+    CategoryTargets = Table.Buffer(
+        Table.Distinct(
+            Table.SelectColumns(
+                #"MW TargetMinutes Prepare",
+                {
+                    "Facility", "MinuteCategory", "CategoryDailyTargetMinutes",
+                    "CategoryTargetMinutes"
+                }
+            )
+        )
+    ),
+    // Build the complete seven-day category grain before joining allocations,
+    // so a missing allocation is shown as zero and fails reconciliation.
+    #"Added Complete Week" = Table.AddColumn(
+        CategoryTargets,
+        "Weekdays",
+        each Weekdays,
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text]
+    ),
+    #"Expanded Complete Week" = Table.ExpandTableColumn(
+        #"Added Complete Week",
+        "Weekdays",
+        {"DayOfWeek", "Week Day"},
+        {"DayOfWeek", "Week Day"}
+    ),
+    Allocation = Table.Buffer(
+        Table.SelectColumns(
+            #"MW DayShift Allocation",
+            {
+                "Facility", "MinuteCategory", "DayOfWeek",
+                "WeekdayShiftTargetMinutes"
+            }
+        )
+    ),
+    // Sum shifts and roles before calculating an average. Averaging the raw
+    // role/day rows divides OTHERS by its role count and understates the target.
+    DailyCategoryAllocation = Table.Group(
+        Allocation,
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        {
+            {
+                "AllocatedDayProductiveMinutes",
+                each List.Sum([WeekdayShiftTargetMinutes]),
+                type number
+            }
+        }
+    ),
+    #"Merged Daily Category Allocation" = Table.NestedJoin(
+        #"Expanded Complete Week",
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        DailyCategoryAllocation,
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        "DailyCategoryAllocation",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Daily Category Allocation" = Table.ExpandTableColumn(
+        #"Merged Daily Category Allocation",
+        "DailyCategoryAllocation",
+        {"AllocatedDayProductiveMinutes"},
+        {"AllocatedDayProductiveMinutes"}
+    ),
+    #"Replaced Missing Allocation With Zero" = Table.ReplaceValue(
+        #"Expanded Daily Category Allocation",
+        null,
+        0,
+        Replacer.ReplaceValue,
+        {"AllocatedDayProductiveMinutes"}
+    ),
+    BufferedCategoryDays = Table.Buffer(#"Replaced Missing Allocation With Zero"),
+    WeeklyCategoryTotals = Table.Group(
+        BufferedCategoryDays,
+        {"Facility", "MinuteCategory"},
+        {
+            {
+                "AllocatedWeeklyProductiveMinutes",
+                each List.Sum([AllocatedDayProductiveMinutes]),
+                type number
+            }
+        }
+    ),
+    #"Merged Weekly Category Totals" = Table.NestedJoin(
+        BufferedCategoryDays,
+        {"Facility", "MinuteCategory"},
+        WeeklyCategoryTotals,
+        {"Facility", "MinuteCategory"},
+        "WeeklyCategoryTotals",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Weekly Category Totals" = Table.ExpandTableColumn(
+        #"Merged Weekly Category Totals",
+        "WeeklyCategoryTotals",
+        {"AllocatedWeeklyProductiveMinutes"},
+        {"AllocatedWeeklyProductiveMinutes"}
+    ),
+    #"Added Expected Weekly Minutes" = Table.AddColumn(
+        #"Expanded Weekly Category Totals",
+        "ExpectedWeeklyProductiveMinutes",
+        each
+            if [CategoryDailyTargetMinutes] = null then
+                null
+            else
+                [CategoryDailyTargetMinutes] * 7,
+        type nullable number
+    ),
+    #"Added Average Allocated Daily Minutes" = Table.AddColumn(
+        #"Added Expected Weekly Minutes",
+        "AverageAllocatedDailyProductiveMinutes",
+        each [AllocatedWeeklyProductiveMinutes] / 7,
+        type number
+    ),
+    #"Added Average Daily Variance" = Table.AddColumn(
+        #"Added Average Allocated Daily Minutes",
+        "AverageDailyVarianceMinutes",
+        each
+            if [CategoryDailyTargetMinutes] = null then
+                null
+            else
+                [AverageAllocatedDailyProductiveMinutes] - [CategoryDailyTargetMinutes],
+        type nullable number
+    ),
+    // Doubling the representative week must also reconstruct the original
+    // 14-day RN or OTHERS category target.
+    #"Added Reconstructed Fortnight Minutes" = Table.AddColumn(
+        #"Added Average Daily Variance",
+        "ReconstructedFortnightProductiveMinutes",
+        each [AllocatedWeeklyProductiveMinutes] * 2,
+        type number
+    ),
+    #"Added Fortnight Variance" = Table.AddColumn(
+        #"Added Reconstructed Fortnight Minutes",
+        "FortnightVarianceMinutes",
+        each
+            if [CategoryTargetMinutes] = null then
+                null
+            else
+                [ReconstructedFortnightProductiveMinutes] - [CategoryTargetMinutes],
+        type nullable number
+    ),
+    #"Added Day Versus Average" = Table.AddColumn(
+        #"Added Fortnight Variance",
+        "DayVsAverageDailyTarget%",
+        each
+            if [CategoryDailyTargetMinutes] = null or [CategoryDailyTargetMinutes] = 0 then
+                if [AllocatedDayProductiveMinutes] = 0 then 0 else null
+            else
+                [AllocatedDayProductiveMinutes] / [CategoryDailyTargetMinutes],
+        Percentage.Type
+    ),
+    #"Added Status" = Table.AddColumn(
+        #"Added Day Versus Average",
+        "Status",
+        each
+            if
+                [AverageDailyVarianceMinutes] <> null and
+                [FortnightVarianceMinutes] <> null and
+                Number.Abs([AverageDailyVarianceMinutes]) <= Tolerance and
+                Number.Abs([FortnightVarianceMinutes]) <= Tolerance
+            then
+                "PASS"
+            else
+                "ERROR",
+        type text
+    ),
+    #"Added Check Message" = Table.AddColumn(
+        #"Added Status",
+        "CheckMessage",
+        each
+            if [Status] = "PASS" then
+                "The seven-day average productive minutes reconcile to the category daily target."
+            else
+                "The seven-day average does not reconcile; review missing roles, history, or category allocations.",
+        type text
+    ),
+    #"Selected Check Columns" = Table.SelectColumns(
+        #"Added Check Message",
+        {
+            "Facility", "MinuteCategory", "DayOfWeek", "Week Day",
+            "AllocatedDayProductiveMinutes", "DayVsAverageDailyTarget%",
+            "CategoryDailyTargetMinutes", "AverageAllocatedDailyProductiveMinutes",
+            "AverageDailyVarianceMinutes", "ExpectedWeeklyProductiveMinutes",
+            "AllocatedWeeklyProductiveMinutes", "CategoryTargetMinutes",
+            "ReconstructedFortnightProductiveMinutes", "FortnightVarianceMinutes",
+            "Status", "CheckMessage"
+        }
+    ),
+    #"Sorted Category Daily Check" = Table.Sort(
+        #"Selected Check Columns",
+        {
+            {"Facility", Order.Ascending},
+            {"MinuteCategory", Order.Ascending},
+            {"DayOfWeek", Order.Ascending}
+        }
+    )
+in
+    #"Sorted Category Daily Check";
 
 // Query: MW Input Check
 // Purpose: Validates configured roles, Direct Care percentages, and RN/ALL target inputs.
