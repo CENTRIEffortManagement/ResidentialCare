@@ -1,0 +1,62 @@
+flowchart TD
+    Input["1. Input workbooks<br/>1-AllocationExtracted.xlsx<br/>2-DemandExtract.xlsx<br/>StaffList Availability.xlsx<br/>Demand-MasterRoster Manual Read.xlsx"]
+    RoleCapacity["Role capacity distribution files<br/>Role folders / CapacityDistrib*.xlsx"]
+
+    Settings["Settings Data.xlsx"]
+    Intervals["Intervals.xlsx"]
+    DemandIntervals["DemandIntervals.xlsx"]
+    Demand["Demand.xlsx"]
+    CapacityShiftAvailability["Capacity-ShiftAvailability.xlsx"]
+    StaffListMaster["StaffListMaster.xlsx"]
+    Capacity["Capacity.xlsx"]
+    Shifts["Shifts.xlsx"]
+    AllocationByShiftAverage["AllocationByShiftAverage.xlsx"]
+    Allocation["Allocation.xlsx"]
+    Effort["Effort.xlsx"]
+    MultiRoleCheck["MutliRoleCheck.xlsx"]
+    ShiftStaffDistribution["Shift-StaffDistribution.xlsx"]
+
+    Input --> Settings
+    Input --> Intervals
+    Settings --> Intervals
+
+    Input --> DemandIntervals
+    Settings --> DemandIntervals
+    Intervals --> DemandIntervals
+
+    Settings --> Demand
+    Intervals --> Demand
+    DemandIntervals --> Demand
+    Input --> DemandMER
+
+    Input --> CapacityShiftAvailability
+    Settings --> CapacityShiftAvailability
+
+    CapacityShiftAvailability --> StaffListMaster
+    Input --> StaffListMaster
+
+    Settings --> Capacity
+    RoleCapacity --> Capacity
+
+    Settings --> Shifts
+    Intervals --> Shifts
+    Input --> Shifts
+
+    Settings --> AllocationByShiftAverage
+    Shifts --> AllocationByShiftAverage
+
+    Settings --> Allocation
+    AllocationByShiftAverage --> Allocation
+    Input --> Allocation
+
+    Demand --> Effort
+    Capacity --> Effort
+    Allocation --> Effort
+    Settings --> Effort
+    StaffListMaster --> Effort
+
+    CapacityShiftAvailability --> MultiRoleCheck
+    Settings --> MultiRoleCheck
+    Shifts --> MultiRoleCheck
+
+    Shifts --> ShiftStaffDistribution
