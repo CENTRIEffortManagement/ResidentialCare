@@ -1,11 +1,11 @@
 // Power Query from: Demand-MasterRoster Manual Read.xlsx
-// Pathname: c:\Users\alexp\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Demand-MasterRoster Manual Read.xlsx
+// Pathname: c:\Users\alexp\CentriNOTSYNC\ResidentialCare \CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Demand-MasterRoster Manual Read.xlsx
 // Extracted: 2026-08-29T20:58:10.990Z
 
 section Section1;
 
 shared #"IMPORT Master" = let
-    Source = Excel.Workbook(File.Contents("C:\Users\alexp\Centri\4. Production - Documents\WFEffectiveness\4.1.1 AGED CARE\ResidentialCare\Whiddon\DATExx\UNITS\Unit1\1. Input\Master Roster.xlsx"), null, true),
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Master Roster.xlsx"), null, true),
     Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
     #"Promoted Headers1" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
     #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}})
@@ -136,6 +136,85 @@ let
     )
 in
     #"Added Minute Category";
+
+// Query: MinuteWorkerRoleAssignments_TABLE
+// Purpose: Lists every original Master Roster role that maps to a configured MinuteWorker role.
+// Inputs: IMPORT Master, MW Abbreviate Role, and MW MinuteWorkers Prepare.
+// Output: One row per original and assigned role with configuration, row-count, and facility coverage.
+// Notes: Unmatched Master Roster roles are excluded; use this table to audit the applied role mappings.
+shared MinuteWorkerRoleAssignments_TABLE =
+let
+    Source = Table.SelectColumns(#"IMPORT Master", {"Location", "Role"}),
+    #"Normalised Master Role Fields" = Table.TransformColumns(
+        Source,
+        {
+            {
+                "Location",
+                each if _ = null then null else Text.Upper(Text.Start(Text.Trim(_), 2)),
+                type nullable text
+            },
+            {"Role", each if _ = null then null else Text.Trim(_), type nullable text}
+        }
+    ),
+    #"Renamed Original Role" = Table.RenameColumns(
+        #"Normalised Master Role Fields",
+        {{"Role", "MasterRosterRole"}}
+    ),
+    #"Added Assigned Role Key" = Table.AddColumn(
+        #"Renamed Original Role",
+        "AssignedRoleKey",
+        each
+            let
+                AssignedRole = #"MW Abbreviate Role"([MasterRosterRole])
+            in
+                if AssignedRole = null then null else Text.Upper(Text.Trim(AssignedRole)),
+        type nullable text
+    ),
+    // The inner join retains only roles that are actually configured in INPUT
+    // MinuteWorkers; the expanded Role is the authoritative assigned role.
+    #"Merged Configured MinuteWorkers" = Table.NestedJoin(
+        #"Added Assigned Role Key",
+        {"AssignedRoleKey"},
+        #"MW MinuteWorkers Prepare",
+        {"RoleKey"},
+        "MinuteWorker",
+        JoinKind.Inner
+    ),
+    #"Expanded MinuteWorker Assignment" = Table.ExpandTableColumn(
+        #"Merged Configured MinuteWorkers",
+        "MinuteWorker",
+        {"Role", "MinuteCategory", "QFR Category", "Direct Care %"},
+        {"AssignedMinuteWorkerRole", "MinuteCategory", "QFR Category", "Direct Care %"}
+    ),
+    #"Summarised Role Assignments" = Table.Group(
+        #"Expanded MinuteWorker Assignment",
+        {
+            "MasterRosterRole", "AssignedMinuteWorkerRole", "MinuteCategory",
+            "QFR Category", "Direct Care %"
+        },
+        {
+            {"MasterRosterRowCount", each Table.RowCount(_), Int64.Type},
+            {
+                "FacilityCount",
+                each List.Count(List.Distinct(List.RemoveNulls([Location]))),
+                Int64.Type
+            },
+            {
+                "Facilities",
+                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([Location]))), ", "),
+                type text
+            }
+        }
+    ),
+    #"Sorted Role Assignments" = Table.Sort(
+        #"Summarised Role Assignments",
+        {
+            {"AssignedMinuteWorkerRole", Order.Ascending},
+            {"MasterRosterRole", Order.Ascending}
+        }
+    )
+in
+    #"Sorted Role Assignments";
 
 // Query: Master Prepare
 // Purpose: Normalises original master-roster roles, retains configured MinuteWorkers, and assigns shifts.
@@ -497,47 +576,88 @@ in
     #"Expanded Category Target Values";
 
 // Query: MW Historical DayShift
-// Purpose: Filters the historical day/shift distribution to configured MinuteWorker roles.
-// Inputs: LocRoleDayShift%, LocRoleWeekDaysHours, and MW MinuteWorkers Prepare.
-// Output: One historical row per facility, role, weekday, and shift.
+// Purpose: Builds weekday-local historical role and shift distributions for configured MinuteWorkers.
+// Inputs: LocRoleWeekDaysHours and MW MinuteWorkers Prepare.
+// Output: One row per facility, role, weekday, and shift with role/day and category/day denominators.
+// Notes: This branch does not use LocRoleTOTAL or the legacy week-normalised LocRoleDayShift%.
 shared #"MW Historical DayShift" =
 let
-    Source = #"LocRoleDayShift%",
-    #"Renamed Historical Columns" = Table.RenameColumns(
-        Source,
+    Source = Table.SelectColumns(
+        LocRoleWeekDaysHours,
         {
-            {"Location", "Facility"},
-            {"Attribute", "DayShift"},
-            {"Value", "HistoricalRosterHours"},
-            {"Hours", "RoleHistoricalRosterHours"}
+            "Location", "Week No", "Role", "DayOfWeek", "Week Day",
+            "Shift", "ShiftIndex", "DayShift", "Hours"
         }
     ),
     #"Normalised Facility" = Table.TransformColumns(
-        #"Renamed Historical Columns",
+        Table.RenameColumns(Source, {{"Location", "Facility"}}),
         {{"Facility", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text}}
     ),
-    DayShiftMap = Table.Distinct(
-        Table.SelectColumns(
-            LocRoleWeekDaysHours,
-            {"DayShift", "DayOfWeek", "Week Day", "Shift", "ShiftIndex"}
-        )
-    ),
-    #"Merged DayShift Details" = Table.NestedJoin(
+    #"Filtered Valid Historical Days" = Table.SelectRows(
         #"Normalised Facility",
-        {"DayShift"},
-        DayShiftMap,
-        {"DayShift"},
-        "DayShiftDetails",
+        each [DayOfWeek] >= 1 and [DayOfWeek] <= 7
+    ),
+    BufferedHistoricalDays = Table.Buffer(#"Filtered Valid Historical Days"),
+    // Count each facility's complete historical periods before grouping by
+    // weekday or role. Missing role/shift rows, or a wholly absent weekday,
+    // therefore contribute zero to the period average rather than shrinking
+    // the denominator to observed cells only.
+    FacilityPeriodCounts = Table.Group(
+        Table.Distinct(
+            Table.SelectColumns(
+                BufferedHistoricalDays,
+                {"Facility", "Week No"}
+            )
+        ),
+        {"Facility"},
+        {{"HistoricalWeeksInAverage", each Table.RowCount(_), Int64.Type}}
+    ),
+    HistoricalTotals = Table.Group(
+        BufferedHistoricalDays,
+        {
+            "Facility", "Role", "DayOfWeek", "Week Day", "Shift",
+            "ShiftIndex", "DayShift"
+        },
+        {
+            {
+                "HistoricalRosterHoursTotal",
+                each List.Sum(List.RemoveNulls([Hours])),
+                type number
+            }
+        }
+    ),
+    // Zero-hour cells have no historical weight and are omitted rather than
+    // published as a role/day with an undefined shift denominator.
+    PositiveHistoricalTotals = Table.SelectRows(
+        HistoricalTotals,
+        each [HistoricalRosterHoursTotal] > 0
+    ),
+    #"Merged Facility Period Counts" = Table.NestedJoin(
+        PositiveHistoricalTotals,
+        {"Facility"},
+        FacilityPeriodCounts,
+        {"Facility"},
+        "FacilityPeriodCount",
         JoinKind.LeftOuter
     ),
-    #"Expanded DayShift Details" = Table.ExpandTableColumn(
-        #"Merged DayShift Details",
-        "DayShiftDetails",
-        {"DayOfWeek", "Week Day", "Shift", "ShiftIndex"},
-        {"DayOfWeek", "Week Day", "Shift", "ShiftIndex"}
+    #"Expanded Facility Period Counts" = Table.ExpandTableColumn(
+        #"Merged Facility Period Counts",
+        "FacilityPeriodCount",
+        {"HistoricalWeeksInAverage"},
+        {"HistoricalWeeksInAverage"}
+    ),
+    #"Added Historical Roster Hours Average" = Table.AddColumn(
+        #"Expanded Facility Period Counts",
+        "HistoricalRosterHours",
+        each
+            if [HistoricalWeeksInAverage] = null or [HistoricalWeeksInAverage] = 0 then
+                null
+            else
+                [HistoricalRosterHoursTotal] / [HistoricalWeeksInAverage],
+        type nullable number
     ),
     #"Added Role Key" = Table.AddColumn(
-        #"Expanded DayShift Details",
+        #"Added Historical Roster Hours Average",
         "RoleKey",
         each if [Role] = null then null else Text.Upper(Text.Trim([Role])),
         type nullable text
@@ -558,84 +678,160 @@ let
         {"QFR Category", "Direct Care %", "MinuteCategory"},
         {"QFR Category", "Direct Care %", "MinuteCategory"}
     ),
-    #"Selected Historical Columns" = Table.SelectColumns(
+    #"Selected Historical Base Columns" = Table.SelectColumns(
         #"Expanded MinuteWorker Attributes",
         {
             "Facility", "MinuteCategory", "Role", "RoleKey", "QFR Category", "Direct Care %",
             "DayOfWeek", "Week Day", "Shift", "ShiftIndex", "DayShift",
-            "HistoricalRosterHours", "RoleHistoricalRosterHours", "LocRoleDayShift%"
+            "HistoricalWeeksInAverage", "HistoricalRosterHours"
+        }
+    ),
+    #"Added Historical Productive Hours" = Table.AddColumn(
+        #"Selected Historical Base Columns",
+        "HistoricalProductiveHours",
+        each [HistoricalRosterHours] * [#"Direct Care %"],
+        type number
+    ),
+    BufferedHistory = Table.Buffer(#"Added Historical Productive Hours"),
+    RoleDayTotals = Table.Group(
+        BufferedHistory,
+        {"Facility", "MinuteCategory", "RoleKey", "DayOfWeek"},
+        {
+            {
+                "RoleDayHistoricalRosterHours",
+                each List.Sum([HistoricalRosterHours]),
+                type number
+            },
+            {
+                "RoleDayHistoricalProductiveHours",
+                each List.Sum([HistoricalProductiveHours]),
+                type number
+            }
+        }
+    ),
+    CategoryDayTotals = Table.Group(
+        BufferedHistory,
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        {
+            {
+                "CategoryDayHistoricalProductiveHours",
+                each List.Sum([HistoricalProductiveHours]),
+                type number
+            }
+        }
+    ),
+    #"Merged Role Day Totals" = Table.NestedJoin(
+        BufferedHistory,
+        {"Facility", "MinuteCategory", "RoleKey", "DayOfWeek"},
+        RoleDayTotals,
+        {"Facility", "MinuteCategory", "RoleKey", "DayOfWeek"},
+        "RoleDayTotals",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Role Day Totals" = Table.ExpandTableColumn(
+        #"Merged Role Day Totals",
+        "RoleDayTotals",
+        {"RoleDayHistoricalRosterHours", "RoleDayHistoricalProductiveHours"},
+        {"RoleDayHistoricalRosterHours", "RoleDayHistoricalProductiveHours"}
+    ),
+    #"Merged Category Day Totals" = Table.NestedJoin(
+        #"Expanded Role Day Totals",
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        CategoryDayTotals,
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        "CategoryDayTotals",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Category Day Totals" = Table.ExpandTableColumn(
+        #"Merged Category Day Totals",
+        "CategoryDayTotals",
+        {"CategoryDayHistoricalProductiveHours"},
+        {"CategoryDayHistoricalProductiveHours"}
+    ),
+    // Role mix is calculated independently inside each facility/category/day.
+    #"Added Role Day History Distribution" = Table.AddColumn(
+        #"Expanded Category Day Totals",
+        "RoleDayHistoryDistribution%",
+        each
+            if
+                [CategoryDayHistoricalProductiveHours] = null or
+                [CategoryDayHistoricalProductiveHours] = 0
+            then
+                null
+            else
+                [RoleDayHistoricalProductiveHours] /
+                [CategoryDayHistoricalProductiveHours],
+        Percentage.Type
+    ),
+    // Shift mix is calculated independently inside each role/day. Other
+    // weekdays therefore cannot change this weekday's AM, PM, or NS share.
+    #"Added Role Day Shift Distribution" = Table.AddColumn(
+        #"Added Role Day History Distribution",
+        "RoleDayShiftDistribution%",
+        each
+            if
+                [RoleDayHistoricalRosterHours] = null or
+                [RoleDayHistoricalRosterHours] = 0
+            then
+                null
+            else
+                [HistoricalRosterHours] / [RoleDayHistoricalRosterHours],
+        Percentage.Type
+    ),
+    #"Added Category Day Role Shift Distribution" = Table.AddColumn(
+        #"Added Role Day Shift Distribution",
+        "CategoryDayRoleShiftDistribution%",
+        each
+            if
+                [CategoryDayHistoricalProductiveHours] = null or
+                [CategoryDayHistoricalProductiveHours] = 0
+            then
+                null
+            else
+                [HistoricalProductiveHours] /
+                [CategoryDayHistoricalProductiveHours],
+        Percentage.Type
+    ),
+    #"Selected Historical Columns" = Table.SelectColumns(
+        #"Added Category Day Role Shift Distribution",
+        {
+            "Facility", "MinuteCategory", "Role", "RoleKey", "QFR Category", "Direct Care %",
+            "DayOfWeek", "Week Day", "Shift", "ShiftIndex", "DayShift",
+            "HistoricalWeeksInAverage", "HistoricalRosterHours", "HistoricalProductiveHours",
+            "RoleDayHistoricalRosterHours", "RoleDayHistoricalProductiveHours",
+            "CategoryDayHistoricalProductiveHours", "RoleDayHistoryDistribution%",
+            "RoleDayShiftDistribution%", "CategoryDayRoleShiftDistribution%"
         }
     )
 in
     #"Selected Historical Columns";
 
 // Query: MW Role Distribution
-// Purpose: Calculates each role's share of category productive minutes from historical roster hours.
+// Purpose: Exposes each role's productive-minute share independently within each weekday.
 // Inputs: MW Historical DayShift.
-// Output: One row per facility and MinuteWorker role with RoleHistoryDistribution%.
+// Output: One row per facility, MinuteCategory, role, and weekday with RoleDayHistoryDistribution%.
 shared #"MW Role Distribution" =
 let
     Source = #"MW Historical DayShift",
-    #"Selected Distinct Role History" = Table.Distinct(
+    #"Selected Role Day Distribution" = Table.Distinct(
         Table.SelectColumns(
             Source,
             {
                 "Facility", "MinuteCategory", "Role", "RoleKey", "QFR Category",
-                "Direct Care %", "RoleHistoricalRosterHours"
+                "Direct Care %", "DayOfWeek", "Week Day",
+                "RoleDayHistoricalRosterHours",
+                "RoleDayHistoricalProductiveHours", "CategoryDayHistoricalProductiveHours",
+                "RoleDayHistoryDistribution%"
             }
         )
-    ),
-    // Only the Direct Care portion of historical roster hours contributes to
-    // the role distribution used to allocate target minutes.
-    #"Added Historical Minute Hours" = Table.AddColumn(
-        #"Selected Distinct Role History",
-        "HistoricalMinuteHours",
-        each [RoleHistoricalRosterHours] * [#"Direct Care %"],
-        type number
-    ),
-    #"Summarised Category History" = Table.Group(
-        #"Added Historical Minute Hours",
-        {"Facility", "MinuteCategory"},
-        {
-            {
-                "CategoryHistoricalMinuteHours",
-                each List.Sum([HistoricalMinuteHours]),
-                type number
-            }
-        }
-    ),
-    #"Merged Category History" = Table.NestedJoin(
-        #"Added Historical Minute Hours",
-        {"Facility", "MinuteCategory"},
-        #"Summarised Category History",
-        {"Facility", "MinuteCategory"},
-        "CategoryHistory",
-        JoinKind.LeftOuter
-    ),
-    #"Expanded Category History" = Table.ExpandTableColumn(
-        #"Merged Category History",
-        "CategoryHistory",
-        {"CategoryHistoricalMinuteHours"},
-        {"CategoryHistoricalMinuteHours"}
-    ),
-    // RoleHistoryDistribution% is calculated within facility and MinuteCategory.
-    #"Added Role History Distribution" = Table.AddColumn(
-        #"Expanded Category History",
-        "RoleHistoryDistribution%",
-        each
-            if [CategoryHistoricalMinuteHours] = null or [CategoryHistoricalMinuteHours] = 0 then
-                null
-            else
-                [HistoricalMinuteHours] / [CategoryHistoricalMinuteHours],
-        Percentage.Type
     )
 in
-    #"Added Role History Distribution";
+    #"Selected Role Day Distribution";
 
 // Query: MW Role Targets
-// Purpose: Allocates each facility/category fortnight target across eligible MinuteWorker roles.
+// Purpose: Allocates each facility/category daily target across roles independently for every weekday.
 // Inputs: MW Role Distribution and MW TargetMinutes Prepare.
-// Output: One row per facility and role with daily and 14-day RoleTargetMinutes.
+// Output: One row per facility, role, and weekday with day-specific, weekly, and 14-day role targets.
 shared #"MW Role Targets" =
 let
     Source = #"MW Role Distribution",
@@ -664,21 +860,53 @@ let
     #"Added Role Daily Target Minutes" = Table.AddColumn(
         #"Expanded Category Targets",
         "RoleDailyTargetMinutes",
-        each [CategoryDailyTargetMinutes] * [#"RoleHistoryDistribution%"],
+        each [CategoryDailyTargetMinutes] * [#"RoleDayHistoryDistribution%"],
         type number
     ),
-    // Each role receives its Direct Care-adjusted share of the 14-day category target.
+    BufferedRoleDayTargets = Table.Buffer(#"Added Role Daily Target Minutes"),
+    RoleWeeklyTargets = Table.Group(
+        BufferedRoleDayTargets,
+        {"Facility", "MinuteCategory", "RoleKey"},
+        {
+            {
+                "RoleWeeklyTargetMinutes",
+                each List.Sum([RoleDailyTargetMinutes]),
+                type number
+            }
+        }
+    ),
+    #"Merged Role Weekly Targets" = Table.NestedJoin(
+        BufferedRoleDayTargets,
+        {"Facility", "MinuteCategory", "RoleKey"},
+        RoleWeeklyTargets,
+        {"Facility", "MinuteCategory", "RoleKey"},
+        "RoleWeeklyTarget",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Role Weekly Targets" = Table.ExpandTableColumn(
+        #"Merged Role Weekly Targets",
+        "RoleWeeklyTarget",
+        {"RoleWeeklyTargetMinutes"},
+        {"RoleWeeklyTargetMinutes"}
+    ),
+    #"Added Role Average Daily Target" = Table.AddColumn(
+        #"Expanded Role Weekly Targets",
+        "RoleAverageDailyTargetMinutes",
+        each [RoleWeeklyTargetMinutes] / 7,
+        type number
+    ),
+    // The representative week repeats twice in the 14-day target period.
     #"Added Role Target Minutes" = Table.AddColumn(
-        #"Added Role Daily Target Minutes",
+        #"Added Role Average Daily Target",
         "RoleTargetMinutes",
-        each [CategoryTargetMinutes] * [#"RoleHistoryDistribution%"],
+        each [RoleWeeklyTargetMinutes] * 2,
         type number
     )
 in
     #"Added Role Target Minutes";
 
 // Query: MW DayShift Allocation
-// Purpose: Distributes role targets across the representative week and converts roster minutes to FTE.
+// Purpose: Allocates each weekday's complete category target across that day's roles and shifts, then converts roster minutes to FTE.
 // Inputs: MW Historical DayShift and MW Role Targets.
 // Output: One row per facility, role, weekday, and shift with unrounded FTE.
 shared #"MW DayShift Allocation" =
@@ -686,9 +914,9 @@ let
     Source = #"MW Historical DayShift",
     #"Merged Role Targets" = Table.NestedJoin(
         Source,
-        {"Facility", "MinuteCategory", "RoleKey"},
+        {"Facility", "MinuteCategory", "RoleKey", "DayOfWeek"},
         #"MW Role Targets",
-        {"Facility", "MinuteCategory", "RoleKey"},
+        {"Facility", "MinuteCategory", "RoleKey", "DayOfWeek"},
         "RoleTarget",
         JoinKind.Inner
     ),
@@ -696,38 +924,56 @@ let
         #"Merged Role Targets",
         "RoleTarget",
         {
-            "HistoricalMinuteHours", "CategoryHistoricalMinuteHours",
-            "RoleHistoryDistribution%", "CategoryDailyTargetMinutes", "CategoryTargetMinutes",
-            "RoleDailyTargetMinutes", "RoleTargetMinutes"
+            "CategoryDailyTargetMinutes", "CategoryTargetMinutes",
+            "RoleDailyTargetMinutes", "RoleWeeklyTargetMinutes",
+            "RoleAverageDailyTargetMinutes", "RoleTargetMinutes"
         },
         {
-            "HistoricalMinuteHours", "CategoryHistoricalMinuteHours",
-            "RoleHistoryDistribution%", "CategoryDailyTargetMinutes", "CategoryTargetMinutes",
-            "RoleDailyTargetMinutes", "RoleTargetMinutes"
+            "CategoryDailyTargetMinutes", "CategoryTargetMinutes",
+            "RoleDailyTargetMinutes", "RoleWeeklyTargetMinutes",
+            "RoleAverageDailyTargetMinutes", "RoleTargetMinutes"
         }
     ),
-    // LocRoleDayShift% describes one representative week. Dividing the
-    // fortnight role target by two produces the week-after-week FTE profile.
+    // CategoryDayRoleShiftDistribution% totals 100% inside each
+    // facility/category/day, so other weekdays cannot change this day's target.
     #"Added WeekdayShift Target Minutes" = Table.AddColumn(
         #"Expanded Role Targets",
         "WeekdayShiftTargetMinutes",
-        each [RoleTargetMinutes] * [#"LocRoleDayShift%"] / 2,
+        each
+            [CategoryDailyTargetMinutes] *
+            [#"CategoryDayRoleShiftDistribution%"],
+        type number
+    ),
+    #"Added Two Stage Allocation Variance" = Table.AddColumn(
+        #"Added WeekdayShift Target Minutes",
+        "TwoStageAllocationVarianceMinutes",
+        each
+            [WeekdayShiftTargetMinutes] -
+            ([RoleDailyTargetMinutes] * [#"RoleDayShiftDistribution%"]),
         type number
     ),
     // Target minutes represent productive Direct Care time. Divide by the
     // role's Direct Care percentage to obtain rostered minutes.
     #"Added WeekdayShift Roster Minutes" = Table.AddColumn(
-        #"Added WeekdayShift Target Minutes",
+        #"Added Two Stage Allocation Variance",
         "WeekdayShiftRosterMinutes",
-        each [WeekdayShiftTargetMinutes] / [#"Direct Care %"],
-        type number
+        each
+            if [#"Direct Care %"] = null or [#"Direct Care %"] <= 0 then
+                null
+            else
+                [WeekdayShiftTargetMinutes] / [#"Direct Care %"],
+        type nullable number
     ),
     // One FTE shift is 7.6 hours, or 456 rostered minutes.
     #"Added FTE" = Table.AddColumn(
         #"Added WeekdayShift Roster Minutes",
         "FTE",
-        each [WeekdayShiftRosterMinutes] / 456,
-        type number
+        each
+            if [WeekdayShiftRosterMinutes] = null then
+                null
+            else
+                [WeekdayShiftRosterMinutes] / 456,
+        type nullable number
     ),
     #"Added WeekdayShift Key" = Table.AddColumn(
         #"Added FTE",
@@ -740,10 +986,14 @@ let
         {
             "Facility", "MinuteCategory", "Role", "QFR Category", "Direct Care %",
             "DayOfWeek", "Week Day", "Shift", "ShiftIndex", "WeekdayShift",
-            "HistoricalRosterHours", "RoleHistoricalRosterHours", "HistoricalMinuteHours",
-            "CategoryHistoricalMinuteHours", "RoleHistoryDistribution%", "LocRoleDayShift%",
+            "HistoricalWeeksInAverage", "HistoricalRosterHours", "HistoricalProductiveHours",
+            "RoleDayHistoricalRosterHours", "RoleDayHistoricalProductiveHours",
+            "CategoryDayHistoricalProductiveHours", "RoleDayHistoryDistribution%",
+            "RoleDayShiftDistribution%", "CategoryDayRoleShiftDistribution%",
             "CategoryDailyTargetMinutes", "CategoryTargetMinutes",
-            "RoleDailyTargetMinutes", "RoleTargetMinutes", "WeekdayShiftTargetMinutes",
+            "RoleDailyTargetMinutes", "RoleAverageDailyTargetMinutes",
+            "RoleWeeklyTargetMinutes", "RoleTargetMinutes", "WeekdayShiftTargetMinutes",
+            "TwoStageAllocationVarianceMinutes",
             "WeekdayShiftRosterMinutes", "FTE"
         }
     ),
@@ -761,9 +1011,9 @@ in
     #"Sorted Allocation";
 
 // Query: MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK
-// Purpose: Proves that variable daily role distributions still allocate the complete weekly productive-minute target.
+// Purpose: Proves every role/day allocation matches its weekday-local target and still reconciles across the representative week and fortnight.
 // Inputs: MW DayShift Allocation.
-// Output: Seven rows per facility and role, including zero-allocation days, daily variability, cumulative minutes, and weekly/fortnight reconciliation.
+// Output: Seven rows per facility and role with daily shift-distribution, daily target, weekly, and fortnight checks.
 shared MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK =
 let
     Tolerance = 0.000001,
@@ -775,8 +1025,10 @@ let
             #"MW DayShift Allocation",
             {
                 "Facility", "MinuteCategory", "Role", "QFR Category", "Direct Care %",
-                "RoleDailyTargetMinutes", "RoleTargetMinutes", "DayOfWeek",
-                "LocRoleDayShift%", "WeekdayShiftTargetMinutes",
+                "RoleDailyTargetMinutes", "RoleAverageDailyTargetMinutes",
+                "RoleWeeklyTargetMinutes", "RoleTargetMinutes", "DayOfWeek",
+                "RoleDayHistoryDistribution%", "RoleDayShiftDistribution%",
+                "WeekdayShiftTargetMinutes", "TwoStageAllocationVarianceMinutes",
                 "WeekdayShiftRosterMinutes", "FTE"
             }
         )
@@ -798,7 +1050,7 @@ let
             Source,
             {
                 "Facility", "MinuteCategory", "Role", "QFR Category", "Direct Care %",
-                "RoleDailyTargetMinutes", "RoleTargetMinutes"
+                "RoleAverageDailyTargetMinutes", "RoleWeeklyTargetMinutes", "RoleTargetMinutes"
             }
         )
     ),
@@ -816,16 +1068,26 @@ let
         {"DayOfWeek", "Week Day"},
         {"DayOfWeek", "Week Day"}
     ),
-    // Shift rows are collapsed to a daily role total. DayDistribution% is
-    // deliberately allowed to vary; only its seven-day sum must equal 100%.
+    // Shift rows are collapsed to a daily role total. Each populated role/day
+    // shift distribution must total 100% independently of every other day.
     DailyAllocation = Table.Group(
         Source,
         {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
         {
             {
-                "DayDistribution%",
-                each List.Sum([#"LocRoleDayShift%"]),
+                "DailyShiftDistributionTotal%",
+                each List.Sum([#"RoleDayShiftDistribution%"]),
                 Percentage.Type
+            },
+            {
+                "RoleDayHistoryDistribution%",
+                each List.Max([#"RoleDayHistoryDistribution%"]),
+                Percentage.Type
+            },
+            {
+                "RoleDailyTargetMinutes",
+                each List.Max([RoleDailyTargetMinutes]),
+                type number
             },
             {
                 "AllocatedDayProductiveMinutes",
@@ -840,6 +1102,11 @@ let
             {
                 "DayFTEShiftTotal",
                 each List.Sum([FTE]),
+                type number
+            },
+            {
+                "MaximumAbsoluteTwoStageVarianceMinutes",
+                each List.Max(List.Transform([TwoStageAllocationVarianceMinutes], Number.Abs)),
                 type number
             }
         }
@@ -856,12 +1123,16 @@ let
         #"Merged Daily Allocation",
         "DailyAllocation",
         {
-            "DayDistribution%", "AllocatedDayProductiveMinutes",
-            "AllocatedDayRosterMinutes", "DayFTEShiftTotal"
+            "DailyShiftDistributionTotal%", "RoleDayHistoryDistribution%",
+            "RoleDailyTargetMinutes", "AllocatedDayProductiveMinutes",
+            "AllocatedDayRosterMinutes", "DayFTEShiftTotal",
+            "MaximumAbsoluteTwoStageVarianceMinutes"
         },
         {
-            "DayDistribution%", "AllocatedDayProductiveMinutes",
-            "AllocatedDayRosterMinutes", "DayFTEShiftTotal"
+            "DailyShiftDistributionTotal%", "RoleDayHistoryDistribution%",
+            "RoleDailyTargetMinutes", "AllocatedDayProductiveMinutes",
+            "AllocatedDayRosterMinutes", "DayFTEShiftTotal",
+            "MaximumAbsoluteTwoStageVarianceMinutes"
         }
     ),
     #"Replaced Missing Days With Zero" = Table.ReplaceValue(
@@ -870,8 +1141,10 @@ let
         0,
         Replacer.ReplaceValue,
         {
-            "DayDistribution%", "AllocatedDayProductiveMinutes",
-            "AllocatedDayRosterMinutes", "DayFTEShiftTotal"
+            "DailyShiftDistributionTotal%", "RoleDayHistoryDistribution%",
+            "RoleDailyTargetMinutes", "AllocatedDayProductiveMinutes",
+            "AllocatedDayRosterMinutes", "DayFTEShiftTotal",
+            "MaximumAbsoluteTwoStageVarianceMinutes"
         }
     ),
     // The completed daily table is small (seven rows per allocated role) and
@@ -883,8 +1156,8 @@ let
         {"Facility", "MinuteCategory", "Role"},
         {
             {
-                "WeeklyDistributionTotal%",
-                each List.Sum([#"DayDistribution%"]),
+                "RoleHistoryDistributionAcrossWeek%",
+                each List.Sum([#"RoleDayHistoryDistribution%"]),
                 Percentage.Type
             },
             {
@@ -923,20 +1196,20 @@ let
         #"Merged Weekly Totals",
         "WeeklyTotals",
         {
-            "WeeklyDistributionTotal%", "AllocatedWeeklyProductiveMinutes",
+            "RoleHistoryDistributionAcrossWeek%", "AllocatedWeeklyProductiveMinutes",
             "AllocatedWeeklyRosterMinutes", "WeeklyFTEShiftTotal", "DaysWithAllocatedMinutes"
         },
         {
-            "WeeklyDistributionTotal%", "AllocatedWeeklyProductiveMinutes",
+            "RoleHistoryDistributionAcrossWeek%", "AllocatedWeeklyProductiveMinutes",
             "AllocatedWeeklyRosterMinutes", "WeeklyFTEShiftTotal", "DaysWithAllocatedMinutes"
         }
     ),
-    // Daily targets cover each calendar day, so seven daily targets are the
-    // productive minutes that the representative-week distribution must absorb.
+    // Role mix can differ by weekday, so the expected week is the sum of the
+    // seven weekday-specific role targets.
     #"Added Expected Weekly Minutes" = Table.AddColumn(
         #"Expanded Weekly Totals",
         "ExpectedWeeklyProductiveMinutes",
-        each [RoleDailyTargetMinutes] * 7,
+        each [RoleWeeklyTargetMinutes],
         type number
     ),
     #"Added Weekly Variance" = Table.AddColumn(
@@ -958,9 +1231,15 @@ let
         each [ReconstructedFortnightProductiveMinutes] - [RoleTargetMinutes],
         type number
     ),
-    #"Added Day Versus Average" = Table.AddColumn(
+    #"Added Day Allocation Variance" = Table.AddColumn(
         #"Added Fortnight Variance",
-        "DayVsAverageDailyTarget%",
+        "DayAllocationVarianceMinutes",
+        each [AllocatedDayProductiveMinutes] - [RoleDailyTargetMinutes],
+        type number
+    ),
+    #"Added Day Versus Role Day Target" = Table.AddColumn(
+        #"Added Day Allocation Variance",
+        "DayVsRoleDayTarget%",
         each
             if [RoleDailyTargetMinutes] = null or [RoleDailyTargetMinutes] = 0 then
                 if [AllocatedDayProductiveMinutes] = 0 then 0 else null
@@ -968,12 +1247,36 @@ let
                 [AllocatedDayProductiveMinutes] / [RoleDailyTargetMinutes],
         Percentage.Type
     ),
+    #"Added Day Versus Average" = Table.AddColumn(
+        #"Added Day Versus Role Day Target",
+        "DayVsAverageDailyTarget%",
+        each
+            if
+                [RoleAverageDailyTargetMinutes] = null or
+                [RoleAverageDailyTargetMinutes] = 0
+            then
+                if [AllocatedDayProductiveMinutes] = 0 then 0 else null
+            else
+                [AllocatedDayProductiveMinutes] / [RoleAverageDailyTargetMinutes],
+        Percentage.Type
+    ),
     #"Added Check Status" = Table.AddColumn(
         #"Added Day Versus Average",
         "Status",
         each
             if
-                Number.Abs([#"WeeklyDistributionTotal%"] - 1) <= Tolerance and
+                (
+                    (
+                        Number.Abs([#"RoleDayHistoryDistribution%"]) <= Tolerance and
+                        Number.Abs([#"DailyShiftDistributionTotal%"]) <= Tolerance
+                    ) or
+                    (
+                        [#"RoleDayHistoryDistribution%"] > Tolerance and
+                        Number.Abs([#"DailyShiftDistributionTotal%"] - 1) <= Tolerance
+                    )
+                ) and
+                Number.Abs([DayAllocationVarianceMinutes]) <= Tolerance and
+                [MaximumAbsoluteTwoStageVarianceMinutes] <= Tolerance and
                 Number.Abs([WeeklyVarianceMinutes]) <= Tolerance and
                 Number.Abs([FortnightVarianceMinutes]) <= Tolerance
             then
@@ -1062,21 +1365,24 @@ let
         "CheckMessage",
         each
             if [Status] = "PASS" then
-                "Daily percentages vary, but the seven-day and reconstructed 14-day productive minutes reconcile."
+                "The role/day target, daily shift distribution, representative week, and reconstructed fortnight reconcile."
             else
-                "Weekly distribution or productive-minute totals do not reconcile; review the role's daily rows.",
+                "A role/day shift distribution or productive-minute total does not reconcile; review this weekday and the role totals.",
         type text
     ),
     #"Selected Check Columns" = Table.SelectColumns(
         #"Added Check Message",
         {
             "Facility", "MinuteCategory", "Role", "QFR Category", "Direct Care %",
-            "DayOfWeek", "Week Day", "DayDistribution%", "DayVsAverageDailyTarget%",
-            "AllocatedDayProductiveMinutes", "CumulativeWeekProductiveMinutes",
+            "DayOfWeek", "Week Day", "RoleDayHistoryDistribution%",
+            "DailyShiftDistributionTotal%", "DayVsRoleDayTarget%",
+            "DayVsAverageDailyTarget%", "AllocatedDayProductiveMinutes",
+            "RoleDailyTargetMinutes", "DayAllocationVarianceMinutes",
+            "MaximumAbsoluteTwoStageVarianceMinutes", "CumulativeWeekProductiveMinutes",
             "CumulativeWeeklyTarget%", "AllocatedDayRosterMinutes", "DayFTEShiftTotal",
-            "RoleDailyTargetMinutes", "ExpectedWeeklyProductiveMinutes",
+            "RoleAverageDailyTargetMinutes", "ExpectedWeeklyProductiveMinutes",
             "AllocatedWeeklyProductiveMinutes", "WeeklyVarianceMinutes",
-            "WeeklyDistributionTotal%", "DaysWithAllocatedMinutes",
+            "RoleHistoryDistributionAcrossWeek%", "DaysWithAllocatedMinutes",
             "AllocatedWeeklyRosterMinutes", "WeeklyFTEShiftTotal", "RoleTargetMinutes",
             "ReconstructedFortnightProductiveMinutes", "FortnightVarianceMinutes",
             "Status", "CheckMessage"
@@ -1088,8 +1394,8 @@ in
 // Query: MinuteWorkersFTE_CATEGORY_DAILY_CHECK
 // Purpose: Reconciles RN and OTHERS daily productive minutes after summing all roles in each category.
 // Inputs: MW TargetMinutes Prepare and MW DayShift Allocation.
-// Output: Seven rows per facility/category, with weekday totals and the seven-day average compared with the daily target.
-// Notes: Use this category-grain output instead of averaging role/day rows; daily allocations may vary while their seven-day average must match the target.
+// Output: Seven rows per facility/category, proving every weekday independently equals the complete daily target.
+// Notes: Use this category-grain output instead of averaging role/day rows; the average is retained only as a secondary weekly audit.
 shared MinuteWorkersFTE_CATEGORY_DAILY_CHECK =
 let
     Tolerance = 0.000001,
@@ -1105,15 +1411,13 @@ let
             {7, "Sunday"}
         }
     ),
-    CategoryTargets = Table.Buffer(
-        Table.Distinct(
-            Table.SelectColumns(
-                #"MW TargetMinutes Prepare",
-                {
-                    "Facility", "MinuteCategory", "CategoryDailyTargetMinutes",
-                    "CategoryTargetMinutes"
-                }
-            )
+    CategoryTargets = Table.Distinct(
+        Table.SelectColumns(
+            #"MW TargetMinutes Prepare",
+            {
+                "Facility", "MinuteCategory", "CategoryDailyTargetMinutes",
+                "CategoryTargetMinutes"
+            }
         )
     ),
     // Build the complete seven-day category grain before joining allocations,
@@ -1130,14 +1434,12 @@ let
         {"DayOfWeek", "Week Day"},
         {"DayOfWeek", "Week Day"}
     ),
-    Allocation = Table.Buffer(
-        Table.SelectColumns(
-            #"MW DayShift Allocation",
-            {
-                "Facility", "MinuteCategory", "DayOfWeek",
-                "WeekdayShiftTargetMinutes"
-            }
-        )
+    Allocation = Table.SelectColumns(
+        #"MW DayShift Allocation",
+        {
+            "Facility", "MinuteCategory", "DayOfWeek",
+            "WeekdayShiftTargetMinutes"
+        }
     ),
     // Sum shifts and roles before calculating an average. Averaging the raw
     // role/day rows divides OTHERS by its role count and understates the target.
@@ -1209,8 +1511,18 @@ let
                 [CategoryDailyTargetMinutes] * 7,
         type nullable number
     ),
-    #"Added Average Allocated Daily Minutes" = Table.AddColumn(
+    #"Added Daily Variance" = Table.AddColumn(
         #"Added Expected Weekly Minutes",
+        "DailyVarianceMinutes",
+        each
+            if [CategoryDailyTargetMinutes] = null then
+                null
+            else
+                [AllocatedDayProductiveMinutes] - [CategoryDailyTargetMinutes],
+        type nullable number
+    ),
+    #"Added Average Allocated Daily Minutes" = Table.AddColumn(
+        #"Added Daily Variance",
         "AverageAllocatedDailyProductiveMinutes",
         each [AllocatedWeeklyProductiveMinutes] / 7,
         type number
@@ -1243,9 +1555,9 @@ let
                 [ReconstructedFortnightProductiveMinutes] - [CategoryTargetMinutes],
         type nullable number
     ),
-    #"Added Day Versus Average" = Table.AddColumn(
+    #"Added Day Versus Daily Target" = Table.AddColumn(
         #"Added Fortnight Variance",
-        "DayVsAverageDailyTarget%",
+        "DayVsDailyTarget%",
         each
             if [CategoryDailyTargetMinutes] = null or [CategoryDailyTargetMinutes] = 0 then
                 if [AllocatedDayProductiveMinutes] = 0 then 0 else null
@@ -1254,12 +1566,14 @@ let
         Percentage.Type
     ),
     #"Added Status" = Table.AddColumn(
-        #"Added Day Versus Average",
+        #"Added Day Versus Daily Target",
         "Status",
         each
             if
+                [DailyVarianceMinutes] <> null and
                 [AverageDailyVarianceMinutes] <> null and
                 [FortnightVarianceMinutes] <> null and
+                Number.Abs([DailyVarianceMinutes]) <= Tolerance and
                 Number.Abs([AverageDailyVarianceMinutes]) <= Tolerance and
                 Number.Abs([FortnightVarianceMinutes]) <= Tolerance
             then
@@ -1273,16 +1587,17 @@ let
         "CheckMessage",
         each
             if [Status] = "PASS" then
-                "The seven-day average productive minutes reconcile to the category daily target."
+                "This weekday independently reconciles to the complete category daily target; the week and fortnight also reconcile."
             else
-                "The seven-day average does not reconcile; review missing roles, history, or category allocations.",
+                "This weekday, the representative week, or the reconstructed fortnight does not reconcile; review missing history and category allocations.",
         type text
     ),
     #"Selected Check Columns" = Table.SelectColumns(
         #"Added Check Message",
         {
             "Facility", "MinuteCategory", "DayOfWeek", "Week Day",
-            "AllocatedDayProductiveMinutes", "DayVsAverageDailyTarget%",
+            "AllocatedDayProductiveMinutes", "DayVsDailyTarget%",
+            "DailyVarianceMinutes",
             "CategoryDailyTargetMinutes", "AverageAllocatedDailyProductiveMinutes",
             "AverageDailyVarianceMinutes", "ExpectedWeeklyProductiveMinutes",
             "AllocatedWeeklyProductiveMinutes", "CategoryTargetMinutes",
@@ -1300,6 +1615,657 @@ let
     )
 in
     #"Sorted Category Daily Check";
+
+// Query: MinuteWorkersFTE_HISTORICAL_DAY_CHECK
+// Purpose: Compares historical daily worker counts and roster-hour FTE with the target FTE allocation at the same facility, role, and weekday grain.
+// Inputs: Master Prepare and MW DayShift Allocation.
+// Output: Seven rows per allocated facility/role with historical people and roster FTE beside AM, PM, NS, and total target FTE.
+// Notes: Historical distinct workers are people; historical and target roster FTE are 7.6-hour equivalents. Compare FTE with FTE, not a full-day worker count with one shift's FTE.
+// Notes: Week No is the available historical period key; confirm that it uniquely identifies roster weeks in the source.
+shared MinuteWorkersFTE_HISTORICAL_DAY_CHECK =
+let
+    Tolerance = 0.000001,
+    Weekdays = #table(
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text],
+        {
+            {1, "Monday"},
+            {2, "Tuesday"},
+            {3, "Wednesday"},
+            {4, "Thursday"},
+            {5, "Friday"},
+            {6, "Saturday"},
+            {7, "Sunday"}
+        }
+    ),
+    // Buffer one narrow allocation source because it feeds both the role grain
+    // and the target aggregation. This avoids reevaluating the role-target and
+    // historical-distribution chain through two independent branches.
+    AllocationSource = Table.Buffer(
+        Table.SelectColumns(
+            #"MW DayShift Allocation",
+            {
+                "Facility", "MinuteCategory", "Role", "QFR Category",
+                "Direct Care %", "RoleDailyTargetMinutes", "DayOfWeek", "Shift",
+                "HistoricalRosterHours", "WeekdayShiftTargetMinutes",
+                "WeekdayShiftRosterMinutes", "FTE"
+            }
+        )
+    ),
+    RoleGrain =
+        Table.Distinct(
+            Table.SelectColumns(
+                AllocationSource,
+                {
+                    "Facility", "MinuteCategory", "Role", "QFR Category",
+                    "Direct Care %"
+                }
+            )
+        ),
+    HistoricalSource =
+        Table.SelectColumns(
+            #"Master Prepare",
+            {
+                "Location", "Role", "Employee Code", "Week No", "Week Day",
+                "Shift", "Roster Hours"
+            }
+        ),
+    #"Renamed Historical Facility" = Table.RenameColumns(
+        HistoricalSource,
+        {{"Location", "Facility"}}
+    ),
+    #"Added Historical Day Number" = Table.AddColumn(
+        #"Renamed Historical Facility",
+        "DayOfWeek",
+        each
+            List.PositionOf(
+                {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
+                [#"Week Day"]
+            ) + 1,
+        Int64.Type
+    ),
+    #"Filtered Valid Historical Days" = Table.SelectRows(
+        #"Added Historical Day Number",
+        each [DayOfWeek] >= 1 and [DayOfWeek] <= 7
+    ),
+    BufferedHistoricalDays = Table.Buffer(#"Filtered Valid Historical Days"),
+    FacilityWeeks =
+        Table.Distinct(
+            Table.SelectColumns(
+                BufferedHistoricalDays,
+                {"Facility", "Week No"}
+            )
+        ),
+    FacilityWeekDayCoverage = Table.Group(
+        BufferedHistoricalDays,
+        {"Facility", "Week No"},
+        {
+            {
+                "HistoricalFacilityDaysPresent",
+                each List.Count(List.Distinct([DayOfWeek])),
+                Int64.Type
+            }
+        }
+    ),
+    FacilityCoverageSummary = Table.Group(
+        FacilityWeekDayCoverage,
+        {"Facility"},
+        {
+            {"HistoricalFacilityWeeks", each Table.RowCount(_), Int64.Type},
+            {
+                "HistoricalIncompleteFacilityWeeks",
+                each Table.RowCount(Table.SelectRows(_, each [HistoricalFacilityDaysPresent] < 7)),
+                Int64.Type
+            },
+            {
+                "HistoricalMinimumFacilityDaysPresent",
+                each List.Min([HistoricalFacilityDaysPresent]),
+                Int64.Type
+            }
+        }
+    ),
+    CountDistinctPositiveWorkers = (Rows as table, ShiftName as nullable text) as number =>
+        let
+            EligibleRows = Table.SelectRows(
+                Rows,
+                (HistoryRow) =>
+                    HistoryRow[#"Employee Code"] <> null and
+                    HistoryRow[#"Roster Hours"] <> null and
+                    HistoryRow[#"Roster Hours"] > 0 and
+                    (ShiftName = null or HistoryRow[Shift] = ShiftName)
+            )
+        in
+            List.Count(List.Distinct(EligibleRows[#"Employee Code"])),
+    // Count distinct employees once across the full day, and separately inside
+    // each shift. Roster rows are retained because split rows can make a simple
+    // row count differ from the number of people actually rostered.
+    ObservedHistoricalWeekDays = Table.Group(
+        BufferedHistoricalDays,
+        {"Facility", "Role", "Week No", "DayOfWeek"},
+        {
+            {
+                "HistoricalRosterRows",
+                each Table.RowCount(_),
+                Int64.Type
+            },
+            {
+                "HistoricalPositiveRosterRows",
+                each
+                    Table.RowCount(
+                        Table.SelectRows(
+                            _,
+                            each [Roster Hours] <> null and [Roster Hours] > 0
+                        )
+                    ),
+                Int64.Type
+            },
+            {
+                "HistoricalDistinctWorkers",
+                each CountDistinctPositiveWorkers(_, null),
+                Int64.Type
+            },
+            {
+                "HistoricalRowsMissingEmployeeCode",
+                each
+                    Table.RowCount(
+                        Table.SelectRows(
+                            _,
+                            each
+                                [Employee Code] = null and
+                                [Roster Hours] <> null and
+                                [Roster Hours] > 0
+                        )
+                    ),
+                Int64.Type
+            },
+            {
+                "HistoricalRosterHours",
+                each List.Sum(List.RemoveNulls([Roster Hours])),
+                type number
+            },
+            {
+                "HistoricalAMDistinctWorkers",
+                each CountDistinctPositiveWorkers(_, "AM"),
+                Int64.Type
+            },
+            {
+                "HistoricalPMDistinctWorkers",
+                each CountDistinctPositiveWorkers(_, "PM"),
+                Int64.Type
+            },
+            {
+                "HistoricalNSDistinctWorkers",
+                each CountDistinctPositiveWorkers(_, "NS"),
+                Int64.Type
+            },
+            {
+                "HistoricalAMRosterHours",
+                each List.Sum(List.RemoveNulls(Table.SelectRows(_, each [Shift] = "AM")[Roster Hours])),
+                type number
+            },
+            {
+                "HistoricalPMRosterHours",
+                each List.Sum(List.RemoveNulls(Table.SelectRows(_, each [Shift] = "PM")[Roster Hours])),
+                type number
+            },
+            {
+                "HistoricalNSRosterHours",
+                each List.Sum(List.RemoveNulls(Table.SelectRows(_, each [Shift] = "NS")[Roster Hours])),
+                type number
+            }
+        }
+    ),
+    #"Merged Facility Weeks" = Table.NestedJoin(
+        RoleGrain,
+        {"Facility"},
+        FacilityWeeks,
+        {"Facility"},
+        "FacilityWeeks",
+        JoinKind.Inner
+    ),
+    #"Expanded Facility Weeks" = Table.ExpandTableColumn(
+        #"Merged Facility Weeks",
+        "FacilityWeeks",
+        {"Week No"},
+        {"Week No"}
+    ),
+    #"Added Complete Historical Week" = Table.AddColumn(
+        #"Expanded Facility Weeks",
+        "Weekdays",
+        each Weekdays,
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text]
+    ),
+    #"Expanded Complete Historical Week" = Table.ExpandTableColumn(
+        #"Added Complete Historical Week",
+        "Weekdays",
+        {"DayOfWeek", "Week Day"},
+        {"DayOfWeek", "Week Day"}
+    ),
+    #"Merged Observed Historical Days" = Table.NestedJoin(
+        #"Expanded Complete Historical Week",
+        {"Facility", "Role", "Week No", "DayOfWeek"},
+        ObservedHistoricalWeekDays,
+        {"Facility", "Role", "Week No", "DayOfWeek"},
+        "ObservedHistory",
+        JoinKind.LeftOuter
+    ),
+    HistoricalMeasureColumns = {
+        "HistoricalRosterRows", "HistoricalPositiveRosterRows", "HistoricalDistinctWorkers",
+        "HistoricalRowsMissingEmployeeCode", "HistoricalRosterHours",
+        "HistoricalAMDistinctWorkers", "HistoricalPMDistinctWorkers",
+        "HistoricalNSDistinctWorkers", "HistoricalAMRosterHours",
+        "HistoricalPMRosterHours", "HistoricalNSRosterHours"
+    },
+    #"Expanded Observed Historical Days" = Table.ExpandTableColumn(
+        #"Merged Observed Historical Days",
+        "ObservedHistory",
+        HistoricalMeasureColumns,
+        HistoricalMeasureColumns
+    ),
+    #"Replaced Missing Historical Days With Zero" = Table.ReplaceValue(
+        #"Expanded Observed Historical Days",
+        null,
+        0,
+        Replacer.ReplaceValue,
+        HistoricalMeasureColumns
+    ),
+    HistoricalDailyAverages = Table.Group(
+        #"Replaced Missing Historical Days With Zero",
+        {
+            "Facility", "MinuteCategory", "Role", "QFR Category",
+            "Direct Care %", "DayOfWeek", "Week Day"
+        },
+        {
+            {"HistoricalWeeksInDenominator", each Table.RowCount(_), Int64.Type},
+            {
+                "HistoricalWeeksWithRoster",
+                each Table.RowCount(Table.SelectRows(_, each [HistoricalPositiveRosterRows] > 0)),
+                Int64.Type
+            },
+            {"HistoricalTotalRosterRowsAcrossWeeks", each List.Sum([HistoricalRosterRows]), Int64.Type},
+            {
+                "HistoricalTotalPositiveRosterRowsAcrossWeeks",
+                each List.Sum([HistoricalPositiveRosterRows]),
+                Int64.Type
+            },
+            {
+                "HistoricalNonPositiveOrNullRosterRowsAcrossWeeks",
+                each List.Sum([HistoricalRosterRows]) - List.Sum([HistoricalPositiveRosterRows]),
+                Int64.Type
+            },
+            {
+                "HistoricalTotalWorkerOccurrencesAcrossWeeks",
+                each List.Sum([HistoricalDistinctWorkers]),
+                Int64.Type
+            },
+            {
+                "HistoricalRowsMissingEmployeeCodeAcrossWeeks",
+                each List.Sum([HistoricalRowsMissingEmployeeCode]),
+                Int64.Type
+            },
+            {"HistoricalAverageDailyRosterRows", each List.Average([HistoricalRosterRows]), type number},
+            {
+                "HistoricalAverageDailyPositiveRosterRows",
+                each List.Average([HistoricalPositiveRosterRows]),
+                type number
+            },
+            {"HistoricalAverageDailyDistinctWorkers", each List.Average([HistoricalDistinctWorkers]), type number},
+            {"HistoricalMinimumDailyDistinctWorkers", each List.Min([HistoricalDistinctWorkers]), Int64.Type},
+            {"HistoricalMaximumDailyDistinctWorkers", each List.Max([HistoricalDistinctWorkers]), Int64.Type},
+            {"HistoricalAverageDailyRosterHours", each List.Average([HistoricalRosterHours]), type number},
+            {"HistoricalAverageAMDistinctWorkers", each List.Average([HistoricalAMDistinctWorkers]), type number},
+            {"HistoricalAveragePMDistinctWorkers", each List.Average([HistoricalPMDistinctWorkers]), type number},
+            {"HistoricalAverageNSDistinctWorkers", each List.Average([HistoricalNSDistinctWorkers]), type number},
+            {"HistoricalAverageAMRosterHours", each List.Average([HistoricalAMRosterHours]), type number},
+            {"HistoricalAveragePMRosterHours", each List.Average([HistoricalPMRosterHours]), type number},
+            {"HistoricalAverageNSRosterHours", each List.Average([HistoricalNSRosterHours]), type number}
+        }
+    ),
+    #"Merged Historical Coverage" = Table.NestedJoin(
+        HistoricalDailyAverages,
+        {"Facility"},
+        FacilityCoverageSummary,
+        {"Facility"},
+        "HistoricalCoverage",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Historical Coverage" = Table.ExpandTableColumn(
+        #"Merged Historical Coverage",
+        "HistoricalCoverage",
+        {
+            "HistoricalFacilityWeeks", "HistoricalIncompleteFacilityWeeks",
+            "HistoricalMinimumFacilityDaysPresent"
+        },
+        {
+            "HistoricalFacilityWeeks", "HistoricalIncompleteFacilityWeeks",
+            "HistoricalMinimumFacilityDaysPresent"
+        }
+    ),
+    Allocation = AllocationSource,
+    TargetDailyAllocation = Table.Group(
+        Allocation,
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
+        {
+            {
+                "AllocatorHistoricalDailyRosterHours",
+                each List.Sum([HistoricalRosterHours]),
+                type number
+            },
+            {
+                "AllocatorHistoricalAMRosterHours",
+                each List.Sum(Table.SelectRows(_, each [Shift] = "AM")[HistoricalRosterHours]),
+                type nullable number
+            },
+            {
+                "AllocatorHistoricalPMRosterHours",
+                each List.Sum(Table.SelectRows(_, each [Shift] = "PM")[HistoricalRosterHours]),
+                type nullable number
+            },
+            {
+                "AllocatorHistoricalNSRosterHours",
+                each List.Sum(Table.SelectRows(_, each [Shift] = "NS")[HistoricalRosterHours]),
+                type nullable number
+            },
+            {"RoleDailyTargetMinutes", each List.Max([RoleDailyTargetMinutes]), type number},
+            {"TargetDailyProductiveMinutes", each List.Sum([WeekdayShiftTargetMinutes]), type number},
+            {"TargetDailyRosterMinutes", each List.Sum([WeekdayShiftRosterMinutes]), type number},
+            {"TargetDailyFTEShiftTotal", each List.Sum([FTE]), type number},
+            {
+                "TargetAMFTE",
+                each List.Sum(Table.SelectRows(_, each [Shift] = "AM")[FTE]),
+                type nullable number
+            },
+            {
+                "TargetPMFTE",
+                each List.Sum(Table.SelectRows(_, each [Shift] = "PM")[FTE]),
+                type nullable number
+            },
+            {
+                "TargetNSFTE",
+                each List.Sum(Table.SelectRows(_, each [Shift] = "NS")[FTE]),
+                type nullable number
+            }
+        }
+    ),
+    #"Merged Target Daily Allocation" = Table.NestedJoin(
+        #"Expanded Historical Coverage",
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
+        TargetDailyAllocation,
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
+        "TargetDailyAllocation",
+        JoinKind.LeftOuter
+    ),
+    TargetMeasureColumns = {
+        "AllocatorHistoricalDailyRosterHours", "AllocatorHistoricalAMRosterHours",
+        "AllocatorHistoricalPMRosterHours", "AllocatorHistoricalNSRosterHours",
+        "RoleDailyTargetMinutes", "TargetDailyProductiveMinutes",
+        "TargetDailyRosterMinutes", "TargetDailyFTEShiftTotal",
+        "TargetAMFTE", "TargetPMFTE", "TargetNSFTE"
+    },
+    #"Expanded Target Daily Allocation" = Table.ExpandTableColumn(
+        #"Merged Target Daily Allocation",
+        "TargetDailyAllocation",
+        TargetMeasureColumns,
+        TargetMeasureColumns
+    ),
+    #"Replaced Missing Target Allocation With Zero" = Table.ReplaceValue(
+        #"Expanded Target Daily Allocation",
+        null,
+        0,
+        Replacer.ReplaceValue,
+        TargetMeasureColumns
+    ),
+    // Historical roster FTE and target FTE now use the same 7.6-hour unit.
+    // Historical distinct workers remain visible as headcount context only.
+    #"Added Historical Daily Roster FTE" = Table.AddColumn(
+        #"Replaced Missing Target Allocation With Zero",
+        "HistoricalAverageDailyRosterFTE",
+        each [HistoricalAverageDailyRosterHours] / 7.6,
+        type number
+    ),
+    #"Added Historical Shift Roster FTE" = Table.AddColumn(
+        #"Added Historical Daily Roster FTE",
+        "HistoricalShiftRosterFTE",
+        each [
+            AM = [HistoricalAverageAMRosterHours] / 7.6,
+            PM = [HistoricalAveragePMRosterHours] / 7.6,
+            NS = [HistoricalAverageNSRosterHours] / 7.6
+        ],
+        type [AM = number, PM = number, NS = number]
+    ),
+    #"Expanded Historical Shift Roster FTE" = Table.ExpandRecordColumn(
+        #"Added Historical Shift Roster FTE",
+        "HistoricalShiftRosterFTE",
+        {"AM", "PM", "NS"},
+        {"HistoricalAverageAMRosterFTE", "HistoricalAveragePMRosterFTE", "HistoricalAverageNSRosterFTE"}
+    ),
+    #"Added Historical Daily Productive Minutes" = Table.AddColumn(
+        #"Expanded Historical Shift Roster FTE",
+        "EstimatedHistoricalAverageDailyProductiveMinutesAtCurrentDirectCarePercent",
+        each [HistoricalAverageDailyRosterHours] * 60 * [#"Direct Care %"],
+        type number
+    ),
+    #"Added Allocator Historical Daily Roster FTE" = Table.AddColumn(
+        #"Added Historical Daily Productive Minutes",
+        "AllocatorHistoricalDailyRosterFTE",
+        each [AllocatorHistoricalDailyRosterHours] / 7.6,
+        type number
+    ),
+    #"Added Allocator Historical Shift Roster FTE" = Table.AddColumn(
+        #"Added Allocator Historical Daily Roster FTE",
+        "AllocatorHistoricalShiftRosterFTE",
+        each [
+            AM = [AllocatorHistoricalAMRosterHours] / 7.6,
+            PM = [AllocatorHistoricalPMRosterHours] / 7.6,
+            NS = [AllocatorHistoricalNSRosterHours] / 7.6
+        ],
+        type [AM = number, PM = number, NS = number]
+    ),
+    #"Expanded Allocator Historical Shift Roster FTE" = Table.ExpandRecordColumn(
+        #"Added Allocator Historical Shift Roster FTE",
+        "AllocatorHistoricalShiftRosterFTE",
+        {"AM", "PM", "NS"},
+        {
+            "AllocatorHistoricalAMRosterFTE", "AllocatorHistoricalPMRosterFTE",
+            "AllocatorHistoricalNSRosterFTE"
+        }
+    ),
+    #"Added Historical Baseline Variance" = Table.AddColumn(
+        #"Expanded Allocator Historical Shift Roster FTE",
+        "AllWeeksVsAllocatorHistoricalRosterFTE",
+        each [HistoricalAverageDailyRosterFTE] - [AllocatorHistoricalDailyRosterFTE],
+        type number
+    ),
+    #"Added Target Versus Allocator Historical FTE" = Table.AddColumn(
+        #"Added Historical Baseline Variance",
+        "TargetVsAllocatorHistoricalRosterFTE",
+        each [TargetDailyFTEShiftTotal] - [AllocatorHistoricalDailyRosterFTE],
+        type number
+    ),
+    #"Added Target As Percent Of Allocator Historical FTE" = Table.AddColumn(
+        #"Added Target Versus Allocator Historical FTE",
+        "TargetAsPercentOfAllocatorHistoricalRosterFTE",
+        each
+            if [AllocatorHistoricalDailyRosterFTE] = 0 then
+                null
+            else
+                [TargetDailyFTEShiftTotal] / [AllocatorHistoricalDailyRosterFTE],
+        Percentage.Type
+    ),
+    #"Added Target Versus Allocator Shift FTE" = Table.AddColumn(
+        #"Added Target As Percent Of Allocator Historical FTE",
+        "TargetVsAllocatorShiftFTE",
+        each [
+            AM = [TargetAMFTE] - [AllocatorHistoricalAMRosterFTE],
+            PM = [TargetPMFTE] - [AllocatorHistoricalPMRosterFTE],
+            NS = [TargetNSFTE] - [AllocatorHistoricalNSRosterFTE]
+        ],
+        type [AM = number, PM = number, NS = number]
+    ),
+    #"Expanded Target Versus Allocator Shift FTE" = Table.ExpandRecordColumn(
+        #"Added Target Versus Allocator Shift FTE",
+        "TargetVsAllocatorShiftFTE",
+        {"AM", "PM", "NS"},
+        {
+            "TargetVsAllocatorAMRosterFTE", "TargetVsAllocatorPMRosterFTE",
+            "TargetVsAllocatorNSRosterFTE"
+        }
+    ),
+    #"Added Target Versus All Weeks Historical FTE" = Table.AddColumn(
+        #"Expanded Target Versus Allocator Shift FTE",
+        "TargetVsAllWeeksHistoricalRosterFTE",
+        each [TargetDailyFTEShiftTotal] - [HistoricalAverageDailyRosterFTE],
+        type number
+    ),
+    #"Added Target As Percent Of All Weeks Historical FTE" = Table.AddColumn(
+        #"Added Target Versus All Weeks Historical FTE",
+        "TargetAsPercentOfAllWeeksHistoricalRosterFTE",
+        each
+            if [HistoricalAverageDailyRosterFTE] = 0 then
+                null
+            else
+                [TargetDailyFTEShiftTotal] / [HistoricalAverageDailyRosterFTE],
+        Percentage.Type
+    ),
+    #"Added FTE Formula Variance" = Table.AddColumn(
+        #"Added Target As Percent Of All Weeks Historical FTE",
+        "InternalFTEArithmeticVarianceMinutes",
+        each ([TargetDailyFTEShiftTotal] * 456) - [TargetDailyRosterMinutes],
+        type number
+    ),
+    #"Added FTE Formula Status" = Table.AddColumn(
+        #"Added FTE Formula Variance",
+        "InternalFTEArithmeticStatus",
+        each
+            if Number.Abs([InternalFTEArithmeticVarianceMinutes]) <= Tolerance then
+                "PASS"
+            else
+                "ERROR",
+        type text
+    ),
+    #"Added Direct Care Formula Variance" = Table.AddColumn(
+        #"Added FTE Formula Status",
+        "InternalDirectCareReconstructionVarianceMinutes",
+        each
+            ([TargetDailyFTEShiftTotal] * 456 * [#"Direct Care %"]) -
+            [TargetDailyProductiveMinutes],
+        type number
+    ),
+    #"Added Direct Care Formula Status" = Table.AddColumn(
+        #"Added Direct Care Formula Variance",
+        "InternalDirectCareReconstructionStatus",
+        each
+            if Number.Abs([InternalDirectCareReconstructionVarianceMinutes]) <= Tolerance then
+                "PASS"
+            else
+                "ERROR",
+        type text
+    ),
+    #"Added Role Day Target Variance" = Table.AddColumn(
+        #"Added Direct Care Formula Status",
+        "RoleDayTargetVarianceMinutes",
+        each [TargetDailyProductiveMinutes] - [RoleDailyTargetMinutes],
+        type number
+    ),
+    #"Added Role Day Target Status" = Table.AddColumn(
+        #"Added Role Day Target Variance",
+        "RoleDayTargetStatus",
+        each
+            if Number.Abs([RoleDayTargetVarianceMinutes]) <= Tolerance then
+                "PASS"
+            else
+                "ERROR",
+        type text
+    ),
+    #"Added Headcount Data Quality Status" = Table.AddColumn(
+        #"Added Role Day Target Status",
+        "HeadcountDataQualityStatus",
+        each
+            if [HistoricalRowsMissingEmployeeCodeAcrossWeeks] = 0 then
+                "PASS"
+            else
+                "WARNING",
+        type text
+    ),
+    #"Added Roster Row Data Quality Status" = Table.AddColumn(
+        #"Added Headcount Data Quality Status",
+        "RosterRowDataQualityStatus",
+        each
+            if [HistoricalNonPositiveOrNullRosterRowsAcrossWeeks] = 0 then
+                "PASS"
+            else
+                "REVIEW",
+        type text
+    ),
+    #"Added Historical Coverage Review Status" = Table.AddColumn(
+        #"Added Roster Row Data Quality Status",
+        "HistoricalCoverageReviewStatus",
+        each
+            if [HistoricalIncompleteFacilityWeeks] = 0 then
+                "PASS"
+            else
+                "REVIEW",
+        type text
+    ),
+    #"Added Comparison Note" = Table.AddColumn(
+        #"Added Historical Coverage Review Status",
+        "ComparisonNote",
+        each
+            "HistoricalAverageDailyDistinctWorkers counts people across the full day. " &
+            "Compare TargetDailyFTEShiftTotal with AllocatorHistoricalDailyRosterFTE; " &
+            "TargetAMFTE, TargetPMFTE, and TargetNSFTE are individual 7.6-hour shift equivalents, not simultaneous minimum headcount. " &
+            "Each target uses only this weekday's role and shift mix; other weekdays cannot change it. " &
+            "REVIEW coverage means at least one facility/week has fewer than seven weekdays with eligible MinuteWorker rows.",
+        type text
+    ),
+    #"Selected Historical Comparison Columns" = Table.SelectColumns(
+        #"Added Comparison Note",
+        {
+            "Facility", "MinuteCategory", "Role", "QFR Category", "Direct Care %",
+            "DayOfWeek", "Week Day", "HistoricalWeeksInDenominator", "HistoricalWeeksWithRoster",
+            "HistoricalFacilityWeeks", "HistoricalIncompleteFacilityWeeks",
+            "HistoricalMinimumFacilityDaysPresent", "HistoricalTotalRosterRowsAcrossWeeks",
+            "HistoricalTotalPositiveRosterRowsAcrossWeeks",
+            "HistoricalNonPositiveOrNullRosterRowsAcrossWeeks",
+            "HistoricalTotalWorkerOccurrencesAcrossWeeks",
+            "HistoricalRowsMissingEmployeeCodeAcrossWeeks", "HistoricalAverageDailyRosterRows",
+            "HistoricalAverageDailyPositiveRosterRows",
+            "HistoricalAverageDailyDistinctWorkers", "HistoricalMinimumDailyDistinctWorkers",
+            "HistoricalMaximumDailyDistinctWorkers",
+            "HistoricalAverageAMDistinctWorkers", "HistoricalAveragePMDistinctWorkers",
+            "HistoricalAverageNSDistinctWorkers", "HistoricalAverageDailyRosterHours",
+            "HistoricalAverageDailyRosterFTE", "HistoricalAverageAMRosterFTE",
+            "HistoricalAveragePMRosterFTE", "HistoricalAverageNSRosterFTE",
+            "EstimatedHistoricalAverageDailyProductiveMinutesAtCurrentDirectCarePercent",
+            "AllocatorHistoricalDailyRosterHours", "AllocatorHistoricalAMRosterHours",
+            "AllocatorHistoricalPMRosterHours", "AllocatorHistoricalNSRosterHours",
+            "AllocatorHistoricalDailyRosterFTE", "AllWeeksVsAllocatorHistoricalRosterFTE",
+            "AllocatorHistoricalAMRosterFTE", "AllocatorHistoricalPMRosterFTE",
+            "AllocatorHistoricalNSRosterFTE",
+            "RoleDailyTargetMinutes",
+            "TargetDailyProductiveMinutes", "TargetDailyRosterMinutes", "TargetAMFTE",
+            "TargetPMFTE", "TargetNSFTE", "TargetDailyFTEShiftTotal",
+            "TargetVsAllocatorHistoricalRosterFTE", "TargetAsPercentOfAllocatorHistoricalRosterFTE",
+            "TargetVsAllocatorAMRosterFTE", "TargetVsAllocatorPMRosterFTE",
+            "TargetVsAllocatorNSRosterFTE",
+            "TargetVsAllWeeksHistoricalRosterFTE", "TargetAsPercentOfAllWeeksHistoricalRosterFTE",
+            "InternalFTEArithmeticVarianceMinutes", "InternalFTEArithmeticStatus",
+            "InternalDirectCareReconstructionVarianceMinutes",
+            "InternalDirectCareReconstructionStatus", "RoleDayTargetVarianceMinutes",
+            "RoleDayTargetStatus", "HeadcountDataQualityStatus",
+            "RosterRowDataQualityStatus", "HistoricalCoverageReviewStatus", "ComparisonNote"
+        }
+    ),
+    #"Sorted Historical Day Check" = Table.Sort(
+        #"Selected Historical Comparison Columns",
+        {
+            {"Facility", Order.Ascending},
+            {"MinuteCategory", Order.Ascending},
+            {"Role", Order.Ascending},
+            {"DayOfWeek", Order.Ascending}
+        }
+    )
+in
+    #"Sorted Historical Day Check";
 
 // Query: MW Input Check
 // Purpose: Validates configured roles, Direct Care percentages, and RN/ALL target inputs.
@@ -1438,20 +2404,232 @@ in
     Result;
 
 // Query: MW Distribution Check
-// Purpose: Validates history coverage and the role and day/shift distribution denominators.
-// Inputs: MW Role Distribution, MW Historical DayShift, and MW TargetMinutes Prepare.
+// Purpose: Validates historical source rows, complete periods, coverage, and weekday-local distribution denominators.
+// Inputs: LocRoleWeekDaysHours, MW Historical DayShift, and MW TargetMinutes Prepare.
 // Output: Pass, warning, and error records for historical allocation readiness.
 shared #"MW Distribution Check" =
 let
     Tolerance = 0.000001,
-    RoleDistribution = #"MW Role Distribution",
-    HistoricalDayShift = #"MW Historical DayShift",
-    TargetCategories = #"MW TargetMinutes Prepare",
+    HistoricalDayShift = Table.Buffer(#"MW Historical DayShift"),
+    RoleDistribution = Table.Buffer(
+        Table.Distinct(
+            Table.SelectColumns(
+                HistoricalDayShift,
+                {
+                    "Facility", "MinuteCategory", "Role", "RoleKey", "QFR Category",
+                    "Direct Care %", "DayOfWeek", "Week Day",
+                    "RoleDayHistoricalRosterHours",
+                    "RoleDayHistoricalProductiveHours",
+                    "CategoryDayHistoricalProductiveHours",
+                    "RoleDayHistoryDistribution%"
+                }
+            )
+        )
+    ),
+    TargetCategories = Table.Buffer(#"MW TargetMinutes Prepare"),
+    HistoricalInput = Table.Buffer(
+        Table.SelectColumns(
+            LocRoleWeekDaysHours,
+            {
+                "Location", "Week No", "Role", "DayOfWeek", "Week Day",
+                "Shift", "ShiftIndex", "Hours"
+            }
+        )
+    ),
+    Weekdays = #table(
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text],
+        {
+            {1, "Monday"},
+            {2, "Tuesday"},
+            {3, "Wednesday"},
+            {4, "Thursday"},
+            {5, "Friday"},
+            {6, "Saturday"},
+            {7, "Sunday"}
+        }
+    ),
+
+    // Invalid source keys and negative/null aggregated hours must fail before
+    // they can create negative or incomplete allocation shares.
+    InvalidHistoricalInput = Table.SelectRows(
+        HistoricalInput,
+        each
+            [Week No] = null or
+            [DayOfWeek] = null or [DayOfWeek] < 1 or [DayOfWeek] > 7 or
+            not List.Contains(
+                {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
+                [#"Week Day"]
+            ) or
+            [Shift] = null or
+            not List.Contains({"AM", "PM", "NS"}, [Shift]) or
+            [ShiftIndex] = null or
+            [Hours] = null or [Hours] < 0
+    ),
+    HistoricalInputChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(InvalidHistoricalInput),
+            each [
+                Check = "Historical allocation source row is valid",
+                Severity = "Error",
+                Facility = [Location],
+                MinuteCategory = null,
+                Role = [Role],
+                Actual = [Hours],
+                Expected = 0,
+                Message =
+                    "History requires a non-null Week No, a recognised weekday/shift, " &
+                    "a ShiftIndex, and non-negative roster hours. Week=" &
+                    (if [Week No] = null then "<null>" else Text.From([Week No], "en-AU")) &
+                    ", day=" &
+                    (if [#"Week Day"] = null then "<null>" else [#"Week Day"]) &
+                    ", shift=" &
+                    (if [Shift] = null then "<null>" else [Shift]) & "."
+            ]
+        )
+    ),
+    TargetFacilityList = Table.Distinct(
+        Table.SelectColumns(TargetCategories, {"Facility"})
+    ),
+    HistoricalFacilityPeriods = Table.Distinct(
+        Table.SelectColumns(
+            Table.SelectRows(HistoricalInput, each [Week No] <> null),
+            {"Location", "Week No"}
+        )
+    ),
+    TargetHistoricalPeriods = Table.RemoveColumns(
+        Table.NestedJoin(
+            HistoricalFacilityPeriods,
+            {"Location"},
+            TargetFacilityList,
+            {"Facility"},
+            "TargetFacility",
+            JoinKind.Inner
+        ),
+        {"TargetFacility"}
+    ),
+    #"Added Expected Historical Weekdays" = Table.AddColumn(
+        TargetHistoricalPeriods,
+        "Weekdays",
+        each Weekdays,
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text]
+    ),
+    #"Expanded Expected Historical Weekdays" = Table.ExpandTableColumn(
+        #"Added Expected Historical Weekdays",
+        "Weekdays",
+        {"DayOfWeek", "Week Day"},
+        {"DayOfWeek", "Week Day"}
+    ),
+    ObservedHistoricalWeekdays = Table.Distinct(
+        Table.SelectColumns(
+            Table.SelectRows(
+                HistoricalInput,
+                each
+                    [Week No] <> null and
+                    [DayOfWeek] <> null and
+                    [DayOfWeek] >= 1 and [DayOfWeek] <= 7
+            ),
+            {"Location", "Week No", "DayOfWeek"}
+        )
+    ),
+    MissingHistoricalWeekdays = Table.NestedJoin(
+        #"Expanded Expected Historical Weekdays",
+        {"Location", "Week No", "DayOfWeek"},
+        ObservedHistoricalWeekdays,
+        {"Location", "Week No", "DayOfWeek"},
+        "ObservedDay",
+        JoinKind.LeftAnti
+    ),
+    HistoricalCoverageChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(MissingHistoricalWeekdays),
+            each [
+                Check = "Historical facility period has every weekday",
+                Severity = "Error",
+                Facility = [Location],
+                MinuteCategory = null,
+                Role = null,
+                Actual = 0,
+                Expected = 1,
+                Message =
+                    "Week " & Text.From([Week No], "en-AU") & " has no eligible " &
+                    [#"Week Day"] &
+                    " MinuteWorker history; complete periods are required for weekday-local averaging."
+            ]
+        )
+    ),
+
+    BuildDistributionRangeChecks =
+        (Rows as table, ColumnName as text, CheckName as text) as table =>
+            let
+                InvalidRows = Table.SelectRows(
+                    Rows,
+                    each
+                        let
+                            DistributionValue = Record.Field(_, ColumnName)
+                        in
+                            DistributionValue = null or
+                            DistributionValue < -Tolerance or
+                            DistributionValue > 1 + Tolerance
+                ),
+                Result = #"MW Check Table"(
+                    List.Transform(
+                        Table.ToRecords(InvalidRows),
+                        each [
+                            Check = CheckName,
+                            Severity = "Error",
+                            Facility = [Facility],
+                            MinuteCategory = [MinuteCategory],
+                            Role = [Role],
+                            Actual = Record.Field(_, ColumnName),
+                            Expected = 1,
+                            Message =
+                                ColumnName & " must be between 0% and 100% on " &
+                                [#"Week Day"] & "."
+                        ]
+                    )
+                )
+            in
+                Result,
+    RoleDistributionRangeChecks = BuildDistributionRangeChecks(
+        Table.Distinct(
+            Table.SelectColumns(
+                RoleDistribution,
+                {
+                    "Facility", "MinuteCategory", "Role", "DayOfWeek", "Week Day",
+                    "RoleDayHistoryDistribution%"
+                }
+            )
+        ),
+        "RoleDayHistoryDistribution%",
+        "Role weekday history share is within range"
+    ),
+    ShiftDistributionRangeChecks = BuildDistributionRangeChecks(
+        Table.SelectColumns(
+            HistoricalDayShift,
+            {
+                "Facility", "MinuteCategory", "Role", "DayOfWeek", "Week Day",
+                "RoleDayShiftDistribution%"
+            }
+        ),
+        "RoleDayShiftDistribution%",
+        "Role weekday shift share is within range"
+    ),
+    CategoryDistributionRangeChecks = BuildDistributionRangeChecks(
+        Table.SelectColumns(
+            HistoricalDayShift,
+            {
+                "Facility", "MinuteCategory", "Role", "DayOfWeek", "Week Day",
+                "CategoryDayRoleShiftDistribution%"
+            }
+        ),
+        "CategoryDayRoleShiftDistribution%",
+        "Category weekday role/shift share is within range"
+    ),
 
     RoleDistributionTotals = Table.Group(
         RoleDistribution,
-        {"Facility", "MinuteCategory"},
-        {{"Actual", each List.Sum([#"RoleHistoryDistribution%"]), type nullable number}}
+        {"Facility", "MinuteCategory", "DayOfWeek", "Week Day"},
+        {{"Actual", each List.Sum([#"RoleDayHistoryDistribution%"]), type nullable number}}
     ),
     RoleDistributionChecks = #"MW Check Table"(
         List.Transform(
@@ -1468,15 +2646,17 @@ let
                 Role = null,
                 Actual = [Actual],
                 Expected = 1,
-                Message = "RoleHistoryDistribution% must total 100% for each facility/category."
+                Message =
+                    "RoleDayHistoryDistribution% must total 100% for " &
+                    [#"Week Day"] & " independently."
             ]
         )
     ),
 
     DayShiftDistributionTotals = Table.Group(
         HistoricalDayShift,
-        {"Facility", "MinuteCategory", "Role"},
-        {{"Actual", each List.Sum([#"LocRoleDayShift%"]), type nullable number}}
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek", "Week Day"},
+        {{"Actual", each List.Sum([#"RoleDayShiftDistribution%"]), type nullable number}}
     ),
     DayShiftDistributionChecks = #"MW Check Table"(
         List.Transform(
@@ -1493,35 +2673,99 @@ let
                 Role = [Role],
                 Actual = [Actual],
                 Expected = 1,
-                Message = "LocRoleDayShift% must total 100% for each facility/role."
+                Message =
+                    "RoleDayShiftDistribution% must total 100% for role " &
+                    [Role] & " on " & [#"Week Day"] & " independently."
             ]
         )
     ),
 
-    CategoryHistory = Table.Distinct(
-        Table.SelectColumns(
-            RoleDistribution,
-            {"Facility", "MinuteCategory", "CategoryHistoricalMinuteHours"}
+    CategoryDayDistributionTotals = Table.Group(
+        HistoricalDayShift,
+        {"Facility", "MinuteCategory", "DayOfWeek", "Week Day"},
+        {
+            {
+                "Actual",
+                each List.Sum([#"CategoryDayRoleShiftDistribution%"]),
+                type nullable number
+            }
+        }
+    ),
+    CategoryDayDistributionChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(CategoryDayDistributionTotals),
+            each [
+                Check = "Category weekday role/shift distribution totals 100%",
+                Severity =
+                    if [Actual] <> null and Number.Abs([Actual] - 1) <= Tolerance then
+                        "Pass"
+                    else
+                        "Error",
+                Facility = [Facility],
+                MinuteCategory = [MinuteCategory],
+                Role = null,
+                Actual = [Actual],
+                Expected = 1,
+                Message =
+                    "CategoryDayRoleShiftDistribution% must total 100% for " &
+                    [#"Week Day"] & " independently."
+            ]
         )
+    ),
+
+    CategoryHistory = Table.Group(
+        HistoricalDayShift,
+        {"Facility", "MinuteCategory", "DayOfWeek", "Week Day"},
+        {
+            {
+                "CategoryDayHistoricalProductiveHours",
+                each List.Max([CategoryDayHistoricalProductiveHours]),
+                type nullable number
+            }
+        }
+    ),
+    TargetCategoryGrain = Table.Distinct(
+        Table.SelectColumns(
+            TargetCategories,
+            {
+                "Facility", "MinuteCategory", "CategoryDailyTargetMinutes",
+                "CategoryTargetMinutes"
+            }
+        )
+    ),
+    #"Added Complete Target Week" = Table.AddColumn(
+        TargetCategoryGrain,
+        "Weekdays",
+        each Weekdays,
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text]
+    ),
+    #"Expanded Complete Target Week" = Table.ExpandTableColumn(
+        #"Added Complete Target Week",
+        "Weekdays",
+        {"DayOfWeek", "Week Day"},
+        {"DayOfWeek", "Week Day"}
     ),
     TargetHistoryJoin = Table.ExpandTableColumn(
         Table.NestedJoin(
-            TargetCategories,
-            {"Facility", "MinuteCategory"},
+            #"Expanded Complete Target Week",
+            {"Facility", "MinuteCategory", "DayOfWeek"},
             CategoryHistory,
-            {"Facility", "MinuteCategory"},
+            {"Facility", "MinuteCategory", "DayOfWeek"},
             "CategoryHistory",
             JoinKind.LeftOuter
         ),
         "CategoryHistory",
-        {"CategoryHistoricalMinuteHours"},
-        {"CategoryHistoricalMinuteHours"}
+        {"CategoryDayHistoricalProductiveHours"},
+        {"CategoryDayHistoricalProductiveHours"}
     ),
     MissingHistory = Table.SelectRows(
         TargetHistoryJoin,
         each
-            [CategoryTargetMinutes] > 0 and
-            ([CategoryHistoricalMinuteHours] = null or [CategoryHistoricalMinuteHours] <= 0)
+            [CategoryDailyTargetMinutes] > 0 and
+            (
+                [CategoryDayHistoricalProductiveHours] = null or
+                [CategoryDayHistoricalProductiveHours] <= 0
+            )
     ),
     MissingHistoryChecks = #"MW Check Table"(
         List.Transform(
@@ -1533,16 +2777,17 @@ let
                 MinuteCategory = [MinuteCategory],
                 Role = null,
                 Actual =
-                    if [CategoryHistoricalMinuteHours] = null then
+                    if [CategoryDayHistoricalProductiveHours] = null then
                         0
                     else
-                        [CategoryHistoricalMinuteHours],
-                Expected = [CategoryTargetMinutes],
+                        [CategoryDayHistoricalProductiveHours],
+                Expected = 1,
                 Message =
                     "Facility " & [Facility] & ", category " & [MinuteCategory] &
-                    " has a positive 14-day target of " &
-                    Text.From([CategoryTargetMinutes], "en-AU") &
-                    " minutes but no eligible historical MinuteWorker hours."
+                    " has a positive daily target of " &
+                    Text.From([CategoryDailyTargetMinutes], "en-AU") &
+                    " minutes but no eligible historical MinuteWorker hours on " &
+                    [#"Week Day"] & "."
             ]
         )
     ),
@@ -1550,7 +2795,7 @@ let
     MasterRoleKeys = Table.Distinct(
         Table.SelectColumns(
             Table.AddColumn(
-                LocRoleWeekDaysHours,
+                HistoricalInput,
                 "RoleKey",
                 each if [Role] = null then null else Text.Upper(Text.Trim([Role])),
                 type nullable text
@@ -1638,8 +2883,14 @@ let
 
     Result = Table.Combine(
         {
+            HistoricalInputChecks,
+            HistoricalCoverageChecks,
+            RoleDistributionRangeChecks,
+            ShiftDistributionRangeChecks,
+            CategoryDistributionRangeChecks,
             RoleDistributionChecks,
             DayShiftDistributionChecks,
+            CategoryDayDistributionChecks,
             MissingHistoryChecks,
             UnmatchedRoleChecks,
             TargetFacilityChecks,
@@ -1649,53 +2900,389 @@ let
 in
     Result;
 
+// Query: MW Daily Allocation Check
+// Purpose: Blocks publication unless every category/day and role/day allocation reconciles independently.
+// Inputs: MW TargetMinutes Prepare, MW Role Targets, and MW DayShift Allocation.
+// Output: Standard MinuteWorker check rows for weekday target and two-stage allocation invariants.
+shared #"MW Daily Allocation Check" =
+let
+    Tolerance = 0.000001,
+    Weekdays = #table(
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text],
+        {
+            {1, "Monday"},
+            {2, "Tuesday"},
+            {3, "Wednesday"},
+            {4, "Thursday"},
+            {5, "Friday"},
+            {6, "Saturday"},
+            {7, "Sunday"}
+        }
+    ),
+    // One narrow buffered allocation feeds both category/day and role/day
+    // checks, avoiding two independent evaluations of the history chain.
+    Allocation = Table.Buffer(
+        Table.SelectColumns(
+            #"MW DayShift Allocation",
+            {
+                "Facility", "MinuteCategory", "Role", "DayOfWeek", "Week Day",
+                "CategoryDailyTargetMinutes", "CategoryTargetMinutes",
+                "WeekdayShiftTargetMinutes", "TwoStageAllocationVarianceMinutes"
+            }
+        )
+    ),
+    CategoryTargets = Table.Distinct(
+        Table.SelectColumns(
+            #"MW TargetMinutes Prepare",
+            {
+                "Facility", "MinuteCategory", "CategoryDailyTargetMinutes",
+                "CategoryTargetMinutes"
+            }
+        )
+    ),
+    #"Added Complete Category Week" = Table.AddColumn(
+        CategoryTargets,
+        "Weekdays",
+        each Weekdays,
+        type table [DayOfWeek = Int64.Type, #"Week Day" = text]
+    ),
+    #"Expanded Complete Category Week" = Table.ExpandTableColumn(
+        #"Added Complete Category Week",
+        "Weekdays",
+        {"DayOfWeek", "Week Day"},
+        {"DayOfWeek", "Week Day"}
+    ),
+    AllocatedCategoryDays = Table.Group(
+        Allocation,
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        {
+            {
+                "AllocatedDayProductiveMinutes",
+                each List.Sum([WeekdayShiftTargetMinutes]),
+                type number
+            }
+        }
+    ),
+    #"Merged Category Day Allocation" = Table.NestedJoin(
+        #"Expanded Complete Category Week",
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        AllocatedCategoryDays,
+        {"Facility", "MinuteCategory", "DayOfWeek"},
+        "CategoryDayAllocation",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Category Day Allocation" = Table.ExpandTableColumn(
+        #"Merged Category Day Allocation",
+        "CategoryDayAllocation",
+        {"AllocatedDayProductiveMinutes"},
+        {"AllocatedDayProductiveMinutes"}
+    ),
+    #"Replaced Missing Category Day Allocation" = Table.ReplaceValue(
+        #"Expanded Category Day Allocation",
+        null,
+        0,
+        Replacer.ReplaceValue,
+        {"AllocatedDayProductiveMinutes"}
+    ),
+    #"Added Category Day Variance" = Table.AddColumn(
+        #"Replaced Missing Category Day Allocation",
+        "DailyVarianceMinutes",
+        each [AllocatedDayProductiveMinutes] - [CategoryDailyTargetMinutes],
+        type number
+    ),
+    CategoryPeriodTotals = Table.Group(
+        #"Added Category Day Variance",
+        {"Facility", "MinuteCategory"},
+        {
+            {
+                "ReconstructedFortnightProductiveMinutes",
+                each List.Sum([AllocatedDayProductiveMinutes]) * 2,
+                type number
+            }
+        }
+    ),
+    #"Merged Category Period Totals" = Table.NestedJoin(
+        #"Added Category Day Variance",
+        {"Facility", "MinuteCategory"},
+        CategoryPeriodTotals,
+        {"Facility", "MinuteCategory"},
+        "CategoryPeriod",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Category Period Totals" = Table.ExpandTableColumn(
+        #"Merged Category Period Totals",
+        "CategoryPeriod",
+        {"ReconstructedFortnightProductiveMinutes"},
+        {"ReconstructedFortnightProductiveMinutes"}
+    ),
+    CategoryDaily = Table.Buffer(
+        Table.AddColumn(
+            #"Expanded Category Period Totals",
+            "FortnightVarianceMinutes",
+            each [ReconstructedFortnightProductiveMinutes] - [CategoryTargetMinutes],
+            type number
+        )
+    ),
+    CategoryChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(CategoryDaily),
+            each [
+                Check = "Category weekday allocation reconciles",
+                Severity =
+                    if
+                        [DailyVarianceMinutes] <> null and
+                        Number.Abs([DailyVarianceMinutes]) <= Tolerance
+                    then
+                        "Pass"
+                    else
+                        "Error",
+                Facility = [Facility],
+                MinuteCategory = [MinuteCategory],
+                Role = null,
+                Actual = [AllocatedDayProductiveMinutes],
+                Expected = [CategoryDailyTargetMinutes],
+                Message =
+                    [#"Week Day"] &
+                    " must receive the complete category daily target independently of all other weekdays."
+            ]
+        )
+    ),
+    CategoryPeriodGrain = Table.Distinct(
+        Table.SelectColumns(
+            CategoryDaily,
+            {
+                "Facility", "MinuteCategory", "CategoryTargetMinutes",
+                "ReconstructedFortnightProductiveMinutes", "FortnightVarianceMinutes"
+            }
+        )
+    ),
+    CategoryPeriodChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(CategoryPeriodGrain),
+            each [
+                Check = "Category fortnight allocation reconciles",
+                Severity =
+                    if
+                        [FortnightVarianceMinutes] <> null and
+                        Number.Abs([FortnightVarianceMinutes]) <= Tolerance
+                    then
+                        "Pass"
+                    else
+                        "Error",
+                Facility = [Facility],
+                MinuteCategory = [MinuteCategory],
+                Role = null,
+                Actual = [ReconstructedFortnightProductiveMinutes],
+                Expected = [CategoryTargetMinutes],
+                Message =
+                    "Twice the representative week must reconstruct the 14-day category target."
+            ]
+        )
+    ),
+    AllocatedRoleDays = Table.Group(
+        Allocation,
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
+        {
+            {
+                "AllocatedRoleDayProductiveMinutes",
+                each List.Sum([WeekdayShiftTargetMinutes]),
+                type number
+            },
+            {
+                "MaximumAbsoluteTwoStageVarianceMinutes",
+                each
+                    let
+                        Variances = List.RemoveNulls([TwoStageAllocationVarianceMinutes])
+                    in
+                        if List.IsEmpty(Variances) then
+                            null
+                        else
+                            List.Max(List.Transform(Variances, Number.Abs)),
+                type nullable number
+            }
+        }
+    ),
+    RoleTargets = Table.Buffer(
+        Table.SelectColumns(
+            #"MW Role Targets",
+            {
+                "Facility", "MinuteCategory", "Role", "DayOfWeek", "Week Day",
+                "RoleDailyTargetMinutes"
+            }
+        )
+    ),
+    #"Merged Expected Role Days" = Table.NestedJoin(
+        RoleTargets,
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
+        AllocatedRoleDays,
+        {"Facility", "MinuteCategory", "Role", "DayOfWeek"},
+        "AllocatedRoleDay",
+        JoinKind.LeftOuter
+    ),
+    #"Expanded Expected Role Days" = Table.ExpandTableColumn(
+        #"Merged Expected Role Days",
+        "AllocatedRoleDay",
+        {
+            "AllocatedRoleDayProductiveMinutes",
+            "MaximumAbsoluteTwoStageVarianceMinutes"
+        },
+        {
+            "AllocatedRoleDayProductiveMinutes",
+            "MaximumAbsoluteTwoStageVarianceMinutes"
+        }
+    ),
+    RoleDaily = Table.Buffer(
+        Table.ReplaceValue(
+            #"Expanded Expected Role Days",
+            null,
+            0,
+            Replacer.ReplaceValue,
+            {
+                "AllocatedRoleDayProductiveMinutes",
+                "MaximumAbsoluteTwoStageVarianceMinutes"
+            }
+        )
+    ),
+    RoleChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(RoleDaily),
+            each [
+                Check = "Role weekday allocation reconciles",
+                Severity =
+                    if
+                        [RoleDailyTargetMinutes] <> null and
+                        Number.Abs(
+                            [AllocatedRoleDayProductiveMinutes] - [RoleDailyTargetMinutes]
+                        ) <= Tolerance
+                    then
+                        "Pass"
+                    else
+                        "Error",
+                Facility = [Facility],
+                MinuteCategory = [MinuteCategory],
+                Role = [Role],
+                Actual = [AllocatedRoleDayProductiveMinutes],
+                Expected = [RoleDailyTargetMinutes],
+                Message =
+                    [Role] & " shift allocations must total its weekday-specific target on " &
+                    [#"Week Day"] & "."
+            ]
+        )
+    ),
+    TwoStageChecks = #"MW Check Table"(
+        List.Transform(
+            Table.ToRecords(RoleDaily),
+            each [
+                Check = "Weekday allocation formulas agree",
+                Severity =
+                    if
+                        [MaximumAbsoluteTwoStageVarianceMinutes] <> null and
+                        [MaximumAbsoluteTwoStageVarianceMinutes] <= Tolerance
+                    then
+                        "Pass"
+                    else
+                        "Error",
+                Facility = [Facility],
+                MinuteCategory = [MinuteCategory],
+                Role = [Role],
+                Actual = [MaximumAbsoluteTwoStageVarianceMinutes],
+                Expected = 0,
+                Message =
+                    "Direct category/day allocation and role/day then shift allocation must agree on " &
+                    [#"Week Day"] & "."
+            ]
+        )
+    ),
+    Result = Table.Combine(
+        {CategoryChecks, CategoryPeriodChecks, RoleChecks, TwoStageChecks}
+    )
+in
+    Result;
+
 // Query: MW PreAllocation Check
-// Purpose: Combines all checks that must pass before FTE outputs can be published.
+// Purpose: Combines input and historical-distribution checks that can run before allocation.
 // Inputs: MW Input Check and MW Distribution Check.
-// Output: Validation rows; Severity Error blocks TABLE and MATRIX.
+// Output: Validation rows; Severity Error prevents the allocation checks from being evaluated.
 shared #"MW PreAllocation Check" =
 let
     Result = Table.Combine({#"MW Input Check", #"MW Distribution Check"})
 in
     Result;
 
+// Query: MW Publication Check
+// Purpose: Combines pre-allocation and post-allocation checks for a complete publication gate.
+// Inputs: MW PreAllocation Check and MW Daily Allocation Check.
+// Output: Standard validation rows; any Severity Error blocks TABLE and MATRIX.
+shared #"MW Publication Check" =
+let
+    PreAllocationChecks = Table.Buffer(#"MW PreAllocation Check"),
+    FatalPreAllocation = Table.SelectRows(
+        PreAllocationChecks,
+        each [Severity] = "Error"
+    ),
+    Result =
+        if Table.RowCount(FatalPreAllocation) > 0 then
+            PreAllocationChecks
+        else
+            Table.Combine({PreAllocationChecks, #"MW Daily Allocation Check"})
+in
+    Result;
+
 // Query: MinuteWorkersFTE_TABLE
 // Purpose: Publishes the validated representative-week MinuteWorker FTE allocation.
-// Inputs: MW DayShift Allocation and MW PreAllocation Check.
+// Inputs: MW PreAllocation Check, MW Daily Allocation Check, and MW DayShift Allocation.
 // Output: One row per facility, role, weekday, and shift with unrounded FTE.
 shared MinuteWorkersFTE_TABLE =
 let
-    Validation = #"MW PreAllocation Check",
-    FatalValidation = Table.SelectRows(Validation, each [Severity] = "Error"),
-    // Include the failing keys in the thrown message so Excel identifies the
-    // exact input or history row without requiring the nested Details table.
-    #"Added Fatal Error Context" = Table.AddColumn(
-        FatalValidation,
-        "ErrorContext",
-        each Text.Combine(
-            List.RemoveNulls(
-                {
-                    [Check],
-                    if [Facility] = null then null else "Facility=" & [Facility],
-                    if [MinuteCategory] = null then null else "MinuteCategory=" & [MinuteCategory],
-                    if [Role] = null then null else "Role=" & [Role],
-                    [Message]
-                }
+    RaiseValidationError = (ErrorTitle as text, ValidationRows as table) as any =>
+        let
+            // Include failing keys so Excel identifies the exact input,
+            // historical denominator, or weekday allocation without opening Details.
+            AddedErrorContext = Table.AddColumn(
+                ValidationRows,
+                "ErrorContext",
+                each Text.Combine(
+                    List.RemoveNulls(
+                        {
+                            [Check],
+                            if [Facility] = null then null else "Facility=" & [Facility],
+                            if [MinuteCategory] = null then null else "MinuteCategory=" & [MinuteCategory],
+                            if [Role] = null then null else "Role=" & [Role],
+                            [Message]
+                        }
+                    ),
+                    " | "
+                ),
+                type text
             ),
-            " | "
-        ),
-        type text
+            ErrorMessage = Text.Combine(
+                List.Distinct(AddedErrorContext[ErrorContext]),
+                "#(lf)"
+            )
+        in
+            error Error.Record(ErrorTitle, ErrorMessage, ValidationRows),
+    PreValidation = Table.Buffer(#"MW PreAllocation Check"),
+    PreFatalValidation = Table.SelectRows(
+        PreValidation,
+        each [Severity] = "Error"
     ),
-    FatalMessage = Text.Combine(
-        List.Distinct(#"Added Fatal Error Context"[ErrorContext]),
-        "#(lf)"
+    // M evaluates let bindings lazily: allocation checks are not reached when
+    // required inputs or historical distributions already failed.
+    DailyValidation = Table.Buffer(#"MW Daily Allocation Check"),
+    DailyFatalValidation = Table.SelectRows(
+        DailyValidation,
+        each [Severity] = "Error"
     ),
     Result =
-        if Table.RowCount(FatalValidation) > 0 then
-            error Error.Record(
-                "MinuteWorkersFTE validation failed",
-                FatalMessage,
-                FatalValidation
+        if Table.RowCount(PreFatalValidation) > 0 then
+            RaiseValidationError(
+                "MinuteWorkersFTE pre-allocation validation failed",
+                PreFatalValidation
+            )
+        else if Table.RowCount(DailyFatalValidation) > 0 then
+            RaiseValidationError(
+                "MinuteWorkersFTE weekday allocation validation failed",
+                DailyFatalValidation
             )
         else
             #"MW DayShift Allocation"
@@ -1708,7 +3295,15 @@ in
 // Output: One row per facility, MinuteCategory, and role.
 shared MinuteWorkersFTE_MATRIX =
 let
-    Source = MinuteWorkersFTE_TABLE,
+    Source = Table.Buffer(
+        Table.SelectColumns(
+            MinuteWorkersFTE_TABLE,
+            {
+                "Facility", "MinuteCategory", "Role", "QFR Category",
+                "Direct Care %", "DayOfWeek", "ShiftIndex", "WeekdayShift", "FTE"
+            }
+        )
+    ),
     MatrixSource = Table.SelectColumns(
         Source,
         {
@@ -1737,24 +3332,32 @@ in
 
 // Query: MinuteWorkersFTE_CHECK
 // Purpose: Reports input, distribution, category, and facility reconciliation results.
-// Inputs: MW PreAllocation Check, MW DayShift Allocation, and MW TargetMinutes Prepare.
+// Inputs: MW PreAllocation Check, MW Daily Allocation Check, MW DayShift Allocation, and MW TargetMinutes Prepare.
 // Output: Validation rows proving productive minutes reconcile to RN, OTHERS, and ALL.
 shared MinuteWorkersFTE_CHECK =
 let
     Tolerance = 0.000001,
-    PreAllocationChecks = #"MW PreAllocation Check",
+    PreAllocationChecks = Table.Buffer(#"MW PreAllocation Check"),
     FatalValidation = Table.SelectRows(
         PreAllocationChecks,
         each [Severity] = "Error"
     ),
-    Allocation = #"MW DayShift Allocation",
+    DailyAllocationChecks = #"MW Daily Allocation Check",
 
     // Reconstruct fortnight productive minutes from the representative-week FTE.
-    AllocationWithProductiveMinutes = Table.AddColumn(
-        Allocation,
-        "ReconciledProductiveMinutes",
-        each [FTE] * 456 * [#"Direct Care %"] * 2,
-        type number
+    AllocationWithProductiveMinutes = Table.Buffer(
+        Table.AddColumn(
+            Table.SelectColumns(
+                #"MW DayShift Allocation",
+                {
+                    "Facility", "MinuteCategory", "CategoryTargetMinutes",
+                    "Direct Care %", "FTE"
+                }
+            ),
+            "ReconciledProductiveMinutes",
+            each [FTE] * 456 * [#"Direct Care %"] * 2,
+            type number
+        )
     ),
     CategoryReconciliation = Table.Group(
         AllocationWithProductiveMinutes,
@@ -1848,6 +3451,13 @@ let
         if Table.RowCount(FatalValidation) > 0 then
             PreAllocationChecks
         else
-            Table.Combine({PreAllocationChecks, CategoryChecks, FacilityChecks})
+            Table.Combine(
+                {
+                    PreAllocationChecks,
+                    DailyAllocationChecks,
+                    CategoryChecks,
+                    FacilityChecks
+                }
+            )
 in
     Result;
