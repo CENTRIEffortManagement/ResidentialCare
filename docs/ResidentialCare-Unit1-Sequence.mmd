@@ -1,0 +1,30 @@
+flowchart LR
+    S01["01<br/>1-AllocationExtracted.xlsx"] --> S02["02<br/>2-DemandExtracted-Master-.xlsx<br/>(currently missing)"]
+    S02 --> S03["03<br/>StaffList Availability.xlsx"]
+    S03 --> S04["04<br/>Settings Data.xlsx<br/>(currently missing)"]
+    S04 --> S05["05<br/>2-DemandExtract.xlsx"]
+    S05 --> S06["06<br/>Intervals.xlsx"]
+    S06 --> S07["07<br/>DemandIntervals.xlsx"]
+    S07 --> S08["08<br/>Demand.xlsx"]
+    S08 --> S09["09<br/>Capacity-ShiftAvailability.xlsx"]
+    S09 --> S10["10<br/>StaffListMaster.xlsx"]
+    S10 --> S11["11<br/>Shifts.xlsx"]
+    S11 --> S12["12<br/>AllocationByShiftAverage.xlsx"]
+    S12 --> S13["13<br/>Allocation.xlsx"]
+    S13 --> S14["14<br/>Shift-StaffDistribution.xlsx"]
+    S14 --> S15["15<br/>MutliRoleCheck.xlsx"]
+    S15 --> S16["16<br/>AIN / CapacityDistrib(A.1)-shifts.xlsx"]
+    S16 --> S17["17<br/>AIN / CapacityDistrib(A.2)-shifts.xlsx"]
+    S17 --> S18["18<br/>AIN / CapacityDistrib(B)-shifts.xlsx"]
+    S18 --> S19["19<br/>AINC4 / CapacityDistrib(A.1)-shifts.xlsx"]
+    S19 --> S20["20<br/>AINC4 / CapacityDistrib(A.2)-shifts.xlsx"]
+    S20 --> S21["21<br/>AINC4 / CapacityDistrib(B)-shifts.xlsx"]
+    S21 --> S22["22<br/>RN / CapacityDistrib(A.1)-shifts.xlsx"]
+    S22 --> S23["23<br/>RN / CapacityDistrib(A.2)-shifts.xlsx"]
+    S23 --> S24["24<br/>RN / CapacityDistrib(B)-shifts.xlsx"]
+    S24 --> S25["25<br/>Capacity.xlsx"]
+    S25 --> S26["26<br/>Effort.xlsx"]
+
+    classDef missing fill:#ffd6d6,stroke:#b00020,color:#5f0010;
+    class S02,S04 missing;
+

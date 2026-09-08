@@ -1,0 +1,18 @@
+flowchart LR
+    Units["All selected units complete"] --> O01["01<br/>E-O-I / StafMasterList-All.xlsx"]
+    O01 --> O02["02<br/>E-O-I / Effort-All.xlsx"]
+    O02 --> O03["03<br/>E-O-I / EffortOutcomes.xlsx"]
+    O03 --> O04["04<br/>E-O-I / Inefficiencies.xlsx"]
+    O04 --> O05["05<br/>Cost / Cost..xlsx"]
+    O05 --> O06["06<br/>EOW / EffortOutcomeLogXY.xlsx"]
+    O06 --> O07["07<br/>EOW / 2DRead.xlsx"]
+    O07 --> O08["08<br/>Tableau Connection.xlsx"]
+    O08 --> Complete["Top-level run complete"]
+
+    A["Required support<br/>Change / AllocationChange.xlsx"] -.-> O01
+    B["Required support<br/>EOW / Grid Thresholds.xlsx"] -.-> O01
+    C["Required support<br/>Unit1 / Settings Data.xlsx<br/>(currently missing)"] -.-> O01
+
+    classDef missing fill:#ffd6d6,stroke:#b00020,color:#5f0010;
+    class C missing;
+

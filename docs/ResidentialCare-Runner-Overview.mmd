@@ -1,0 +1,23 @@
+flowchart TD
+    Codex["Codex operator"] --> Scope["Confirm scope and exact manifest"]
+    Scope --> Preflight{"Preflight passes?"}
+    Preflight -->|"No"| Stop["Stop: report missing path, lock, or prerequisite"]
+    Preflight -->|"Yes"| Validate["Run -ValidateSelectionOnly"]
+    Validate --> Valid{"Validation passes?"}
+    Valid -->|"No"| Stop
+    Valid -->|"Yes"| Approval{"Explicit refresh approval?"}
+    Approval -->|"No"| Wait["Wait without changing workbooks"]
+    Approval -->|"Yes"| Top["Run-RefreshRunner.cmd"]
+
+    Top --> UnitRunner["All-units runner"]
+    UnitRunner --> Discover["Discover UNITS/UnitN folders"]
+    Discover --> Unit1["Unit 1: 26-workbook manifest"]
+    Discover -.-> FutureUnits["Other UnitN folders, when present"]
+    Unit1 --> OrgRunner["Organisation runner: 8 workbooks"]
+    FutureUnits -.-> OrgRunner
+    OrgRunner --> Complete["Final status, exit code, and logs"]
+
+    Top --> Status["RunLogs/current-status.txt"]
+    UnitRunner --> UnitStatus["UNITS/RunLogs"]
+    Unit1 --> Unit1Status["UNITS/Unit1/RunLogs"]
+

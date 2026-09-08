@@ -1,204 +1,173 @@
-# MinuteWorker FTE Analysis — PC Handoff
+# MinuteWorker FTE Analysis — Handoff
 
-**Snapshot date:** 30 August 2026, Australia/Sydney.
+**Revision:** 8 September 2026 — separate Week 1 and Week 2 allocation.
 
-**Revision:** 7 September 2026, whole-period distribution revision. `TargetMinutes` contains productive-care **hours per fortnight**. The final result is required roster FTE; care minutes are an intermediate calculation. The allocator now preserves differences between weekdays using whole-period historical shares, then displays the average of corresponding weekdays. Earlier daily-minute input assumptions and fixed-category-target-per-weekday rules are superseded.
+The user reviewed the two historical weeks and found their differences too large to justify averaging. This revision supersedes the seven-day representative-week calculation. Both historical and required FTE retain all 14 days, with labels such as `1-Tuesday` and `2-Tuesday`.
 
-> **Staleness warning:** This document describes the work as it stood on the date above. If Codex or another developer reads it much later, it may be out of date. Before making changes, re-read the repository `AGENTS.md`, check the current Git/worktree state, inspect the current `.m` source, and verify the workbook table structures and input values.
+**Profile-comparison addition:** The existing `MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE` now includes actual redistributed FTE beside historical FTE at the same row grain. Its original historical columns remain intact. The addition is source-only, not synced or refreshed. Revised chart instructions are in `docs/MinuteWorker-FTE-Profile-Chart-Instructions.md`.
 
-## Goal
+**Explicit role-mapping addition:** `MinuteWorkersTable` and inferred role abbreviations are superseded by the workbook table `MatchingRosterRoleswithANACCRoles`. Its fields are `Roster Roles`, `DC Category`, `DC Role`, and `Direct Care %`. This addition is also source-only, not synced or refreshed.
 
-Produce a MinuteWorker-only analysis of required roster FTE by facility, role, weekday and shift, using funded productive-care hours per fortnight and whole-period historical roster patterns. Retain unaveraged historical FTE by original roster week to compare the two Mondays, two Tuesdays, and so on before accepting a representative-week pattern.
+## Status and source of truth
 
-The analysis is a separate branch. Existing roster-analysis outputs should remain unchanged.
+- Approved editable source: `CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m`.
+- Target workbook: `CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx`.
+- This revision is **source-only: not synced, refreshed or evaluated in Excel**.
+- The user selected this sidecar and the approved IMPORT Extract process. Do not extract older workbook code over the source, substitute a backup, or move the source into `Workflows/` without reconciling that decision with the user.
+- The current repository `AGENTS.md` requires explicit opt-in for the named source/workbook pair before synchronization. An edit request does not authorize sync, refresh, save or close.
+- Preserve unrelated worktree changes, including the user's changes to `AGENTS.md` and `Master Roster.xlsx`.
+- Earlier 7 September code was synced using the approved extension, with backup `Demand-MasterRoster Manual Read.xlsx.backup.2026-09-07T10-19-34-585Z`. That version averaged corresponding weekdays; its sync and any older PASS values do not validate this 14-day revision.
 
-## Current working files
+## Goal and confirmed units
 
-- Power Query source: `CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m`
-- Target workbook: `CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx`
-- This handoff: `CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md`
+Required roster FTE is the final output. Care minutes are an intermediate calculation.
 
-During this work, the user explicitly instructed Codex to use the current `.m` file and the approved **IMPORT Extract** method. Do not overwrite the current `.m` by extracting older code from the workbook. Confirm the source-of-truth state before any future extraction or synchronization. Repository policy normally places canonical product-specific Power Query source under `Workflows/`, so reconcile that policy with the explicitly selected sidecar source before moving or syncing anything.
+1. `INPUT TargetMinutes` contains productive-care **hours per fortnight**, despite its name.
+2. `DC Category` is authoritative: RN receives the RN target, OTHER receives ALL minus RN, and NA is excluded from MinuteWorker calculations.
+3. Convert category input hours to fortnight minutes by multiplying by 60.
+4. Historical productive hours = roster hours × configured Direct Care %.
+5. Historical FTE = roster hours / 7.6, without applying target scaling or dividing by Direct Care %.
+6. Required roster minutes = allocated productive minutes / Direct Care %.
+7. Required FTE = required roster minutes / 456. These are 7.6-hour shift equivalents, not full-time employee positions.
+8. Keep full precision; round only for presentation.
 
-The whole-period distribution revision and new historical table were synchronized through the approved Excel Power Query Editor extension on 7 September at approximately 20:19 Australia/Sydney. The extension reported success and created `Demand-MasterRoster Manual Read.xlsx.backup.2026-09-07T10-19-34-585Z` beside the workbook. Automatic backup cleanup was temporarily disabled for this sync; the temporary settings overrides were then removed without changing the existing settings. Excel runtime refresh/validation and loading the new historical output to a worksheet are still pending. Earlier refreshes and observed PASS values do not validate this revision. An earlier accidental `MW Distribution Check` header edit was restored. Preserve the workbook's existing worktree changes; do not extract older workbook code over this source.
+## Fortnight identity and ordering
 
-## Confirmed business rules
+- `Week No`: original source identifier, retained unchanged.
+- `FortnightWeek`: 1 or 2. `MW Historical Weeks` maps the two source week numbers in ascending numeric order within each facility.
+- `DayOfWeek`: Monday = 1 through Sunday = 7.
+- `FortnightDay`: `1-Monday`, `1-Tuesday`, …, `2-Sunday`.
+- `FortnightDayIndex`: 1 through 14; use this field to sort charts and tables.
+- `FortnightDayShift`: e.g. `1-Tuesday-AM` in historical staging.
+- `WeekdayShift`: now the same week-qualified day/shift style in the allocation and matrix.
 
-1. `INPUT MinuteWorkers` is the role list and contains each role's `Direct Care %`.
-2. Despite its name, `INPUT TargetMinutes` contains productive-care **hours per fortnight (14 days)**, confirmed by the user on 7 September 2026.
-3. Targets are supplied for each facility for two types:
-   - `RN`
-   - `ALL`, which includes RN hours
-4. The calculated MinuteCategories are:
-   - `RN`: the canonical role `RN` only
-   - `OTHERS`: every other MinuteWorker role, including RN-qualified management roles
-5. Average daily category targets (reference values, not a fixed target for every weekday) are:
-   - `RNDailyTargetMinutes = RNFortnightTargetHours * 60 / 14`
-   - `OTHERSDailyTargetMinutes = (ALLFortnightTargetHours - RNFortnightTargetHours) * 60 / 14`
-6. Fortnight category minute targets equal the input category hours multiplied by 60. Original `RNFortnightTargetHours` and `ALLFortnightTargetHours` remain visible in target preparation.
-7. Historical hours are filtered to MinuteWorker roles and adjusted for direct care:
-   - `HistoricalProductiveHours = HistoricalRosterHours * Direct Care %`
-8. Retain each original `Week No` at facility/role/weekday/shift grain. Average corresponding cells across all observed facility weeks, including zero cells in complete weeks. With two weeks, this is `(Week 1 Monday + Week 2 Monday) / 2`, not the average of only populated cells. Incomplete source weeks fail validation.
-9. The conditional role share within a weekday remains available as a diagnostic:
-   - `RoleDayHistoryDistribution% = RoleDayHistoricalProductiveHours / CategoryDayHistoricalProductiveHours`
-10. The conditional shift share within a role/weekday also remains available:
-   - `RoleDayShiftDistribution% = HistoricalRosterHours / RoleDayHistoricalRosterHours`
-11. Allocate the whole-period category budget across roles, weekdays and shifts:
-    - `CategoryWeeklyHistoricalProductiveHours = sum(HistoricalProductiveHours)` across all representative-week cells in the facility/category.
-    - `CategoryWeekRoleDayShiftDistribution% = HistoricalProductiveHours / CategoryWeeklyHistoricalProductiveHours`.
-    - `CategoryWeekdayDistribution% = CategoryDayHistoricalProductiveHours / CategoryWeeklyHistoricalProductiveHours`.
-    - `CategoryWeekdayTargetMinutes = CategoryTargetMinutes / 2 * CategoryWeekdayDistribution%`.
-    - `RoleDailyTargetMinutes = CategoryWeekdayTargetMinutes * RoleDayHistoryDistribution%`.
-    - `WeekdayShiftTargetMinutes = CategoryTargetMinutes / 2 * CategoryWeekRoleDayShiftDistribution%`.
-    - equivalently, `WeekdayShiftTargetMinutes = RoleDailyTargetMinutes * RoleDayShiftDistribution%`
-12. Productive-care target minutes are converted back to roster minutes:
-    - `WeekdayShiftRosterMinutes = WeekdayShiftTargetMinutes / Direct Care %`
-13. One FTE shift is 7.6 hours or 456 minutes:
-    - `FTE = WeekdayShiftRosterMinutes / 456`
-    - `FTE` means 7.6-hour shift equivalents, not weekly employee FTE. Sum the three shifts for a daily total. `RoleAverageDailyTargetMinutes` is a repeated informational field and must not be summed across shift rows.
-14. Calculations retain full precision. Rounding is for display only.
-15. A positive facility/category target with no eligible productive history across the entire period fails validation. A zero-weight category/weekday is allowed if source coverage is complete; no allocation is invented for it.
-16. Weekdays compete for the same finite category budget. Changing Tuesday history can therefore change Monday's absolute target FTE, although Monday's conditional role/shift mix is unchanged. Busier Tuesdays are preserved rather than flattened to the daily average.
-17. Normalizing seven-day average history gives the same relative weights as pooling corresponding weekday cells across the source weeks. Allocate half the fortnight budget to that representative week; double its totals only for fortnight reconciliation. Do not divide the resulting FTE by two again.
-18. `MW Fortnight Hours Check` independently compares `sum(FTE * 7.6 * Direct Care % * 2)` over the representative week with the original RN and ALL input hours. Failures block TABLE and MATRIX through `MW Publication Check`. This comparison reads raw hours directly rather than reusing converted minute targets.
-19. Historical FTE is `HistoricalRosterHours / 7.6`, before target scaling and without dividing by Direct Care %. Retain original week identifiers for chart series. If more than two weeks are supplied, preserve all of them and expose `HistoricalWeeksInAverage`; do not silently select two.
+Exactly two complete source weeks are required for each target facility. A one-week or longer extract fails validation; no pair is silently selected or averaged. All supplied historical weeks remain visible diagnostically. If numeric week order does not represent chronology, for example a year-boundary extract with weeks 52 and 1, obtain an explicit period mapping before use. A repeated week number across years cannot be distinguished without a better source period key.
 
-## Role normalization
+Absent role/shift cells in complete facility weeks are explicit zero cells. Missing cells in incomplete weeks and cells with null/negative source hours remain flagged/null. Seven-day coverage is inferred from eligible source rows; it does not prove that every employee was present in the source extract.
 
-`MW Abbreviate Role` is applied both to the raw `IMPORT Master` roles and to `INPUT MinuteWorkers`. `Master Prepare` filters dynamically using the canonical MinuteWorker role list instead of an incomplete hard-coded list.
+## Allocation formula
 
-| Source role variants | Canonical role |
+For each facility/category and distinct source week/day/role/shift:
+
+```text
+CellProductiveHours = HistoricalRosterHours × DirectCarePercent
+FortnightShare = CellProductiveHours / SUM(CellProductiveHours across all 14 days)
+AllocatedProductiveMinutes = CategoryFortnightHours × 60 × FortnightShare
+RequiredRosterFTE = AllocatedProductiveMinutes / DirectCarePercent / 456
+```
+
+There is **no weekday averaging, division by two, or doubling of results**.
+
+The equivalent two-stage calculation uses that individual fortnight day's category share, then its role share, then the role/day's shift share. Both methods are checked for agreement.
+
+`RoleWeeklyTargetMinutes` now refers to the actual subtotal for the row's `FortnightWeek`; Week 1 and Week 2 may differ. `RoleTargetMinutes` sums all 14 days. `RoleAverageDailyTargetMinutes = RoleTargetMinutes / 14` and `CategoryDailyTargetMinutes` remain informational fields only; neither drives allocation. Do not sum repeated target fields across shift/day rows.
+
+## Query pipeline
+
+New/supporting staging:
+
+- `INPUT MinuteWorkers`: compatibility query name retained; now returns `MatchingRosterRoleswithANACCRoles` directly without an assigned-types step.
+- `MW Roster Role Mapping Prepare`: normalises explicit roster and DC-role keys and maps DC Category to internal MinuteCategory.
+- `MW MinuteWorkers Prepare`: one retained configuration per normalised DC Role; many roster roles may share one DC Role.
+- `MW Fortnight Days`: fixed ordered 14-day display keys.
+- `MW Historical Weeks`: original source-week mapping and period count.
+- `MW Historical WeekDayShift`: unaveraged, zero-completed historical cells.
+- `MW Historical DayShift`: positive-history cells with conditional day shares and full-fortnight shares; no averaging.
+- `MW Role Distribution`: role share within each individual fortnight day.
+- `MW Category Weekday Targets`: name retained, but now 14 weighted category/day targets.
+- `MW Role Targets`: individual day targets, actual weekly subtotals and fortnight totals.
+- `MW DayShift Allocation`: required FTE at facility/role/FortnightDay/shift.
+- `MW FTE Profile Comparison`: exact role/week/day/shift join to actual allocation, with independent expected-scalar and residual checks.
+- `MW Role Fortnight Day Totals`: sums shifts into explicit 14-day role totals.
+
+Published outputs:
+
+| Query | Current grain/use |
 | --- | --- |
-| Registered Nurse; REGN variants | RN |
-| Assistant/Asst in Nursing; AINC4/Med Comp variants | AIN |
-| Enrolled Nurse | EN |
-| Clinical Care Coordinator; Clinical Care Coordinator & Manager | CCCM |
-| Residential Services Manager | RSM |
-| Care Service Manager; Care Services Manager | CSM |
-| Wellbeing & Care Support Officer; Wellbeing & Lifestyle Officer; WLO | WCSO |
-| Care & Assessment Manager | CAM |
-| Regional General Manager | RGM |
-| Therapy Assistant | TA |
+| `MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE` | Paired historical and redistributed FTE per original week/day/role/shift, with scalar-alignment diagnostics; publication-gated |
+| `MinuteWorkersFTE_TABLE` | Validated required FTE per distinct fortnight day and shift |
+| `MinuteWorkersFTE_MATRIX` | One row per facility/category/role; separate week-qualified day/shift columns, up to 42 |
+| `MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK` | 14 rows per allocated role; individual day, actual week and full-fortnight reconciliation |
+| `MinuteWorkersFTE_CATEGORY_DAILY_CHECK` | 14 rows per facility/category, reconciling weighted day targets and both weeks |
+| `MinuteWorkersFTE_HISTORICAL_DAY_CHECK` | Historical versus required FTE for each distinct role/week/day, with source coverage and headcount context |
+| `MinuteWorkersFTE_CHECK` | Main input, history, distribution and original-hours reconciliation results |
 
-The workbook's MinuteWorker list was last observed as RN, AIN, EN, CCCM, RSM, CSM, WCSO, CAM, and RGM. CAM and RGM did not have matching historical roster hours in the data inspected on the snapshot date. They should remain visible as warnings/unmatched roles; no historical allocation is to be invented for them.
+Legacy `LocRole…` query definitions remain in place, but their shared `Master Prepare` source now uses the explicit mapping and excludes NA roles. They still include the old historical-hours averages; do not use them to infer the new 14-day target allocation.
 
-## Query dependency and presentation order
+## Changed interfaces for existing charts
 
-The `.m` file presents substantial steps as separate named queries with `// Query:` and `// Purpose:` headers and business-rule comments.
+- Use `FortnightDay` sorted by `FortnightDayIndex`, not `Week Day` alone, for a 14-day axis.
+- Existing matrix column names change to week-qualified labels such as `1-Tuesday-AM`.
+- The seven-row proof tables now have fourteen rows per role/category. Weekly subtotal fields repeat within their own week; do not sum repeated subtotal fields.
+- The historical daily comparison retires the old `HistoricalAverage…`, across-weeks and average-versus-allocator fields. Use `HistoricalDailyRosterFTE`, `HistoricalAMRosterFTE`, `HistoricalPMRosterFTE`, `HistoricalNSRosterFTE`, `TargetDailyFTEShiftTotal`, and `TargetVsHistoricalRosterFTE`.
+- Direct master-roster headcount context is retained as `HistoricalDailyDistinctWorkers` and `HistoricalRowsMissingEmployeeCode`; no averaging is applied to these fields.
+- Whole-period shares are explicitly named `CategoryFortnightRoleDayShiftDistribution%`, `CategoryFortnightDayDistribution%`, and `CategoryFortnightHistoricalProductiveHours`.
+- Diagnostic tables may be inspected independently, but their existence is not proof that publication checks pass. Historical coverage/cell flags must be reviewed.
 
-### Inputs and preparation
+## Validation and acceptance
 
-- `IMPORT Master`
-- `INPUT MinuteWorkers`
-- `MW Abbreviate Role`
-- `MW MinuteWorkers Prepare`
-- `Master Prepare`
-- `LocRoleWeekDaysHours` (legacy aggregation and source-key/coverage checks)
-- existing legacy historical queries ending in `LocRoleDayShift%` remain for non-MinuteWorker outputs only
-- `INPUT TargetMinutes`
-- `MW TargetMinutes Prepare`
+Required checks:
 
-### Historical distribution
+1. Every supplied normalised `Roster Roles` key is nonblank and unique. Unmapped Master Roster roles are outside the MinuteWorker inclusion list and are excluded without error.
+2. `DC Category` is RN, OTHER, or NA. Retained RN/OTHER mappings have a DC Role and `0 < Direct Care % ≤ 1`; mappings sharing a DC Role have one category and percentage.
+3. Raw roster rows have non-null, non-negative hours and valid week/day/shift keys.
+4. Every target facility has exactly two source weeks, each with seven eligible weekdays.
+5. Historical graph cells are unique; source row counts and unaveraged roster hours reconcile.
+6. Conditional role/day and role/day/shift shares reconcile within each individual fortnight day.
+7. Full-fortnight category cell shares sum to 100%.
+8. Positive category targets require eligible productive history somewhere in the fortnight. Zero-history days may receive zero.
+9. Individual day allocations, the two actual weekly subtotals and the full fortnight reconcile.
+10. Independently, `sum(FTE × 7.6 × Direct Care %)` over **all 14 days once** equals the original RN and ALL input hours. There is no factor of two.
 
-- `MW Historical WeekDayShift` (unaveraged complete-cell staging, directly from `Master Prepare`)
-- `MW Historical DayShift`
-- `MW Role Distribution`
+11. `MW FTE Profile Alignment Check` checks every historical cell against actual redistributed FTE. Expected factor = category target productive minutes / 60 / historical category productive hours. Because direct-care adjustment cancels on conversion back to roster FTE, the same factor applies to every role, shift and day in that facility/category, across both weeks. RN and OTHERS can have different factors. A mixed-category aggregate is not guaranteed to retain one scaled shape.
 
-### Allocation
+Failures block `MinuteWorkersFTE_TABLE`, `MinuteWorkersFTE_MATRIX` and `MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE` through `MW Publication Check`. Inspect connection-only `MW Historical WeekDayShift` for raw history when the paired output is blocked.
 
-- `MW Category Weekday Targets`
-- `MW Role Targets`
-- `MW DayShift Allocation`
+Profile comparison fields:
 
-### Validation
+- `HistoricalRosterFTE`: unchanged, unaveraged master-roster hours / 7.6.
+- `RedistributedRosterFTE`: actual joined FTE from `MW DayShift Allocation`.
+- `ExpectedRedistributionFactor`: expected category-wide multiplier; repeated informational field, never sum it.
+- `RedistributionFactor`: redistributed / historical FTE for positive historical cells; null for zeros.
+- `ProfileVarianceFTE`: actual redistributed FTE minus historical FTE times expected factor; expected zero.
+- `ProfileAlignmentStatus`: `PASS`, `PASS ZERO`, `ERROR`, or `NO TARGET`.
+- `RedistributionMatchCount`: exposes missing or duplicate allocation joins without multiplying historical rows.
 
-- `MW Input Check`
-- `MW Distribution Check`
-- `MW Daily Allocation Check`
-- `MW PreAllocation Check`
-- `MW Fortnight Hours Check`
-- `MW Publication Check`
+Only valid zero-history cells with a configured target can receive an absent-allocation zero. Missing targets, incomplete history or missing positive-history allocations do not become fabricated zeros. An all-zero target/history pair can pass with an undefined ratio; no unique scalar can be inferred from zero divided by zero.
 
-### Published outputs
+Current source verification:
 
-- `MinuteWorkerRoleAssignments_TABLE`
-- `MinuteWorkersFTE_TABLE`
-- `MinuteWorkersFTE_MATRIX`
-- `MinuteWorkersFTE_CHECK`
-- `MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK`
-- `MinuteWorkersFTE_CATEGORY_DAILY_CHECK`
-- `MinuteWorkersFTE_HISTORICAL_DAY_CHECK`
-- `MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE`
+- `scripts/test-minuteworker-period-allocation.mjs`: 544 independent arithmetic/source-contract assertions passed, including balanced source delimiters, the 14-day/profile cases, explicit overrides of former guesses, many-to-one DC roles, NA/unmapped-role exclusion, duplicate mappings, invalid/non-numeric percentages, invalid categories and conflicting DC-role attributes.
+- 47 uniquely named shared queries.
+- Lexical delimiter/string checks passed; the quoted shared-query dependency scan found no cycles. These are not a full M parser.
+- The shared source validator passed six M files using a temporary configuration including this sidecar's directory. That configuration was removed. The validator checks nonempty files and conflict markers, not runtime calculation.
+- The selected sidecar's input and historical-preparation prefix was deliberately revised for the explicit role mapping; unrelated legacy calculations were preserved. Query headers, mapping dependency flow, joins, final outputs and the week-qualified matrix key were reviewed. `git diff --check` passed apart from line-ending warnings.
+- These fixtures do not execute Power Query. Excel runtime validation remains pending; do not describe source-only tests as refreshed workbook results.
 
-Staging queries should be connection-only in Excel when supported. Load only the outputs that users need to worksheets or the data model.
+Next authorized workflow: obtain explicit sync approval, validate the named source, confirm the named workbook is closed, sync via the approved mechanism, and re-extract to a separate comparison artifact as required by AGENTS.md. Never overwrite this approved source during verification. Obtain refresh approval separately, then inspect the check outputs before using the matrix.
 
-## Output grains and purpose
+## Plotting
 
-### `MinuteWorkerRoleAssignments_TABLE`
+For a continuous fortnight comparison, use `FortnightDay` on the axis sorted by `FortnightDayIndex`; filter facility, role and shift, or sum shifts for daily totals.
 
-One row per exact original Master Roster role and assigned configured MinuteWorker role. It exposes `MinuteCategory`, `QFR Category`, `Direct Care %`, source-row count, facility count, and facility list. Unmatched Master Roster roles are deliberately excluded.
+For two historical-week series, use `Week Day` on the axis with `FortnightWeek` as the series. This compares them visually without averaging.
 
-### `MinuteWorkersFTE_TABLE`
+For the requested four-line overlay, use the same weekday axis and combine `FortnightWeek` with the two value measures `HistoricalRosterFTE` and `RedistributedRosterFTE`. Use one colour per week, historical dashed and redistributed solid, with a common FTE axis. Filter to one facility and role; filter shift or sum all three for daily totals. Never normalise the two profiles separately, since that would conceal the scalar difference. Check `ProfileAlignmentStatus` and the residual before claiming alignment.
 
-Detailed allocation at approximately:
+For historical versus required daily FTE, use `MinuteWorkersFTE_HISTORICAL_DAY_CHECK` with `HistoricalDailyRosterFTE` and `TargetDailyFTEShiftTotal`. Review coverage flags and publication checks first. Missing/error historical values must not become fabricated zeros.
 
-`Facility × MinuteCategory × Role × Weekday × Shift`
+## Explicit role mapping
 
-It contains the historical measures and distributions, direct-care percentage, daily/fortnight/role targets, allocated productive minutes, roster minutes, and unrounded FTE.
+`MatchingRosterRoleswithANACCRoles` is the sole authority for roster-role relationships. Matching is case-insensitive after trimming, but no substring, abbreviation, nursing qualification, or role-name inference is applied.
 
-### `MinuteWorkersFTE_MATRIX`
+- `Roster Roles` is the original role label from `IMPORT Master`.
+- `DC Role` is the assigned analytical role. Its normalised uppercase key is used for grouping so case-only differences cannot split a role.
+- `DC Category` is RN, OTHER, or NA. Internal `MinuteCategory` remains RN/OTHERS for compatibility with target calculations.
+- `Direct Care %` converts historical roster hours to productive hours and target productive minutes back to roster FTE.
+- Multiple Roster Roles may map to one DC Role and are aggregated only after the explicit join.
+- NA rows remain in mapping preparation for validation but are removed from `Master Prepare` before analysis; no Excel table rows are deleted.
 
-One row per facility/category/role, with weekday-shift combinations as FTE columns. This is the user-facing staffing pattern view.
-
-### `MinuteWorkersFTE_CHECK`
-
-The principal validation output. It surfaces input, matching, distribution, allocation, and reconciliation failures, including independent checks against original fortnight hours. For those checks, Actual and Expected are in hours; existing minute-reconciliation checks remain in minutes. Required publication checks must pass before using TABLE or MATRIX.
-
-### `MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK`
-
-The role proof table. It has seven rows for every facility/category/role, including zero-allocation days, and proves that each role/day target, the representative week, and the reconstructed fortnight reconcile.
-
-Important columns include:
-
-- `RoleDayHistoryDistribution%`
-- `DailyShiftDistributionTotal%`
-- `RoleDailyTargetMinutes`
-- `DayAllocationVarianceMinutes`
-- `DayVsRoleDayTarget%`
-- `MaximumAbsoluteTwoStageVarianceMinutes`
-- `AllocatedDayProductiveMinutes`
-- `AllocatedDayRosterMinutes`
-- `DayFTEShiftTotal`
-- `ExpectedWeeklyProductiveMinutes`
-- `AllocatedWeeklyProductiveMinutes`
-- `WeeklyVarianceMinutes`
-- `RoleHistoryDistributionAcrossWeek%` (informational sum of seven day-specific shares; it is not expected to equal 100%)
-- `DaysWithAllocatedMinutes`
-- `AllocatedWeeklyRosterMinutes`
-- `WeeklyFTEShiftTotal`
-- `ReconstructedFortnightProductiveMinutes`
-- `FortnightVarianceMinutes`
-- `DayVsAverageDailyTarget%`
-- `CumulativeWeekProductiveMinutes`
-- `CumulativeWeeklyTarget%`
-- `Status`
-- `CheckMessage`
-
-For every allocated role, each day's shift distribution must total 100%, each day's allocated productive minutes must equal that day's `RoleDailyTargetMinutes`, weekly allocated productive minutes must equal `RoleWeeklyTargetMinutes`, and reconstructed fortnight minutes must equal `RoleTargetMinutes`, within a tolerance of 0.000001.
-
-### `MinuteWorkersFTE_CATEGORY_DAILY_CHECK`
-
-The category proof table. Each weekday must have `AllocatedDayProductiveMinutes = CategoryWeekdayTargetMinutes`, its weighted target. The seven-day mean must equal `CategoryDailyTargetMinutes`; doubling the weekly sum must equal the fortnight target. `DayVsDailyTarget%` retains its existing name but compares with the daily average, so it need not equal 100% on each day.
-
-### `MinuteWorkersFTE_HISTORICAL_DAY_CHECK`
-
-The historical comparison table places average distinct workers, roster-hour FTE, and target FTE at the same facility/role/weekday grain. Historical distinct workers are headcount context, not a staffing minimum. `RoleDayTargetStatus`, direct-care reconstruction, roster-FTE arithmetic, missing employee codes, and incomplete historical coverage are shown explicitly.
-
-### `MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE`
-
-Unaveraged graph-ready history at `Facility × Role × Week No × Weekday × Shift`. It exposes historical roster hours, roster FTE, productive hours, source-row counts, invalid-hour counts and coverage/cell flags. With two observed weeks, each observed facility/role has 42 cells (14 days × three shifts). Configured roles with no history anywhere are not invented.
-
-`OBSERVED` cells retain source hours; `ZERO` cells are absent role/shift combinations in a complete facility week. `MISSING` cells in incomplete weeks and `ERROR` cells containing invalid raw hours have null historical FTE. Coverage completeness is inferred from eligible source weekdays, not proof that an upstream extract contains every employee. Review flags and `MW Distribution Check` before graphing. The diagnostic history output remains available independently of target validity.
+The old `MW Abbreviate Role`, `QFR Category`, and guessed mappings are retired. `MinuteWorkerRoleAssignments_TABLE` exposes the retained original-to-DC-role assignments. Mapping-table roles with no retained historical rows remain warnings; Master Roster roles absent from the mapping table are excluded from this analysis.
 
 ## Last observed target values
 
@@ -210,7 +179,7 @@ The original input values below were recorded on the snapshot date. Their units 
 | JE | 395 | 1954 | 1559 | 23700 | 117240 | 93540 |
 | TE | 738 | 3641 | 2903 | 44280 | 218460 | 174180 |
 
-For BD RN at 100% direct care, the expected average daily productive minutes are 4461.93. The seven-day average of the AM + PM + NS FTE totals is approximately 9.784934211; individual weekdays may be higher or lower. The representative week's shift-equivalent sum is approximately 68.494539474. Display rounding only; calculations retain full precision. These are arithmetic expectations from the recorded input, not refreshed results of this revision.
+For BD RN at 100% direct care, 1041.117 hours per fortnight gives approximately 136.989078947 roster shift equivalents across all 14 days. The two weekly subtotals may differ; their mean is approximately 68.494539474. These are arithmetic expectations, not refreshed results of this revision.
 
 The facility code is `TE`; an older `NR`/`TE` mismatch was reported as resolved.
 
@@ -224,108 +193,10 @@ Counts below are diagnostic row counts after role normalization, not target amou
 | JE | 154 | 9 | 10 | 28 | 40 | 10 | 14 |
 | TE | 323 | 7 | 20 | 25 | 83 | 20 | 43 |
 
-## Earlier scale correction (spot checks superseded)
+## Remaining safeguards
 
-Earlier work assumed the inputs were daily minutes. That assumption was incorrect and is superseded by the user's 7 September confirmation of hours per fortnight. The correct conversion is input hours times 60 for fortnight minutes, divided by 14 for daily minutes.
-
-Examples after the scale correction, but before the weekday-local correction, were approximately:
-
-| Facility | Role | Weekday/shift | FTE |
-| --- | --- | --- | ---: |
-| BD | AIN | Monday AM | 2.939611794 |
-| BD | RN | Monday AM | 1.127048720 |
-| JE | RN | Monday AM | 0.293941662 |
-| TE | RN | Monday AM | 0.239175524 |
-
-These values must not be used as regression expectations for the revised allocator. They predate the corrected input units and/or denominator safeguards. Refresh the workbook and establish new spot checks only after the whole-period and raw-hours reconciliations pass.
-
-## Historical validation record (before the 7 September correction)
-
-- Power Query query/header and dependency presentation was reviewed.
-- Shared-query names were checked for duplicates.
-- Delimiter counts were checked for balance.
-- `git diff --check` passed apart from the repository's CRLF warning.
-- The shared Power Query source validator was run with a temporary project configuration and passed six `.m` files.
-- The temporary validator configuration was removed.
-
-The shared validator is structural and does not prove Power Query runtime correctness. A language-server check was attempted earlier but timed out, so do **not** record that as a pass. Excel refresh and reconciliation remain required.
-
-The session's earlier claim that `refresh-residentialcare.ps1 -ValidateOnly` proved this sidecar structurally valid was not supported. That command checks refresh configuration, and the default `pq.project.json` source roots cover `Workflows`, not this sidecar. Validation of the correction must explicitly include this file; source checks and independent arithmetic tests are distinct from Excel runtime execution.
-
-## Whole-period revision source validation (7 September)
-
-- `scripts/test-minuteworker-period-allocation.mjs`: 134 independent arithmetic/source-contract assertions passed, including unequal weekday weights, pooled-fortnight equivalence, two-stage allocation, raw-hours reconstruction, historical zero cells, invalid/missing history, and retaining more than two source weeks.
-- The source has 42 uniquely named shared queries, including the new unaveraged history stage/output and weighted category-weekday targets.
-- The shared validator passed six `.m` files using a temporary configuration explicitly including this sidecar's directory; the temporary configuration was removed. This validator checks file presence/content and conflict markers, not M evaluation.
-- These tests do not execute Power Query, prove Excel runtime correctness, or establish that BD's two historical weeks are similar. Synchronization succeeded through the approved extension; refresh and source-data comparison remain separate acceptance steps.
-
-## Errors already corrected
-
-- `MinuteWorkersFTE_CHECK` / `PreAllocationChecks` previously raised: `The columns of the specified table type must be nullable.` The explicit `Table.FromRecords` schemas were changed to nullable fields.
-- A previous allocation failure reported only `[Table]`. Fatal output errors now include check/facility/category/role context.
-- Historical role names did not fully match `INPUT MinuteWorkers`. Role normalization was expanded and applied consistently to both sides of the join.
-- Target-period scaling now converts input hours per fortnight to minutes (`* 60`) and then daily minutes (`/ 14`), superseding the former daily-minute assumption.
-- MinuteWorker role and shift distributions no longer use the legacy week-wide `LocRoleTOTAL` / `LocRoleDayShift%` denominator.
-- Historical averages now divide summed role/day/shift hours by the facility historical-period count, so a role or whole weekday absent in one period contributes zero instead of shrinking the averaging denominator.
-- Every target facility/week must contain eligible MinuteWorker history for all seven weekdays; incomplete periods are a fatal pre-allocation error.
-- Category/day and role/day reconciliation errors now block `MinuteWorkersFTE_TABLE` and `MinuteWorkersFTE_MATRIX`.
-- Original RN/ALL fortnight-hour reconciliation also blocks TABLE and MATRIX through `MW Publication Check`.
-- Target reshaping preserves null cells, and input checks reject an empty target table or missing RN/ALL target values.
-
-## Continue on the other PC
-
-1. Transfer or pull the repository and verify that both the `.m` file and this handoff arrived. Do not assume a Git pull includes local or uncommitted files; run `git status --short` on both PCs or use the approved secure transfer method.
-2. Read the current repository `AGENTS.md` before acting. Instructions may have changed since this snapshot.
-3. Confirm the exact workbook and `.m` paths listed above. Do not silently substitute a backup, copy, same-stem workbook, or older extracted source.
-4. Review the current `.m` diff and query list before importing it.
-5. Check the source used by `IMPORT Master`. It contains an external workbook path that may not exist on the new PC. Update it only through the approved path/source process; do not copy the old PC's user-specific absolute path into documentation or code examples.
-6. Confirm the Excel input tables still contain the expected columns and that target facility columns still include `TE`.
-7. Use the approved IMPORT Extract/synchronization method. Preserve staging queries as connection-only where supported.
-8. Refresh validation outputs first:
-   - `MinuteWorkersFTE_CHECK`
-   - `MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK`
-   - `MinuteWorkersFTE_CATEGORY_DAILY_CHECK`
-   - `MinuteWorkersFTE_HISTORICAL_DAY_CHECK`
-9. Investigate every error and any unexpected warning. Do not publish the matrix merely because it refreshes if reconciliation fails.
-10. For each allocated role/day, verify `Status = PASS`, `DailyShiftDistributionTotal% = 1`, and daily/weekly/fortnight variance is effectively zero.
-11. At facility/category level, confirm:
-    - every weekday's RN and OTHERS allocation equals its weighted `CategoryWeekdayTargetMinutes`;
-    - their seven-day averages equal the RN and `ALL - RN` average daily targets;
-    - `sum(FTE * 456 * Direct Care % * 2)` reconstructs the 14-day target when summed over the representative week.
-    - `sum(FTE * 7.6 * Direct Care % * 2)` reconstructs the original RN/ALL input hours, with the independent `MW Fortnight Hours Check` showing Pass.
-    - BD RN's seven daily AM + PM + NS totals average approximately 9.784934211 if the input is still 1041.117 hours/fortnight and RN direct care is 100%.
-    - historical graph keys are unique, source hours/row counts reconcile, and all facility/weeks have complete seven-day coverage.
-12. Only then refresh/use `MinuteWorkersFTE_TABLE` and `MinuteWorkersFTE_MATRIX`.
-
-## Suggested verification chart
-
-First compare the actual roster weeks using `MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE`:
-
-- Axis: weekday, ordered by `DayOfWeek`.
-- Values: sum of `HistoricalRosterFTE`.
-- Series: original `Week No` (two series when the source is a fortnight).
-- Filters: `Facility = BD`, `Role = RN`; optionally `Shift`, or sum all three shifts to compare whole days.
-- Review coverage/cell flags first. Similar lines support weekday averaging; material differences warrant retaining distinct week patterns. Similarity has not yet been confirmed numerically.
-
-Build a PivotChart from `MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK`:
-
-- Axis: weekday, sorted by the numeric day-of-week field
-- Clustered columns: `DayFTEShiftTotal`
-- Line on secondary axis: `CumulativeWeekProductiveMinutes` or `CumulativeWeeklyTarget%`
-- Slicers: `Facility` and `Role`
-- Optional slicer: `MinuteCategory`
-
-The final cumulative percentage should reach 100% for an allocated role, while the daily columns show how the FTE requirement varies through the week.
-
-## Safeguards and open points
-
-- This revision adds raw null/negative-hour validation before grouping and historical graph total/uniqueness checks. Remaining review findings: shift boundaries depend on input row order, and legacy historical outputs share the configured-role preparation filter. Do not describe the legacy branch as independent of configuration changes.
-
-- Do not inspect, unzip, directly edit, or refresh a workbook unless the user explicitly authorizes that action and the approved workflow is followed.
-- Preserve all existing non-MinuteWorker queries and outputs.
-- Do not recategorize RN-qualified manager roles as the `RN` MinuteCategory unless the business rule is explicitly changed. The current rule uses the canonical role name `RN` only.
-- Do not give CAM or RGM invented historical shares. Resolve missing history with a business-approved method if they are expected to receive an allocation.
-- Do not use earlier Monday-only figures as a regression target. Corrected units, complete-period averaging and fortnight reconciliation are all required. Whole-period weighting does not impose a historical headcount minimum such as 14 AIN; such a floor requires a separate approved business rule.
-- `Week No` is the only available historical period key. It must be non-null and uniquely identify each roster period; use a composite year/week key if the source later spans repeated week numbers.
-- Confirm whether the current `.m` sidecar should be promoted to a canonical file under `Workflows/`; do not make that move implicitly.
-- If the workbook inputs or historical source have changed after 30 August 2026, regenerate the diagnostic values rather than treating this handoff's numbers as authoritative.
+- Historical data means master-roster hours, not necessarily hours actually worked.
+- CAM/RGM unmatched-history warnings do not authorize invented allocation weights.
+- Shift boundaries still depend on input row order. This was not changed in the 14-day revision.
+- Legacy outputs still share the configured-role preparation filter; they are not independent of future configuration changes.
+- Preserve the hours-per-fortnight correction and approved source path. Do not roll back wholesale to an older allocator.
