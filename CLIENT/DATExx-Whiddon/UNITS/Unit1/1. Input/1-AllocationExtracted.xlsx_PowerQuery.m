@@ -48,11 +48,14 @@ shared RosterStart = let
 in
     #"Calculated Maximum";
 
+// Query: AllocationExtraction
+// Purpose: Prepare roster allocations using RN, AIN and the existing AINC4 role value.
 shared AllocationExtraction = let
     Source = #"Allocation Prepare",
     #"Renamed Columns2" = Table.RenameColumns(Source,{{"Finish", "End"}}),
     #"Renamed Columns" = Table.RenameColumns(#"Renamed Columns2",{{"Role", "RoleX"}}),
-    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns", "Role", each if Text.Contains([RoleX], "REGN") then "RN" else if [RoleX] = "Asst in Nursing Med Comp" then "AINC4" else if Text.Contains([RoleX], "Asst") then "AIN" else if [RoleX] = "Enrolled Nurse" then "EN" else [RoleX]),
+    // Temporarily use AINC4 for enrolled-nurse allocations so the third role branch receives them.
+    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns", "Role", each if Text.Contains([RoleX], "REGN") then "RN" else if [RoleX] = "Asst in Nursing Med Comp" then "AINC4" else if Text.Contains([RoleX], "Asst") then "AIN" else if [RoleX] = "Enrolled Nurse" then "AINC4" else [RoleX]),
     #"Filtered Rows" = Table.SelectRows(#"Added Conditional Column", each ([Role] = "AIN" or [Role] = "AINC4" or [Role] = "Asst in Nursing " or [Role] = "Enrolled Nurse" or [Role] = "RN")),
     #"Added Custom" = Table.AddColumn(#"Filtered Rows", "Unit", each null),
     #"Removed Columns" = Table.RemoveColumns(#"Added Custom",{"RoleX"})

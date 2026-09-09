@@ -4,12 +4,16 @@
 
 section Section1;
 
+// Query: IMPORT AvailabilityDayShiftMATRIXRaw
+// Purpose: Read staff availability using AINC4 as the temporary enrolled-nurse role value.
 shared #"IMPORT AvailabilityDayShiftMATRIXRaw" = let
  
     Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\StaffList Availability.xlsx"), null, true),
-    Table2_Table = Source{[Item="AvailabilityMatrix",Kind="Table"]}[Data]
+    Table2_Table = Source{[Item="AvailabilityMatrix",Kind="Table"]}[Data],
+    // Use the same role value as allocation and demand before staff names and availability are joined.
+    ReplacedENRole = Table.ReplaceValue(Table2_Table, "EN", "AINC4", Replacer.ReplaceValue, {"Role"})
 in
-    Table2_Table;
+    ReplacedENRole;
 
 shared #"IMPORT OrdinaryWorkWk" = let
 

@@ -1,59 +1,42 @@
 // Power Query from: CapacityDistrib(A.1)-shifts.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\AINC4\CapacityDistrib(A.1)-shifts.xlsx
-// Extracted: 2026-05-21T00:53:35.669Z
+// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\RoleA\CapacityDistrib(A.1)-shifts.xlsx
+// Extracted: 2026-05-21T00:53:59.335Z
 
 section Section1;
 
 shared #"IMPORT ShiftUnitDemandHRS !!" = let
     Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Demand.xlsx"), null, true),
     ShiftDemandHCAverageANACC_Table = Source{[Item="ShiftDemandHCAverageANACC",Kind="Table"]}[Data],
-    #"Renamed Columns" = Table.RenameColumns(ShiftDemandHCAverageANACC_Table,{{"ShiftDurations.Duration", "ShiftDurations.ShiftDuration"}}),
-    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"ShiftPeriod", type text}, {"UnitShiftEffort", type number}, {"ShiftDurations.ShiftDuration", type number}, {"ShiftDemandHCAverage", type number}}),
-    #"Filtered ROLE" = Table.SelectRows(#"Changed Type", each ([Role] = Role))
+    #"Filtered ROLE" = Table.SelectRows(ShiftDemandHCAverageANACC_Table, each ([Role] = Role)),
+    #"Renamed Columns" = Table.RenameColumns(#"Filtered ROLE",{{"ShiftDurations.Duration", "ShiftDurations.ShiftDuration"}}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"ShiftPeriod", type text}, {"UnitShiftEffort", type number}, {"ShiftDurations.ShiftDuration", type number}, {"ShiftDemandHCAverage", type number}})
 in
-    #"Filtered ROLE";
-
-shared #"IMPORT PermutationDimensions" = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Settings Data.xlsx"), null, true),
-    PermutationDimensions_Table = Source{[Item="PermutationDimensions",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(PermutationDimensions_Table,{{"Date", type date}, {"Shifts", type text}, 
- {"Period", Int64.Type}, {"RolesList", type text}}),
-    #"Filtered ROLE" = Table.SelectRows(#"Changed Type", each ([RolesList] = Role))
-in
-    #"Filtered ROLE";
+    #"Changed Type";
 
 shared #"IMPORT Masterlist !!" = let
     Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\StaffListMaster.xlsx"), null, true),
     Table_Masterlist_Table = Source{[Item="Table_Masterlist",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(Table_Masterlist_Table,{{"Role", type text}}),
-    #"Filtered ROLE" = Table.SelectRows(#"Changed Type", each ([Role] = Role))
+    #"Filtered ROLE" = Table.SelectRows(Table_Masterlist_Table, each ([Role] = Role)),
+    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"Role", type text}})
 in
-    #"Filtered ROLE";
+    #"Changed Type";
 
 shared #"IMPORT ResDayShift !!" = let
     Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Capacity-ShiftAvailability.xlsx"), null, true),
     Table_ResDayShift_Table = Source{[Item="Table_ResDayShift",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(Table_ResDayShift_Table,{{"Role", type text}, {"Name", type text},  {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", Int64.Type}}),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Date", type date}}),
-    #"Filtered ROLE" = Table.SelectRows(#"Changed Type1", each ([Role] = Role))
+    #"Filtered ROLE" = Table.SelectRows(Table_ResDayShift_Table, each ([Role] = Role)),
+    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"Role", type text}, {"Name", type text},  {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", Int64.Type}}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Date", type date}})
 in
-    #"Filtered ROLE";
+    #"Changed Type1";
 
 shared #"IMPORT ResourceShiftAllocation - Role!!" = let
     Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\AllocationByShiftAverage.xlsx"), null, true),
     ResourceShiftAllocation_Table = Source{[Item="ResourceShiftAllocation",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(ResourceShiftAllocation_Table,{{"ShiftDate", type date}, {"ShiftPeriod", type text}, {"Name", type text}, {"Role", type text}, {"ResShiftEffort", type number}, {"ResShiftEffectiveRatio", type number}, {"ResShiftFTE", type number}}),
-    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Role] = Role))
+    #"Filtered ROLE" = Table.SelectRows(ResourceShiftAllocation_Table, each ([Role] = Role)),
+    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"ShiftDate", type date}, {"ShiftPeriod", type text}, {"Name", type text}, {"Role", type text}, {"ResShiftEffort", type number}, {"ResShiftEffectiveRatio", type number}, {"ResShiftFTE", type number}})
 in
-    #"Filtered Rows";
-
-shared #"IMPORT MaxAvailability" = let
-    Source = Excel.Workbook(File.Contents(FilePath &"\2. Calculations\Settings Data.xlsx"), null, true),
-    MaxAvailability_Table = Source{[Item="MaxAvailability",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(MaxAvailability_Table,{{"MaxAvailability", Int64.Type}}),
-    MaxAvailability1 = #"Changed Type"{0}[MaxAvailability]
-in
-    MaxAvailability1;
+    #"Changed Type";
 
 shared MaxShiftCluster = 5 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
 
@@ -67,7 +50,7 @@ in
 
 [ Description = "BUFFER" ]
 shared #"PeriodShiftDay B" = let
-    Source = #"IMPORT PermutationDimensions",
+    Source = #"EXTRACT PermutationDimensions",
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Date", "Day", "Shifts", "Period", "RolesList"}),
     BUFFER = Table.Buffer(#"Removed Other Columns")
 in
@@ -92,24 +75,25 @@ shared #"ResPeriodAvailabilityTABLE !!" = let
     Source = #"IMPORT ResDayShift !!",
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Name", "Role", "Week", "Shift", "Date"}),
     #"Changed Type2" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Date", type date}}),
-    // Buffer
-    BUFFER = Table.Buffer(#"Changed Type2"),
-    #"Merged Queries" = Table.NestedJoin(BUFFER, {"Name"}, Resources, {"Name"}, "Resources", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(#"Changed Type2", {"Name"}, Resources, {"Name"}, "Resources", JoinKind.LeftOuter),
     #"Expanded Resources" = Table.ExpandTableColumn(#"Merged Queries", "Resources", {"Resource"}, {"Resource"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded Resources", {"Date", "Shift", "Role"}, #"PeriodShiftDay B", {"Date", "Shifts", "RolesList"}, "PeriodShiftDay", JoinKind.LeftOuter),
     #"Expanded PeriodShiftDay" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodShiftDay", {"Period"}, {"Period"}),
     // Make Availability dynamic
     #"Added AVAILABILITY TEMP" = Table.AddColumn(#"Expanded PeriodShiftDay", "Availability", each 1),
-    #"Removed Other Columns1" = Table.SelectColumns(#"Added AVAILABILITY TEMP",{"Role", "Resource", "Period", "Availability"})
+    #"Removed Other Columns1" = Table.SelectColumns(#"Added AVAILABILITY TEMP",{"Role", "Resource", "Period", "Availability"}),
+    // Buffer
+    BUFFER = Table.Buffer(#"Removed Other Columns1")
 in
-    #"Removed Other Columns1";
+    BUFFER;
 
 shared ResDayPeriodAvailabilityTABLE = let
     Source = #"ResPeriodAvailabilityTABLE !!",
     #"Merged Queries" = Table.NestedJoin(Source, {"Period", "Role"}, #"PeriodShiftDay B", {"Period", "RolesList"}, "PeriodShiftDay", JoinKind.LeftOuter),
-    #"Expanded PeriodShiftDay" = Table.ExpandTableColumn(#"Merged Queries", "PeriodShiftDay", {"Day"}, {"Day"})
+    #"Expanded PeriodShiftDay" = Table.ExpandTableColumn(#"Merged Queries", "PeriodShiftDay", {"Day"}, {"Day"}),
+    BUFFER = Table.Buffer(#"Expanded PeriodShiftDay")
 in
-    #"Expanded PeriodShiftDay";
+    BUFFER;
 
 shared ResDayAvailabilityTABLE = let
     Source = ResDayPeriodAvailabilityTABLE,
@@ -124,8 +108,7 @@ in
 
 shared ResPeriodAllocationCHECK = let
     Source = #"IMPORT ResourceShiftAllocation - Role!!",
-    BUFFER = Table.Buffer(Source),
-    #"Filtered DATEFROM" = Table.SelectRows(BUFFER, each ([ShiftDate] >= Date_From)),
+    #"Filtered DATEFROM" = Table.SelectRows(Source, each ([ShiftDate] >= #"EXTRACT Date_From")),
     #"Removed Columns" = Table.RemoveColumns(#"Filtered DATEFROM",{"ResShiftEffort", "ResShiftEffectiveRatio"}),
     #"Merged Queries" = Table.NestedJoin(#"Removed Columns", {"Name", "Role"}, Resources, {"Name", "Role"}, "Resources", JoinKind.LeftOuter),
     #"Expanded Resources" = Table.ExpandTableColumn(#"Merged Queries", "Resources", {"Resource"}, {"Resource"}),
@@ -134,41 +117,43 @@ in
     #"Renamed Columns";
 
 [ Description = "BUFFER" ]
-shared #"ResPeriodAllocation-" = let
+shared #"ResPeriodAllocation-B" = let
     Source = ResPeriodAllocationCHECK,
     #"Filtered Rows NULL" = Table.SelectRows(Source, each ([Resource] <> null)),
-    #"Added SHIFTNUMBER" = Table.AddColumn(#"Filtered Rows NULL", "ShiftNumber", each if [IntervalAssociatedShift] = "AM" then 1 else if [IntervalAssociatedShift] = "PM" then 2 else if [IntervalAssociatedShift] = "NIGHT" then 3 else null)
+    #"Added SHIFTNUMBER" = Table.AddColumn(#"Filtered Rows NULL", "ShiftNumber", each if [IntervalAssociatedShift] = "AM" then 1 else if [IntervalAssociatedShift] = "PM" then 2 else if [IntervalAssociatedShift] = "NIGHT" then 3 else null),
+    BUFFER = Table.Buffer(#"Added SHIFTNUMBER")
 in
-    #"Added SHIFTNUMBER";
+    BUFFER;
 
 shared #"ResPeriodAllocation-ShiftBias" = let
-    Source = #"ResPeriodAllocation-",
-    BUFFER = Table.Buffer(Source),
-    #"Grouped Rows1" = Table.Group(BUFFER, {"IntervalAssociatedShift", "Resource", "ShiftDate"}, {{"Allocation", each List.Sum([Allocation]), type nullable number}}),
+    Source = #"ResPeriodAllocation-B",
+    #"Grouped Rows1" = Table.Group(Source, {"IntervalAssociatedShift", "Resource", "ShiftDate"}, {{"Allocation", each List.Sum([Allocation]), type nullable number}}),
     #"Filtered Rows" = Table.SelectRows(#"Grouped Rows1", each ([Allocation] > NotShiftThreshold)),
     #"Added SHIFTINDEX" = Table.AddColumn(#"Filtered Rows", "ShiftIndex", each if [IntervalAssociatedShift] = "AM" then 1 else if [IntervalAssociatedShift] = "PM" then 2 else 3),
-    #"Grouped SHIFTBIAS" = Table.Group(#"Added SHIFTINDEX", {"Resource"}, {{"ShiftBias", each List.Average([ShiftIndex]), type number}})
+    #"Grouped SHIFTBIAS" = Table.Group(#"Added SHIFTINDEX", {"Resource"}, {{"ShiftBias", each List.Average([ShiftIndex]), type number}}),
+    BUFFER = Table.Buffer(#"Grouped SHIFTBIAS")
 in
-    #"Grouped SHIFTBIAS";
+    BUFFER;
 
 [ Description = "BUFFER" ]
 shared ResPeriodAllocationTABLE = let
-    Source = #"ResPeriodAllocation-",
-    BUFFER = Table.Buffer(Source),
-    #"Merged Queries1" = Table.NestedJoin(BUFFER, {"ShiftDate", "IntervalAssociatedShift"}, #"PeriodShiftDay B", {"Date", "Shifts"}, "PeriodShiftDay", JoinKind.LeftOuter),
+    Source = #"ResPeriodAllocation-B",
+    #"Merged Queries1" = Table.NestedJoin(Source, {"ShiftDate", "IntervalAssociatedShift"}, #"PeriodShiftDay B", {"Date", "Shifts"}, "PeriodShiftDay", JoinKind.LeftOuter),
     #"Expanded PeriodShiftDay" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodShiftDay", {"Period"}, {"Period"}),
     #"Grouped ALLOCATION" = Table.Group(#"Expanded PeriodShiftDay", {"ShiftDate", "IntervalAssociatedShift", "Role", "Resource", "Period", "ShiftNumber"}, {{"Allocation", each List.Sum([Allocation]), type nullable number}}),
     #"Filtered NOTFULLSHIFT" = Table.SelectRows(#"Grouped ALLOCATION", each ([Allocation] > NotShiftThreshold)),
-    #"Removed Other Columns" = Table.SelectColumns(#"Filtered NOTFULLSHIFT",{"Role", "Resource", "Period", "ShiftNumber", "Allocation"})
+    #"Removed Other Columns" = Table.SelectColumns(#"Filtered NOTFULLSHIFT",{"Role", "Resource", "Period", "ShiftNumber", "Allocation"}),
+    BUFFER = Table.Buffer(#"Removed Other Columns")
 in
-    #"Removed Other Columns";
+    BUFFER;
 
 shared ResDayAllocationTABLE = let
     Source = Table.NestedJoin(ResPeriodAllocationTABLE, {"Period"}, #"PeriodShiftDay B", {"Period"}, "PeriodShiftDay", JoinKind.LeftOuter),
     #"Expanded PeriodShiftDay1" = Table.ExpandTableColumn(Source, "PeriodShiftDay", {"Day"}, {"Day"}),
-    #"Group RESDAYALLOCATION" = Table.Group(#"Expanded PeriodShiftDay1", {"Resource", "Day"}, {{"ResDayAllocation", each List.Sum([Allocation]), type nullable number}, {"ShiftAverage", each List.Average([ShiftNumber]), type number}})
+    #"Group RESDAYALLOCATION" = Table.Group(#"Expanded PeriodShiftDay1", {"Resource", "Day"}, {{"ResDayAllocation", each List.Sum([Allocation]), type nullable number}, {"ShiftAverage", each List.Average([ShiftNumber]), type number}}),
+    BUFFER = Table.Buffer(#"Group RESDAYALLOCATION")
 in
-    #"Group RESDAYALLOCATION";
+    BUFFER;
 
 shared PeriodAllocationTABLE = let
     Source = ResPeriodAllocationTABLE,
@@ -195,10 +180,9 @@ shared #"PeriodC'" = let
     #"Merged Queries" = Table.NestedJoin(#"Expanded DAY", {"Resource", "Day"}, ResDayNWDTABLE, {"Resource", "Day"}, "ResDayNWDTABLE", JoinKind.LeftOuter),
     #"Expanded ResDayNWDTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ResDayNWDTABLE", {"PotentialAvailability"}, {"PotentialAvailability"}),
     #"Filtered Rows" = Table.SelectRows(#"Expanded ResDayNWDTABLE", each ([PotentialAvailability] = null)),
-    #"Grouped C'" = Table.Group(#"Filtered Rows", {"Period"}, {{"PeriodC'", each List.Sum([Availability]), type number}}),
-    Custom1 = Table.Buffer(#"Grouped C'")
+    #"Grouped C'" = Table.Group(#"Filtered Rows", {"Period"}, {{"PeriodC'", each List.Sum([Availability]), type number}})
 in
-    Custom1;
+    #"Grouped C'";
 
 shared #"PeriodC'-D" = let
     Source = #"PeriodC'",
@@ -224,8 +208,8 @@ in
 
 shared #"ResAv-C'" = let
     Source = #"ResC'",
-    #"Added AVAILCAP" = Table.AddColumn(Source, "RosterAvailabilityCAPPED", each if [RosterAvailability] > #"IMPORT MaxAvailability"
-then #"IMPORT MaxAvailability"
+    #"Added AVAILCAP" = Table.AddColumn(Source, "RosterAvailabilityCAPPED", each if [RosterAvailability] > #"EXTRACT MaxAvailability"
+then #"EXTRACT MaxAvailability"
 else [RosterAvailability]),
     #"Inserted REDUCTION" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
     #"Renamed Columns" = Table.RenameColumns(#"Inserted REDUCTION",{{"AvailabilityReduction", "ResAv-C'"}})
@@ -235,8 +219,7 @@ in
 [ Description = "BUFFER   Tag RP cell with R that need to reduced becuase over allocated" ]
 shared #"ResPeriod(ExcessPot)SpareAvailabilityTABLE" = let
     Source = #"C' ResSingleShiftDayTABLE",
-    #"BUFER 1" = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(#"BUFER 1", {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded ResPeriodAllocationTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ResPeriodAllocationTABLE", {"Allocation"}, {"Allocation"}),
     #"Merged Queries2" = Table.NestedJoin(#"Expanded ResPeriodAllocationTABLE", {"Resource", "Period"}, ResPeriodWDTABLE, {"Resource", "Period"}, "ResPeriodWDTABLE", JoinKind.LeftOuter),
     #"Expanded ResPeriodWDTABLE" = Table.ExpandTableColumn(#"Merged Queries2", "ResPeriodWDTABLE", {"PotentialAvailability"}, {"PotentialAvailability"}),
@@ -261,8 +244,7 @@ in
 [ Description = "BUFFER" ]
 shared ResPeriodCapPrioritised = let
     Source = #"ResPeriod(ExcessPot)SpareAvailabilityTABLE",
-    BUFFER = Table.Buffer(Source),
-    #"Filtered Rows" = Table.SelectRows(BUFFER, each ([UnassignedAvail] > 0)),
+    #"Filtered Rows" = Table.SelectRows(Source, each ([UnassignedAvail] > 0)),
     #"Merged Queries" = Table.NestedJoin(#"Filtered Rows", {"Period"}, #"PeriodC'-DPos (ExcessPot)", {"Period"}, "C-DPos (ExcessPot)", JoinKind.LeftOuter),
     #"Expanded zPeriodC-DPos (ExcessPot)" = Table.ExpandTableColumn(#"Merged Queries", "C-DPos (ExcessPot)", {"C'-D", "C'/D"}, {"C'-D", "C'/D"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded zPeriodC-DPos (ExcessPot)", {"Period"}, #"PeriodA-C' Neg(Surfit)", {"Period"}, "PeriodA-C", JoinKind.LeftOuter),
@@ -283,7 +265,7 @@ in
     BUFFER;
 
 [ Description = "BUFFER" ]
-shared #"AppliedAllocation+ActiveDays#" = let
+shared #"AppliedAllocation+ActiveDays" = let
     Source = Table.NestedJoin(ResourcePeriodTABLEIndex, {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded ResPeriodAllocationTABLE" = Table.ExpandTableColumn(Source, "ResPeriodAllocationTABLE", {"Allocation"}, {"Allocation"}),
     #"Merged Queries" = Table.NestedJoin(#"Expanded ResPeriodAllocationTABLE", {"Resource", "Period"}, #"ResPeriodAvailabilityTABLE !!", {"Resource", "Period"}, "ResPeriodAvailabilityTABLE", JoinKind.LeftOuter),
@@ -297,69 +279,123 @@ in
     #"Renamed Columns";
 
 shared ResDaysAllocated = let
-    Source = #"AppliedAllocation+ActiveDays#",
-    #"Replaced Value" = Table.ReplaceValue(Source,null,0,Replacer.ReplaceValue,{"Allocation"}),
-    // Not true allocation.  1 used as indicator mostly allocated shift
-    #"Added VALIDALLOCATION" = Table.AddColumn(#"Replaced Value", "ValidAllocation", each if [InValidAllocation] = true then 0 else if [Allocation] > ValidAllocation then 1 else 0),
-    #"Grouped RESDAYALLOCATION" = Table.Group(#"Added VALIDALLOCATION", {"Resource", "Day"}, {{"ResDayAllocation", each List.Max([ValidAllocation]), type number}}),
-    // Valid allocation only.  Not true allocation
-    #"Added RESDAYALLOCATED" = Table.AddColumn(#"Grouped RESDAYALLOCATION", "ResDayAllocated", each if [ResDayAllocation] <> 0 then [ResDayAllocation] else null),
-    #"Sorted Rows" = Table.Sort(#"Added RESDAYALLOCATED",{{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
-    #"Added Index" = Table.AddIndexColumn(#"Sorted Rows", "ResIndex", 2, 1, Int64.Type)
-in
-    #"Added Index";
+    // 1) Start from your per‑shift allocations
+    Raw = #"AppliedAllocation+ActiveDays",
 
-shared ResourcePeriodIndexLimit = let
-    Source = ResDaysAllocated,
-    #"Grouped Rows" = Table.Group(Source, {"Resource"}, {{"ResIndexStart", each List.Min([ResIndex]), type number}})
-in
-    #"Grouped Rows";
+    // 2) Keep only Resource, Day and the raw Allocation
+    Base = Table.SelectColumns(Raw,{"Resource", "Day", "Allocation"}),
 
-[ Description = "BUFFER" ]
-shared CumIndexes = let
-    Source = ResDaysAllocated,
-    // from ResDayAllocation
-    #"Renamed ALLOCATION" = Table.RenameColumns(Source,{{"ResDayAllocation", "Allocation"}}),
-    BUFFER = Table.Buffer(#"Renamed ALLOCATION"),
-    #"Sorted BY RES INDEX" = Table.Sort(BUFFER,{{"ResIndex", Order.Ascending}}),
-    #"Merged Queries" = Table.NestedJoin(#"Sorted BY RES INDEX", {"Resource"}, ResourcePeriodIndexLimit, {"Resource"}, "ResourcePeriodIndexLimit", JoinKind.LeftOuter),
-    #"Expanded ResourcePeriodIndexLimit" = Table.ExpandTableColumn(#"Merged Queries", "ResourcePeriodIndexLimit", {"ResIndexStart"}, {"ResIndexStart"}),
-    #"Replaced Value" = Table.ReplaceValue(#"Expanded ResourcePeriodIndexLimit",null,0,Replacer.ReplaceValue,{"Allocation"}),
-    #"Inserted FORWAR STEP" = Table.AddColumn(#"Replaced Value", "ForwardStep", each [ResIndex] - [ResIndexStart]+1, type number),
-    LIST.BUFFER = List.Buffer(#"Inserted FORWAR STEP"[ResDayAllocation]),
-    #"Added FORWARDCUM" = Table.AddColumn(#"Inserted FORWAR STEP", "CumulativeForward", each List.Sum(List.Range(#"Inserted FORWAR STEP"[ResDayAllocated], [ResIndexStart]-2
-,[ForwardStep]))),
-    #"Added Index" = Table.AddIndexColumn(#"Added FORWARDCUM", "Index", 0, 1, Int64.Type),
-    #"Added Index1" = Table.AddIndexColumn(#"Added Index", "Index.1", 1, 1, Int64.Type),
-    #"Added Index2" = Table.AddIndexColumn(#"Added Index1", "Index.2", 2, 1, Int64.Type),
-    #"Added Index3" = Table.AddIndexColumn(#"Added Index2", "Index.3", 3, 1, Int64.Type)
+    // 3) Turn each shift into a 1/0 flag
+    ShiftFlagged = Table.TransformColumns(
+        Base,
+        {{"Allocation", each if _ <> null and _ > ValidAllocation then 1 else 0, Int64.Type}}
+    ),
+
+    // 4) Collapse to one row per Resource/Day (1 if any shift had allocation)
+    Daily = Table.Group(ShiftFlagged, {"Resource", "Day"}, {{"AllocFlag", each List.Max([Allocation]), type number}}),
+
+    // 5) Buffer that small daily table once
+    LeanDailyBUFFER = Table.Buffer(Daily),
+
+    // 6) Sort & group so we can index within each Resource
+    Sorted = Table.Sort(LeanDailyBUFFER, {{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
+    Grouped = Table.Group(
+        Sorted,
+        {"Resource"},
+        {{"AllData", each Table.AddIndexColumn(_, "Idx", 0, 1, Int64.Type), type table}}
+    ),
+
+    // 7) **Note the double‐braces** here—this makes your transformOperations a list of one operation
+    WithCodes = Table.TransformColumns(
+        Grouped,
+        {
+            {
+                "AllData",
+                (tbl) =>
+                    let
+                        flags    = Table.Column(tbl, "AllocFlag"),
+                        n        = List.Count(flags),
+                        getD     = (i, o) => if i+o < 0 or i+o >= n then "0" else Text.From(flags{i+o}),
+                        enriched = Table.AddColumn(
+                                     tbl,
+                                     "Code",
+                                     each Text.Combine(List.Transform({-2..2}, (off) => getD([Idx], off)), "")
+                                   )
+                    in
+                        enriched
+            }
+        }
+    ),
+
+    // 8) Expand only the new fields (Day, AllocFlag, Idx, Code)
+    Expanded = Table.ExpandTableColumn(
+        WithCodes,
+        "AllData",
+        {"Day", "AllocFlag", "Idx", "Code"},
+        {"Day", "AllocFlag", "Idx", "Code"}
+    ),
+    #"Renamed Columns" = Table.RenameColumns(Expanded,{{"Idx", "ResIndex"}})
 in
-    #"Added Index3";
+    #"Renamed Columns"
+;
 
 [ Description = "BUFFER" ]
 shared AllocationCode = let
-    Source = CumIndexes,
-    BUFFER1 = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(BUFFER1, {"Index"}, BUFFER1, {"Index.3"}, "Reordered Columns1", JoinKind.LeftOuter),
-    #"Expanded YESTERDAY3" = Table.ExpandTableColumn(#"Merged Queries", "Reordered Columns1", {"ResDayAllocated"}, {"Yesterday.Allocated3"}),
-    #"Merged Queries2" = Table.NestedJoin(#"Expanded YESTERDAY3", {"Index"}, #"Expanded YESTERDAY3", {"Index.2"}, "Reordered Columns", JoinKind.LeftOuter),
-    #"Expanded YESTERDAY2" = Table.ExpandTableColumn(#"Merged Queries2", "Reordered Columns", {"Resource", "ResDayAllocated"}, {"Yesterday.Resource2", "Yesterday.Allocated2"}),
-    #"Merged Queries1" = Table.NestedJoin(#"Expanded YESTERDAY2", {"Index"}, #"Expanded YESTERDAY2", {"Index.1"}, "Added Index1", JoinKind.LeftOuter),
-    #"Expanded YESTERDAY1" = Table.ExpandTableColumn(#"Merged Queries1", "Added Index1", {"Resource", "ResDayAllocated"}, {"Yesterday.Resource1", "Yesterday.Allocated1"}),
-    #"Merged Queries3" = Table.NestedJoin(#"Expanded YESTERDAY1", {"Index.1"}, #"Expanded YESTERDAY1", {"Index"}, "Added Index2", JoinKind.LeftOuter),
-    #"Expanded TOMORROW1" = Table.ExpandTableColumn(#"Merged Queries3", "Added Index2", {"Resource", "ResDayAllocated"}, {"Tomorrow.Resource1", "Tomorrow.Allocated1"}),
-    #"Merged Queries4" = Table.NestedJoin(#"Expanded TOMORROW1", {"Index.2"}, #"Expanded TOMORROW1", {"Index"}, "Expanded TOMORROW1", JoinKind.LeftOuter),
-    #"Expanded TOMORROW2" = Table.ExpandTableColumn(#"Merged Queries4", "Expanded TOMORROW1", {"Resource", "ResDayAllocated"}, {"Tomorrow.Resource2", "Tomorrow.Allocated2"}),
-    #"Merged Queries5" = Table.NestedJoin(#"Expanded TOMORROW2", {"Index.3"}, #"Expanded TOMORROW2", {"Index"}, "Expanded Reordered Columns1", JoinKind.LeftOuter),
-    #"Expanded TOMORROW3" = Table.ExpandTableColumn(#"Merged Queries5", "Expanded Reordered Columns1", {"ResDayAllocated"}, {"Tomorrow.Allocated3"}),
-    #"Replaced Value" = Table.ReplaceValue(#"Expanded TOMORROW3",null,0,Replacer.ReplaceValue,{"Yesterday.Resource1","Yesterday.Allocated3", "Yesterday.Allocated2", "Yesterday.Allocated1", "ResDayAllocated", "Tomorrow.Allocated1", "Tomorrow.Allocated2", "Tomorrow.Allocated3"}),
-    #"Removed Other Columns" = Table.SelectColumns(#"Replaced Value",{"Resource", "Day", "Allocation", "ResDayAllocated", "ResIndex", "ResIndexStart", "ForwardStep",  "CumulativeForward", "Yesterday.Allocated3", "Yesterday.Resource2", "Yesterday.Allocated2", "Yesterday.Resource1", "Yesterday.Allocated1", "Tomorrow.Resource1", "Tomorrow.Allocated1", "Tomorrow.Resource2", "Tomorrow.Allocated2", "Tomorrow.Allocated3"}),
-    #"Reordered Columns" = Table.ReorderColumns(#"Removed Other Columns",{"Resource", "Day", "Allocation", "ResIndex", "ResIndexStart", "ForwardStep", "CumulativeForward", "Yesterday.Allocated3", "Yesterday.Allocated2", "Yesterday.Allocated1", "ResDayAllocated", "Tomorrow.Allocated1", "Tomorrow.Allocated2", "Tomorrow.Allocated3", "Yesterday.Resource2", "Yesterday.Resource1", "Tomorrow.Resource1", "Tomorrow.Resource2"}),
-    CODE5 = Table.AddColumn(#"Reordered Columns", "Code", each Text.Combine({Text.From([Yesterday.Allocated2], "en-AU"), Text.From([Yesterday.Allocated1], "en-AU"), Text.From([ResDayAllocated], "en-AU"), Text.From([Tomorrow.Allocated1], "en-AU"), Text.From([Tomorrow.Allocated2], "en-AU")}, ""), type text),
-    #"Added RESOURCEEND" = Table.AddColumn(CODE5, "ResourceStartEnd", each if [Resource] <> [Tomorrow.Resource1] then "ResourceEnd1" else if [Resource] <> [Yesterday.Resource1] then "ResourceStart1" else if [Resource] <> [Tomorrow.Resource2] then "ResourceEnd2" else if [Resource] <> [Yesterday.Resource2] then "ResourceStart2" else null),
-    #"Removed Other Columns1" = Table.SelectColumns(#"Added RESOURCEEND",{"Resource", "Day", "Allocation", "ResIndex", "ResDayAllocated", "Tomorrow.Resource1", "Code", "ResourceStartEnd"}),
-    #"Added CLUSTERPOINTS" = Table.AddColumn(#"Removed Other Columns1", "ClusterPoints", each 
-        if (                    
+    // 1) Base daily codes
+    SourceDaily = ResDaysAllocated,  // must exist already
+
+    // 2) Group by Resource → sort by Day → add a zero‑based index
+    Grouped = Table.Group(
+      SourceDaily,
+      {"Resource"},
+      {{"Group",
+        each Table.AddIndexColumn(
+               Table.Sort(_, {"Day", Order.Ascending}),
+               "Idx", 0, 1, Int64.Type
+             ),
+        type table
+      }}
+    ),
+
+    // 3) Inside each Resource‑group, peek at Resource IDs ±2 days
+    WithNeighbors = Table.TransformColumns(
+      Grouped,
+      {"Group",(tbl) =>
+        let
+          resList = Table.Column(tbl, "Resource"),
+          n       = List.Count(resList),
+          getRes  = (i,off) => let p = i+off in if p<0 or p>=n then null else resList{p},
+          step1   = Table.AddColumn(tbl, "Yesterday.Resource2", each getRes([Idx], -2), Int64.Type),
+          step2   = Table.AddColumn(step1,   "Yesterday.Resource1", each getRes([Idx], -1), Int64.Type),
+          step3   = Table.AddColumn(step2,   "Tomorrow.Resource1",  each getRes([Idx],  1), Int64.Type),
+          step4   = Table.AddColumn(step3,   "Tomorrow.Resource2",  each getRes([Idx],  2), Int64.Type)
+        in
+          step4
+      }
+    ),
+
+    // 4) Flatten back to one table (bringing in the new neighbor columns)
+    Expanded = Table.ExpandTableColumn(WithNeighbors, "Group", {"Day", "AllocFlag", "ResIndex", "Code", "Yesterday.Resource2", "Yesterday.Resource1", "Tomorrow.Resource1", "Tomorrow.Resource2"}, {"Day", "AllocFlag", "ResIndex", "Code", "Yesterday.Resource2", "Yesterday.Resource1", "Tomorrow.Resource1", "Tomorrow.Resource2"}),
+
+    // 5) Original “Added RESOURCEEND” logic, unchanged
+    AddedResourceEnd = Table.AddColumn(
+      Expanded,
+      "ResourceStartEnd",
+      each 
+        if      [Resource] <> [Tomorrow.Resource1]   then "ResourceEnd1"
+        else if [Resource] <> [Yesterday.Resource1]  then "ResourceStart1"
+        else if [Resource] <> [Tomorrow.Resource2]   then "ResourceEnd2"
+        else if [Resource] <> [Yesterday.Resource2]  then "ResourceStart2"
+        else null,
+      type text
+    ),
+
+
+
+
+
+ //#"Removed Other Columns1" = Table.SelectColumns(#"Added RESOURCEEND",{"Resource", "Day", "Allocation", "ResIndex", "ResDayAllocated", "Tomorrow.Resource1", "Code", "ResourceStartEnd"}),
+    #"Added CLUSTERPOINTS" = Table.AddColumn(AddedResourceEnd, "ClusterPoints", each if (                    
             //general start
             (  [Code] = "00111" 
                 or [Code] ="00101" 
@@ -391,7 +427,7 @@ shared AllocationCode = let
             //Change of resource
             or  (
                 [Tomorrow.Resource1] <> [Resource] 
-                and [Allocation] <> 0
+                and [AllocFlag] <> 0
                 )
            
         then "Allocated-ClusterEnd" 
@@ -402,8 +438,7 @@ shared AllocationCode = let
             [Code] = "00100" 
             then "Allocated-SingleStart/End"        
         else null),
-    #"Reordered Columns2" = Table.ReorderColumns(#"Added CLUSTERPOINTS",{"Resource", "Day", "Allocation", "ResIndex", "ResDayAllocated", "Code", "ResourceStartEnd", "ClusterPoints"}),
-    BUFFER = Table.Buffer(#"Reordered Columns2")
+    BUFFER = Table.Buffer(#"Added CLUSTERPOINTS")
 in
     BUFFER;
 
@@ -432,14 +467,13 @@ in
 [ Description = "BUFFER" ]
 shared Clusters = let
     Source = #"AllocationCode",
-    #"BUFFER 1" = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(#"BUFFER 1", {"Resource", "Day", "ClusterPoints"}, #"ClusterIDStart+End", {"Resource", "Day", "ClusterPoints"}, "ClusterIDStart+End", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Day", "ClusterPoints"}, #"ClusterIDStart+End", {"Resource", "Day", "ClusterPoints"}, "ClusterIDStart+End", JoinKind.LeftOuter),
     #"Expanded ClusterIDStart+End" = Table.ExpandTableColumn(#"Merged Queries", "ClusterIDStart+End", {"ClusterIndex"}, {"ClusterIndex"}),
     #"Filled Down" = Table.FillDown(#"Expanded ClusterIDStart+End",{"ClusterIndex"}),
-    #"Filled Up" = Table.FillUp(#"Filled Down",{"ClusterIndex"}),
-    #"Renamed Columns" = Table.RenameColumns(#"Filled Up",{{"ClusterIndex", "ClusterIndexX"}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Filled Down",{{"ClusterIndex", "ClusterIndexX"}, {"AllocFlag", "Allocation"}}),
     #"Added NO ALLOCATION NULL" = Table.AddColumn(#"Renamed Columns", "ClusterIndex", each if [Allocation] = 0 then null else [ClusterIndexX]),
-    #"Removed Columns" = Table.RemoveColumns(#"Added NO ALLOCATION NULL",{"ClusterIndexX", "ClusterPoints"}),
+    #"Filled Up" = Table.FillUp(#"Added NO ALLOCATION NULL",{"ClusterIndex"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Filled Up",{"ClusterIndexX", "ClusterPoints"}),
 
 // Now we add the "ClusterNumber" column based on the previous row's value
 AddPreviousClusterIndex = Table.AddColumn(#"Removed Columns", "ClusterNumber", each 
@@ -462,20 +496,21 @@ AddPreviousClusterIndex = Table.AddColumn(#"Removed Columns", "ClusterNumber", e
         PrevRow = if PrevRowT = null or Table.IsEmpty(PrevRowT) then "X"  else PrevRowT{0}[ClusterIndex]
     in
         PrevRow),
-    BUFFER = Table.Buffer(AddPreviousClusterIndex),
-    #"Sorted Rows" = Table.Sort(BUFFER,{{"Resource", Order.Ascending}})
+    BUFFER = Table.Buffer(AddPreviousClusterIndex)
 in
-    #"Sorted Rows";
+    BUFFER;
 
 shared ClusterAllocation = let
     Source = Clusters,
-    #"Grouped CLUSTERSIZE" = Table.Group(Source, {"ClusterIndex"}, {{"ClusterAllocation", each List.Sum([Allocation]), type nullable number}}),
-    #"Filtered Rows" = Table.SelectRows(#"Grouped CLUSTERSIZE", each ([ClusterIndex] <> null))
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Allocation", Int64.Type}}),
+    #"Grouped CLUSTERSIZE" = Table.Group(#"Changed Type", {"ClusterIndex"}, {{"ClusterAllocation", each List.Sum([Allocation]), type nullable number}}),
+    #"Filtered Rows" = Table.SelectRows(#"Grouped CLUSTERSIZE", each ([ClusterIndex] <> null)),
+    BUFFER = Table.Buffer(#"Filtered Rows")
 in
-    #"Filtered Rows";
+    BUFFER;
 
 [ Description = "BUFFER #(lf)S2, P2 dev debt #(lf)Opportunity to discriminate with small Cluster Allocation#(lf)i.e. change the cluster it is associated with" ]
-shared #"WD Type B" = let
+shared #"WD Type" = let
     Source = Clusters,
     Custom1 = Table.Buffer(Source),
     #"Merged Queries" = Table.NestedJoin(Custom1, {"ClusterNumber"}, ClusterAllocation, {"ClusterIndex"}, "ClusterAllocation", JoinKind.LeftOuter),
@@ -483,7 +518,7 @@ shared #"WD Type B" = let
     #"BUFFER LIST" = List.Buffer(#"Expanded ClusterAllocation"[Code]),
     // S2, P2 dev debt 
     // Opportunity to discriminate with small Cluster Allocation
-    #"Added NWD TYPE" = Table.AddColumn(#"Expanded ClusterAllocation", "NWDType", each if [ResDayAllocated] = 1  then "Allocated" 
+    #"Added NWD TYPE" = Table.AddColumn(#"Expanded ClusterAllocation", "NWDType", each if [Allocation] = 1  then "Allocated" 
 
         else if [Code] = "00000" then "Reducable"
 
@@ -594,13 +629,12 @@ shared #"WD Type B" = let
         then "1D Off"
               
         else "Reducable"),
-    #"Removed Other Columns" = Table.SelectColumns(#"Added NWD TYPE",{"Resource", "Day",  "ClusterNumber", "ClusterAllocation", "NWDType"}),
-    Custom2 = #"Removed Other Columns"
+    #"Removed Other Columns" = Table.SelectColumns(#"Added NWD TYPE",{"Resource", "Day",  "ClusterNumber", "ClusterAllocation", "NWDType"})
 in
-    Custom2;
+    #"Removed Other Columns";
 
 shared ResDayPotentialAvailabilityTABLE = let
-    Source = #"WD Type B",
+    Source = #"WD Type",
   
 
 
@@ -627,7 +661,8 @@ shared ResDayPotentialAvailabilityTABLE = let
 
    
     else "U"),
-    BUFFER = Table.Buffer(#"POTENTIAL ALLOCATION")
+    #"Removed Other Columns" = Table.SelectColumns(#"POTENTIAL ALLOCATION",{"Resource", "Day", "NWDType", "PotentialAvailability"}),
+    BUFFER = Table.Buffer(#"Removed Other Columns")
 in
     BUFFER;
 
@@ -636,8 +671,7 @@ shared ResPeriodShiftNWDTABLE = let
     Source = ResDayPotentialAvailabilityTABLE,
     #"Filtered Rows" = Table.SelectRows(Source, each ([PotentialAvailability] = "R")),
     #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"PotentialAvailability"}),
-    BUFFER = Table.Buffer(#"Removed Columns"),
-    #"Merged Queries" = Table.NestedJoin(BUFFER, {"NWDType"}, #"SET NWDPriority", {"NWD Type"}, "NWDPrioritiesTABLE", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(#"Removed Columns", {"NWDType"}, #"SET NWDPriority", {"NWD Type"}, "NWDPrioritiesTABLE", JoinKind.LeftOuter),
     #"Expanded NWDPrioritiesTABLE" = Table.ExpandTableColumn(#"Merged Queries", "NWDPrioritiesTABLE", {"NWDPriority"}, {"NWDPriority"}),
     #"Sorted Rows" = Table.Sort(#"Expanded NWDPrioritiesTABLE",{{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
     #"Merged Queries1" = Table.NestedJoin(#"Sorted Rows", {"Day"}, #"PeriodShiftDay B", {"Day"}, "Period.1", JoinKind.LeftOuter),
@@ -648,16 +682,16 @@ in
 shared ResDayNWDTABLE = let
     Source = ResDayPotentialAvailabilityTABLE,
     #"Filtered Rows" = Table.SelectRows(Source, each ([PotentialAvailability] = "R")),
-    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"Resource", "Day", "PotentialAvailability"})
+    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"Resource", "Day", "PotentialAvailability"}),
+    BUFFER = Table.Buffer(#"Removed Other Columns")
 in
-    #"Removed Other Columns";
+    BUFFER;
 
 [ Description = "BUFFER" ]
 shared ResPeriodWDTABLE = let
     Source = ResDayPotentialAvailabilityTABLE,
     #"Filtered Rows" = Table.SelectRows(Source, each ([PotentialAvailability] = "U")),
-    BUFFER = Table.Buffer(#"Filtered Rows"),
-    #"Removed Other Columns" = Table.SelectColumns(BUFFER,{"Resource", "Day", "PotentialAvailability"}),
+    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"Resource", "Day", "PotentialAvailability"}),
     #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"Day"}, #"PeriodShiftDay B", {"Day"}, "PeriodShiftDay", JoinKind.LeftOuter),
     #"Expanded PeriodShiftDay" = Table.ExpandTableColumn(#"Merged Queries", "PeriodShiftDay", {"Period"}, {"Period"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded PeriodShiftDay", {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE (2)", JoinKind.LeftOuter),
@@ -675,9 +709,10 @@ else if [Allocation] = 0 then "RosteredDay"
 else if [Allocation] <> 0 then "AllocatedPeriod" 
 else null),
 
-    #"Removed Columns" = Table.RemoveColumns(#"Added ROSTEREDPERIODSTATUS",{"Allocation"})
+    #"Removed Columns" = Table.RemoveColumns(#"Added ROSTEREDPERIODSTATUS",{"Allocation"}),
+    BUFFER = Table.Buffer(#"Removed Columns")
 in
-    #"Removed Columns";
+    BUFFER;
 
 shared UnavailableAllocated = let
     Source = Table.NestedJoin(#"ResPeriodAvailabilityTABLE !!", {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.FullOuter),
@@ -711,8 +746,7 @@ in
 shared MultiShiftAvilabilityDay = let
     Source = #"MultiDayPeriod-Available+Allocation",
     #"Removed MULTIPERIODALLOCATION" = Table.RemoveColumns(Source,{"Allocation"}),
-    BUFFER = Table.Buffer(#"Removed MULTIPERIODALLOCATION"),
-    #"Merged Queries" = Table.NestedJoin(BUFFER, {"Resource", "Day"}, ResDayAllocationTABLE, {"Resource", "Day"}, "ResDayAllocationTABLE", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(#"Removed MULTIPERIODALLOCATION", {"Resource", "Day"}, ResDayAllocationTABLE, {"Resource", "Day"}, "ResDayAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded ResDayAllocationTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ResDayAllocationTABLE", {"ResDayAllocation"}, {"ResDayAllocation"}),
     #"Filtered UNMACTHED PERIODS REMOVED" = Table.SelectRows(#"Expanded ResDayAllocationTABLE", each ([ResDayAllocation] = null))
 in
@@ -720,8 +754,7 @@ in
 
 shared #"MultishiftAvailDayPeriod-Index" = let
     Source = MultiShiftAvilabilityDay,
-    #"BUFFER 1" = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(#"BUFFER 1", {"Resource", "AvailablePeriod"}, ResDayPeriodAvailabilityTABLE, {"Resource", "Period"}, "ResDayPeriodAvailabilityTABLE", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "AvailablePeriod"}, ResDayPeriodAvailabilityTABLE, {"Resource", "Period"}, "ResDayPeriodAvailabilityTABLE", JoinKind.LeftOuter),
     #"Expanded ResDayPeriodAvailabilityTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ResDayPeriodAvailabilityTABLE", {"Availability"}, {"Availability"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded ResDayPeriodAvailabilityTABLE", {"AvailablePeriod"}, PeriodCapacityTABLE, {"Period"}, "PeriodCapacityTABLE", JoinKind.LeftOuter),
     #"Expanded PeriodCapacityTABLE" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodCapacityTABLE", {"Capacity"}, {"Capacity"}),
@@ -750,8 +783,7 @@ in
 
 shared #"SingleShiftDayAvail+MultiAllocation B" = let
     Source = #"SingleShiftDay-initial",
-    BUFFER = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(BUFFER, {"Day"}, #"PeriodShiftDay B", {"Day"}, "PeriodShiftDay", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(Source, {"Day"}, #"PeriodShiftDay B", {"Day"}, "PeriodShiftDay", JoinKind.LeftOuter),
     #"Expanded PeriodShiftDay" = Table.ExpandTableColumn(#"Merged Queries", "PeriodShiftDay", {"Period"}, {"Period"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded PeriodShiftDay", {"Resource", "Period", "Role"}, ResPeriodAllocationTABLE, {"Resource", "Period", "Role"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded ResPeriodAllocationTABLE" = Table.ExpandTableColumn(#"Merged Queries1", "ResPeriodAllocationTABLE", {"Allocation"}, {"Allocation"}),
@@ -817,17 +849,15 @@ in
 
 shared MultiShiftDayPeriodMatches = let
     Source = MultiShiftDayMatches,
-    BUFFER = Table.Buffer(Source),
-    #"Merged Queries1" = Table.NestedJoin(BUFFER, {"Resource", "Day"}, #"MultiDayPeriod-AvailableAllocatedMatches", {"Resource", "Day"}, "MultiDayPeriod-AvailableAllocatedMatches", JoinKind.LeftOuter),
+    #"Merged Queries1" = Table.NestedJoin(Source, {"Resource", "Day"}, #"MultiDayPeriod-AvailableAllocatedMatches", {"Resource", "Day"}, "MultiDayPeriod-AvailableAllocatedMatches", JoinKind.LeftOuter),
     #"Expanded MultiDayPeriod-AvailableAllocatedMatches" = Table.ExpandTableColumn(#"Merged Queries1", "MultiDayPeriod-AvailableAllocatedMatches", {"AvailablePeriod"}, {"AvailablePeriod"})
 in
     #"Expanded MultiDayPeriod-AvailableAllocatedMatches";
 
-shared #"MultiPeriodPriority B" = let
+shared MultiPeriodPriority = let
     Source = MultiShiftDayPeriodMatches[[AvailablePeriod]],
     #"Removed Duplicates" = Table.Distinct(Source),
-    BUFFER = Table.Buffer(#"Removed Duplicates"),
-    #"Merged Queries" = Table.NestedJoin(BUFFER, {"AvailablePeriod"}, #"PeriodDemandTABLE !!", {"Period"}, "PeriodDemandTABLE", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(#"Removed Duplicates", {"AvailablePeriod"}, #"PeriodDemandTABLE !!", {"Period"}, "PeriodDemandTABLE", JoinKind.LeftOuter),
     #"Expanded PeriodDemandTABLE" = Table.ExpandTableColumn(#"Merged Queries", "PeriodDemandTABLE", {"D"}, {"D"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded PeriodDemandTABLE", {"AvailablePeriod"}, PeriodAllocationTABLE, {"Period"}, "PeriodAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded PeriodAllocationTABLE" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodAllocationTABLE", {"A"}, {"A"}),
@@ -841,11 +871,13 @@ shared #"MultiPeriodPriority B" = let
 in
     #"Removed Columns";
 
+[ Description = "BUFFER" ]
 shared MultiResPeriodPriority = let
-    Source = Table.NestedJoin(MultiShiftDayPeriodMatches, {"AvailablePeriod"}, #"MultiPeriodPriority B", {"AvailablePeriod"}, "MultiPeriodPriority", JoinKind.LeftOuter),
-    #"Expanded MultiPeriodPriority" = Table.ExpandTableColumn(Source, "MultiPeriodPriority", {"PeriodPriority"}, {"PeriodPriority"})
+    Source = Table.NestedJoin(MultiShiftDayPeriodMatches, {"AvailablePeriod"}, MultiPeriodPriority, {"AvailablePeriod"}, "MultiPeriodPriority", JoinKind.LeftOuter),
+    #"Expanded MultiPeriodPriority" = Table.ExpandTableColumn(Source, "MultiPeriodPriority", {"PeriodPriority"}, {"PeriodPriority"}),
+    BUFFER = Table.Buffer(#"Expanded MultiPeriodPriority")
 in
-    #"Expanded MultiPeriodPriority";
+    BUFFER;
 
 shared #"MultiResPeriodPriority-Highest" = let
     Source = MultiResPeriodPriority,
@@ -875,8 +907,7 @@ in
 [ Description = "BUFFER" ]
 shared #"MultiDayPeriod-Reducibile" = let
     Source = #"MultiShiftAvailDayPeriod -0 Allocation",
-    BUFFER = Table.Buffer(Source),
-    #"Filtered Rows" = Table.SelectRows(BUFFER, each ([NoAllocationKeep] = true)),
+    #"Filtered Rows" = Table.SelectRows(Source, each ([NoAllocationKeep] = true)),
     #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Day", "NoAllocationKeep", "C/D"}),
     #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"AvailablePeriod", "Period"}})
 in
@@ -897,9 +928,10 @@ in
 
 shared PeriodCapacityTABLE = let
     Source = #"ResPeriodAvailabilityTABLE !!",
-    #"Grouped Rows" = Table.Group(Source, {"Period"}, {{"Capacity", each List.Sum([Availability]), type number}})
+    #"Grouped Rows" = Table.Group(Source, {"Period"}, {{"Capacity", each List.Sum([Availability]), type number}}),
+    BUFFER = Table.Buffer(#"Grouped Rows")
 in
-    #"Grouped Rows";
+    BUFFER;
 
 shared ResPeriodAllocationSUM = let
     Source = List.Sum(PeriodAllocationTABLE[A])
@@ -930,14 +962,6 @@ shared PeriodDemandSUM = let
 in
     Source;
 
-shared Date_From = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Settings Data.xlsx"), null, true),
-    DateFrom_Table = Source{[Item="DateFrom",Kind="Table"]}[Data],
-    #"Changed Type1" = Table.TransformColumnTypes(DateFrom_Table,{{"DateFrom", type date}}),
-    DateFrom = #"Changed Type1"{0}[DateFrom]
-in
-    DateFrom;
-
 shared ValidAllocation = 0.7 meta [IsParameterQuery=true, Type="Number", IsParameterQueryRequired=true];
 
 shared #"PeriodC'SUM" = let
@@ -947,30 +971,45 @@ shared #"PeriodC'SUM" = let
 in
     #"Calculated Sum";
 
-shared RolePathTABLE = // Version 25.02 flexible ResidentialCare
+// Query: RolePathTABLE
+// Purpose: Resolve this workbook's folder and dynamic role through the standard CentriSyncPaths mapping.
+// Inputs: FilePathUrl (one-row FilePath table or single named cell) and the public CentriSyncPaths table.
+// Output: Existing Variable Name / Value rows used by RolePath, FilePath and Role.
+shared RolePathTABLE =
 let
+    NormalizePath = (value as nullable text) as nullable text =>
+        if value = null then null else Text.TrimEnd(Text.Replace(Text.Trim(value), "/", "\"), "\"),
     FilePathUrl =
     let
-        Source = try Excel.CurrentWorkbook(){[Name="FilePAthUrl"]}[Content] otherwise Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
-        FirstColumn = Table.ColumnNames(Source){0},
-        RenamedColumns = if FirstColumn = "FilePath" then Source else Table.RenameColumns(Source, {{FirstColumn, "FilePath"}}, MissingField.Ignore),
-        ReplacedValue = Table.TransformColumns(RenamedColumns, {{"FilePath", each Text.Replace(Text.From(_), "/", "\"), type text}}),
-        BufferedTable = Table.Buffer(ReplacedValue)
+        // Accept the legacy FilePAthUrl casing without masking a missing or malformed input.
+        PathInputs = Table.SelectRows(Excel.CurrentWorkbook(), each Comparer.OrdinalIgnoreCase([Name], "FilePathUrl") = 0),
+        Source = if Table.RowCount(PathInputs) = 1 then PathInputs{0}[Content]
+            else error "Expected exactly one FilePathUrl table or named cell in this workbook.",
+        // A single named cell is exposed by Excel as Column1.
+        PathColumn = if Table.HasColumns(Source, {"FilePath"}) then Table.SelectColumns(Source, {"FilePath"})
+            else if Table.ColumnNames(Source) = {"Column1"} then Table.RenameColumns(Source, {{"Column1", "FilePath"}})
+            else error "FilePathUrl must contain a FilePath column or be a single named cell.",
+        ValidatedRows = if Table.RowCount(PathColumn) = 1 then PathColumn
+            else error "FilePathUrl must contain exactly one data row.",
+        TypedPath = Table.TransformColumnTypes(ValidatedRows, {{"FilePath", type text}}),
+        BufferedTable = Table.Buffer(TypedPath)
     in
         BufferedTable,
 
-    RawFilePath = FilePathUrl{0}[FilePath],
+    RawFilePath = NormalizePath(FilePathUrl{0}[FilePath]),
+    NonBlankFilePath = if RawFilePath = null or RawFilePath = "" then
+        error "FilePathUrl is blank. Save this workbook and recalculate its CELL filename formula."
+        else RawFilePath,
+    // CELL("filename", reference) returns folder\[workbook.xlsx]sheet; retain only the workbook path.
+    WorkbookPath = if Text.Contains(NonBlankFilePath, "[") then
+        Text.BeforeDelimiter(NonBlankFilePath, "[") & Text.BetweenDelimiters(NonBlankFilePath, "[", "]")
+        else NonBlankFilePath,
+    InputFileName = Text.AfterDelimiter(WorkbookPath, "\", {0, RelativePosition.FromEnd}),
+    FilePath = if Comparer.OrdinalIgnoreCase(InputFileName, "CapacityDistrib(A.1)-shifts.xlsx") = 0 then WorkbookPath
+        else error "FilePathUrl identifies another workbook. Use =CELL(""filename"",A1) in its input cell, then save and recalculate CapacityDistrib(A.1)-shifts.xlsx.",
     CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
     CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
     CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
-    NormalizePath = (value as nullable text) as nullable text =>
-        let
-            TextValue = if value = null then null else Text.From(value),
-            SlashNormalized = if TextValue = null then null else Text.Replace(TextValue, "/", "\"),
-            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
-        in
-            Trimmed,
-    FilePath = NormalizePath(RawFilePath),
     CentriSyncPaths_Normalized = Table.TransformColumns(
         CentriSyncPaths_ChangedType,
         {
@@ -978,6 +1017,7 @@ let
             {"SyncedFolderRootPath", each NormalizePath(_), type text}
         }
     ),
+    // Match full roots for both SharePoint and local paths; no Site-name join is required.
     SharePointCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SharepointRootUrl], type text),
     SharePointDocumentsCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each if [SharepointRootUrl] = null then null else [SharepointRootUrl] & "\Shared Documents", type text),
     LocalCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SyncedFolderRootPath], type text),
@@ -990,9 +1030,17 @@ let
             and [SyncedFolderRootPath] <> null
             and Text.Trim([SyncedFolderRootPath]) <> ""
             and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
+            // A root must end at a folder boundary, not part-way through a different folder name.
+            and (Text.Length(FilePath) = [MatchRootLength] or Text.Range(FilePath, [MatchRootLength], 1) = "\")
     ),
     SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
-    BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
+    LongestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0}
+        else error "FilePathUrl has no usable CentriSyncPaths mapping. Check SharepointRootUrl and SyncedFolderRootPath for: " & FilePath,
+    // Duplicate matching rows may agree, but conflicting destinations must not depend on row order.
+    BestMatches = Table.SelectRows(SortedMatches, each [MatchRootLength] = LongestMatch[MatchRootLength]),
+    BestMatch = if Table.IsEmpty(SortedMatches) then LongestMatch
+        else if List.Count(List.Distinct(BestMatches[SyncedFolderRootPath], Comparer.OrdinalIgnoreCase)) = 1 then LongestMatch
+        else error "CentriSyncPaths contains conflicting local folders for: " & FilePath,
     RelativePath = Text.Range(FilePath, BestMatch[MatchRootLength]),
     RelativePath_Trimmed = Text.TrimStart(RelativePath, "\"),
     LocalFullPath =
@@ -1000,17 +1048,26 @@ let
             BestMatch[SyncedFolderRootPath]
         else
             BestMatch[SyncedFolderRootPath] & "\" & RelativePath_Trimmed,
-    RootPath = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    WorkbookFolder = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    FolderSegments = List.Select(Text.Split(WorkbookFolder, "\"), each _ <> ""),
+    UnitsIndex = List.PositionOf(FolderSegments, "UNITS", Occurrence.Last, Comparer.OrdinalIgnoreCase),
+    CalcIndex = List.PositionOf(FolderSegments, "2. Calculations", Occurrence.Last, Comparer.OrdinalIgnoreCase),
+    // Imports require UNITS/<unit>/2. Calculations/<role>; unit and role names remain dynamic.
+    RootPath = if UnitsIndex >= 0
+        and CalcIndex = UnitsIndex + 2
+        and List.Count(FolderSegments) = CalcIndex + 2
+        and Text.Trim(FolderSegments{UnitsIndex + 1}) <> ""
+        and Text.Trim(FolderSegments{CalcIndex + 1}) <> "" then WorkbookFolder
+        else error "FilePathUrl must identify this workbook under UNITS\<unit>\2. Calculations\<role>. Save and recalculate its path input.",
     Segments = List.Select(Text.Split(RootPath, "\"), each _ <> ""),
-    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare"),
-    UnitsIndex = List.PositionOf(Segments, "UNITS"),
-    CalcIndex = List.PositionOf(Segments, "2. Calculations"),
+    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare", Occurrence.First, Comparer.OrdinalIgnoreCase),
     UserName = try Text.BeforeDelimiter(Text.AfterDelimiter(RootPath, "C:\Users\"), "\") otherwise null,
     Client = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 1 then Segments{ResidentialCareIndex + 1} else null,
     Date = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 2 then Segments{ResidentialCareIndex + 2} else null,
     Unit = if UnitsIndex >= 0 and List.Count(Segments) > UnitsIndex + 1 then Segments{UnitsIndex + 1} else null,
-    Role = if CalcIndex >= 0 and List.Count(Segments) > CalcIndex + 1 then Segments{CalcIndex + 1} else null,
-    FileName = try Text.BetweenDelimiters(LocalFullPath, "[", "]") otherwise Text.AfterDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    // Preserve the role folder name so copies into another role folder use that role automatically.
+    Role = Segments{CalcIndex + 1},
+    FileName = InputFileName,
     TABLE = #table(
         {"Variable Name", "Value"},
         {
@@ -1050,3 +1107,44 @@ shared Role = let
     Value = #"Filtered Rows"{0}[Value]
 in
     Value;
+
+shared #"IMPORTSource Settings Data" = let
+  Source = Excel.Workbook(
+    File.Contents(FilePath & "\2. Calculations\Settings Data.xlsx"),
+    null,
+    true
+  )
+in
+  Source
+;
+
+shared #"EXTRACT PermutationDimensions" = let
+  // refer to the other query by name—since it has spaces, wrap in #"..."
+  Source = #"IMPORTSource Settings Data"{[Item="PermutationDimensions",Kind="Table"]}[Data],
+    #"Filtered ROLE" = Table.SelectRows(Source, each ([RolesList] = Role)),
+  ChangedType = Table.TransformColumnTypes(
+    #"Filtered ROLE",
+    {
+      {"Date", type date},
+      {"Shifts", type text},
+      {"Period", Int64.Type},
+      {"RolesList", type text}
+    }
+  )
+in
+    ChangedType;
+
+shared #"EXTRACT Date_From" = let
+    Source = #"IMPORTSource Settings Data"{[Item="DateFrom",Kind="Table"]}[Data],
+    #"Changed Type1" = Table.TransformColumnTypes(Source,{{"DateFrom", type date}}),
+    DateFrom = #"Changed Type1"{0}[DateFrom]
+in
+    DateFrom;
+
+shared #"EXTRACT MaxAvailability" = let
+    Source = #"IMPORTSource Settings Data"{[Item="MaxAvailability",Kind="Table"]}[Data],
+    
+    #"Changed Type" = Table.TransformColumnTypes(Source,{{"MaxAvailability", Int64.Type}}),
+    MaxAvailability1 = #"Changed Type"{0}[MaxAvailability]
+in
+    MaxAvailability1;

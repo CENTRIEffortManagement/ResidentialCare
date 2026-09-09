@@ -28,19 +28,20 @@ The available entry points are:
 ## Current readiness status
 
 - Runner scripts and manifests parse successfully.
-- PowerShell 7 (`pwsh`) must be installed or made available on `PATH`.
+- PowerShell 7.6.5 is installed and available as `pwsh`.
 - Unit 1 validation is expected to stop because the manifest requires
   `2-DemandExtracted-Master-.xlsx` and `Settings Data.xlsx`, which are not
   present under those exact local names.
 - Only `Unit1` is currently discoverable under `CLIENT/DATExx-Whiddon/UNITS`.
 - No Excel workbook was refreshed as part of copying, documenting, or checking
   the runner package.
+- A top-level validation-only run on 9 September 2026 enumerated the complete
+  34-workbook flow and stopped at global sequence 002 because
+  `2-DemandExtracted-Master-.xlsx` was missing. Excel was not opened.
 
 ## Next controlled decision
 
 Confirm which existing workbook corresponds to each missing manifest entry, or
-confirm that Production should supply the exact missing files. After that and
-the PowerShell 7 prerequisite are resolved, Codex can run validation-only,
-report the selected sequence, and wait for explicit approval before starting a
-real Excel refresh.
-
+confirm that Production should supply the exact missing files. After the paths
+are resolved, Codex can rerun validation-only, report the selected sequence,
+and wait for explicit approval before starting a real Excel refresh.

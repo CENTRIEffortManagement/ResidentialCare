@@ -14,7 +14,7 @@ Do not start a refresh until all preflight items pass.
 
 - The runner package and six `.cmd` entry points are present locally.
 - The PowerShell scripts and `.psd1` manifests parse successfully.
-- PowerShell 7 (`pwsh`) is not currently available on this PC's `PATH`.
+- PowerShell 7.6.5 is installed and available as `pwsh`.
 - The Unit 1 manifest currently references two workbook paths that do not
   exist locally under those exact names:
   - `UNITS/Unit1/1. Input/2-DemandExtracted-Master-.xlsx`
@@ -26,9 +26,12 @@ Do not start a refresh until all preflight items pass.
   - `Settings DataW.xlsx`
   - `Settings DataOld.xlsx`
 
-The missing-path issue must be resolved by confirming the intended workbook
-names or approving a manifest change. Do not rename, copy, or replace a
-workbook merely to make validation pass.
+The top-level validation-only run on 9 September 2026 enumerated all 34 entries
+and stopped safely at global sequence 002 because
+`2-DemandExtracted-Master-.xlsx` was missing. Excel was not opened. The
+missing-path issues must be resolved by confirming the intended workbook names
+or approving a manifest change. Do not rename, copy, or replace a workbook
+merely to make validation pass.
 
 ## Main entry points
 
@@ -131,6 +134,8 @@ code means validation or refresh failed.
 
 ## Sequence sources of truth
 
+- `CLIENT/DATExx-Whiddon/runner/ResidentialCare-ClientRunProfile.psd1` —
+  persistent ordered client role list and per-role workbook order.
 - `CLIENT/DATExx-Whiddon/runner/ResidentialCare-UnitWorkbookSequence.psd1`
 - `CLIENT/DATExx-Whiddon/runner/ResidentialCare-OrgWorkbookSequence.psd1`
 - `CLIENT/DATExx-Whiddon/UNITS/runner/AllUnits-WorkbookSequence.psd1`
@@ -143,3 +148,7 @@ Edit a sequence manifest only after the approved workbook order or exact path
 has changed. The Mermaid diagrams document the manifests but do not control
 execution.
 
+Normal runs use the saved client role list without scanning role folders. When
+Codex is asked to run a workflow, it asks whether to use that saved list or run
+a read-only role-folder comparison first. A role check is intended for new
+clients or units and for approved changes to role names or run participation.

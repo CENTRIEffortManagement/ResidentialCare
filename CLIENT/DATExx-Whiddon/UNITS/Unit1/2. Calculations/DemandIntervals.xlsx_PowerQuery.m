@@ -1,6 +1,6 @@
 // Power Query from: DemandIntervals.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\DemandIntervals.xlsx
-// Extracted: 2026-05-18T06:14:19.082Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\DemandIntervals.xlsx
+// Extracted: 2026-09-08T23:46:03.038Z
 
 section Section1;
 
@@ -113,7 +113,7 @@ shared Table_Intervals = let
     
     
     Source = Excel.Workbook(File.Contents(FilePath &  "\2. Calculations\Intervals.xlsx"), null, true),
-    Table_Intervals_Table = Source{[Item="Table_Intervals",Kind="Table"]}[Data],
+    Table_Intervals_Table = Source{[Item="Intervals",Kind="Table"]}[Data],
     #"Sorted Rows" = Table.Sort(Table_Intervals_Table,{{"StartInterval", Order.Ascending}})
 in
     #"Sorted Rows";

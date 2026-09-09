@@ -14,6 +14,7 @@
 - Do not inspect, unzip, parse, diff, compare, or edit Excel workbooks unless explicitly requested.
 - Do not create real/full refresh automation until a workbook workflow and source-of-truth process have been approved.
 - Keep scaffold, documentation, scripts, and configuration repo-relative.
+- For requests to validate, run, monitor, or stop the ResidentialCare refresh sequence, follow `docs/ResidentialCare-Runner-Agent-Instructions.md`.
 
 ## Power Query Source Of Truth
 
