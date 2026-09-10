@@ -1,6 +1,6 @@
 // Power Query from: Allocation.xlsx
-// Pathname: C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\Allocation.xlsx
-// Extracted: 2026-05-18T06:14:05.148Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\Allocation.xlsx
+// Extracted: 2026-09-10T07:07:21.063Z
 
 section Section1;
 
@@ -93,9 +93,8 @@ shared AllocationExtracted1 = let
 
     Source = Excel.Workbook(File.Contents( #"FilePath - 1Input" & "\1-AllocationExtracted.xlsx"), null, true),
     AllocationExtracted_Table = Source{[Item="AllocationExtracted",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(AllocationExtracted_Table,{{"Code", Int64.Type}, {"Date", type date}, {"Start", type datetime}, {"End", type datetime}, {"Break", Int64.Type}, {"Hours", type number}, {"Location", type text}, {"Department", type text}, {"Area", type text}, {"Role", type text}, {"Unit", type any}, {"Name", type text}}),
-    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Date] = #date(2024, 10, 10))),
-    #"Sorted Rows" = Table.Sort(#"Filtered Rows",{{"Start", Order.Ascending}})
+    #"Changed Type" = Table.TransformColumnTypes(AllocationExtracted_Table,{{"Code", Int64.Type}, {"Date", type date}, {"Start", type datetime}, {"End", type datetime}, {"Break", Int64.Type},  {"Hours", type number}, {"Location", type text}, {"Department", type text}, {"Area", type text}, {"Role", type text}, {"Unit", type any}, {"Name", type text}}),
+    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"Start", Order.Ascending}})
 in
     #"Sorted Rows";
 

@@ -4,166 +4,6 @@
 
 section Section1;
 
-// Query: PathTABLE
-// Purpose: Resolve the saved workbook path through the shared ResidentialCare sync mapping.
-// Inputs: FilePathUrl (one-row FilePath table or single named cell) and the public CentriSyncPaths table.
-// Output: Existing Variable Name / Value interface; Root Path is the workbook's containing folder.
-shared PathTABLE = let
-    NormalizePath = (value as nullable text) as nullable text =>
-        let
-            SlashNormalized = if value = null then null else Text.Replace(Text.Trim(value), "/", "\"),
-            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
-        in
-            Trimmed,
-
-    // Accept existing name casing, but require exactly one path input and never read a query-output table.
-    WorkbookPathInputs = Table.SelectRows(Excel.CurrentWorkbook(), each Comparer.OrdinalIgnoreCase([Name], "FilePathUrl") = 0),
-    WorkbookPathTable = if Table.RowCount(WorkbookPathInputs) = 1 then WorkbookPathInputs{0}[Content]
-        else error "Expected exactly one FilePathUrl table or named cell in this workbook.",
-    // Excel exposes a single named cell as Column1; the standard table exposes FilePath.
-    WorkbookPathColumn = if Table.HasColumns(WorkbookPathTable, {"FilePath"}) then Table.SelectColumns(WorkbookPathTable, {"FilePath"})
-        else if Table.ColumnNames(WorkbookPathTable) = {"Column1"} then Table.RenameColumns(WorkbookPathTable, {{"Column1", "FilePath"}})
-        else error "FilePathUrl must contain a FilePath column or be a single named cell.",
-    WorkbookPathRow = if Table.RowCount(WorkbookPathColumn) = 1 then WorkbookPathColumn{0} else error "FilePathUrl must contain exactly one data row.",
-    RawFilePath = WorkbookPathRow[FilePath],
-    // An unsaved workbook or malformed path table must stop dependent imports.
-    NormalizedWorkbookPath =
-        if not Value.Is(RawFilePath, type text) then
-            error "FilePathUrl[FilePath] must contain the current workbook path as text."
-        else if Text.Trim(RawFilePath) = "" then
-            error "FilePathUrl[FilePath] must contain the current workbook path."
-        else
-            NormalizePath(RawFilePath),
-
-    // CELL("filename", reference) returns folder\[workbook.xlsx]sheet; isolate its final segment.
-    InputWorkbookFolder = Text.BeforeDelimiter(NormalizedWorkbookPath, "\", {0, RelativePosition.FromEnd}),
-    InputWorkbookSuffix = Text.AfterDelimiter(NormalizedWorkbookPath, "\", {0, RelativePosition.FromEnd}),
-    InputFileName = if Text.StartsWith(InputWorkbookSuffix, "[") then Text.BetweenDelimiters(InputWorkbookSuffix, "[", "]") else InputWorkbookSuffix,
-    // A copied path formula must identify this workbook before any external imports use it.
-    FilePath = if Comparer.OrdinalIgnoreCase(InputFileName, "1-AllocationExtracted.xlsx") = 0 then InputWorkbookFolder & "\" & InputFileName
-        else error "FilePathUrl identifies another workbook. Use =CELL(""filename"",A1) in its input cell, then save and recalculate 1-AllocationExtracted.xlsx.",
-
-    // Fixed public-machine location (%PUBLIC%); independent of the signed-in user.
-    CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
-    CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
-    CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
-    CentriSyncPaths_Normalized = Table.TransformColumns(
-        CentriSyncPaths_ChangedType,
-        {
-            {"SharepointRootUrl", each NormalizePath(_), type text},
-            {"SyncedFolderRootPath", each NormalizePath(_), type text}
-        }
-    ),
-    // Reuse the small mapping table for all three candidate-root forms.
-    BufferedMappings = Table.Buffer(CentriSyncPaths_Normalized),
-    SharePointCandidates = Table.AddColumn(BufferedMappings, "MatchRoot", each [SharepointRootUrl], type text),
-    SharePointDocumentsCandidates = Table.AddColumn(BufferedMappings, "MatchRoot", each if [SharepointRootUrl] = null or Text.Trim([SharepointRootUrl]) = "" then null else [SharepointRootUrl] & "\Shared Documents", type text),
-    LocalCandidates = Table.AddColumn(BufferedMappings, "MatchRoot", each [SyncedFolderRootPath], type text),
-    MatchCandidates = Table.Combine({SharePointCandidates, SharePointDocumentsCandidates, LocalCandidates}),
-    MatchCandidates_WithLength = Table.AddColumn(MatchCandidates, "MatchRootLength", each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]), Int64.Type),
-    // Match whole path segments, ignoring case, so similarly prefixed folders cannot collide.
-    MatchingRows = Table.SelectRows(
-        MatchCandidates_WithLength,
-        each [MatchRoot] <> null
-            and Text.Trim([MatchRoot]) <> ""
-            and [SyncedFolderRootPath] <> null
-            and Text.Trim([SyncedFolderRootPath]) <> ""
-            and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
-            and (Text.Length(FilePath) = [MatchRootLength] or Text.Range(FilePath, [MatchRootLength], 1) = "\")
-    ),
-    SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
-    LongestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
-    // Equally specific roots must agree on the destination; mapping row order is not a tie-breaker.
-    LongestMatches = Table.SelectRows(SortedMatches, each [MatchRootLength] = LongestMatch[MatchRootLength]),
-    MatchedDestinations = List.Distinct(LongestMatches[SyncedFolderRootPath], Comparer.OrdinalIgnoreCase),
-    BestMatch =
-        if Table.RowCount(SortedMatches) = 0 then
-            error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath
-        else if List.Count(MatchedDestinations) = 1 then
-            LongestMatch
-        else
-            error "CentriSyncPaths contains conflicting mappings for: " & FilePath,
-    RelativePath = Text.Range(FilePath, BestMatch[MatchRootLength]),
-    RelativePath_Trimmed = Text.TrimStart(RelativePath, "\"),
-    LocalFullPath =
-        if RelativePath_Trimmed = "" then
-            BestMatch[SyncedFolderRootPath]
-        else
-            BestMatch[SyncedFolderRootPath] & "\" & RelativePath_Trimmed,
-    // The normalized path ends in the workbook filename, without a worksheet suffix.
-    RootPath = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
-    Segments = List.Select(Text.Split(RootPath, "\"), each _ <> ""),
-    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare", Occurrence.First, Comparer.OrdinalIgnoreCase),
-    UnitsIndex = List.PositionOf(Segments, "UNITS", Occurrence.First, Comparer.OrdinalIgnoreCase),
-    // UserName is optional display metadata; it does not participate in path resolution.
-    UserName = try Text.BeforeDelimiter(Text.AfterDelimiter(RootPath, "C:\Users\"), "\") otherwise null,
-    Client = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 1 then Segments{ResidentialCareIndex + 1} else null,
-    Date = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 2 then Segments{ResidentialCareIndex + 2} else null,
-    Unit = if UnitsIndex >= 0 and List.Count(Segments) > UnitsIndex + 1 then Segments{UnitsIndex + 1} else null,
-    FileName = InputFileName,
-    TABLE = #table(
-        {"Variable Name", "Value"},
-        {
-            {"UserName", UserName},
-            {"Root Path", RootPath},
-            {"FilePathUrl", FilePath},
-            {"Client", Client},
-            {"Date", Date},
-            {"Unit", Unit},
-            {"FileName", FileName}
-        }
-    ),
-    BUFFER = Table.Buffer(TABLE)
-in
-    BUFFER;
-
-// Query: UnitL1PathTABLE
-// Purpose: Preserve the existing path-table interface using the single resolver in PathTABLE.
-shared UnitL1PathTABLE = let
-    Source = PathTABLE
-in
-    Source;
-
-// Query: Unit1Path
-// Purpose: Expose the resolved unit folder for relative external imports.
-// Inputs: The Root Path row of UnitL1PathTABLE, ending in an approved workbook subfolder.
-shared Unit1Path = let
-    Source = PathTABLE,
-    RootPathRow = Table.SelectRows(Source, each [Variable Name] = "Root Path"),
-    WorkbookFolder = RootPathRow{0}[Value],
-    UnitFolder =
-        if Text.EndsWith(WorkbookFolder, "\1. Input", Comparer.OrdinalIgnoreCase) then
-            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\1. Input"))
-        else if Text.EndsWith(WorkbookFolder, "\2. Calculations", Comparer.OrdinalIgnoreCase) then
-            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\2. Calculations"))
-        else
-            error "Root Path did not end in an expected Unit1 workbook folder: " & WorkbookFolder
-in
-    UnitFolder;
-
-// Query: Unit
-// Purpose: Expose the unit name from the authoritative path metadata.
-shared Unit = let
-    Source = PathTABLE,
-    UnitRow = Table.SelectRows(Source, each [Variable Name] = "Unit"),
-    UnitName = UnitRow{0}[Value]
-in
-    UnitName;
-
-// Query: Path
-// Purpose: Preserve the existing scalar interface for the resolved unit folder.
-shared Path = let
-    Source = Unit1Path
-in
-    Source;
-
-// Query: UnitL1PathTABLE (2)
-// Purpose: Preserve the existing query interface without a second resolver implementation.
-shared #"UnitL1PathTABLE (2)" = let
-    Source = PathTABLE
-in
-    Source;
-
 shared #"Allocation Prepare" = let
     Source = #"IMPORT Roster",
     #"Filter AGENCY" = Table.SelectRows(Source, each ([Employment Type] <> " " and [Employment Type] <> "Agency ")),
@@ -265,6 +105,10 @@ shared AllocationExtracted = let
 in
     #"Removed Columns";
 
+shared PathTABLE = UnitL1PathTABLE;
+
+shared Path = Unit1Path;
+
 shared DayAdjustment = let
     Source = Excel.CurrentWorkbook(){[Name="DayAdjustment"]}[Content],
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"DayAdjustment", Int64.Type}}),
@@ -273,7 +117,7 @@ in
     DayAdjustment1;
 
 shared #"IMPORT Roster" = let
-    Source = Excel.Workbook(File.Contents(Unit1Path & "\1. Input\Allocation\BD,TE,JE,RY Published Roster Data 20.07.26-16.08.26.xlsx"), null, true),
+    Source = Excel.Workbook(File.Contents(Unit1Path & "\1. Input\Allocation\Published Roster.xlsx"), null, true),
     Beaudesert_Sheet = Source{[Item="Beaudesert",Kind="Sheet"]}[Data],
     #"Promoted Headers" = Table.PromoteHeaders(Beaudesert_Sheet, [PromoteAllScalars=true]),
     #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", Int64.Type}})
@@ -327,3 +171,107 @@ shared ResRolesProportion = let
     #"Rounded Off" = Table.TransformColumns(#"Inserted Division",{{"AINC4HrsAvilPref", each Number.Round(_, 1), type number}})
 in
     #"Rounded Off";
+
+shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
+let
+    FilePathUrl =
+    let
+        Source = Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
+        SelectedColumns = Table.SelectColumns(Source, {"FilePath"}),
+        ChangedType = Table.TransformColumnTypes(SelectedColumns, {{"FilePath", type text}}),
+        ReplacedValue = Table.TransformColumns(ChangedType, {{"FilePath", each if _ = null then null else Text.Replace(_, "/", "\"), type text}}),
+        ValidatedTable = if Table.RowCount(ReplacedValue) = 1 then ReplacedValue else error "FilePathUrl must contain exactly one data row.",
+        BufferedTable = Table.Buffer(ValidatedTable)
+    in
+        BufferedTable,
+
+    RawFilePathValue = FilePathUrl{0}[FilePath],
+    RawFilePath = if RawFilePathValue = null or Text.Trim(RawFilePathValue) = "" then error "FilePathUrl[FilePath] must contain the current workbook path." else RawFilePathValue,
+    CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
+    CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
+    CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
+    NormalizePath = (value as nullable text) as nullable text =>
+        let
+            TextValue = if value = null then null else Text.From(value),
+            SlashNormalized = if TextValue = null then null else Text.Replace(TextValue, "/", "\"),
+            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
+        in
+            Trimmed,
+    FilePath = NormalizePath(RawFilePath),
+    CentriSyncPaths_Normalized = Table.TransformColumns(
+        CentriSyncPaths_ChangedType,
+        {
+            {"SharepointRootUrl", each NormalizePath(_), type text},
+            {"SyncedFolderRootPath", each NormalizePath(_), type text}
+        }
+    ),
+    SharePointCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SharepointRootUrl], type text),
+    SharePointDocumentsCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each if [SharepointRootUrl] = null then null else [SharepointRootUrl] & "\Shared Documents", type text),
+    LocalCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SyncedFolderRootPath], type text),
+    MatchCandidates = Table.Combine({SharePointCandidates, SharePointDocumentsCandidates, LocalCandidates}),
+    MatchCandidates_WithLength = Table.AddColumn(MatchCandidates, "MatchRootLength", each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]), Int64.Type),
+    MatchingRows = Table.SelectRows(
+        MatchCandidates_WithLength,
+        each [MatchRoot] <> null
+            and Text.Trim([MatchRoot]) <> ""
+            and [SyncedFolderRootPath] <> null
+            and Text.Trim([SyncedFolderRootPath]) <> ""
+            and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
+            and (Text.Length(FilePath) = [MatchRootLength] or Text.Range(FilePath, [MatchRootLength], 1) = "\")
+    ),
+    SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
+    BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
+    RelativePath = Text.Range(FilePath, BestMatch[MatchRootLength]),
+    RelativePath_Trimmed = Text.TrimStart(RelativePath, "\"),
+    LocalFullPath =
+        if RelativePath_Trimmed = "" then
+            BestMatch[SyncedFolderRootPath]
+        else
+            BestMatch[SyncedFolderRootPath] & "\" & RelativePath_Trimmed,
+    RootPath = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    Segments = List.Select(Text.Split(RootPath, "\"), each _ <> ""),
+    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare"),
+    UnitsIndex = List.PositionOf(Segments, "UNITS"),
+    UserName = try Text.BeforeDelimiter(Text.AfterDelimiter(RootPath, "C:\Users\"), "\") otherwise null,
+    Client = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 1 then Segments{ResidentialCareIndex + 1} else null,
+    Date = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 2 then Segments{ResidentialCareIndex + 2} else null,
+    Unit = if UnitsIndex >= 0 and List.Count(Segments) > UnitsIndex + 1 then Segments{UnitsIndex + 1} else null,
+    FileName = try Text.BetweenDelimiters(LocalFullPath, "[", "]") otherwise Text.AfterDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    TABLE = #table(
+        {"Variable Name", "Value"},
+        {
+            {"UserName", UserName},
+            {"Root Path", RootPath},
+            {"FilePathUrl", FilePath},
+            {"Client", Client},
+            {"Date", Date},
+            {"Unit", Unit},
+            {"FileName", FileName}
+        }
+    ),
+    BUFFER = Table.Buffer(TABLE)
+in
+    BUFFER;
+
+shared #"UnitL1PathTABLE (2)" = UnitL1PathTABLE;
+
+shared Unit1Path = let
+    Source = UnitL1PathTABLE,
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
+    WorkbookFolder = #"Filtered Rows"{0}[Value],
+    UnitFolder =
+        if Text.EndsWith(WorkbookFolder, "\1. Input", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\1. Input"))
+        else if Text.EndsWith(WorkbookFolder, "\2. Calculations", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\2. Calculations"))
+        else
+            error "Root Path did not end in an expected Unit1 workbook folder: " & WorkbookFolder
+in
+    UnitFolder;
+
+shared Unit = let
+    Source = UnitL1PathTABLE,
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Unit")),
+    Value = #"Filtered Rows"{0}[Value]
+in
+    Value;
