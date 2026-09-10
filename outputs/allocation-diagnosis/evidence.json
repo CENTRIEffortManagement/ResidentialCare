@@ -1,0 +1,328 @@
+{
+  "upstream": {
+    "rows": 1485,
+    "keys": 249,
+    "multiplicities": {
+      "3": 3,
+      "6": 246
+    },
+    "min_date": "2026-07-19 00:00:00",
+    "max_date": "2026-08-16 00:00:00"
+  },
+  "allocation": {
+    "rows": 1467,
+    "keys": 252,
+    "multiplicities": {
+      "6": 243,
+      "1": 9
+    },
+    "min_date": "2026-07-20 00:00:00",
+    "max_date": "2026-08-16 00:00:00"
+  },
+  "effort": {
+    "rows": 1467,
+    "keys": 252,
+    "multiplicities": {
+      "6": 243,
+      "1": 9
+    },
+    "min_date": "2026-07-20 00:00:00",
+    "max_date": "2026-08-16 00:00:00"
+  },
+  "demand": {
+    "rows": 252,
+    "keys": 252,
+    "multiplicities": {
+      "1": 252
+    },
+    "min_date": "46223",
+    "max_date": "46250"
+  },
+  "shift_period": [
+    {
+      "Role": "RN",
+      "ShiftPeriod": "AM",
+      "StartTime": 7,
+      "StartDay": 0.2916666666666667,
+      "DurationOfShifts": 7,
+      "EndDay": 0.5833333333333334
+    },
+    {
+      "Role": "RN",
+      "ShiftPeriod": "PM",
+      "StartTime": 14,
+      "StartDay": 0.5833333333333334,
+      "DurationOfShifts": 7.25,
+      "EndDay": 0.8854166666666667
+    },
+    {
+      "Role": "RN",
+      "ShiftPeriod": "NIGHT",
+      "StartTime": 21.25,
+      "StartDay": 0.8854166666666666,
+      "DurationOfShifts": 9.75,
+      "EndDay": 0.2916666666666665
+    },
+    {
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "StartTime": 7,
+      "StartDay": 0.2916666666666667,
+      "DurationOfShifts": 8.25,
+      "EndDay": 0.6354166666666667
+    },
+    {
+      "Role": "AIN",
+      "ShiftPeriod": "PM",
+      "StartTime": 15.25,
+      "StartDay": 0.6354166666666666,
+      "DurationOfShifts": 7.25,
+      "EndDay": 0.9375
+    },
+    {
+      "Role": "AIN",
+      "ShiftPeriod": "NIGHT",
+      "StartTime": 22.5,
+      "StartDay": 0.9375,
+      "DurationOfShifts": 8.5,
+      "EndDay": 0.29166666666666674
+    },
+    {
+      "Role": "AINC4",
+      "ShiftPeriod": "AM",
+      "StartTime": 7,
+      "StartDay": 0.2916666666666667,
+      "DurationOfShifts": 8.25,
+      "EndDay": 0.6354166666666667
+    },
+    {
+      "Role": "AINC4",
+      "ShiftPeriod": "PM",
+      "StartTime": 15.25,
+      "StartDay": 0.6354166666666666,
+      "DurationOfShifts": 7.25,
+      "EndDay": 0.9375
+    },
+    {
+      "Role": "AINC4",
+      "ShiftPeriod": "NIGHT",
+      "StartTime": 22.5,
+      "StartDay": 0.9375,
+      "DurationOfShifts": 8.5,
+      "EndDay": 0.29166666666666674
+    }
+  ],
+  "allocation_example": [
+    {
+      "Attribute": "IntervalStart",
+      "ShiftDate": "2026-07-20 00:00:00",
+      "DurationOfShifts": 8.25,
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "RoleShiftEffort": 3.7250868055555557,
+      "RoleShiftFTE": 10.836616161616162
+    },
+    {
+      "Attribute": "IntervalStart",
+      "ShiftDate": "2026-07-20 00:00:00",
+      "DurationOfShifts": 8.25,
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "RoleShiftEffort": 3.7250868055555557,
+      "RoleShiftFTE": 10.836616161616162
+    },
+    {
+      "Attribute": "IntervalStart",
+      "ShiftDate": "2026-07-20 00:00:00",
+      "DurationOfShifts": 7,
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "RoleShiftEffort": 3.7250868055555557,
+      "RoleShiftFTE": 12.77172619047619
+    },
+    {
+      "Attribute": "IntervalEnd",
+      "ShiftDate": "2026-07-20 00:00:00",
+      "DurationOfShifts": 8.25,
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "RoleShiftEffort": 3.6471354166666674,
+      "RoleShiftFTE": 10.609848484848486
+    },
+    {
+      "Attribute": "IntervalEnd",
+      "ShiftDate": "2026-07-20 00:00:00",
+      "DurationOfShifts": 8.25,
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "RoleShiftEffort": 3.6471354166666674,
+      "RoleShiftFTE": 10.609848484848486
+    },
+    {
+      "Attribute": "IntervalEnd",
+      "ShiftDate": "2026-07-20 00:00:00",
+      "DurationOfShifts": 7,
+      "Role": "AIN",
+      "ShiftPeriod": "AM",
+      "RoleShiftEffort": 3.6471354166666674,
+      "RoleShiftFTE": 12.504464285714288
+    }
+  ],
+  "effort_example": [
+    {
+      "Facility": "Unit1",
+      "Role": "AIN",
+      "Date": "2026-07-20 00:00:00",
+      "Shift": "AM",
+      "Demand": 11.511068862208852,
+      "Capacity": 30,
+      "CapacityMaxHC": 10,
+      "CapacityX": 30,
+      "Allocation": 10.836616161616162,
+      "DATESHIFT": "20/07/2026AM"
+    },
+    {
+      "Facility": "Unit1",
+      "Role": "AIN",
+      "Date": "2026-07-20 00:00:00",
+      "Shift": "AM",
+      "Demand": 11.511068862208852,
+      "Capacity": 30,
+      "CapacityMaxHC": 10,
+      "CapacityX": 30,
+      "Allocation": 12.771726190476192,
+      "DATESHIFT": "20/07/2026AM"
+    },
+    {
+      "Facility": "Unit1",
+      "Role": "AIN",
+      "Date": "2026-07-20 00:00:00",
+      "Shift": "AM",
+      "Demand": 11.511068862208852,
+      "Capacity": 30,
+      "CapacityMaxHC": 10,
+      "CapacityX": 30,
+      "Allocation": 10.836616161616162,
+      "DATESHIFT": "20/07/2026AM"
+    },
+    {
+      "Facility": "Unit1",
+      "Role": "AIN",
+      "Date": "2026-07-20 00:00:00",
+      "Shift": "AM",
+      "Demand": 11.511068862208852,
+      "Capacity": 30,
+      "CapacityMaxHC": 10,
+      "CapacityX": 30,
+      "Allocation": 10.609848484848486,
+      "DATESHIFT": "20/07/2026AM"
+    },
+    {
+      "Facility": "Unit1",
+      "Role": "AIN",
+      "Date": "2026-07-20 00:00:00",
+      "Shift": "AM",
+      "Demand": 11.511068862208852,
+      "Capacity": 30,
+      "CapacityMaxHC": 10,
+      "CapacityX": 30,
+      "Allocation": 10.609848484848486,
+      "DATESHIFT": "20/07/2026AM"
+    },
+    {
+      "Facility": "Unit1",
+      "Role": "AIN",
+      "Date": "2026-07-20 00:00:00",
+      "Shift": "AM",
+      "Demand": 11.511068862208852,
+      "Capacity": 30,
+      "CapacityMaxHC": 10,
+      "CapacityX": 30,
+      "Allocation": 12.504464285714288,
+      "DATESHIFT": "20/07/2026AM"
+    }
+  ],
+  "aggregation_max_error": 0.0,
+  "fte_formula_max_error": 0.0,
+  "zero_staff_nonzero_effort": 0,
+  "attributes": {
+    "IntervalStart": 16827,
+    "IntervalEnd": 16827
+  },
+  "wrong_denominator_rows": 440,
+  "null_padding_rows": 9,
+  "demand_capacity_invariant_groups": 252,
+  "sum_inflation": {
+    "Demand": {
+      "saved_sum": 7397.714984758223,
+      "one_per_key_sum": 1251.4246022175141
+    },
+    "Capacity": {
+      "saved_sum": 7698,
+      "one_per_key_sum": 1283
+    }
+  },
+  "example_start_fte": 10.836616161616162,
+  "example_end_fte": 10.609848484848486,
+  "example_fte_sum": 68.16911976911977,
+  "non_six_keys": [
+    {
+      "date": "2026-07-20 00:00:00",
+      "role": "AINC4",
+      "shift": "PM",
+      "count": 1
+    },
+    {
+      "date": "2026-07-24 00:00:00",
+      "role": "AINC4",
+      "shift": "PM",
+      "count": 1
+    },
+    {
+      "date": "2026-07-26 00:00:00",
+      "role": "AINC4",
+      "shift": "NIGHT",
+      "count": 1
+    },
+    {
+      "date": "2026-07-27 00:00:00",
+      "role": "AINC4",
+      "shift": "AM",
+      "count": 1
+    },
+    {
+      "date": "2026-07-27 00:00:00",
+      "role": "AINC4",
+      "shift": "NIGHT",
+      "count": 1
+    },
+    {
+      "date": "2026-07-27 00:00:00",
+      "role": "AINC4",
+      "shift": "PM",
+      "count": 1
+    },
+    {
+      "date": "2026-08-01 00:00:00",
+      "role": "AINC4",
+      "shift": "PM",
+      "count": 1
+    },
+    {
+      "date": "2026-08-02 00:00:00",
+      "role": "AINC4",
+      "shift": "PM",
+      "count": 1
+    },
+    {
+      "date": "2026-08-16 00:00:00",
+      "role": "AINC4",
+      "shift": "NIGHT",
+      "count": 1
+    }
+  ],
+  "settings_keys_unique": true,
+  "allocation_equals_upstream_nonpadding": true,
+  "effort_allocation_values_match": true,
+  "start_end_effort_different_keys": 65
+}

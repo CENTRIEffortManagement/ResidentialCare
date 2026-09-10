@@ -180,27 +180,88 @@ else [Effective Duration] / [RealDuration]),
 in
     BUFFER;
 
-shared RoleShiftAllocation = let
-    Source = ResourceIntervalAllocation,
-    #"Filtered Rows" = Table.SelectRows(Source, each ([StaffCount] = 1)),
-    #"Grouped Rows" = Table.Group(#"Filtered Rows", {"ShiftDate", "ShiftPeriod", "Role", "Attribute"}, {{"RoleShiftEffort", each List.Sum([ResEffectiveIntervalEffort]), type number}}),
-    #"Filtered Rows1" = Table.SelectRows(#"Grouped Rows", each ([Attribute] = "IntervalStart")),
-    #"Merged Queries" = Table.NestedJoin(#"Filtered Rows1", {"ShiftPeriod", "Role"}, #"IMPORT ShiftPeriod", {"ShiftPeriod", "Role"}, "ShiftPeriod.1", JoinKind.LeftOuter),
-    #"Expanded ShiftPeriod.1" = Table.ExpandTableColumn(#"Merged Queries", "ShiftPeriod.1", {"DurationOfShifts"}, {"DurationOfShifts"}),
-    ROLESHIFTFTE = Table.AddColumn(#"Expanded ShiftPeriod.1", "RoleShiftFTE", each [RoleShiftEffort]*24/[DurationOfShifts]),
-    #"Sorted Rows2" = Table.Sort(ROLESHIFTFTE,{{"Role", Order.Ascending}, {"ShiftDate", Order.Ascending}})
+// Query: RoleShiftAllocation_StartEffort
+// Purpose: Aggregate each resource interval once at date, role and shift grain.
+// Inputs: ResourceIntervalAllocation; effort is measured in days.
+// Output: One row per ShiftDate, ShiftPeriod and Role with Attribute = IntervalStart.
+shared RoleShiftAllocation_StartEffort = let
+    // Shifts exposes both endpoints and a Role1 expansion. Count only the matching role at the start.
+    AllocationStarts = Table.SelectRows(ResourceIntervalAllocation, each [StaffCount] = 1 and [Attribute] = "IntervalStart"),
+    EffortByRoleShift = Table.Group(AllocationStarts, {"ShiftDate", "ShiftPeriod", "Role"}, {{"RoleShiftEffort", each List.Sum([ResEffectiveIntervalEffort]), type number}}),
+    WithEndpoint = Table.AddColumn(EffortByRoleShift, "Attribute", each "IntervalStart", type text)
 in
-    #"Sorted Rows2";
+    WithEndpoint;
 
-shared RoleShiftIntervalAllocation = let
-    Source = ResourceIntervalAllocation,
-    #"Grouped Rows" = Table.Group(Source, {"ShiftDate", "ShiftPeriod", "Role", "Attribute"}, {{"RoleShiftEffort", each List.Sum([ResEffectiveIntervalEffort]), type number}}),
-    #"Merged Queries" = Table.NestedJoin(#"Grouped Rows", {"ShiftPeriod"}, #"IMPORT ShiftPeriod", {"ShiftPeriod"}, "ShiftPeriod.1", JoinKind.LeftOuter),
-    #"Expanded ShiftPeriod.1" = Table.ExpandTableColumn(#"Merged Queries", "ShiftPeriod.1", {"DurationOfShifts"}, {"DurationOfShifts"}),
-    ROLESHIFTFTE = Table.AddColumn(#"Expanded ShiftPeriod.1", "RoleShiftFTE", each [RoleShiftEffort]*24/[DurationOfShifts]),
-    #"Sorted Rows" = Table.Sort(ROLESHIFTFTE,{{"ShiftDate", Order.Ascending}, {"ShiftPeriod", Order.Ascending}})
+// Query: RoleShiftAllocation_Calculated
+// Purpose: Match each role shift to its own duration and calculate shift-equivalent FTE.
+// Output: One row per date, role and shift, including DurationMatchCount for validation.
+shared RoleShiftAllocation_Calculated = let
+    // Role is part of the duration key: matching ShiftPeriod alone fans out across all roles.
+    MatchedDurations = Table.NestedJoin(RoleShiftAllocation_StartEffort, {"Role", "ShiftPeriod"}, #"IMPORT ShiftPeriod", {"Role", "ShiftPeriod"}, "ShiftDurationMatches", JoinKind.LeftOuter),
+    WithMatchCount = Table.AddColumn(MatchedDurations, "DurationMatchCount", each Table.RowCount([ShiftDurationMatches]), Int64.Type),
+    // Keep ambiguous/missing matches visible to the check query without multiplying output rows.
+    WithDuration = Table.AddColumn(WithMatchCount, "DurationOfShifts", each if [DurationMatchCount] = 1 then [ShiftDurationMatches]{0}[DurationOfShifts] else null, type nullable number),
+    WithoutNestedMatches = Table.RemoveColumns(WithDuration, {"ShiftDurationMatches"}),
+    // Effective effort is in days; convert to hours, then divide by the role's shift hours.
+    WithFTE = Table.AddColumn(WithoutNestedMatches, "RoleShiftFTE", each
+        if [DurationOfShifts] <> null and [DurationOfShifts] > 0 and [DurationOfShifts] < #infinity
+        then [RoleShiftEffort] * 24 / [DurationOfShifts]
+        else null, type nullable number)
 in
-    #"Sorted Rows";
+    WithFTE;
+
+// Query: RoleShiftAllocation
+// Purpose: Publish validated allocation at date, role and shift grain.
+// Notes: Preserve the existing seven-column interface; required check failures block publication.
+shared RoleShiftAllocation = let
+    FailedChecks = Table.SelectRows(RoleShiftAllocation_CHECK, each not [Passed]),
+    ValidatedAllocation = if Table.IsEmpty(FailedChecks) then RoleShiftAllocation_Calculated
+        else error Error.Record("RoleShiftAllocation.Validation", "Allocation validation failed. Inspect RoleShiftAllocation_CHECK.", FailedChecks),
+    OutputColumns = Table.SelectColumns(ValidatedAllocation, {"ShiftDate", "ShiftPeriod", "Role", "Attribute", "RoleShiftEffort", "DurationOfShifts", "RoleShiftFTE"}),
+    SortedAllocation = Table.Sort(OutputColumns, {{"Role", Order.Ascending}, {"ShiftDate", Order.Ascending}, {"ShiftPeriod", Order.Ascending}})
+in
+    SortedAllocation;
+
+// Query: RoleShiftIntervalAllocation
+// Purpose: Supply the existing Table_RoleShiftIntervalAllocation load with validated shift totals.
+// Notes: Retain this query/table binding for Allocation.xlsx; endpoints are not separate allocations.
+shared RoleShiftIntervalAllocation = let
+    SortedAllocation = Table.Sort(RoleShiftAllocation, {{"ShiftDate", Order.Ascending}, {"ShiftPeriod", Order.Ascending}, {"Role", Order.Ascending}})
+in
+    SortedAllocation;
+
+// Query: RoleShiftAllocation_CHECK
+// Purpose: Expose the key, duration, completeness and FTE invariants required by both outputs.
+// Inputs: Staging queries only, so output validation does not create a dependency cycle.
+// Output: One row per check with a failure count and Passed flag; keep connection-only when syncing.
+shared RoleShiftAllocation_CHECK = let
+    AllocationRows = RoleShiftAllocation_Calculated,
+    IsNonnegativeFinite = (Value as any) as logical =>
+        if Value = null then false else (try Value >= 0 and Value < #infinity otherwise false),
+    KeyCounts = Table.Group(AllocationRows, {"ShiftDate", "ShiftPeriod", "Role"}, {{"RowsPerKey", each Table.RowCount(_), Int64.Type}}),
+    DuplicateKeys = Table.RowCount(Table.SelectRows(KeyCounts, each [RowsPerKey] <> 1)),
+    InvalidKeys = Table.RowCount(Table.SelectRows(AllocationRows, each [ShiftDate] = null or [Role] = null or [ShiftPeriod] = null or Text.Trim([Role]) = "" or Text.Trim([ShiftPeriod]) = "")),
+    InvalidEndpoints = Table.RowCount(Table.SelectRows(AllocationRows, each [Attribute] <> "IntervalStart")),
+    InvalidDurations = Table.RowCount(Table.SelectRows(AllocationRows, each [DurationMatchCount] <> 1 or not IsNonnegativeFinite([DurationOfShifts]) or [DurationOfShifts] = 0)),
+    InvalidMeasures = Table.RowCount(Table.SelectRows(AllocationRows, each not IsNonnegativeFinite([RoleShiftEffort]) or not IsNonnegativeFinite([RoleShiftFTE]))),
+    // Reconcile in hours with a relative tolerance for floating-point arithmetic.
+    UnreconciledRows = Table.RowCount(Table.SelectRows(AllocationRows, each
+        if not IsNonnegativeFinite([RoleShiftEffort]) or not IsNonnegativeFinite([RoleShiftFTE]) or not IsNonnegativeFinite([DurationOfShifts]) then true
+        else Number.Abs([RoleShiftFTE] * [DurationOfShifts] - [RoleShiftEffort] * 24) > 0.000000001 * List.Max({1, Number.Abs([RoleShiftEffort] * 24)}))),
+    MissingStartKeys = Table.RowCount(Table.NestedJoin(RoleShiftAllocation_StartEffort, {"ShiftDate", "ShiftPeriod", "Role"}, AllocationRows, {"ShiftDate", "ShiftPeriod", "Role"}, "AllocationMatch", JoinKind.LeftAnti)),
+    CheckResults = #table(type table [Check = text, Failures = Int64.Type], {
+        {"Unique date-role-shift keys", DuplicateKeys},
+        {"Required date-role-shift keys", InvalidKeys},
+        {"Interval starts only", InvalidEndpoints},
+        {"One positive finite duration for each role-shift", InvalidDurations},
+        {"Nonnegative finite effort and FTE", InvalidMeasures},
+        {"FTE reconciles to effective hours", UnreconciledRows},
+        {"All start-effort keys retained", MissingStartKeys}
+    }),
+    WithStatus = Table.AddColumn(CheckResults, "Passed", each [Failures] = 0, type logical)
+in
+    WithStatus;
+
 
 shared RoleShiftEffortFTE = let
     Source = ResourceIntervalAllocation,

@@ -17,7 +17,7 @@ Interpret the user's concise requests as follows:
 | `validate all` | Validate the complete global sequence. Do not refresh. |
 | `run all` | Validate, then refresh the complete global sequence. |
 | `run units` | Validate, then refresh all discovered `UnitN` folders. |
-| `run Unit1` | Validate, then refresh Unit1's complete 26-workbook sequence. |
+| `run Unit1` | Validate, then refresh Unit1's complete 24-workbook sequence. |
 | `run org` | Validate, then refresh the eight organisation workbooks. |
 | `run RN` | Validate, then refresh the three Unit1 RN workbooks. |
 | `run roles` | Validate, then refresh the nine Unit1 role workbooks. |
@@ -161,8 +161,7 @@ Expected: all three RN workbooks validate and Excel is not started.
 CLIENT\DATExx-Whiddon\Run-RefreshRunner.cmd -ValidateSelectionOnly -StartAtSequence 1 -EndAtSequence 1
 ```
 
-Expected: global sequence 001 validates and Excel is not started. This avoids
-the currently unresolved missing workbook at global sequence 002.
+Expected: global sequence 001 validates and Excel is not started.
 
 After these three smoke tests pass, resolve all known missing manifest paths and
 run `validate all` before any complete production refresh.

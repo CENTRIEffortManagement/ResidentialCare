@@ -1,0 +1,276 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Why allocation reaches Tableau six times",
+    "generatedAt": "2026-09-09T23:58:15.701407+00:00",
+    "sources": [
+      {
+        "id": "saved_workbooks",
+        "label": "Saved workbook tables and embedded Power Query",
+        "path": "outputs/allocation-diagnosis/evidence.json",
+        "query": {
+          "engine": "Python",
+          "language": "python",
+          "description": "Profile output grain, reproduce interval aggregation, check duration joins and reconcile saved Allocation to Effort.",
+          "tables_used": [
+            "AllocationByShiftAverage.xlsx::Table_RoleShiftIntervalAllocation",
+            "AllocationByShiftAverage.xlsx::ResourceShiftAllocationY",
+            "Settings Data.xlsx::ShiftPeriod",
+            "Allocation.xlsx::Allocation",
+            "Effort.xlsx::EffortAllMatrixAG1_1D"
+          ],
+          "filters": [
+            "DATExx-Whiddon / Unit1",
+            "Saved workbook snapshot; no refresh"
+          ],
+          "sql": "from pathlib import Path\nfrom collections import Counter, defaultdict\nimport json, math\n\nP = Path(__file__).resolve().parent\nload = lambda name: json.loads((P / (name + '.xlsx.tables.json')).read_text())\ns,a,b,e = [load(n) for n in ['Settings Data','AllocationByShiftAverage','Allocation','Effort']]\ndef profile(rows, keys):\n    counts=Counter(tuple(r[k] for k in keys) for r in rows)\n    return {'rows':len(rows),'keys':len(counts),'multiplicities':dict(Counter(counts.values())), 'min_date':min(str(r.get('Date',r.get('ShiftDate'))) for r in rows),'max_date':max(str(r.get('Date',r.get('ShiftDate'))) for r in rows)}\nresult={}\nfor label,rows,keys in [('upstream',a['Table_RoleShiftIntervalAllocation'],['ShiftDate','Role','ShiftPeriod']),('allocation',b['Allocation'],['ShiftDate','Role','ShiftPeriod']),('effort',e['EffortAllMatrixAG1_1D'],['Facility','Role','Date','Shift']),('demand',e['IMPORT_DemandCorrected'],['Date','Role','ShiftPeriod'])]:\n    result[label]=profile(rows,keys)\nresult['shift_period']=s['ShiftPeriod']\nkey=('2026-07-20 00:00:00','AIN','AM')\nresult['allocation_example']=[r for r in b['Allocation'] if tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod'])==key]\nresult['effort_example']=[r for r in e['EffortAllMatrixAG1_1D'] if tuple(r[k] for k in ['Date','Role','Shift'])==key]\ndurations={(r['Role'],r['ShiftPeriod']):r['DurationOfShifts'] for r in s['ShiftPeriod']}\nraw=a['ResourceShiftAllocationY']\ntotals=defaultdict(float)\nfor r in raw:\n    totals[tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod','Attribute'])]+=r['ResEffectiveIntervalEffort']\nresult['aggregation_max_error']=max(abs(r['RoleShiftEffort']-totals[tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod','Attribute'])]) for r in a['Table_RoleShiftIntervalAllocation'])\nresult['fte_formula_max_error']=max(abs(r['RoleShiftFTE']-r['RoleShiftEffort']*24/r['DurationOfShifts']) for r in a['Table_RoleShiftIntervalAllocation'])\nresult['zero_staff_nonzero_effort']=sum(r['StaffCount']==0 and r['ResEffectiveIntervalEffort']!=0 for r in raw)\nresult['attributes']=dict(Counter(r['Attribute'] for r in raw))\nresult['wrong_denominator_rows']=sum(r['DurationOfShifts']!=durations[(r['Role'],r['ShiftPeriod'])] for r in b['Allocation'] if r['DurationOfShifts'] is not None)\nresult['null_padding_rows']=sum(r['Attribute'] is None for r in b['Allocation'])\ngroups=defaultdict(list)\nfor r in e['EffortAllMatrixAG1_1D']: groups[(r['Date'],r['Role'],r['Shift'])].append(r)\nresult['demand_capacity_invariant_groups']=sum(all(len({r[col] for r in rows})==1 for col in ['Demand','Capacity','CapacityMaxHC','CapacityX']) for rows in groups.values())\nresult['sum_inflation']={col:{'saved_sum':sum(r[col] for r in e['EffortAllMatrixAG1_1D']),'one_per_key_sum':sum(rows[0][col] for rows in groups.values())} for col in ['Demand','Capacity']}\nresult['example_start_fte']=totals[(*key,'IntervalStart')]*24/durations[(key[1],key[2])]\nresult['example_end_fte']=totals[(*key,'IntervalEnd')]*24/durations[(key[1],key[2])]\nresult['example_fte_sum']=sum(r['Allocation'] for r in result['effort_example'])\nresult['non_six_keys']=[{'date':k[0],'role':k[1],'shift':k[2],'count':len(v)} for k,v in groups.items() if len(v)!=6]\nresult['settings_keys_unique']=len(durations)==len(s['ShiftPeriod'])\n# Equality of the saved upstream rows and Allocation, after the calendar restriction.\ncalendar={tuple(r[k] for k in ['Date','RolesList','Shifts']) for r in s['PermutationDimensions']}\nup=[r for r in a['Table_RoleShiftIntervalAllocation'] if tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod']) in calendar]\nsig=lambda r: tuple(r.get(k) for k in ['ShiftDate','Role','ShiftPeriod','Attribute','RoleShiftEffort','DurationOfShifts','RoleShiftFTE'])\nresult['allocation_equals_upstream_nonpadding']=Counter(map(sig,up))==Counter(sig(r) for r in b['Allocation'] if r['Attribute'] is not None)\nresult['effort_allocation_values_match']=all(all(math.isclose(x,y,rel_tol=1e-12,abs_tol=1e-12) for x,y in zip(sorted(r['Allocation'] for r in rows),sorted(r['RoleShiftFTE'] for r in b['Allocation'] if (r['ShiftDate'],r['Role'],r['ShiftPeriod'])==k))) for k,rows in groups.items())\nresult['start_end_effort_different_keys']=sum(not math.isclose(v,totals.get((d,role,shift,'IntervalEnd'),0),abs_tol=1e-10) for (d,role,shift,attr),v in totals.items() if attr=='IntervalStart' and (d,role,shift) in calendar)\n(P/'evidence.json').write_text(json.dumps(result,indent=2))\nprint(json.dumps(result,indent=2))\n"
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Why allocation reaches Tableau six times",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n**The fault is in AllocationByShiftAverage.xlsx \u2192 RoleShiftIntervalAllocation.** It retains both interval endpoints and joins shift durations on ShiftPeriod alone, matching all three roles. This produces 2 \u00d7 3 = 6 rows per populated date/role/shift. Allocation and Effort preserve the duplication.\n\n**The numeric variation has two causes:** another role\u2019s shift length is used as the denominator, and interval starts and ends can be assigned to different shift dates. The \u00d724 conversion itself is correct because effort is measured in days.\n\n**Fix the upstream output grain before using Tableau totals.** The existing RoleShiftAllocation query already demonstrates the intended start-only, role-specific calculation. No workbook or business M source was changed or refreshed.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "body": "## The saved output contains 1,467 rows for 252 keys\n\nScope: DATExx-Whiddon, Unit1, 20 July\u201316 August 2026. Effort\u2019s expected key is Facility + Role + Date + Shift; Facility is added as Unit1. Allocation\u2019s equivalent key is ShiftDate + Role + ShiftPeriod.\n\nBoth saved outputs contain **243 keys with six rows and nine keys with one zero-allocation row**: 1,467 rows instead of 252, or 1,215 excess rows. The nine padded keys are AINC4. Demand\u2019s imported table has 252 rows with 252 unique date/role/shift keys. Settings has nine duration records, unique by Role + ShiftPeriod.\n\nThe saved Table_RoleShiftIntervalAllocation has 1,485 rows across 249 keys, including 19 July outside the output calendar. Allocation keeps its in-calendar rows and pads missing calendar keys with zero; its non-padding rows exactly match the upstream table.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "row_count_chart",
+        "type": "chart",
+        "chartId": "row_counts"
+      },
+      {
+        "id": "cause",
+        "type": "markdown",
+        "body": "## Two endpoints meet three duration records\n\nShifts.xlsx \u2192 NAMES+INTERVALSLIST unpivots IntervalStart and IntervalEnd into Attribute. These are two representations of each interval, not two independent staffing contributions. It also expands Role1; the allocation calculation correctly zeros the nonmatching role rows. None of the inspected StaffCount = 0 rows has nonzero effective effort.\n\nAllocationByShiftAverage.xlsx \u2192 RoleShiftIntervalAllocation groups by ShiftDate, ShiftPeriod, Role **and Attribute**. It never restricts Attribute to IntervalStart. It then joins IMPORT ShiftPeriod on **ShiftPeriod only**, omitting Role. AM therefore matches RN\u2019s 7 hours, AIN\u2019s 8.25 hours and AINC4\u2019s 8.25 hours. Expanding that join turns two endpoint groups into six rows. **440 saved Allocation rows use a numerically incorrect duration for their own role.**\n\nAllocation.xlsx imports Table_RoleShiftIntervalAllocation. Effort then joins Allocation by date, role and shift and expands RoleShiftFTE, repeating its Demand and Capacity fields. All 252 output groups have constant Demand and Capacity values within the group. Effort\u2019s allocation values reconcile to Allocation within 1e-12 floating-point tolerance.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "example",
+        "type": "markdown",
+        "body": "## One AIN morning shift shows both defects\n\nFor **Unit1 / AIN / 20 July 2026 / AM**, the six saved Allocation rows are shown below. Repeated 8.25-hour rows arise from the AIN and AINC4 duration matches; 7-hour rows use RN\u2019s duration. Starts and ends have different effort totals on this date.\n\nThe table is an exact audit example, not six distinct staffing observations.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "example_table",
+        "type": "table",
+        "tableId": "six_rows"
+      },
+      {
+        "id": "units",
+        "type": "markdown",
+        "body": "## Effort and FTE use different units\n\nThe formula is **RoleShiftFTE = RoleShiftEffort \u00d7 24 \u00f7 DurationOfShifts**. Effective interval effort is stored as a fraction of a day; multiplying by 24 gives effective staff-hours. Dividing by the role\u2019s shift hours gives equivalent staff for that shift, rather than weekly employment FTE. Every saved upstream row matches this formula.\n\nFor the start row above: **3.725086806 days \u00d7 24 = 89.402083 hours; \u00f7 8.25 = 10.836616 FTE**. Using RN\u2019s seven hours instead gives 12.771726.\n\nThe six values total **68.169120**, versus the start-only, role-correct candidate **10.836616**. Their average is about 11.361520, so averaging or removing exact duplicates is not a reliable repair. Demand 11.511069 and Capacity 30 are each repeated six times for this key; SUM in Tableau would show about 69.066413 and 180. Tableau\u2019s actual aggregation/extract was not inspected.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "boundary",
+        "type": "markdown",
+        "body": "## Endpoint dates explain the remaining effort differences\n\nShifts calculates ShiftDate from each unpivoted endpoint\u2019s TimeDate using the AM boundary. An interval\u2019s start and end can land on different shift dates. **65 in-calendar populated keys have different start and end effort totals.** They cannot be collapsed by blindly averaging, summing or choosing an arbitrary row.\n\nThe separate RoleShiftAllocation query already filters StaffCount = 1 and Attribute = IntervalStart, then joins durations by ShiftPeriod + Role. That is the existing model convention supporting the candidate correction. The wider correctness of Shifts\u2019 boundary, break and effective-duration rules was not independently revalidated.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "fix",
+        "type": "markdown",
+        "body": "## Repair the published upstream table and enforce its key\n\n1. Through the approved source-of-truth process, make Table_RoleShiftIntervalAllocation publish the validated start-only, role-specific calculation. Either adapt its owning query or deliberately bind the existing RoleShiftAllocation result to that output interface. Preserve the table name expected by Allocation.\n2. Join duration on both Role and ShiftPeriod and require exactly one positive duration per key. Keep one endpoint convention; the existing aggregation query uses IntervalStart.\n3. Add a blocking check for one row per date/role/shift, matching duration, expected calendar coverage, and FTE-to-effort reconciliation. Verify 252 rows in Allocation and Effort for this saved calendar.\n4. Once synchronization and refresh are explicitly authorized, refresh the affected dependencies and verify the Tableau extract and aggregations. A Tableau-only DISTINCT, SUM or AVG workaround cannot correct mixed endpoints and denominators.",
+        "sourceId": "saved_workbooks"
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "body": "## Scope and remaining decisions\n\nDiagnosis used saved tables from the exact Settings Data, AllocationByShiftAverage, Allocation and Effort workbooks, plus embedded M from those workbooks and Shifts. It did not rely only on adjacent M files. Saved files were last modified on 9 September 2026; unsaved Excel changes are outside this snapshot.\n\nNo workbook was modified, synchronized, refreshed, saved or closed. No production M file was edited. The start-only numeric example is a reconstruction of the existing calculation convention, not a refreshed or approved replacement result. The remaining implementation decision is how to publish that query through the existing output table; upstream scheduling policy is outside this diagnosis.",
+        "sourceId": "saved_workbooks"
+      }
+    ],
+    "tables": [
+      {
+        "id": "six_rows",
+        "title": "Saved allocation rows",
+        "dataset": "example",
+        "sourceId": "saved_workbooks",
+        "defaultSort": {
+          "field": "row",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "row",
+            "label": "Row",
+            "type": "number"
+          },
+          {
+            "field": "endpoint",
+            "label": "Endpoint",
+            "type": "text"
+          },
+          {
+            "field": "days",
+            "label": "Effort (days)",
+            "type": "number"
+          },
+          {
+            "field": "hours",
+            "label": "Divisor (hours)",
+            "type": "number"
+          },
+          {
+            "field": "fte",
+            "label": "FTE",
+            "type": "number"
+          }
+        ],
+        "source": {
+          "id": "example_sql",
+          "label": "Six saved Allocation rows for AIN AM 20 July 2026",
+          "path": "outputs/allocation-diagnosis/build_report.py",
+          "query": {
+            "engine": "SQLite",
+            "language": "sql",
+            "sql": "SELECT row, endpoint, days, hours, fte FROM example_rows ORDER BY row",
+            "tables_used": [
+              "example_rows"
+            ],
+            "description": "Queries the exact six reviewed Allocation rows retained in evidence.json."
+          }
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "row_counts",
+        "title": "Output row counts",
+        "type": "bar",
+        "dataset": "counts",
+        "sourceId": "saved_workbooks",
+        "encodings": {
+          "x": {
+            "field": "output",
+            "type": "nominal",
+            "label": "Output"
+          },
+          "y": {
+            "field": "rows",
+            "type": "quantitative",
+            "label": "Rows"
+          }
+        },
+        "source": {
+          "id": "counts_sql",
+          "label": "Counts computed from saved workbook rows",
+          "path": "outputs/allocation-diagnosis/build_report.py",
+          "query": {
+            "engine": "SQLite",
+            "language": "sql",
+            "sql": "SELECT output, rows FROM reviewed_output_counts ORDER BY rowid",
+            "description": "Queries row counts established by the saved-workbook key profiling in analyze.py.",
+            "tables_used": [
+              "reviewed_output_counts"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-09-09T23:58:15.701407+00:00",
+    "status": "ready",
+    "datasets": {
+      "example": [
+        {
+          "row": 1,
+          "endpoint": "IntervalStart",
+          "days": 3.7250868055555557,
+          "hours": 8.25,
+          "fte": 10.836616161616162
+        },
+        {
+          "row": 2,
+          "endpoint": "IntervalStart",
+          "days": 3.7250868055555557,
+          "hours": 8.25,
+          "fte": 10.836616161616162
+        },
+        {
+          "row": 3,
+          "endpoint": "IntervalStart",
+          "days": 3.7250868055555557,
+          "hours": 7.0,
+          "fte": 12.77172619047619
+        },
+        {
+          "row": 4,
+          "endpoint": "IntervalEnd",
+          "days": 3.6471354166666674,
+          "hours": 8.25,
+          "fte": 10.609848484848486
+        },
+        {
+          "row": 5,
+          "endpoint": "IntervalEnd",
+          "days": 3.6471354166666674,
+          "hours": 8.25,
+          "fte": 10.609848484848486
+        },
+        {
+          "row": 6,
+          "endpoint": "IntervalEnd",
+          "days": 3.6471354166666674,
+          "hours": 7.0,
+          "fte": 12.504464285714288
+        }
+      ],
+      "counts": [
+        {
+          "output": "Expected keys",
+          "rows": 252
+        },
+        {
+          "output": "Allocation",
+          "rows": 1467
+        },
+        {
+          "output": "Effort",
+          "rows": 1467
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "saved_workbooks",
+      "label": "Saved workbook tables and embedded Power Query",
+      "path": "outputs/allocation-diagnosis/evidence.json",
+      "query": {
+        "engine": "Python",
+        "language": "python",
+        "description": "Profile output grain, reproduce interval aggregation, check duration joins and reconcile saved Allocation to Effort.",
+        "tables_used": [
+          "AllocationByShiftAverage.xlsx::Table_RoleShiftIntervalAllocation",
+          "AllocationByShiftAverage.xlsx::ResourceShiftAllocationY",
+          "Settings Data.xlsx::ShiftPeriod",
+          "Allocation.xlsx::Allocation",
+          "Effort.xlsx::EffortAllMatrixAG1_1D"
+        ],
+        "filters": [
+          "DATExx-Whiddon / Unit1",
+          "Saved workbook snapshot; no refresh"
+        ],
+        "sql": "from pathlib import Path\nfrom collections import Counter, defaultdict\nimport json, math\n\nP = Path(__file__).resolve().parent\nload = lambda name: json.loads((P / (name + '.xlsx.tables.json')).read_text())\ns,a,b,e = [load(n) for n in ['Settings Data','AllocationByShiftAverage','Allocation','Effort']]\ndef profile(rows, keys):\n    counts=Counter(tuple(r[k] for k in keys) for r in rows)\n    return {'rows':len(rows),'keys':len(counts),'multiplicities':dict(Counter(counts.values())), 'min_date':min(str(r.get('Date',r.get('ShiftDate'))) for r in rows),'max_date':max(str(r.get('Date',r.get('ShiftDate'))) for r in rows)}\nresult={}\nfor label,rows,keys in [('upstream',a['Table_RoleShiftIntervalAllocation'],['ShiftDate','Role','ShiftPeriod']),('allocation',b['Allocation'],['ShiftDate','Role','ShiftPeriod']),('effort',e['EffortAllMatrixAG1_1D'],['Facility','Role','Date','Shift']),('demand',e['IMPORT_DemandCorrected'],['Date','Role','ShiftPeriod'])]:\n    result[label]=profile(rows,keys)\nresult['shift_period']=s['ShiftPeriod']\nkey=('2026-07-20 00:00:00','AIN','AM')\nresult['allocation_example']=[r for r in b['Allocation'] if tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod'])==key]\nresult['effort_example']=[r for r in e['EffortAllMatrixAG1_1D'] if tuple(r[k] for k in ['Date','Role','Shift'])==key]\ndurations={(r['Role'],r['ShiftPeriod']):r['DurationOfShifts'] for r in s['ShiftPeriod']}\nraw=a['ResourceShiftAllocationY']\ntotals=defaultdict(float)\nfor r in raw:\n    totals[tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod','Attribute'])]+=r['ResEffectiveIntervalEffort']\nresult['aggregation_max_error']=max(abs(r['RoleShiftEffort']-totals[tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod','Attribute'])]) for r in a['Table_RoleShiftIntervalAllocation'])\nresult['fte_formula_max_error']=max(abs(r['RoleShiftFTE']-r['RoleShiftEffort']*24/r['DurationOfShifts']) for r in a['Table_RoleShiftIntervalAllocation'])\nresult['zero_staff_nonzero_effort']=sum(r['StaffCount']==0 and r['ResEffectiveIntervalEffort']!=0 for r in raw)\nresult['attributes']=dict(Counter(r['Attribute'] for r in raw))\nresult['wrong_denominator_rows']=sum(r['DurationOfShifts']!=durations[(r['Role'],r['ShiftPeriod'])] for r in b['Allocation'] if r['DurationOfShifts'] is not None)\nresult['null_padding_rows']=sum(r['Attribute'] is None for r in b['Allocation'])\ngroups=defaultdict(list)\nfor r in e['EffortAllMatrixAG1_1D']: groups[(r['Date'],r['Role'],r['Shift'])].append(r)\nresult['demand_capacity_invariant_groups']=sum(all(len({r[col] for r in rows})==1 for col in ['Demand','Capacity','CapacityMaxHC','CapacityX']) for rows in groups.values())\nresult['sum_inflation']={col:{'saved_sum':sum(r[col] for r in e['EffortAllMatrixAG1_1D']),'one_per_key_sum':sum(rows[0][col] for rows in groups.values())} for col in ['Demand','Capacity']}\nresult['example_start_fte']=totals[(*key,'IntervalStart')]*24/durations[(key[1],key[2])]\nresult['example_end_fte']=totals[(*key,'IntervalEnd')]*24/durations[(key[1],key[2])]\nresult['example_fte_sum']=sum(r['Allocation'] for r in result['effort_example'])\nresult['non_six_keys']=[{'date':k[0],'role':k[1],'shift':k[2],'count':len(v)} for k,v in groups.items() if len(v)!=6]\nresult['settings_keys_unique']=len(durations)==len(s['ShiftPeriod'])\n# Equality of the saved upstream rows and Allocation, after the calendar restriction.\ncalendar={tuple(r[k] for k in ['Date','RolesList','Shifts']) for r in s['PermutationDimensions']}\nup=[r for r in a['Table_RoleShiftIntervalAllocation'] if tuple(r[k] for k in ['ShiftDate','Role','ShiftPeriod']) in calendar]\nsig=lambda r: tuple(r.get(k) for k in ['ShiftDate','Role','ShiftPeriod','Attribute','RoleShiftEffort','DurationOfShifts','RoleShiftFTE'])\nresult['allocation_equals_upstream_nonpadding']=Counter(map(sig,up))==Counter(sig(r) for r in b['Allocation'] if r['Attribute'] is not None)\nresult['effort_allocation_values_match']=all(all(math.isclose(x,y,rel_tol=1e-12,abs_tol=1e-12) for x,y in zip(sorted(r['Allocation'] for r in rows),sorted(r['RoleShiftFTE'] for r in b['Allocation'] if (r['ShiftDate'],r['Role'],r['ShiftPeriod'])==k))) for k,rows in groups.items())\nresult['start_end_effort_different_keys']=sum(not math.isclose(v,totals.get((d,role,shift,'IntervalEnd'),0),abs_tol=1e-10) for (d,role,shift,attr),v in totals.items() if attr=='IntervalStart' and (d,role,shift) in calendar)\n(P/'evidence.json').write_text(json.dumps(result,indent=2))\nprint(json.dumps(result,indent=2))\n"
+      }
+    }
+  ]
+}

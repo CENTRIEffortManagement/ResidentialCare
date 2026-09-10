@@ -199,10 +199,8 @@ function Resolve-WorkbookEntries {
 
     $allowedRelativePaths = @(
         "1. Input/1-AllocationExtracted.xlsx",
-        "1. Input/2-DemandExtracted-Master-.xlsx",
-        "1. Input/StaffList Availability.xlsx",
-        "2. Calculations/Settings Data.xlsx",
         "1. Input/2-DemandExtract.xlsx",
+        "2. Calculations/Settings Data.xlsx",
         "2. Calculations/Intervals.xlsx",
         "2. Calculations/DemandIntervals.xlsx",
         "2. Calculations/Demand.xlsx",

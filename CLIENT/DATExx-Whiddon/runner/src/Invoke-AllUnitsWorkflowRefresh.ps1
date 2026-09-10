@@ -222,10 +222,8 @@ function Resolve-PerUnitWorkbookEntries {
 
     $allowedRelativePaths = @(
         "1. Input/1-AllocationExtracted.xlsx",
-        "1. Input/2-DemandExtracted-Master-.xlsx",
-        "1. Input/StaffList Availability.xlsx",
-        "2. Calculations/Settings Data.xlsx",
         "1. Input/2-DemandExtract.xlsx",
+        "2. Calculations/Settings Data.xlsx",
         "2. Calculations/Intervals.xlsx",
         "2. Calculations/DemandIntervals.xlsx",
         "2. Calculations/Demand.xlsx",
@@ -250,9 +248,9 @@ function Resolve-PerUnitWorkbookEntries {
     )
 
     $entries = @($SequenceData["Workbooks"])
-    if ($entries.Count -ne 26) {
+    if ($entries.Count -ne 24) {
         $script:ExitCode = 11
-        throw "Sequence file is invalid: expected exactly 26 workbooks, found $($entries.Count)."
+        throw "Sequence file is invalid: expected exactly 24 workbooks, found $($entries.Count)."
     }
 
     $seenSequences = @{}
@@ -276,9 +274,9 @@ function Resolve-PerUnitWorkbookEntries {
         $folder = [string] $entry["Folder"]
         $fileName = [string] $entry["FileName"]
 
-        if ($sequence -lt 1 -or $sequence -gt 26) {
+        if ($sequence -lt 1 -or $sequence -gt 24) {
             $script:ExitCode = 11
-            throw "Sequence file is invalid: per-unit sequence numbers must be 1 through 26."
+            throw "Sequence file is invalid: per-unit sequence numbers must be 1 through 24."
         }
 
         if ($seenSequences.ContainsKey($sequence)) {
@@ -334,7 +332,7 @@ function Resolve-PerUnitWorkbookEntries {
         }
     }
 
-    foreach ($expectedSequence in 1..26) {
+    foreach ($expectedSequence in 1..24) {
         if (-not $seenSequences.ContainsKey($expectedSequence)) {
             $script:ExitCode = 11
             throw "Sequence file is invalid: missing per-unit sequence number $expectedSequence."

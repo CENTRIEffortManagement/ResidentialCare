@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "allocation_rows": 252,
+  "effort_rows": 252,
+  "duplicate_allocation_keys": 0,
+  "duplicate_effort_keys": 0,
+  "allocation_values_reconciled": true,
+  "effort_example": {
+    "Facility": "Unit1",
+    "Role": "AIN",
+    "Date": "2026-07-24 00:00:00",
+    "Shift": "AM",
+    "Demand": 10.641343659286406,
+    "Capacity": 36,
+    "CapacityX": 36,
+    "Allocation": 18.653281767252356,
+    "DATESHIFT": "24/07/2026AM"
+  },
+  "files": [
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Allocation.xlsx",
+      "modified": 1789008791.4914553
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Effort.xlsx",
+      "modified": 1789008845.2738624
+    }
+  ]
+}
