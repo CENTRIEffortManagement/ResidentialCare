@@ -1,0 +1,2589 @@
+{
+  "CapturedAt": "2026-09-11T15:43:33.8638817+10:00",
+  "ExcelPID": 23440,
+  "Responding": false,
+  "Title": "Effort-All - Excel",
+  "Memory": {
+    "FreePhysicalMemory": 12758332,
+    "TotalVisibleMemorySize": 33488452
+  },
+  "Office": {
+    "VersionToReport": "16.0.20326.20112",
+    "Platform": "x64",
+    "UpdateChannel": "http://officecdn.microsoft.com/pr/492350f6-3a01-4f97-b9c0-c7c6ddf67d60"
+  },
+  "Processes": [
+    {
+      "ProcessId": 36392,
+      "ParentProcessId": 1416,
+      "Name": "EXCEL.EXE",
+      "CreationDate": "2026-09-11T14:41:42.089258+10:00",
+      "KernelModeTime": 64531250,
+      "UserModeTime": 107343750,
+      "ReadTransferCount": 59725269,
+      "WriteTransferCount": 21986565,
+      "WorkingSetSize": 268058624
+    },
+    {
+      "ProcessId": 23440,
+      "ParentProcessId": 12096,
+      "Name": "EXCEL.EXE",
+      "CreationDate": "2026-09-11T15:37:57.465029+10:00",
+      "KernelModeTime": 70000000,
+      "UserModeTime": 126562500,
+      "ReadTransferCount": 60920611,
+      "WriteTransferCount": 2596632,
+      "WorkingSetSize": 554647552
+    },
+    {
+      "ProcessId": 30652,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:09.499137+10:00",
+      "KernelModeTime": 8281250,
+      "UserModeTime": 16718750,
+      "ReadTransferCount": 310835,
+      "WriteTransferCount": 2769,
+      "WorkingSetSize": 71667712
+    },
+    {
+      "ProcessId": 22580,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:09.547043+10:00",
+      "KernelModeTime": 5156250,
+      "UserModeTime": 17343750,
+      "ReadTransferCount": 259062,
+      "WriteTransferCount": 3973,
+      "WorkingSetSize": 74301440
+    },
+    {
+      "ProcessId": 23464,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:09.600123+10:00",
+      "KernelModeTime": 5312500,
+      "UserModeTime": 17187500,
+      "ReadTransferCount": 274582,
+      "WriteTransferCount": 3765,
+      "WorkingSetSize": 72196096
+    },
+    {
+      "ProcessId": 9684,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:09.67555+10:00",
+      "KernelModeTime": 6093750,
+      "UserModeTime": 18437500,
+      "ReadTransferCount": 274911,
+      "WriteTransferCount": 2788,
+      "WorkingSetSize": 71503872
+    },
+    {
+      "ProcessId": 32456,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:09.735154+10:00",
+      "KernelModeTime": 4062500,
+      "UserModeTime": 17187500,
+      "ReadTransferCount": 274977,
+      "WriteTransferCount": 2788,
+      "WorkingSetSize": 71512064
+    },
+    {
+      "ProcessId": 2804,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:09.827487+10:00",
+      "KernelModeTime": 5781250,
+      "UserModeTime": 15156250,
+      "ReadTransferCount": 221608,
+      "WriteTransferCount": 2534,
+      "WorkingSetSize": 69066752
+    },
+    {
+      "ProcessId": 31656,
+      "ParentProcessId": 23440,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CreationDate": "2026-09-11T15:38:10.209689+10:00",
+      "KernelModeTime": 2656250,
+      "UserModeTime": 16406250,
+      "ReadTransferCount": 626323,
+      "WriteTransferCount": 4135,
+      "WorkingSetSize": 73945088
+    }
+  ],
+  "Threads": [
+    {
+      "TID": 42488,
+      "State": "Wait",
+      "CPUSeconds": 7.09375,
+      "WaitChain": {
+        "TID": 42488,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 42488,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 51048,
+      "State": "Wait",
+      "CPUSeconds": 0.109375,
+      "WaitChain": {
+        "TID": 51048,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 51048,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 17156,
+      "State": "Wait",
+      "CPUSeconds": 0.484375,
+      "WaitChain": {
+        "TID": 17156,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 17156,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 46792,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 46792,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 46792,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 40844,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 40844,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 40844,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 28612,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 28612,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 28612,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 12208,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 12208,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 12208,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 22296,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 22296,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 22296,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 26376,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 26376,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 26376,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 16020,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 16020,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 16020,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 16516,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 16516,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 16516,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 48780,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 48780,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 48780,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 36152,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 36152,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 36152,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 17152,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 17152,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 17152,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 14528,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 14528,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 14528,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 18072,
+      "State": "Wait",
+      "CPUSeconds": 0.078125,
+      "WaitChain": {
+        "TID": 18072,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 18072,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 29392,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 29392,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 29392,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 18520,
+      "State": "Wait",
+      "CPUSeconds": 0.046875,
+      "WaitChain": {
+        "TID": 18520,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 18520,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 14500,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 14500,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 14500,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 7516,
+      "State": "Wait",
+      "CPUSeconds": 0.03125,
+      "WaitChain": {
+        "TID": 7516,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 7516,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 31092,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 31092,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 31092,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 25220,
+      "State": "Wait",
+      "CPUSeconds": 0.0625,
+      "WaitChain": {
+        "TID": 25220,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 25220,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 45440,
+      "State": "Wait",
+      "CPUSeconds": 0.03125,
+      "WaitChain": {
+        "TID": 45440,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 45440,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 38332,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 38332,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 38332,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 43120,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 43120,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 43120,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 9784,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 9784,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 9784,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 18012,
+      "State": "Wait",
+      "CPUSeconds": 0.375,
+      "WaitChain": {
+        "TID": 18012,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 18012,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 26208,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 26208,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 26208,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 50444,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 50444,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 50444,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 19168,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 19168,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 19168,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 49272,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 49272,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 49272,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 33260,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 33260,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 33260,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 40184,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 40184,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 40184,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 14252,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 14252,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 14252,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 17696,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 17696,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 17696,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 22656,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 22656,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 22656,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 15748,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 15748,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 15748,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 45376,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 45376,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 45376,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 20360,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 20360,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 20360,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 3692,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 3692,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 3692,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 11880,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 11880,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 11880,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 9240,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 9240,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 9240,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 50296,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 50296,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 50296,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 40496,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 40496,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 40496,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 17780,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 17780,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 17780,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 32764,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 32764,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 32764,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 9204,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 9204,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 9204,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 12600,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 12600,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 12600,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 37268,
+      "State": "Wait",
+      "CPUSeconds": 0.5,
+      "WaitChain": {
+        "TID": 37268,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 37268,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 29484,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 29484,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 29484,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 37972,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 37972,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 37972,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 34516,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 34516,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 34516,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 45680,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 45680,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 45680,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 36632,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 36632,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 36632,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 36144,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 36144,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 36144,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 31548,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 31548,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 31548,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 10532,
+      "State": "Wait",
+      "CPUSeconds": 0.046875,
+      "WaitChain": {
+        "TID": 10532,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 10532,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 27512,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 27512,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 27512,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 31320,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 31320,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 31320,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 49380,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 49380,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 49380,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 10268,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 10268,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 10268,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 11672,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 11672,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 11672,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 39460,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 39460,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 39460,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 2680,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 2680,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 2680,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 12100,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 12100,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 12100,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 38016,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 38016,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 38016,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 15160,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 15160,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 15160,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 46180,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 46180,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 46180,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 31880,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 31880,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 31880,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 34296,
+      "State": "Wait",
+      "CPUSeconds": 0.046875,
+      "WaitChain": {
+        "TID": 34296,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 34296,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 4688,
+      "State": "Wait",
+      "CPUSeconds": 0.078125,
+      "WaitChain": {
+        "TID": 4688,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 4688,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 30860,
+      "State": "Wait",
+      "CPUSeconds": 0.09375,
+      "WaitChain": {
+        "TID": 30860,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 30860,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 18728,
+      "State": "Wait",
+      "CPUSeconds": 0.171875,
+      "WaitChain": {
+        "TID": 18728,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 18728,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 32596,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 32596,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 32596,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 37252,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 37252,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 37252,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 49288,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 49288,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 49288,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 18288,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 18288,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 18288,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 23192,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 23192,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 23192,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 43704,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 43704,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 43704,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 35056,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 35056,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 35056,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 42460,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 42460,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 42460,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 31164,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 31164,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 31164,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 45736,
+      "State": "Wait",
+      "CPUSeconds": 1.15625,
+      "WaitChain": {
+        "TID": 45736,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 45736,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 30556,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 30556,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 30556,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 32952,
+      "State": "Wait",
+      "CPUSeconds": 0.125,
+      "WaitChain": {
+        "TID": 32952,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 32952,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 28036,
+      "State": "Wait",
+      "CPUSeconds": 0.0625,
+      "WaitChain": {
+        "TID": 28036,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 28036,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 48320,
+      "State": "Wait",
+      "CPUSeconds": 0.359375,
+      "WaitChain": {
+        "TID": 48320,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 48320,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 32644,
+      "State": "Wait",
+      "CPUSeconds": 0.21875,
+      "WaitChain": {
+        "TID": 32644,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 32644,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 26436,
+      "State": "Wait",
+      "CPUSeconds": 0.234375,
+      "WaitChain": {
+        "TID": 26436,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 26436,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 11940,
+      "State": "Wait",
+      "CPUSeconds": 0.078125,
+      "WaitChain": {
+        "TID": 11940,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 11940,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 12080,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 12080,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 12080,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 26464,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 26464,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 26464,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 40124,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 40124,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 40124,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 42740,
+      "State": "Wait",
+      "CPUSeconds": 0.0625,
+      "WaitChain": {
+        "TID": 42740,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 42740,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 3932,
+      "State": "Wait",
+      "CPUSeconds": 0.296875,
+      "WaitChain": {
+        "TID": 3932,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 3932,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 13028,
+      "State": "Wait",
+      "CPUSeconds": 0.5625,
+      "WaitChain": {
+        "TID": 13028,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 13028,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 50156,
+      "State": "Wait",
+      "CPUSeconds": 0.421875,
+      "WaitChain": {
+        "TID": 50156,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 50156,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 48412,
+      "State": "Wait",
+      "CPUSeconds": 0.34375,
+      "WaitChain": {
+        "TID": 48412,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 48412,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 50300,
+      "State": "Wait",
+      "CPUSeconds": 0.453125,
+      "WaitChain": {
+        "TID": 50300,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 50300,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 39400,
+      "State": "Wait",
+      "CPUSeconds": 0.453125,
+      "WaitChain": {
+        "TID": 39400,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 39400,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 15040,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 15040,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 15040,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 35892,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 35892,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 35892,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 47652,
+      "State": "Wait",
+      "CPUSeconds": 0.390625,
+      "WaitChain": {
+        "TID": 47652,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 47652,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 29744,
+      "State": "Wait",
+      "CPUSeconds": 0.296875,
+      "WaitChain": {
+        "TID": 29744,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 29744,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 43680,
+      "State": "Wait",
+      "CPUSeconds": 0.03125,
+      "WaitChain": {
+        "TID": 43680,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 43680,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 5340,
+      "State": "Wait",
+      "CPUSeconds": 0.046875,
+      "WaitChain": {
+        "TID": 5340,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 5340,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 28308,
+      "State": "Wait",
+      "CPUSeconds": 0.078125,
+      "WaitChain": {
+        "TID": 28308,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 28308,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 28820,
+      "State": "Wait",
+      "CPUSeconds": 0.15625,
+      "WaitChain": {
+        "TID": 28820,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 28820,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 39412,
+      "State": "Wait",
+      "CPUSeconds": 0.078125,
+      "WaitChain": {
+        "TID": 39412,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 3,
+            "PID": 23440,
+            "TID": 39412,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 25408,
+      "State": "Wait",
+      "CPUSeconds": 0.015625,
+      "WaitChain": {
+        "TID": 25408,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 25408,
+            "Name": null
+          }
+        ]
+      }
+    },
+    {
+      "TID": 23244,
+      "State": "Wait",
+      "CPUSeconds": 0.0,
+      "WaitChain": {
+        "TID": 23244,
+        "Error": 0,
+        "Cycle": false,
+        "Nodes": [
+          {
+            "Type": 8,
+            "Status": 2,
+            "PID": 23440,
+            "TID": 23244,
+            "Name": null
+          }
+        ]
+      }
+    }
+  ],
+  "Events": [
+    {
+      "TimeCreated": "2026-09-11T14:38:38.387772+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.099c7dfe-c3c7-4877-ad7e-3d832df7eafd.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.cca51845-a794-4eb2-8e60-3fdb587597e0.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.969c657f-644e-4734-93c2-faf175f38f09.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.f8bfa191-0ab5-401d-8782-3ec2261a995e.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.11878ad1-8d8a-4598-8994-468b7518f772.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_03526004-c652-44d4-9e52-60bb4b91c3d3\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 22e1fd27-cf26-4be0-a518-4c287d19272b\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:38.3607145+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5284c6bc-6895-4d76-840e-c55c21a2ebe3.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.db650800-c21b-4464-ab05-b3e16ce10fac.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.60f4afd0-3af0-4d49-855b-1382419485a8.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.01b89fab-6650-44ce-83db-ae697c999c82.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.0695dba2-3087-49c0-88c9-825a70e2df13.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_62a96a40-2bd7-4d89-aaf6-08082f889cfa\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: fb299ee7-d3e0-498a-a2a5-c24ed0f7315a\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:38.3459013+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.e3a6a7c0-8297-41d6-aab6-f59b6476fe60.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.c1f50522-2069-4930-8d83-0f499f46465b.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.bc2ad1fc-eb08-4720-bdb3-f178c7a2faff.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.02427de9-2b9e-495a-b626-705399dfce66.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.ad2b2e4d-f689-4c00-8819-aaac9c88c795.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_c2a7d905-5bcd-4d88-b280-c2916cbf2a61\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 46ef8127-e796-49e1-9d3f-7f3bc10a74b8\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:38.3374383+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.3b9ff7d4-0101-49f7-999a-567404fba711.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.8ee8f259-a2c9-4e42-90fd-387d223743e4.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.f8b350b5-5872-45f1-acfe-f4e90e2fb5a4.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.d09aa21a-910f-4dc5-9ac9-192455604f6a.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.13483dda-0240-4481-b01d-9cd0b5d77dd0.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_8a4e5f9f-9725-43e0-b022-98094bd7c369\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: f77f8f5c-4a1d-49f2-b893-a757414a6167\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:34.1422581+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb27101292\r\nFaulting process id: 0x5998\r\nFaulting application start time: 0x1DD41A4B2C549C5\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: fb299ee7-d3e0-498a-a2a5-c24ed0f7315a\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:34.1226403+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb27223612\r\nFaulting process id: 0xA264\r\nFaulting application start time: 0x1DD41A4B2BADD38\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: f77f8f5c-4a1d-49f2-b893-a757414a6167\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:34.1106191+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270b50a2\r\nFaulting process id: 0x3784\r\nFaulting application start time: 0x1DD41A4B2D7C75D\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 46ef8127-e796-49e1-9d3f-7f3bc10a74b8\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:34.088343+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270e5302\r\nFaulting process id: 0xC2BC\r\nFaulting application start time: 0x1DD41A4B2CB949F\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 22e1fd27-cf26-4be0-a518-4c287d19272b\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.885419+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.860057+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.8537476+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.8394454+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.8364974+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.8361047+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-11T14:38:33.8360428+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:34.3918689+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.66c59d6a-cfb0-4119-9397-05444229a7cf.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.f0a32ebc-bb9a-4128-acd6-e35b74312806.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.e33a4a8f-7269-48cc-878f-21b33eef1540.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.78982b02-0c4d-4f40-955a-d9f64fff0971.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.52d4b713-78e6-4a52-bc47-ccce16bd88e9.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_b2c57e83-8614-4095-9874-78cb0e66e517\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 731ad2c0-be97-45f2-87ff-dcf2643dbb22\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:34.3455512+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.038c0446-5d8f-4be0-99f9-78e1701ee4bf.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5d272785-faaf-4f77-9a0a-dec47d3f84e7.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.217fad9f-d20f-4e4f-9089-697a2d62c5d1.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.d85b2598-e8e5-4676-9427-4489714cadba.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.94a07fd2-a2b6-4fa6-b898-2b0b3205d6d9.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_635c365a-1028-4474-8f8f-116953d83200\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: feb2bfae-3857-4e16-8c1a-2ec71cb8e6bf\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:34.3226616+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.45050da4-f50f-4aa3-9f45-2e12994e5c15.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.e93ab637-4af9-47bb-b98e-e41c0f23bf13.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.bfbd962f-9260-48ca-a0e5-0a07be90ecb0.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.f6790205-af82-4c94-89e4-043fe7152630.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.7e0b6b3b-186e-4921-9e40-1452a929a500.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_4a4fd8df-fb49-474a-9300-099c5b7b9ac2\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: bc7b90a1-04a3-4535-b0fe-66128f1115fe\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:34.182278+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.9a87fc51-2af2-456b-8e22-5154cdedd406.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.b6a0f507-e6a3-4f0f-81ab-0d6d49156420.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.b425ca4b-6436-43d3-b5cb-9c1b19f335c2.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.9c7dae86-2c67-45b7-b381-bb33b0aa15d5.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.8d6da394-da15-4c2f-a15f-9272381b5587.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_4441f487-1078-455b-8807-f101a67b847d\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: d950496c-92a2-4cce-8b0d-500a398dccbb\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:30.336184+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270be8e2\r\nFaulting process id: 0x1048\r\nFaulting application start time: 0x1DD41010E86A289\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 731ad2c0-be97-45f2-87ff-dcf2643dbb22\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:30.2965671+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb271d6ff2\r\nFaulting process id: 0x633C\r\nFaulting application start time: 0x1DD41010EDB6324\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: d950496c-92a2-4cce-8b0d-500a398dccbb\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:30.2816395+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb27223b52\r\nFaulting process id: 0x7810\r\nFaulting application start time: 0x1DD41010E5D070A\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: feb2bfae-3857-4e16-8c1a-2ec71cb8e6bf\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:30.2190985+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270e3332\r\nFaulting process id: 0x2CDC\r\nFaulting application start time: 0x1DD41010E63905E\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: bc7b90a1-04a3-4535-b0fe-66128f1115fe\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:30.0419185+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:30.034102+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:29.9939141+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:29.9637345+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:29.9582128+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:29.9561857+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:54:29.9531191+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:49.4286324+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.40cca24e-b2ad-45e8-af3f-da3b75808e5e.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.7e51a8e4-8579-416c-8292-ccd8e4109e02.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5a817881-3a85-4158-a770-e21c7168c948.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.0a67498a-920a-4806-8dc9-f02dfae4bfd6.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5f667d7a-5e5f-4353-8f54-0fe8cf6568b7.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_2c84279d-e0a4-45db-aa9d-6a5ad0d29104\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 03a4867f-c0ec-48a3-9ecc-bc97841a37c0\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:49.3318615+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.6a546e6d-87da-44f5-a065-b0f960b787f1.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.d24d1f0f-6cc7-4c6d-8c31-e14e81fa6719.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.898c19c5-f1c3-481d-9a17-823c70047e30.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.22f46dc3-920f-49fc-8228-7b279560c6f5.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.f257171a-6550-4e59-89c2-9e1cbb2e0df8.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_296acdbf-fcfc-4345-9c65-f13681b47625\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: ac68205e-3ceb-4e3f-a5f8-9829b0d433a4\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:49.3262973+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.4280bd27-1714-44c0-a4d7-454846590315.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.7935671f-c4ce-4470-90c1-4b4d2297b89d.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.debffcdf-14a5-4345-905f-61ede5d46a7f.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.ae17f754-c21b-4b9f-b2d1-018927453825.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.3c7876dc-b6af-47b4-8c71-a4c19e829ab0.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_3e4813b2-eb5f-4403-b47e-c10011e23dfa\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 27b827e2-5a5b-4d69-9671-a977efe0b9a6\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:48.4001908+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.6a0d164e-3b95-4bcb-9304-0be85f3c26c1.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.e7fdd51f-a845-4561-acd5-705ffb9ff343.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.72176235-5fbd-46ee-a7cf-2a8c1537cdd8.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.0dbc11cd-71c3-444c-9f38-ffbdf48681f4.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.650808ee-f010-48b5-8cf7-8dade6dc40e3.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_9dc95b71-8d1e-465b-ba39-18a30c64d8b3\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 90ac5529-2fd1-408a-922e-0ebe2cc0b66d\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.7589217+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1229657533826357176, type 5\r\nEvent Name: AppHangB1\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: EXCEL.EXE\r\nP2: 16.0.20326.20112\r\nP3: 6a86b473\r\nP4: b375\r\nP5: 134217728\r\nP6: \r\nP7: \r\nP8: \r\nP9: \r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.ae01ded3-6267-4075-bd59-47e2b144a099.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.747782f5-5d86-4c36-9c93-3d3a37c97bc1.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.8de1afe4-6cb8-4e22-a5b9-88c6e6741433.tmp.txt\r\n\\\\?\\C:\\Users\\Alex\\AppData\\Local\\Temp\\{B427431A-4E33-4736-B062-0F0D1D6673DD} - OProcSessId.dat\r\n\\\\?\\C:\\Users\\Alex\\AppData\\Local\\Temp\\WER.8c1f8a0c-f365-44f0-9eb0-cd3ee98ad6da.tmp.appcompat.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.1805f004-c6f7-4ad8-bf17-fb798764a05a.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppHang_EXCEL.EXE_53efdfbeacf6fd9d2e45276a7dddc2eb73ce9_daf85cf9_f001546c-d398-4c9b-b7e1-6ff761337a12\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 89adad45-b6ef-49af-929d-d8858805c42a\r\nReport Status: 268435456\r\nHashed bucket: 7e618b18552ac3db11109f03131a57b8\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.6329223+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270aeed2\r\nFaulting process id: 0x36AC\r\nFaulting application start time: 0x1DD41006A2DFFA0\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 03a4867f-c0ec-48a3-9ecc-bc97841a37c0\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.6197308+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270ae802\r\nFaulting process id: 0x5554\r\nFaulting application start time: 0x1DD41006A3761E1\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: ac68205e-3ceb-4e3f-a5f8-9829b0d433a4\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.6040767+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb26d9b482\r\nFaulting process id: 0x3844\r\nFaulting application start time: 0x1DD41006E38A403\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 90ac5529-2fd1-408a-922e-0ebe2cc0b66d\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.5785205+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb27113452\r\nFaulting process id: 0xB8AC\r\nFaulting application start time: 0x1DD41006A18BB10\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 27b827e2-5a5b-4d69-9671-a977efe0b9a6\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.4247046+10:00",
+      "Id": 1002,
+      "ProviderName": "Application Hang",
+      "Message": "The program EXCEL.EXE version 16.0.20326.20112 stopped interacting with Windows and was closed. To see if more information about the problem is available, check the problem history in the Security and Maintenance control panel.\r\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3767908+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3556747+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3442167+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3235339+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3059131+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3033044+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:45:44.3020033+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:37.4508545+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.3fb78698-450b-4eed-9283-eb16abd1bf1f.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.e3e3c292-5fec-48f3-85a6-49b31c757475.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.6d235ae3-7bd2-42fc-827e-9ddd31f0ea7d.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.44c0ca0b-0585-4c2a-912f-7ca85dabe103.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.35704525-6962-4899-a3ef-e7e6aaec9c6e.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_a4d1887a-bdf3-433a-81e8-7e4873af1984\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 7b94240f-3b28-49d0-aa44-f971d47f960d\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:37.3502982+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.72bcbd0a-84a3-46ec-90af-6d2facf98538.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.dd8672d6-be99-45ad-8c9f-bf1aca06467c.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.61b8bb98-83bf-4327-af44-8ee0dd62764e.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.d627e1f2-1a60-4bcb-9179-17cdb982241b.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.242bdec4-e450-463c-8d32-691adf505ecb.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_bb36a084-2222-4c88-98ef-37f88c33369a\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: d5d94376-ff2d-478d-8902-fc61beab97d2\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:37.2208559+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5ef0b6d4-230d-4cc1-bd48-069184f8b567.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.d08ec02d-f522-4838-a4f4-d6ff37c7f1bb.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.824112e7-9777-4d1c-92d1-72917e84cf52.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.de4b8509-a48a-4cd8-9b1d-095930a804b8.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.9b14b41e-e7c7-410f-bfef-c62b4bc8fcf8.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_8e51f538-b52a-4fa3-9569-3762c5541917\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: c820dd60-4869-4a4d-bae4-cbcd9f85423a\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:37.0160989+10:00",
+      "Id": 1001,
+      "ProviderName": "Windows Error Reporting",
+      "Message": "Fault bucket 1200203368521204781, type 5\r\nEvent Name: CLR20r3\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: 02EZA34ZSHLNQLGYAD21U2ZDKFGJGWFN\r\nP2: 2.155.385.0\r\nP3: 6a0f4a6d\r\nP4: Microsoft.Mashup.Container.NetFX45\r\nP5: 2.157.151.0\r\nP6: c1a5ece4\r\nP7: 1c\r\nP8: 10d\r\nP9: FatalError\r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5f21306a-8926-48c6-b315-03f558c1e144.tmp.dmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.b0b72beb-d2bf-4cbb-81b2-fe571441816a.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.47dc5a32-a239-41ab-af69-bc93574dcf42.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.93add1fb-4a28-4aef-8315-751d60b6d7d0.tmp.txt\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER.5f30e117-d7e4-4c39-afa8-28db018837f8.tmp.xml\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_02EZA34ZSHLNQLGY_1c4caa0a78fe449db8da64379afe7d946ae9f1d_d2962e9e_caae2f6f-60cf-4da8-b063-5e76784960ff\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: 020935f5-b0ab-49d8-b036-36a36a65648c\r\nReport Status: 268435456\r\nHashed bucket: e9dbfd5a67b130ee70a7fa9aceef042d\r\nCab Guid: 0"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.5066582+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270ee802\r\nFaulting process id: 0x5F28\r\nFaulting application start time: 0x1DD40FE97B3528E\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: c820dd60-4869-4a4d-bae4-cbcd9f85423a\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.490388+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb270f1b72\r\nFaulting process id: 0x31B8\r\nFaulting application start time: 0x1DD40FE978F8795\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: d5d94376-ff2d-478d-8902-fc61beab97d2\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.4618272+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb271035d2\r\nFaulting process id: 0x1CFC\r\nFaulting application start time: 0x1DD40FE979B5FE5\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 7b94240f-3b28-49d0-aa44-f971d47f960d\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.4300426+10:00",
+      "Id": 1000,
+      "ProviderName": "Application Error",
+      "Message": "Faulting application name: Microsoft.Mashup.Container.Loader.exe, version: 2.155.385.0, time stamp: 0x6a0f4a6d\r\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\r\nException code: 0x80131623\r\nFault offset: 0x00007ffb26dab482\r\nFaulting process id: 0xAB44\r\nFaulting application start time: 0x1DD40FE9BA8B0E6\r\nFaulting application path: C:\\Program Files\\Microsoft Office\\root\\Office16\\ADDINS\\Microsoft Power Query for Excel Integrated\\bin\\Microsoft.Mashup.Container.Loader.exe\r\nFaulting module path: unknown\r\nReport Id: 020935f5-b0ab-49d8-b036-36a36a65648c\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.1577495+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.1424563+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.1085869+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.0816092+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    },
+    {
+      "TimeCreated": "2026-09-10T18:41:33.0691071+10:00",
+      "Id": 1025,
+      "ProviderName": ".NET Runtime",
+      "Message": "Application: Microsoft.Mashup.Container.Loader.exe\nFramework Version: v4.0.30319\nDescription: The application requested process termination through System.Environment.FailFast(string message).\nMessage: Unexpected exception in background thread of Mashup container (error code -2146233088)\nStack:\n   at System.Environment.FailFast(System.String)\n   at Microsoft.Mashup.Container.EvaluationContainerMain+ExceptionHandler.TryHandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2.HandleException(System.Exception)\n   at Microsoft.Mashup.Evaluator.SafeThread2+<>c__DisplayClass9_0.<CreateAction>b__0(System.Object)\n   at Microsoft.Mashup.Container.EvaluationContainerMain.SafeRun(System.String[])\n   at Microsoft.Mashup.Container.BootstrapAppDomainManager.Execute(System.String[])\n"
+    }
+  ]
+}
