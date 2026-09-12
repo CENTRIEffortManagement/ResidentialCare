@@ -21,6 +21,8 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+. (Join-Path $PSScriptRoot "ExcelRefreshSafety.ps1")
+
 $script:WorkflowName = "ResidentialCare All Units Refresh"
 $script:LogFile = $null
 $script:StatusFile = $null
@@ -648,6 +650,8 @@ function Assert-SelectedWorkbookFiles {
             throw "Selected workbook is not writable for refresh: $(Format-WorkbookDisplayName -Entry $entry) ($($entry.UnitRelativePath))"
         }
 
+        try { Assert-NoExternalFileUsers -Path $resolvedPath }
+        catch { $script:ExitCode = 12; throw }
         $entry.Path = $resolvedPath
     }
 }

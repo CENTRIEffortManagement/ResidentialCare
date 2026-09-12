@@ -20,7 +20,9 @@ param(
 
     [string] $StatusPrefix = $null,
 
-    [string] $StopRequestPath = $null
+    [string] $StopRequestPath = $null,
+
+    [string] $WorkerStatePath = $null
 )
 
 Set-StrictMode -Version Latest
@@ -235,127 +237,20 @@ function Start-ResponsiveSleep {
     }
 }
 
-function Test-ConnectionRefreshing {
-    param(
-        [Parameter(Mandatory = $true)]
-        [object] $Connection
-    )
+. (Join-Path $PSScriptRoot "../../../runner/src/ExcelRefreshSafety.ps1")
 
-    foreach ($propertyPath in @("OLEDBConnection", "ODBCConnection")) {
-        try {
-            $connectionObject = $Connection.$propertyPath
-            if ($null -ne $connectionObject -and $connectionObject.Refreshing) {
-                return $true
-            }
-        }
-        catch {
-            # Some connection types do not expose these properties.
-        }
-    }
-
-    return $false
+$script:LogFile = $LogPath
+$script:StatusFile = $StatusPath
+if ([string]::IsNullOrWhiteSpace($WorkerStatePath)) {
+    $supervisorMinutes = Resolve-OptionalInteger -Value $TimeoutMinutesOverride -DefaultValue $DefaultTimeoutMinutes -Name 'TimeoutMinutesOverride'
+    $supervisorExit = Invoke-SupervisedExcelRefresh -WorkerScript $PSCommandPath -Parameters (@{} + $PSBoundParameters) -TimeoutSeconds ($supervisorMinutes * 60)
+    exit $supervisorExit
 }
-
-function Wait-WorkbookRefresh {
-    param(
-        [Parameter(Mandatory = $true)]
-        [object] $Workbook,
-
-        [int] $TimeoutMinutes
-    )
-
-    $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
-    $lastLog = Get-Date
-    $inactivePollCount = 0
-    $noPollableConnectionCount = 0
-    $requiredInactivePollCount = 3
-    $requiredNoPollableConnectionCount = 6
-    $pollIntervalSeconds = 5
-    $finalSettleSeconds = 15
-
-    do {
-        Assert-NotStopNowRequested
-
-        $refreshingCount = 0
-        $checkedCount = 0
-        $hadPollingWarning = $false
-
-        try {
-            foreach ($connection in @($Workbook.Connections)) {
-                if ($null -eq $connection) {
-                    $hadPollingWarning = $true
-                    Write-Log "Connection polling warning: workbook exposed a null connection entry." "WARN"
-                    continue
-                }
-
-                $checkedCount++
-                if (Test-ConnectionRefreshing -Connection $connection) {
-                    $refreshingCount++
-                }
-            }
-        }
-        catch {
-            $hadPollingWarning = $true
-            Write-Log "Connection polling warning: $($_.Exception.Message)" "WARN"
-        }
-
-        if (((Get-Date) - $lastLog).TotalSeconds -ge 15) {
-            Write-Log "Refresh poll: $refreshingCount active connection(s) out of $checkedCount checked. Inactive confirmation $inactivePollCount of $requiredInactivePollCount."
-            $lastLog = Get-Date
-        }
-
-        if ($hadPollingWarning) {
-            $inactivePollCount = 0
-            $noPollableConnectionCount = 0
-            Start-ResponsiveSleep -Seconds $pollIntervalSeconds
-            continue
-        }
-
-        if ($checkedCount -gt 0 -and $refreshingCount -eq 0) {
-            $inactivePollCount++
-            $noPollableConnectionCount = 0
-
-            if ($inactivePollCount -ge $requiredInactivePollCount) {
-                Write-Log "No active workbook connections reported for $inactivePollCount consecutive poll(s); waiting final settle period."
-                Start-ResponsiveSleep -Seconds $finalSettleSeconds
-                return
-            }
-
-            Write-Log "No active workbook connections reported; waiting for confirmation poll $inactivePollCount of $requiredInactivePollCount."
-            Start-ResponsiveSleep -Seconds $pollIntervalSeconds
-            continue
-        }
-
-        if ($refreshingCount -gt 0) {
-            $inactivePollCount = 0
-            $noPollableConnectionCount = 0
-            Start-ResponsiveSleep -Seconds $pollIntervalSeconds
-            continue
-        }
-
-        if ($checkedCount -eq 0) {
-            $inactivePollCount = 0
-            $noPollableConnectionCount++
-
-            if ($noPollableConnectionCount -ge $requiredNoPollableConnectionCount) {
-                Write-Log "Workbook exposes no pollable connections after $noPollableConnectionCount consecutive poll(s); waiting final settle period." "WARN"
-                Start-ResponsiveSleep -Seconds $finalSettleSeconds
-                return
-            }
-
-            Write-Log "Workbook exposes no pollable connections; waiting for confirmation poll $noPollableConnectionCount of $requiredNoPollableConnectionCount." "WARN"
-            Start-ResponsiveSleep -Seconds $pollIntervalSeconds
-            continue
-        }
-
-        Start-ResponsiveSleep -Seconds $pollIntervalSeconds
-    } while ((Get-Date) -lt $deadline)
-
-    throw "Refresh exceeded timeout of $TimeoutMinutes minute(s) while polling workbook connections."
-}
-
+$script:RefreshState = @{ phase = 'Starting'; excel = $null; saved = $false; updatedAt = '' }
+Set-RefreshPhase 'Starting'
 $excel = $null
 $workbook = $null
+$ownsExcel = $false
 
 try {
     $visible = if ($PSBoundParameters.ContainsKey("VisibleOverride")) {
@@ -407,7 +302,7 @@ try {
     Write-CurrentStatus -State "RUNNING" -Message "Starting workbook refresh."
     Write-Log "Starting Excel refresh automation."
     Write-Log "Workbook path input: $WorkbookPath"
-    Write-Log "Mode: $(if ($visible) { 'displayed' } else { 'hidden' }); timeout: $timeoutMinutes minute(s); async wait skipped: $useSkipAsyncWait."
+    Write-Log "Mode: $(if ($visible) { 'displayed' } else { 'hidden' }); timeout: $timeoutMinutes minute(s); supervised async/calculation readiness gate: enabled."
 
     if ([string]::IsNullOrWhiteSpace($WorkbookPath)) {
         throw "Workbook path is missing."
@@ -430,31 +325,36 @@ try {
 
     Assert-NotStopNowRequested
 
+    Assert-NoExternalFileUsers -Path $resolvedWorkbookPath
+    $preExistingExcelIds = @(Get-Process -Name EXCEL -ErrorAction SilentlyContinue | ForEach-Object { $_.Id })
+    Set-RefreshPhase 'CreatingExcel'
     Write-Log "Starting a clean Excel instance."
     $excel = New-Object -ComObject Excel.Application
+    Register-RefreshExcel -Excel $excel -PreExistingExcelIds $preExistingExcelIds
+    $ownsExcel = $true
     $excel.Visible = $visible
     $excel.DisplayAlerts = $false
 
+    Set-RefreshPhase 'Opening'
     Write-Log "Opening workbook."
     $workbook = $excel.Workbooks.Open($resolvedWorkbookPath)
+    if ($workbook.ReadOnly) { throw 'Excel opened the selected workbook read-only. Refusing refresh or Save As.' }
+    if (-not ([IO.Path]::GetFullPath($workbook.FullName).Equals($resolvedWorkbookPath, [StringComparison]::OrdinalIgnoreCase))) {
+        throw 'Excel opened a different workbook path than requested.'
+    }
     Write-Log "Workbook opened. Waiting $DefaultOpenSettleSeconds second(s) for Excel to settle."
     Start-ResponsiveSleep -Seconds $DefaultOpenSettleSeconds
 
     Assert-NotStopNowRequested
 
     $refreshStart = Get-Date
+    Set-RefreshPhase 'Refreshing'
     Write-Log "Starting workbook refresh."
     $workbook.RefreshAll()
     Write-Log "Refresh command accepted by Excel."
 
-    if ($useSkipAsyncWait) {
-        Write-Log "Monitoring workbook connections for refresh activity."
-        Wait-WorkbookRefresh -Workbook $workbook -TimeoutMinutes $timeoutMinutes
-    }
-    else {
-        Write-Log "Waiting for asynchronous Excel queries to complete."
-        $excel.CalculateUntilAsyncQueriesDone()
-    }
+    # SkipAsyncWait is retained for CLI compatibility; it cannot bypass the readiness gate.
+    Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
 
     Assert-NotStopNowRequested
 
@@ -464,15 +364,27 @@ try {
     }
 
     Write-Log ("Refresh monitoring complete after {0:n2} minute(s)." -f $elapsedMinutes)
+    if ($workbook.ReadOnly) { throw 'Workbook became read-only before save.' }
+    Assert-NoExternalFileUsers -Path $resolvedWorkbookPath -AllowedProcessId ([int] $script:RefreshState.excel.id)
+    Set-RefreshPhase 'Saving'
     Write-Log "Saving workbook."
     $workbook.Save()
+    Assert-NotStopNowRequested
+    if (-not $workbook.Saved) { throw 'Excel returned from Save without confirming the workbook is saved.' }
+    if (-not ([IO.Path]::GetFullPath($workbook.FullName).Equals($resolvedWorkbookPath, [StringComparison]::OrdinalIgnoreCase))) {
+        throw 'Workbook path changed during save.'
+    }
+    $script:RefreshState.saved = $true
+    Set-RefreshPhase 'Saved'
     Write-Log "Workbook saved."
 
+    Set-RefreshPhase 'Closing'
     Write-Log "Closing workbook."
     $workbook.Close($false)
     $script:WorkbookClosed = $true
     Write-Log "Workbook closed."
 
+    Set-RefreshPhase 'Quitting'
     Write-Log "Quitting Excel."
     $excel.Quit()
     $script:ExcelQuit = $true
@@ -483,7 +395,8 @@ try {
 }
 catch {
     $script:PrimaryError = $_.Exception.Message
-    if ($script:StopRequested) {
+    if ($script:StopRequested -or (Test-StopNowRequested)) {
+        $script:StopRequested = $true
         $script:FinalStatus = "Stopped"
         $script:ExitCode = 3
         Write-Log "Operator stop-now request observed. The active workbook will close without saving." "WARN"
@@ -508,7 +421,7 @@ finally {
         }
     }
 
-    if ($null -ne $excel -and -not $script:ExcelQuit) {
+    if ($ownsExcel -and $null -ne $excel -and -not $script:ExcelQuit) {
         try {
             Write-Log "Quitting Excel during cleanup."
             $excel.Quit()
@@ -534,6 +447,7 @@ finally {
         Write-CurrentStatus -State "STOPPED" -Message "Operator stop-now request observed."
     }
     elseif ($script:FinalStatus -eq "Success") {
+        Set-RefreshPhase 'Complete'
         Write-Log "Refresh run succeeded."
     }
 

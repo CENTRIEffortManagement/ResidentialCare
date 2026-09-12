@@ -13405,10 +13405,10 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             <column-instance column='[Version]' derivation='None' name='[none:Version:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Date)]'>
-            <groupfilter function='member' level='[Date]' member='#2026-07-20#' user:ui-action-filter='[Action9]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Date]' member='#2026-07-28#' user:ui-action-filter='[Action9]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Facility)]'>
-            <groupfilter function='member' level='[Facility]' member='&quot;Unit2&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Facility]' member='&quot;Unit1&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Version:nk]' filter-group='4'>
             <groupfilter function='member' level='[none:Version:nk]' member='&quot;Base&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
@@ -15417,10 +15417,10 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             <column-instance column='[Date]' derivation='Day-Trunc' name='[tdy:Date:qk]' pivot='key' type='quantitative' />
           </datasource-dependencies>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Date)]'>
-            <groupfilter function='member' level='[Date]' member='#2026-07-20#' user:ui-action-filter='[Action9]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Date]' member='#2026-07-28#' user:ui-action-filter='[Action9]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Facility)]'>
-            <groupfilter function='member' level='[Facility]' member='&quot;Unit2&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Facility]' member='&quot;Unit1&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Version:nk]' filter-group='4'>
             <groupfilter function='member' level='[none:Version:nk]' member='&quot;Base&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
@@ -24654,7 +24654,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             <groupfilter function='level-members' level='[none:Calculation_373517350211387393:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]'>
-            <groupfilter function='member' level='[none:Facility:nk]' member='&quot;COUR&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[none:Facility:nk]' member='&quot;Unit1&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Level:nk]'>
             <groupfilter function='except' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
@@ -26106,7 +26106,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             </dictionary>
           </manual-sort>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Facility)]'>
-            <groupfilter function='member' level='[Facility]' member='&quot;Unit2&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Facility]' member='&quot;Unit1&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Level:nk]'>
             <groupfilter function='member' level='[none:Level:nk]' member='&quot;3.1-Pond FacilityDay&quot;' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
@@ -27046,10 +27046,10 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             </dictionary>
           </manual-sort>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Date)]'>
-            <groupfilter function='member' level='[Date]' member='#2026-07-20#' user:ui-action-filter='[Action34]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Date]' member='#2026-07-28#' user:ui-action-filter='[Action34]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Facility)]'>
-            <groupfilter function='member' level='[Facility]' member='&quot;Unit2&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Facility]' member='&quot;Unit1&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Calculation_373517350211387393:nk]'>
             <groupfilter function='level-members' level='[none:Calculation_373517350211387393:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
@@ -29434,13 +29434,13 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             </dictionary>
           </manual-sort>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Date)]'>
-            <groupfilter function='member' level='[Date]' member='#2026-07-20#' user:ui-action-filter='[Action34]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Date]' member='#2026-07-28#' user:ui-action-filter='[Action34]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Facility)]'>
-            <groupfilter function='member' level='[Facility]' member='&quot;Unit2&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Facility]' member='&quot;Unit1&quot;' user:ui-action-filter='[Action69_6D23C9E90A8844EEADCB438A7A63ED6B]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[Action (Role)]'>
-            <groupfilter function='member' level='[Role]' member='&quot;RN&quot;' user:ui-action-filter='[Action75_9A5912211756409E92B18F614F111FD3]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[Role]' member='&quot;AIN&quot;' user:ui-action-filter='[Action75_9A5912211756409E92B18F614F111FD3]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Level:nk]'>
             <groupfilter function='member' level='[none:Level:nk]' member='&quot;3-Pool&quot;' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
@@ -31458,8 +31458,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1450' minheight='1450' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='982' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='981' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='984' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='983' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='5714' id='658' mode='dropdown' name='Effort Profiles Tbl' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Shift:nk]' type-v2='filter' values='database' w='11583' x='87750' y='13667'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -31703,8 +31703,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1050' minheight='1050' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='983' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='982' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='985' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='984' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='259' h='12714' id='583' is-fixed='true' name='L1 Profile' w='87937' x='500' y='381'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -31960,8 +31960,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='985' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='984' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='987' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='986' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='3872' id='773' mode='checkdropdown' name='Effort Profiles Tbl' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Role:nk]' type-v2='filter' values='database' w='8983' x='90676' y='22295'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -32246,8 +32246,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='991' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='990' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='993' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='992' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='264' h='8000' id='634' is-fixed='true' name='L1 Profile' w='87937' x='500' y='235'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -32516,8 +32516,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1000' minheight='1000' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1225' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1224' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1227' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1226' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='276' h='35765' id='487' is-fixed='true' name='L1 Profile' w='86669' x='5739' y='0'>
                   <layout-cache cell-count-w='14' minheight='244' non-cell-size-w='141' type-h='scalable' type-w='cell' />
                   <zone-style>
@@ -32772,8 +32772,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1100' minheight='1100' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1239' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1238' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1241' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1240' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='25652' id='990' type-v2='text' w='20915' x='5747' y='2691'>
                   <formatted-text>
                     <run bold='true' fontcolor='#4e79a7' fontsize='36'><![CDATA[<[Parameters].[#Outcome Parameter]>]]></run>
@@ -32995,8 +32995,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='2000' minheight='2000' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1275' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1274' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1277' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1276' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='3801' id='134' type-v2='text' w='51882' x='532' y='941'>
                   <formatted-text>
                     <run bold='true' fontcolor='#898989' fontsize='15'>OPPORTUNITIES - PROFILE  + COMPARISON</run>
@@ -33214,8 +33214,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='800' minheight='800' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1272' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1271' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1274' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1273' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='4386' id='134' type-v2='text' w='65087' x='347' y='5830'>
                   <formatted-text>
                     <run bold='true' fontcolor='#898989' fontsize='28'>OPPORTUNITIES BY </run>
@@ -33352,8 +33352,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='926' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='925' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='928' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='927' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='240' h='27589' id='1' is-fixed='true' name='3ABProf' w='99058' x='471' y='7222'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -33555,8 +33555,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1200' minheight='1200' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1192' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1191' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1194' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1193' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='33015' id='162' mode='radiolist' name='L2A Profile' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Territory:nk]' type-v2='filter' values='relevant' w='7770' x='12435' y='34065'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -33788,8 +33788,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1213' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1212' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1215' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1214' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='99' h='13303' id='234' is-fixed='true' name='L2DATESmll' w='13548' x='341' y='885'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -33952,8 +33952,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='386' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='385' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='388' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='387' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='280' h='98000' id='3' is-fixed='true' name='EM L2A:3 Profile (3)' w='94823' x='471' y='1000'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34117,8 +34117,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='750' minheight='750' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='184' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='183' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='186' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='185' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='2765' id='86' mode='checkdropdown' name='L3 profile-CARER' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='database' w='5032' x='87019' y='96820'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34298,8 +34298,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='180' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='179' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='182' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='181' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='41033' id='36' mode='dropdown' name='SimpleL2B Carer' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='7724' x='92036' y='4816'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34392,9 +34392,9 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
       </datasource-dependencies>
       <zones>
         <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='95660' id='21' param='horz' type-v2='layout-flow' w='99064' x='468' y='827'>
-            <zone h='95660' id='19' type-v2='layout-basic' w='89702' x='468' y='827'>
-              <zone h='93054' id='12' type-v2='empty' w='2008' x='468' y='3433'>
+          <zone h='96029' id='21' param='horz' type-v2='layout-flow' w='99318' x='341' y='637'>
+            <zone h='96029' id='19' type-v2='layout-basic' w='92507' x='341' y='637'>
+              <zone h='93413' id='12' type-v2='empty' w='2070' x='341' y='3253'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -34402,7 +34402,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='93054' id='14' type-v2='empty' w='1371' x='88799' y='3433'>
+              <zone h='93413' id='14' type-v2='empty' w='1414' x='91434' y='3253'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -34410,7 +34410,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='2606' id='17' type-v2='empty' w='89702' x='468' y='827'>
+              <zone h='2616' id='17' type-v2='empty' w='92507' x='341' y='637'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -34418,7 +34418,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='93054' id='18' name='Role Profile Weighted' w='86323' x='2476' y='3433'>
+              <zone h='93413' id='18' name='Role Profile Weighted' w='89023' x='2411' y='3253'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -34427,8 +34427,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                 </zone-style>
               </zone>
             </zone>
-            <zone fixed-size='160' h='95660' id='20' is-fixed='true' param='vert' type-v2='layout-flow' w='9362' x='90170' y='827'>
-              <zone h='11582' id='43' mode='radiolist' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='9362' x='90170' y='827'>
+            <zone fixed-size='160' h='96029' id='20' is-fixed='true' param='vert' type-v2='layout-flow' w='6811' x='92848' y='637'>
+              <zone h='8917' id='43' mode='radiolist' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='6811' x='92848' y='637'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -34438,7 +34438,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
               </zone>
             </zone>
           </zone>
-          <zone h='2686' id='24' type-v2='empty' w='99064' x='468' y='96487'>
+          <zone h='2697' id='24' type-v2='empty' w='99318' x='341' y='96666'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -34458,9 +34458,9 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='69' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98346' id='68' param='vert' type-v2='layout-flow' w='99064' x='468' y='827'>
-                <zone h='14167' id='43' mode='dropdown' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='9362' x='90170' y='827'>
+            <zone h='100000' id='71' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98346' id='70' param='vert' type-v2='layout-flow' w='99064' x='468' y='827'>
+                <zone h='11582' id='43' mode='dropdown' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='9362' x='90170' y='827'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -34584,7 +34584,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             </zone>
           </zone>
           <zone h='2691' id='508' param='horz' type-v2='layout-flow' w='78696' x='15581' y='97309'>
-            <zone h='2691' id='1006' type-v2='empty' w='68866' x='15581' y='97309'>
+            <zone h='2691' id='1006' type-v2='empty' w='71544' x='15581' y='97309'>
               <zone-style>
                 <format attr='border-color' value='#000000' />
                 <format attr='border-style' value='none' />
@@ -34592,7 +34592,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                 <format attr='margin' value='4' />
               </zone-style>
             </zone>
-            <zone h='2691' id='1191' name='SimpleL2B Comp' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Role:nk]' type-v2='filter' values='database' w='9830' x='84447' y='97309'>
+            <zone h='2691' id='1191' name='SimpleL2B Comp' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Role:nk]' type-v2='filter' values='database' w='7152' x='87125' y='97309'>
               <zone-style>
                 <format attr='border-color' value='#000000' />
                 <format attr='border-style' value='none' />
@@ -34731,8 +34731,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1400' minheight='1400' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1256' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98346' id='1255' param='vert' type-v2='layout-flow' w='99064' x='468' y='827'>
+            <zone h='100000' id='1258' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98346' id='1257' param='vert' type-v2='layout-flow' w='99064' x='468' y='827'>
                 <zone forceUpdate='true' h='30614' id='990' type-v2='text' w='14036' x='1817' y='2691'>
                   <formatted-text>
                     <run bold='true' fontcolor='#4e79a7' fontsize='36'><![CDATA[<[Parameters].[#Outcome Parameter]>]]></run>
@@ -34905,8 +34905,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='930' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='929' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='932' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='931' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='7555' id='28' type-v2='text' w='99112' x='444' y='889'>
                   <formatted-text>
                     <run bold='true' fontsize='28'>WHOLE WORKFORCE</run>
@@ -35026,8 +35026,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='928' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='927' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='930' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='929' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='244' h='28000' id='1' is-fixed='true' name='3ABProf' w='98858' x='571' y='11667'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35221,8 +35221,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1250' minheight='1250' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1192' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1191' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1194' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1193' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='34774' id='162' mode='radiolist' name='L2A Profile' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Territory:nk]' type-v2='filter' values='relevant' w='6383' x='9695' y='34637'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35454,8 +35454,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1213' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1212' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1215' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1214' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='99' h='13381' id='234' is-fixed='true' name='L2DATESmll' w='16190' x='341' y='673'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35685,8 +35685,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1213' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1212' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1215' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1214' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='99' h='13391' id='234' is-fixed='true' name='L2DATESmll' w='16182' x='370' y='637'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35821,8 +35821,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='929' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='928' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='931' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='930' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='280' h='32444' id='585' is-fixed='true' name=' Pres L2A:3 Profile Spare colour adjusted' w='99058' x='471' y='889'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35996,8 +35996,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1400' minheight='1400' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1214' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1213' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1216' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1215' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='280' h='32382' id='487' is-fixed='true' name='L1 Profile' w='100000' x='0' y='0'>
                   <layout-cache cell-count-w='14' minheight='264' non-cell-size-w='141' type-h='scalable' type-w='cell' />
                   <zone-style>
@@ -36184,8 +36184,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1245' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1244' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1247' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98346' id='1246' param='vert' type-v2='layout-flow' w='99064' x='468' y='827'>
                 <zone forceUpdate='true' h='78470' id='990' type-v2='text' w='16899' x='5747' y='2691'>
                   <formatted-text>
                     <run bold='true' fontcolor='#4e79a7' fontsize='36'><![CDATA[<[Parameters].[#Outcome Parameter]>]]></run>
@@ -36256,16 +36256,16 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
       </cards>
       <simple-id uuid='{3D2E8396-BEA6-489D-81A4-031ADEEFD976}' />
     </window>
-    <window class='dashboard' name='Simple#L1.2A.2B.3 (2)' tab-color='#17927d'>
+    <window class='dashboard' maximized='true' name='Simple#L1.2A.2B.3 (2)' tab-color='#17927d'>
       <viewpoints>
         <viewpoint name='SimpleL0.1 Profile (Org))'>
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='1012' />
+      <active id='-1' />
       <simple-id uuid='{677FE8B6-8CC3-4B64-BCA9-B2E0E8101E21}' />
     </window>
-    <window class='dashboard' maximized='true' name='Effectiveness -All Levels' tab-color='#17927d'>
+    <window class='dashboard' name='Effectiveness -All Levels' tab-color='#17927d'>
       <viewpoints>
         <viewpoint name='L1 FACILITY' />
         <viewpoint name='L1DATE' />
@@ -36285,7 +36285,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='1007' />
+      <active id='1017' />
       <simple-id uuid='{62CA70F2-EB39-44ED-A1BF-7B0FDA8C78A6}' />
     </window>
     <window class='dashboard' name='Effectiveness - Role+ShiftW'>
@@ -36294,7 +36294,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='-1' />
+      <active id='43' />
       <simple-id uuid='{79B9FFA1-729A-4216-82EC-98B671FFFB33}' />
     </window>
     <window class='worksheet' name='Role Profile Weighted'>
@@ -37353,7 +37353,6 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <edge name='right'>
           <strip size='251'>
             <card mode='list' param='[Parameters].[#Outcome Parameter]' type='parameter' />
-            <card pane-specification-id='13' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:###Bar Size (copy)_2252362788336250881:qk]' type='size' />
           </strip>
         </edge>
       </cards>

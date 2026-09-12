@@ -57,17 +57,21 @@ Both timestamps must be valid and the end must be later than the start. Interval
 
 ## 4. Decide the worker's baseline availability
 
-The calculation determines the worker's mode from valid records across the entire filtered extraction, before restricting intervals to the roster dates.
+The calculation starts afresh on each calendar day. An AVAIL record restricts only the dates its interval overlaps. It does not restrict availability on other dates.
 
-| Worker records | Baseline and resulting availability |
+| Worker records on a calendar day | Baseline and resulting availability on that day |
 | --- | --- |
-| At least one explicit AVAIL record | Available only within the union of explicit AVAIL windows, minus exclusions |
-| Exclusion records only | Available throughout the configured roster, minus exclusions |
-| No extraction records | Available throughout the configured roster, provided the worker is eligible and has a resolved name |
+| At least one explicit AVAIL interval overlapping this date | Available only within the union of this date's AVAIL windows, minus this date's exclusions |
+| Exclusion records only | Start with the whole day available, then subtract this date's exclusions |
+| No records overlapping this date | Whole day available, provided the worker is eligible and has a resolved name |
 
-Exclusions always take precedence. Adding a leave record to a worker who has explicit AVAIL windows does not make that worker available outside those windows.
+Exclusions always take precedence on the dates they affect. Adding a leave record to a date with explicit AVAIL windows does not make the worker available outside those windows on that date.
 
-An explicit AVAIL record outside the roster still establishes restricted mode. If there are no AVAIL windows inside the roster, the worker has no available shifts there.
+For example, AVAIL from 06:00 to 14:00 on 22 July restricts 22 July to those hours. On 23 July the worker starts fully available unless that date has its own AVAIL or exclusion intervals. An AVAIL outside the roster calendar dates has no effect on the roster.
+
+`AvailabilityDailyWindows` constructs these daily baselines, which `WorkerAvailabilityRules` clips to the roster horizon and publishes as `AvailableIntervals`. `HasAvailability` is retained only as an informational flag for explicit AVAIL within the calendar horizon; shift calculation does not use it to choose a worker-wide mode. Even workers with no records receive baseline intervals covering the roster.
+
+Midnight is an exclusive endpoint. AVAIL ending at midnight does not restrict the following day. A recorded AVAIL spanning midnight affects both dates for the portions actually recorded, and a night shift uses the rules of each calendar date it crosses.
 
 ## 5. Convert exclusions into full or partial days
 
@@ -159,7 +163,7 @@ The retained legacy `RoleResDayAvailabilityCapped` and `RoleAvailabilityCapped` 
 
 ## 10. Execution and maintenance notes
 
-Only eligible workers' intervals are grouped for the shift calculation. Availability mode uses full history, while interval processing is limited to relevant roster calendar dates. Prepared workers, selected Settings tables, reusable interval lists, scalar shift measurements and small check results are buffered where reused. Historical interval lists are not retained in the expanded scalar shift output.
+Only eligible workers' intervals are grouped for the shift calculation. Availability baselines reset per calendar date, and interval processing is limited to relevant roster calendar dates. Prepared workers, selected Settings tables, reusable interval lists, scalar shift measurements and small check results are buffered where reused. Historical interval lists are not retained in the expanded scalar shift output.
 
 Buffers apply within a query evaluation; they do not guarantee a shared cache across separately refreshed outputs. Source rule tests and syntax validation do not establish Excel refresh performance.
 
