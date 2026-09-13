@@ -4,6 +4,81 @@
 
 section Section1;
 
+// Query: fnAddIndexedRunningTotal
+// Purpose: Calculate inclusive running totals in one pass through the existing indexed priority order.
+// Inputs: Ordered rows with contiguous indexes starting at 2, a group-start index and a prefix count.
+// Output: The original rows and columns followed by the requested total column, retaining type any.
+// Notes: Buffer locally so validation, scalar projections and output rows use the same evaluated order.
+shared fnAddIndexedRunningTotal = (
+    orderedInput as table,
+    valueColumn as text,
+    indexColumn as text,
+    startColumn as text,
+    countColumn as text,
+    outputColumn as text
+) as table =>
+let
+    RequiredColumns = List.Distinct({valueColumn, indexColumn, startColumn, countColumn}),
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(orderedInput)),
+    CheckedSchema =
+        if not List.IsEmpty(MissingColumns) then
+            error Error.Record("CapacityDistribB.RunningTotalSchema", "Required running-total columns are missing.", MissingColumns)
+        else if Table.HasColumns(orderedInput, {outputColumn}) then
+            error Error.Record("CapacityDistribB.RunningTotalSchema", "The running-total output column already exists.", outputColumn)
+        else orderedInput,
+    // These buffers apply to this invocation only; they do not cache separately refreshed queries.
+    StableInput = Table.Buffer(CheckedSchema),
+    Values = List.Buffer(Table.Column(StableInput, valueColumn)),
+    Indexes = List.Buffer(Table.Column(StableInput, indexColumn)),
+    GroupStarts = List.Buffer(Table.Column(StableInput, startColumn)),
+    PrefixCounts = List.Buffer(Table.Column(StableInput, countColumn)),
+    RowCount = Table.RowCount(StableInput),
+    // Positional ranges require unique consecutive indexes and contiguous groups; never repair bad joins silently.
+    IsValidControl = (position as number) as logical =>
+        let
+            RowIndex = Indexes{position},
+            GroupStart = GroupStarts{position},
+            PrefixCount = PrefixCounts{position}
+        in
+            try (
+                Value.Is(RowIndex, type number) and RowIndex = position + 2
+                and Value.Is(GroupStart, type number)
+                and GroupStart >= 2 and GroupStart <= RowIndex and Number.RoundDown(GroupStart) = GroupStart
+                and Value.Is(PrefixCount, type number) and PrefixCount = RowIndex - GroupStart + 1
+                and (if position = 0 then GroupStart = RowIndex
+                     else GroupStart = GroupStarts{position - 1} or GroupStart = RowIndex)
+            ) otherwise false,
+    FirstInvalidPosition = List.First(List.Select(List.Numbers(0, RowCount), each not IsValidControl(_)), null),
+    ValidatedInput =
+        if FirstInvalidPosition = null then StableInput
+        else error Error.Record(
+            "CapacityDistribB.RunningTotalOrder",
+            "Running-total indexes or group boundaries are invalid. Check joins and the existing priority order.",
+            [RowPosition = FirstInvalidPosition + 1, IndexColumn = indexColumn, StartColumn = startColumn, CountColumn = countColumn]
+        ),
+    // Emit one scalar per row without repeatedly slicing/summing prefixes or appending to a growing list.
+    // List.Sum of the two scalars preserves null for an entirely null prefix and ignores null otherwise.
+    RunningTotals = List.Buffer(List.Generate(
+        () => [Position = 0, Total = if RowCount = 0 then null else Values{0}],
+        (state as record) as logical => state[Position] < RowCount,
+        (state as record) as record =>
+            let NextPosition = state[Position] + 1
+            in [
+                Position = NextPosition,
+                Total = if NextPosition >= RowCount then null
+                        else if GroupStarts{NextPosition} <> GroupStarts{state[Position]} then Values{NextPosition}
+                        else List.Sum({state[Total], Values{NextPosition}})
+            ],
+        (state as record) => state[Total]
+    )),
+    WithRunningTotal = Table.AddColumn(
+        ValidatedInput, outputColumn,
+        (row as record) => RunningTotals{Record.Field(row, indexColumn) - 2},
+        type any
+    )
+in
+    WithRunningTotal;
+
 
 shared #"ResMaxReduction (C# Unassigned)" = let
     Source = ResPeriodOverallocationReduction,
@@ -57,6 +132,8 @@ shared #"ResIndexLimits (ResMaxReduction)" = let
 in
     #"Grouped Rows";
 
+// Query: ReDistributeResAvailability
+// Purpose: Apply each resource's reduction cap in the existing redistribution priority order.
 shared ReDistributeResAvailability = let
     Source = Table.NestedJoin(#"PrioritiseRedistribAvail-Distrib", {"Resource"}, #"ResIndexLimits (ResMaxReduction)", {"Resource"}, "REsLimits", JoinKind.LeftOuter),
     #"Expanded REsLimits" = Table.ExpandTableColumn(Source, "REsLimits", {"StartResIndex", "ResExcessAvailable", "ResAvailNumber"}, {"StartResIndex", "ResExcessAvailable", "ResAvailNumber"}),
@@ -65,8 +142,7 @@ shared ReDistributeResAvailability = let
     #"Sorted Rows1" = Table.Sort(#"Expanded ResPeriodAvailabilityCapped(C#)TABLE",{{"IndexAllRowPrioritySort", Order.Ascending}}),
     #"Inserted Subtraction" = Table.AddColumn(#"Sorted Rows1", "Subtraction", each [IndexAllRowPrioritySort] - [StartResIndex]+1),
     #"Changed Type" = Table.TransformColumnTypes(#"Inserted Subtraction",{{"Subtraction", Int64.Type}}),
-    #"Added RUNNINGRESTOTAL" = Table.AddColumn(#"Changed Type", "RunningResTotal", each List.Sum(List.Range(#"Changed Type" [#"C#"], [StartResIndex]-2
-, [Subtraction]))),
+    #"Added RUNNINGRESTOTAL" = fnAddIndexedRunningTotal(#"Changed Type", "C#", "IndexAllRowPrioritySort", "StartResIndex", "Subtraction", "RunningResTotal"),
     #"Added KEEP" = Table.AddColumn(#"Added RUNNINGRESTOTAL", "KeepRunningTotal", each if [RunningResTotal] > [ResMaxReduction] then "Remove" else if [RunningResTotal] <= [ResMaxReduction] then "Keep" else "Split")
 in
     #"Added KEEP";
@@ -89,14 +165,15 @@ in
     #"Grouped Rows";
 
 [ Description = "BUFFER" ]
+// Query: ReDistribPeriodAvailbility TABLE
+// Purpose: Retain redistribution rows within both resource and period reduction limits.
 shared #"ReDistribPeriodAvailbility TABLE" = let
     Source = Table.NestedJoin(ReDistribResAvailabilityTABLE, {"Period"}, #"PeriodIndexLimits (ExcessC#-D)", {"Period"}, "PeriodIndexLimits", JoinKind.LeftOuter),
     #"Expanded PeriodIndexLimits" = Table.ExpandTableColumn(Source, "PeriodIndexLimits", {"StartPeriodIndex"}, {"StartPeriodIndex"}),
     #"Added Custom" = Table.AddColumn(#"Expanded PeriodIndexLimits", "ApplicableC#", each if [KeepRunningTotal] = "Remove" then 0 else [#"C#"]),
     #"Sorted INDEX" = Table.Sort(#"Added Custom",{{"Index", Order.Ascending}}),
     #"Inserted Subtraction" = Table.AddColumn(#"Sorted INDEX", "Subtraction", each [Index] - [StartPeriodIndex]+1, type number),
-    #"Added PERIODRUNNINGTOTAL" = Table.AddColumn(#"Inserted Subtraction", "PeriodRunningTotal", each List.Sum(List.Range(#"Sorted INDEX" [#"ApplicableC#"], [StartPeriodIndex]-2
-, [Subtraction]))),
+    #"Added PERIODRUNNINGTOTAL" = fnAddIndexedRunningTotal(#"Inserted Subtraction", "ApplicableC#", "Index", "StartPeriodIndex", "Subtraction", "PeriodRunningTotal"),
     #"Added KEEP PR" = Table.AddColumn(#"Added PERIODRUNNINGTOTAL", "Keep RunningTotal", each if [RunningResTotal] <= [ResMaxReduction]
 and 
 [PeriodRunningTotal] <=[#"ExcessC#-D"]
@@ -175,15 +252,29 @@ shared MaxAvailability = #"EXTRACT MaxAvailability";
 
 shared AllocationThreshold = 0.8 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
 
+// Query: IMPORTSource A1
+// Purpose: Provide the A.1 workbook binary and navigation table for the four existing imports.
+// Notes: Navigation buffering is shallow; selected table transformations remain in their owning imports.
+shared #"IMPORTSource A1" = let
+    // Reuse the saved file bytes within an evaluation; separately loaded outputs can still evaluate this again.
+    WorkbookBinary = Binary.Buffer(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx")),
+    WorkbookNavigation = Table.Buffer(Excel.Workbook(WorkbookBinary, null, true))
+in
+    WorkbookNavigation;
+
+// Query: IMPORT Demand
+// Purpose: Read the existing A.1 Demand_Prepare table without changing its schema or grain.
 shared #"IMPORT Demand" = let
-    Source = Excel.Workbook(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx"), null, true),
+    Source = #"IMPORTSource A1",
     Demand_Prepare_Table = Source{[Item="Demand_Prepare",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(Demand_Prepare_Table,{{"Shift", type text}, {"Role", type text}, {"Facility", type text}, {"D", Int64.Type}, {"Date", type date}, {"Period", Int64.Type}})
 in
     #"Changed Type";
 
+// Query: IMPORT Allocation
+// Purpose: Read A.1 resource-period allocations, preserving the existing null-period exclusion.
 shared #"IMPORT Allocation" = let
-    Source = Excel.Workbook(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx"), null, true),
+    Source = #"IMPORTSource A1",
     ResPeriodAllocationTABLE_Table = Source{[Item="ResPeriodAllocationTABLE",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(ResPeriodAllocationTABLE_Table,{{"Role", type text}, {"Allocation", type number}, {"Resource", Int64.Type}, {"Period", Int64.Type}}),
     #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Period] <> null))
@@ -191,8 +282,10 @@ in
     #"Filtered Rows";
 
 [ Description = "BUFFER" ]
+// Query: IMPORT AvailabilityOriginal
+// Purpose: Read and retain the existing buffered original-availability table from A.1.
 shared #"IMPORT AvailabilityOriginal" = let
-    Source = Excel.Workbook(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx"), null, true),
+    Source = #"IMPORTSource A1",
     ResPeriodAvailabilityTABLE_Table = Source{[Item="ResPeriodAvailabilityTABLE",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(ResPeriodAvailabilityTABLE_Table,{{"Role", type text}, {"Resource", Int64.Type}, {"Period", Int64.Type}, {"Availability", Int64.Type}}),
     BUFFER = Table.Buffer(#"Changed Type")
@@ -207,8 +300,10 @@ shared #"IMPORT ResPeriodAvailabilityCapped(C#)" = let
 in
     #"Removed Columns";
 
+// Query: IMPORT ResPeriodNWDTABLE
+// Purpose: Read the existing A.1 resource-period priority worksheet, preserving header promotion and types.
 shared #"IMPORT ResPeriodNWDTABLE" = let
-    Source = Excel.Workbook(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx"), null, true),
+    Source = #"IMPORTSource A1",
     ResPeriodWDTABLE_Sheet = Source{[Item="ResPeriodWDTABLE",Kind="Sheet"]}[Data],
     #"Promoted Headers" = Table.PromoteHeaders(ResPeriodWDTABLE_Sheet, [PromoteAllScalars=true]),
     #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Resource", Int64.Type}, {"Day", Int64.Type}, {"PotentialAvailability", type text}, {"Period", Int64.Type}, {"Availability", Int64.Type}, {"RosteredPeriodStatus", type text}})
@@ -377,7 +472,8 @@ shared #"PeriodIndexLimits-ve (C##-D,C##)" = let
 in
     #"Grouped Rows";
 
-[ Description = "BUFFER" ]
+// Query: SubtractOverallatedPeriods
+// Purpose: Apply period reduction limits in the existing indexed priority order.
 shared SubtractOverallatedPeriods = let
     Source = Table.NestedJoin(#"PrioritiseReductionAvail-Setup", {"Period"}, #"PeriodIndexLimits-ve (C##-D,C##)", {"Period"}, "ResLimits-Subtract", JoinKind.LeftOuter),
     #"Expanded ResLimits-Subtract" = Table.ExpandTableColumn(Source, "ResLimits-Subtract", {"StartPeriodIndex", "PeriodExcessAvailable", "PeriodAvailableNumber"}, {"StartPeriodIndex", "PeriodExcessAvailable", "PeriodAvailableNumber"}),
@@ -389,8 +485,7 @@ shared SubtractOverallatedPeriods = let
 
 
 
-    #"Added RUNNINGRESTOTAL" = Table.AddColumn(#"Changed Type", "RunningPeriodTotal", each List.Sum(List.Range(#"Changed Type" [MinimumAvailable], [StartPeriodIndex]-2
-, [Subtraction]))),
+    #"Added RUNNINGRESTOTAL" = fnAddIndexedRunningTotal(#"Changed Type", "MinimumAvailable", "IndexAllRows", "StartPeriodIndex", "Subtraction", "RunningPeriodTotal"),
     #"Added KEEP" = Table.AddColumn(#"Added RUNNINGRESTOTAL", "KeepRunningTotal", each if [RunningPeriodTotal] > [#"ResPeriodC##MAXReduction"] then "Remove" else if [RunningPeriodTotal] <= [#"ResPeriodC##MAXReduction"] then "Keep" else "Split")
 in
     #"Added KEEP";
@@ -411,13 +506,14 @@ shared ResIndexLimits = let
 in
     #"Grouped Rows";
 
+// Query: SubtractOverallocatedResources
+// Purpose: Retain reduction rows within both resource and period caps using the existing indexed order.
 shared SubtractOverallocatedResources = let
     Source = Table.NestedJoin(#"ResIndex-Steup", {"Resource"}, ResIndexLimits, {"Resource"}, "ResIndexLimits", JoinKind.LeftOuter),
     #"Expanded ResIndexLimits" = Table.ExpandTableColumn(Source, "ResIndexLimits", {"StartResIndex", "ResExcessAvailable", "ResAvailableNumber"}, {"StartResIndex", "ResExcessAvailable", "ResAvailableNumber"}),
     #"Sorted Rows" = Table.Sort(#"Expanded ResIndexLimits",{{"IndexAllRows", Order.Ascending}}),
     #"Inserted Subtraction" = Table.AddColumn(#"Sorted Rows", "Subtraction", each [IndexAllRows] - [StartResIndex]+1),
-    #"Added Custom" = Table.AddColumn(#"Inserted Subtraction", "RunningResTotal", each List.Sum(List.Range(#"Inserted Subtraction" [#"MinimumAvailable"], [StartResIndex]-2
-, [Subtraction]))),
+    #"Added Custom" = fnAddIndexedRunningTotal(#"Inserted Subtraction", "MinimumAvailable", "IndexAllRows", "StartResIndex", "Subtraction", "RunningResTotal"),
     #"Replaced Value" = Table.ReplaceValue(#"Added Custom",null,0,Replacer.ReplaceValue,{"A-D"}),
     #"Added KEEP RES" = Table.AddColumn(#"Replaced Value", "KeepRes", each if [RunningResTotal] <= [#"MaxC##Reduction"] then "Keep" else "Remove"),
     #"Added Conditional Column" = Table.AddColumn(#"Added KEEP RES", "KeepPR", each if [KeepRunningTotal] <> "Keep" then null else if [KeepRes] <> "Keep" then null else "Keep"),

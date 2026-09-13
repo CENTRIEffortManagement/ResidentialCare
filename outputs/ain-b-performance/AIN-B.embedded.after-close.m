@@ -1,7 +1,3 @@
-// Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\RoleA\CapacityDistrib(B)-shifts.xlsx
-// Extracted: 2026-05-21T00:54:05.796Z
-
 section Section1;
 
 

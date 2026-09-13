@@ -1,5 +1,6 @@
-// Capacity-ShiftAvailability: approved DATExx-Whiddon source.
-// Rules revised 2026-09-12: UNAVAIL intervals, recognised daily leave, residual effective hours.
+// Power Query from: Capacity-ShiftAvailability.xlsx
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\Capacity-ShiftAvailability.xlsx
+// Extracted: 2026-09-12T21:57:06.510Z
 
 section Section1;
 

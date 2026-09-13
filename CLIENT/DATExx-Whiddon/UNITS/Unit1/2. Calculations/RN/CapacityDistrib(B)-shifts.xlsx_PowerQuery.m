@@ -141,12 +141,37 @@ shared Role = let
 in
     Value;
 
-shared MaxAvailability = let
-    Source = Excel.CurrentWorkbook(){[Name="MaxAvailability"]}[Content],
-    #"Changed Type" = Table.TransformColumnTypes(Source,{{"MaxAvailability", Int64.Type}}),
-    MaxAvailability1 = #"Changed Type"{0}[MaxAvailability]
+// Query: IMPORTSource Settings Data
+// Purpose: Import the shared Settings Data workbook for this unit.
+shared #"IMPORTSource Settings Data" = let
+    // Settings Data is in the parent Calculations folder for every role.
+    CalculationsPath = Text.BeforeDelimiter(
+        RolePath, "\", {0, RelativePosition.FromEnd}
+    ),
+    Source = Excel.Workbook(
+        File.Contents(CalculationsPath & "\Settings Data.xlsx"),
+        null,
+        true
+    )
 in
-    MaxAvailability1;
+    Source;
+
+// Query: EXTRACT MaxAvailability
+// Purpose: Extract the analysis-period worker shift cap from Settings Data.
+shared #"EXTRACT MaxAvailability" = let
+    SettingsTable = #"IMPORTSource Settings Data"{
+        [Item = "MaxAvailability", Kind = "Table"]
+    }[Data],
+    TypedSettings = Table.TransformColumnTypes(
+        SettingsTable, {{"MaxAvailability", Int64.Type}}
+    ),
+    PeriodShiftLimit = TypedSettings{0}[MaxAvailability]
+in
+    PeriodShiftLimit;
+
+// Query: MaxAvailability
+// Purpose: Preserve the existing cap interface for downstream B calculations.
+shared MaxAvailability = #"EXTRACT MaxAvailability";
 
 shared AllocationThreshold = 0.8 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
 

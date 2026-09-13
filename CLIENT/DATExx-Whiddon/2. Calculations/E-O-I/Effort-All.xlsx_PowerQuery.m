@@ -1,6 +1,6 @@
 // Power Query from: Effort-All.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Effort-All.xlsx
-// Extracted: 2026-09-11T06:07:05.832Z
+// Extracted: 2026-09-13T06:13:33.983Z
 
 section Section1;
 
@@ -234,9 +234,10 @@ shared ResShiftAllocation = let
     Source1 = #"Facility2 - ResAllocation",
     #"Appended Query" = Table.Combine({Source1, #"Facility1 - ResAllocation"}),
     //CombinedTables = Table.Combine({Source1, #"Facility1 - ResAllocation"}),
-    #"Renamed Columns" = Table.RenameColumns(#"Appended Query",{{"ShiftPeriod", "Shift"}, {"TimeDate", "Date"}, {"ResShiftFTE", "Effort"}, {"Type", "EffortType"}})
+    #"Renamed Columns" = Table.RenameColumns(#"Appended Query",{{"ShiftPeriod", "Shift"}, {"TimeDate", "Date"}, {"ResShiftFTE", "Effort"}, {"Type", "EffortType"}}),
+    #"Filtered RES NULL" = Table.SelectRows(#"Renamed Columns", each ([Resource] <> null))
 in
-    #"Renamed Columns";
+    #"Filtered RES NULL";
 
 shared #"EffortAllMatrixAG1_1D-base !!" = let
    Source = #"Facility2-EffortAllMatrixAG1_1D#",
@@ -277,9 +278,11 @@ shared #"Availabilities Appended" = let
     #"Appended FAC1" = Table.Combine({Source, #"Facility1 - Availabilities"}),
     //Table.Combine({#"Facility1 - Availabilities", #"Facility2 - Availabilities"}),    //return Facility 1
     #"Renamed Columns" = Table.RenameColumns(#"Appended FAC1",{{"Capacity", "EffortType"}, {"Availability", "Effort"}}),
-    #"Multiplied Column" = Table.TransformColumns(#"Renamed Columns", {{"Effort", each _ * EffectiveAvailability, type number}})
+    #"Multiplied Column" = Table.TransformColumns(#"Renamed Columns", {{"Effort", each _ * EffectiveAvailability, type number}}),
+    #"Sorted Rows" = Table.Sort(#"Multiplied Column",{{"Facility", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"Resource", Order.Ascending}, {"EffortType", Order.Ascending}}),
+    #"Filtered Rows" = Table.SelectRows(#"Sorted Rows", each ([Resource] = 108))
 in
-    #"Multiplied Column";
+    #"Filtered Rows";
 
 shared #"Availability Effort" = let
     Source = #"EffortAllMatrixAG1_1D-base !!",

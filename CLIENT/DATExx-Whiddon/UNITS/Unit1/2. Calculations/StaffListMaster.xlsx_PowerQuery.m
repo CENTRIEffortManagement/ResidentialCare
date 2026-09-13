@@ -1,6 +1,6 @@
 // Power Query from: StaffListMaster.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\StaffListMaster.xlsx
-// Extracted: 2026-05-18T06:14:39.153Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\StaffListMaster.xlsx
+// Extracted: 2026-09-12T21:56:49.763Z
 
 section Section1;
 
@@ -110,23 +110,28 @@ shared Masterlist = let
     Source = #"Masterlist Join",
     #"Added RESOURCE INDEX" = Table.AddIndexColumn(Source, "Resource", 1, 1, Int64.Type),
     #"Merged Queries" = Table.NestedJoin(#"Added RESOURCE INDEX", {"Name", "Role"}, #"Misaligned Join", {"Misaligned-Name", "Misaligned-Role"}, "Misaligned Join", JoinKind.FullOuter),
-    #"Expanded Misaligned Join" = Table.ExpandTableColumn(#"Merged Queries", "Misaligned Join", {"Misalignment"}, {"Misalignment"})
+    #"Expanded Misaligned Join" = Table.ExpandTableColumn(#"Merged Queries", "Misaligned Join", {"Misalignment"}, {"Misalignment"}),
+    #"Sorted Rows" = Table.Sort(#"Expanded Misaligned Join",{{"Misalignment", Order.Ascending}})
 in
-    #"Expanded Misaligned Join";
+    #"Sorted Rows";
 
 shared AllocationTable_StaffList = let
      Source1 = #"IMPORT Table_AllocatedStaffList",
     #"Sorted Rows" = Table.Sort(Source1,{{"Name", Order.Ascending}}),
-    #"Added Custom" = Table.AddColumn(#"Sorted Rows", "Source", each "Allocation")
+    #"Added Custom" = Table.AddColumn(#"Sorted Rows", "Source", each "Allocation"),
+    #"Trimmed Text" = Table.TransformColumns(#"Added Custom",{{"Name", Text.Trim, type text}, {"Role", Text.Trim, type text}}),
+    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Name", Text.Clean, type text}, {"Role", Text.Clean, type text}})
 in
-    #"Added Custom";
+    #"Cleaned Text";
 
 shared AvailableStaffListInitial = let
     Source = #"IMPORT AvailabilityDayShiftMATRIXRaw",
     #"Grouped Rows" = Table.Group(Source, {"Role", "Name"}, {{"AvailableListInitial", each Table.RowCount(_), Int64.Type}}),
-    #"Removed Columns" = Table.RemoveColumns(#"Grouped Rows",{"AvailableListInitial"})
+    #"Removed Columns" = Table.RemoveColumns(#"Grouped Rows",{"AvailableListInitial"}),
+    #"Trimmed Text" = Table.TransformColumns(#"Removed Columns",{{"Role", Text.Trim, type text}, {"Name", Text.Trim, type text}}),
+    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Role", Text.Clean, type text}, {"Name", Text.Clean, type text}})
 in
-    #"Removed Columns";
+    #"Cleaned Text";
 
 shared AvailableStaffList = let
      Source1 = AvailableStaffListInitial,
@@ -154,7 +159,7 @@ in
     #"Changed Type";
 
 shared #"Misaligned Join" = let
-    Source = Table.NestedJoin(AllocationTable_StaffList, {"Name", "Role"}, AvailableStaffList, {"Name", "Role"}, "Availability-StaffList", JoinKind.FullOuter),
+    Source = Table.FuzzyNestedJoin(AllocationTable_StaffList, {"Name", "Role"}, AvailableStaffList, {"Name", "Role"}, "Availability-StaffList", JoinKind.FullOuter, [IgnoreCase=true, IgnoreSpace=true, Threshold=.5]),
     #"Expanded Availability-StaffList" = Table.ExpandTableColumn(Source, "Availability-StaffList", {"Name", "Role"}, {"Availability-StaffList.Name", "Availability-StaffList.Role"}),
     #"Sorted Rows" = Table.Sort(#"Expanded Availability-StaffList",{{"Name", Order.Ascending}}),
     #"Added Conditional Column" = Table.AddColumn(#"Sorted Rows", "Custom", each if [Name] <> [#"Availability-StaffList.Name"] then "Misaligned" else null),
@@ -162,9 +167,10 @@ shared #"Misaligned Join" = let
     #"Filtered Rows1" = Table.SelectRows(#"Sorted Rows1", each ([Custom] = "Misaligned")),
     #"Inserted Merged Column" = Table.AddColumn(#"Filtered Rows1", "Misaligned-Name", each Text.Combine({[Name], [#"Availability-StaffList.Name"]}, ""), type text),
     #"Inserted Merged Column1" = Table.AddColumn(#"Inserted Merged Column", "Misaligned-Role", each Text.Combine({[Role], [#"Availability-StaffList.Role"]}, ""), type text),
-    #"Added Conditional Column1" = Table.AddColumn(#"Inserted Merged Column1", "Misalignment", each if [Name] = null then "Available Only" else if [#"Availability-StaffList.Name"] = null then "Allocated Only" else "ERROR")
+    #"Added Conditional Column1" = Table.AddColumn(#"Inserted Merged Column1", "Misalignment", each if [Name] = null then "Available Only" else if [#"Availability-StaffList.Name"] = null then "Allocated Only" else "ERROR"),
+    #"Sorted Rows2" = Table.Sort(#"Added Conditional Column1",{{"Name", Order.Ascending}, {"Availability-StaffList.Name", Order.Ascending}})
 in
-    #"Added Conditional Column1";
+    #"Sorted Rows2";
 
 shared #"Misaligned Allocation Availability Names" = let
     Source = #"Misaligned Join",
