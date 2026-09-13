@@ -4,6 +4,10 @@
 *.bak
 *.backup.*
 
+# Local roster workbooks (any filename casing; Power Query source stays tracked)
+*[Rr][Oo][Ss][Tt][Ee][Rr]*.[Xx][Ll][Ss]
+*[Rr][Oo][Ss][Tt][Ee][Rr]*.[Xx][Ll][Ss][XxMmBb]
+
 # Logs and local diagnostics
 *.log
 logs/
