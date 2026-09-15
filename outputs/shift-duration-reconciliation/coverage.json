@@ -1,0 +1,1149 @@
+{
+  "Generated": "2026-09-14T14:06:50.8803016+10:00",
+  "Scope": "Working-tree text, including ignored/hidden text, backups and diagnostic artifacts; excludes .git and Excel packages. No workbook inspection or execution.",
+  "Pattern": "(?i)duration|shift[ _.-]*(length|hrs|hours)|effective[ _.-]*(shift|availability)|meal[ _.-]*break|unpaid|paid[ _.-]*hours|direct care|res.*effective.*ratio|intervaleffectiveratio|allocatedeffort|timeworked|ordinaryworkwk|stdrosterdays|\\bFTE\\b|\\b7[.,][56]\\b|(?<![\\w.])0?\\.(5|93[0-9]*|95)\\b|\\b(8|456|450|480|38|76)\\b|half.hour|30.minute|break time",
+  "MatchingFiles": 228,
+  "MatchingLines": 5169,
+  "Files": [
+    {
+      "Path": "CLIENT/DATExx-Whiddon/2. Calculations/Change/AllocationChange.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/2. Calculations/Change/SS/ResidualAllocation-ALL.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/2. Calculations/Change/SS/ResidualAllocation.xlsx_PowerQuery.m",
+      "MatchingLines": 13,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/2. Calculations/Cost/Cost..xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+      "MatchingLines": 5,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/2. Calculations/EOW/EffortOutcomeLogXY.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/~Availability Redistribution__7424.twbr",
+      "MatchingLines": 22,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/Availability Redistribution.twb",
+      "MatchingLines": 40,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/Availability RedistributionY.twb",
+      "MatchingLines": 55,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/Cost-LT_v2025.3.twb",
+      "MatchingLines": 27,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/Effort and Inefficiencies.twb",
+      "MatchingLines": 235,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/EOW v07 - AG1-1DS.twb",
+      "MatchingLines": 200,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/3. Report/ShiftProfilex1F-LT.twb",
+      "MatchingLines": 171,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/runner/Invoke-RefreshRunner.ps1",
+      "MatchingLines": 4,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-OrgWorkbookSequence.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-UnitWorkbookSequence.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+      "MatchingLines": 5,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/2. Calculations/E-O-I/StafMasterList-All.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 6,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AllocationByShiftAverage.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Demand.xlsx_PowerQuery.m",
+      "MatchingLines": 24,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/DemandIntervals.xlsx_PowerQuery.m",
+      "MatchingLines": 18,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Intervals.xlsx_PowerQuery.m",
+      "MatchingLines": 32,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/MutliRoleCheck.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Settings Data.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113943-inpuA43/UNITS/Unit1/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "MatchingLines": 3,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113943-inpuA43/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "MatchingLines": 19,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-continued/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-continued/EffortOutcomeLogXY.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-continued/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/runner/AllUnits-WorkbookSequence.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/runner/Invoke-AllUnitsRefresh.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/1-AllocationExtracted.Christ.xlsx_PowerQuery.m",
+      "MatchingLines": 3,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "MatchingLines": 2,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "MatchingLines": 80,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+      "MatchingLines": 85,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+      "MatchingLines": 29,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_Diagnosis.md",
+      "MatchingLines": 10,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_HoursTest.md",
+      "MatchingLines": 21,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery copy.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 16,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AllocationByShiftAverage.xlsx_PowerQuery.m",
+      "MatchingLines": 31,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Availability-Source-Replacement-Plan.md",
+      "MatchingLines": 16,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AvailabilityDailyReset_Fix.md",
+      "MatchingLines": 8,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AvailabilityRecords_Explained.md",
+      "MatchingLines": 1,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "MatchingLines": 41,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m.OLD",
+      "MatchingLines": 44,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Demand.xlsx_PowerQuery.m",
+      "MatchingLines": 24,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/DemandIntervals.xlsx_PowerQuery.m",
+      "MatchingLines": 18,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Intervals.xlsx_PowerQuery.m",
+      "MatchingLines": 31,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/MutliRoleCheck.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Settings Data.xlsx_PowerQuery.m",
+      "MatchingLines": 2,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Shift-StaffDistribution.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/ShiftsRFBI.xlsx_PowerQuery.m",
+      "MatchingLines": 73,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/StaffListMaster.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/WorkerAvailabilityRules_Explained.md",
+      "MatchingLines": 6,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/WorkerShiftSegments_Explained.md",
+      "MatchingLines": 12,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/3. Report/Availability Redistribution.twb",
+      "MatchingLines": 42,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/3. Report/Availability RedistributionY.twb",
+      "MatchingLines": 52,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/3. Report/Cost-LT_v2025.3.twb",
+      "MatchingLines": 27,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/3. Report/Effort and Inefficiencies.twb",
+      "MatchingLines": 226,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/3. Report/EOW v07 - AG1-1DS.twb",
+      "MatchingLines": 191,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/3. Report/ShiftProfile.twb",
+      "MatchingLines": 148,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Calculation-WorkbookSequence.Stage3-UnitCalculations.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Invoke-CalculationRefresh.Stage3-UnitCalculations.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Invoke-RNRefresh.Stage1-RNOnly.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Invoke-RoleRefresh.Stage2-AllRoles.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Invoke-UnitRefresh.Stage4-Unit1Only.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Role-WorkbookSequence.Stage2-AllRoles.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/bin/Unit-WorkbookSequence.Stage4-Unit1Only.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/1-AllocationExtracted.Christ.xlsx_PowerQuery.m",
+      "MatchingLines": 3,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "MatchingLines": 2,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "MatchingLines": 80,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtracted-Master-Christ.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+      "MatchingLines": 85,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+      "MatchingLines": 29,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/AINC4/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/AINC4/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 16,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/AllocationByShiftAverage.xlsx_PowerQuery.m",
+      "MatchingLines": 31,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Availability-Source-Replacement-Plan.md",
+      "MatchingLines": 16,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "MatchingLines": 41,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Demand.xlsx_PowerQuery.m",
+      "MatchingLines": 24,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/DemandIntervals.xlsx_PowerQuery.m",
+      "MatchingLines": 18,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Intervals.xlsx_PowerQuery.m",
+      "MatchingLines": 31,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/MutliRoleCheck.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Settings Data.xlsx_PowerQuery.m",
+      "MatchingLines": 2,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Shift-StaffDistribution.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/ShiftsRFBI.xlsx_PowerQuery.m",
+      "MatchingLines": 73,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/3. Report/Availability Redistribution.twb",
+      "MatchingLines": 42,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/3. Report/Availability RedistributionY.twb",
+      "MatchingLines": 52,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/3. Report/Cost-LT_v2025.3.twb",
+      "MatchingLines": 27,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/3. Report/Effort and Inefficiencies.twb",
+      "MatchingLines": 226,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/3. Report/EOW v07 - AG1-1DS.twb",
+      "MatchingLines": 191,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/3. Report/ShiftProfile.twb",
+      "MatchingLines": 150,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Calculation-WorkbookSequence.Stage3-UnitCalculations.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Invoke-CalculationRefresh.Stage3-UnitCalculations.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Invoke-RNRefresh.Stage1-RNOnly.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Invoke-RoleRefresh.Stage2-AllRoles.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Invoke-UnitRefresh.Stage4-Unit1Only.ps1",
+      "MatchingLines": 3,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Role-WorkbookSequence.Stage2-AllRoles.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/bin/Unit-WorkbookSequence.Stage4-Unit1Only.psd1",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/Change/AllocationChange.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/Change/SS/ResidualAllocation-ALL.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/Change/SS/ResidualAllocation.xlsx_PowerQuery.m",
+      "MatchingLines": 13,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/Cost/Cost..xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+      "MatchingLines": 5,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/E-O-I/StafMasterList-All.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/2. Calculations/EOW/EffortOutcomeLogXY.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+      "MatchingLines": 5,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/2. Calculations/E-O-I/StafMasterList-All.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 6,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/AllocationByShiftAverage.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Demand.xlsx_PowerQuery.m",
+      "MatchingLines": 24,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/DemandIntervals.xlsx_PowerQuery.m",
+      "MatchingLines": 18,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Intervals.xlsx_PowerQuery.m",
+      "MatchingLines": 32,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/MutliRoleCheck.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Settings Data.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/UNITS/Unit1/2. Calculations/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113943-inpuA43/UNITS/Unit1/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "MatchingLines": 3,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113943-inpuA43/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "MatchingLines": 19,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-continued/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-continued/EffortOutcomeLogXY.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-continued/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Backup or variant"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "MatchingLines": 3,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "MatchingLines": 19,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/1. Input/2-DemandExtracted-Master-.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 6,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/AINC4/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Allocation.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/AllocationByShiftAverage.xlsx_PowerQuery.m",
+      "MatchingLines": 17,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Demand.xlsx_PowerQuery.m",
+      "MatchingLines": 24,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/DemandIntervals.xlsx_PowerQuery.m",
+      "MatchingLines": 18,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Intervals.xlsx_PowerQuery.m",
+      "MatchingLines": 32,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/MutliRoleCheck.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 7,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Settings Data.xlsx_PowerQuery.m",
+      "MatchingLines": 4,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Shift-StaffDistribution.xlsx_PowerQuery.m",
+      "MatchingLines": 1,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "CLIENT/DATExx/UNITS/Unit1/2. Calculations/Shifts.xlsx_PowerQuery.m",
+      "MatchingLines": 75,
+      "Classification": "Repository M source (workbook parity unverified)"
+    },
+    {
+      "Path": "docs/AIN-B-Performance-Changes.md",
+      "MatchingLines": 2,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/Allocation-Duplicate-Row-Fix.md",
+      "MatchingLines": 4,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/cmd-runner-instructions.md",
+      "MatchingLines": 2,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/DATExx-Whiddon-Capacity-Shift-Availability-Rules.md",
+      "MatchingLines": 19,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/DATExx-Whiddon-Input-Workbook-Path-Setup.md",
+      "MatchingLines": 2,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/Demand-Extraction-Distributed-FTE-Plan.md",
+      "MatchingLines": 17,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/MinuteWorker-FTE-Profile-Chart-Instructions.md",
+      "MatchingLines": 10,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/residentialcare-handover-recap.md",
+      "MatchingLines": 1,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/ResidentialCare-Refresh-Safety.md",
+      "MatchingLines": 1,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/ResidentialCare-Runner-Agent-Instructions.md",
+      "MatchingLines": 2,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "docs/ResidentialCare-Runner-Overview.mmd",
+      "MatchingLines": 1,
+      "Classification": "Other text"
+    },
+    {
+      "Path": "docs/ResidentialCare-Runner-Sequences.md",
+      "MatchingLines": 3,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "outputs/ain-b-performance/AIN-B.embedded.after-close.m",
+      "MatchingLines": 4,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/ain-b-performance/AIN-B.embedded.baseline.m",
+      "MatchingLines": 4,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/ain-b-performance/AIN-B.performance-only.m",
+      "MatchingLines": 4,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/ain-b-performance/AIN-B.source.after-close.m",
+      "MatchingLines": 4,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/ain-b-performance/AIN-B.source.baseline.m",
+      "MatchingLines": 4,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/ain-b-performance/source-gate.ps1",
+      "MatchingLines": 1,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/allocation-fix.patch",
+      "MatchingLines": 22,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/allocation-query-replacement.txt",
+      "MatchingLines": 18,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/Allocation.xlsx.embedded.m",
+      "MatchingLines": 16,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/AllocationByShiftAverage.proposed.txt",
+      "MatchingLines": 31,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/AllocationByShiftAverage.xlsx.embedded.m",
+      "MatchingLines": 17,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/analyze.py",
+      "MatchingLines": 7,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/artifact.json",
+      "MatchingLines": 24,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/build_report.py",
+      "MatchingLines": 14,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/check-allocation-fix.py",
+      "MatchingLines": 13,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/evidence.json",
+      "MatchingLines": 19,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/fix-validation.json",
+      "MatchingLines": 2,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/inspect_workbooks.py",
+      "MatchingLines": 4,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/prepare-allocation-change.py",
+      "MatchingLines": 3,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/report.html",
+      "MatchingLines": 102,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/Settings Data.xlsx.embedded.m",
+      "MatchingLines": 2,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/Shifts.xlsx.embedded.m",
+      "MatchingLines": 74,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/allocation-diagnosis/verify-refreshed-effort.py",
+      "MatchingLines": 1,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/excel-hang-diagnosis/capture.json",
+      "MatchingLines": 134,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/excel-hang-diagnosis/capture.ps1",
+      "MatchingLines": 3,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/excel-hang-diagnosis/inefficiencies-sample.json",
+      "MatchingLines": 1,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/excel-hang-diagnosis/README.md",
+      "MatchingLines": 3,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/shift-boundary-diagnosis/README.md",
+      "MatchingLines": 9,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "outputs/shift-boundary-diagnosis/refresh-selection.md",
+      "MatchingLines": 3,
+      "Classification": "Prior diagnostic artifact"
+    },
+    {
+      "Path": "RefreshOrder_Flowchart.md",
+      "MatchingLines": 1,
+      "Classification": "Documentation"
+    },
+    {
+      "Path": "scripts/test-capacity-distrib-b.mjs",
+      "MatchingLines": 6,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "scripts/test-demand-extraction-distributed-fte.py",
+      "MatchingLines": 30,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "scripts/test-excel-refresh-safety.ps1",
+      "MatchingLines": 1,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "scripts/test-minuteworker-period-allocation.mjs",
+      "MatchingLines": 36,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/AIN_20260722_HoursTest.pq",
+      "MatchingLines": 13,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/AIN_20260722_Records.pq",
+      "MatchingLines": 7,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/AIN_22July_Diagnosis.pq",
+      "MatchingLines": 8,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/AvailabilityDailyWindows_CHECK.pq",
+      "MatchingLines": 3,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/CapacityDistribB_InputKeys_TEST.pq",
+      "MatchingLines": 2,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/CapacityDistribB_RunningTotals_TEST.pq",
+      "MatchingLines": 3,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/WorkerShiftSegments_Explained.pq",
+      "MatchingLines": 5,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/WorkerShiftSegments_Stages.pq",
+      "MatchingLines": 10,
+      "Classification": "Diagnostic or tooling"
+    },
+    {
+      "Path": "Workflows/ResidentialCare/Diagnostics/WorkerShiftSegments_StepByStep.pq",
+      "MatchingLines": 12,
+      "Classification": "Diagnostic or tooling"
+    }
+  ]
+}

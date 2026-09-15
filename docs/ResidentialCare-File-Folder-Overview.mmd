@@ -1,0 +1,125 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#ffffff","primaryTextColor":"#333333","primaryBorderColor":"#777777","clusterBkg":"#fff4cc","clusterBorder":"#c6a64b","titleColor":"#5c4900"},"class":{"hideEmptyMembersBox":true}}}%%
+classDiagram
+    direction TB
+    %% Simplified: namespaces are folders and classes are workbook files.
+
+    namespace external["External sources"] {
+        class roster["Published Roster.xlsx"]
+        class avraw["whiddon_availability_leave_extraction.xlsx"]
+    }
+
+    namespace unit1_input["UNITS / Unit1 / 1. Input"] {
+        class workers["Worker's Report.xlsx"]
+        class allex["1-AllocationExtracted.xlsx"]
+        class master["Demand-MasterRoster Manual Read.xlsx"]
+        class demex["2-DemandExtract.xlsx"]
+        class recon["Worker Reconciliation.xlsx"]
+    }
+
+    namespace unit1_calc["UNITS / Unit1 / 2. Calculations"] {
+        class settings["Settings Data.xlsx"]
+        class intervals["Intervals.xlsx"]
+        class demint["DemandIntervals.xlsx"]
+        class demand["Demand.xlsx"]
+        class capshift["Capacity-ShiftAvailability.xlsx"]
+        class staff["StaffListMaster.xlsx"]
+        class shifts["Shifts.xlsx"]
+        class avgbyshift["AllocationByShiftAverage.xlsx"]
+        class alloc["Allocation.xlsx"]
+        class shiftdist["Shift-StaffDistribution.xlsx"]
+        class capacity["Capacity.xlsx"]
+        class effort["Effort.xlsx"]
+    }
+
+    namespace unit1_ain["UNITS / Unit1 / 2. Calculations / AIN"] {
+        class ain1["CapacityDistrib(A.1)-shifts.xlsx"]
+        class ain2["CapacityDistrib(A.2)-shifts.xlsx"]
+        class ainb["CapacityDistrib(B)-shifts.xlsx"]
+    }
+
+    namespace unit2["UNITS / Unit2 / essential interfaces"] {
+        class u2_staff["StaffListMaster.xlsx"]
+        class u2_effort["Effort.xlsx"]
+    }
+
+    namespace change["2. Calculations / Change"] {
+        class allocchange["AllocationChange.xlsx"]
+    }
+
+    namespace eoi["2. Calculations / E-O-I"] {
+        class effall["Effort-All.xlsx"]
+        class effout["EffortOutcomes.xlsx"]
+        class ineff["Inefficiencies.xlsx"]
+    }
+
+    namespace cost["2. Calculations / Cost"] {
+        class costfile["Cost..xlsx"]
+    }
+
+    namespace eow["2. Calculations / EOW"] {
+        class grid["Grid Thresholds.xlsx"]
+        class eowlog["EffortOutcomeLogXY.xlsx"]
+        class read2d["2DRead.xlsx"]
+    }
+
+    namespace top["2. Calculations / top level"] {
+        class tconn["Tableau Connection.xlsx"]
+    }
+
+    workers --> roster
+    roster --> allex
+    master --> demex
+    allex --> settings
+    allex --> intervals
+    demex --> intervals
+    settings --> intervals
+    demex --> demint
+    intervals --> demint
+    settings --> demint
+    demint --> demand
+    intervals --> demand
+    settings --> demand
+    allex --> demand
+    master --> demand
+    avraw --> capshift
+    recon --> capshift
+    allex --> capshift
+    settings --> capshift
+    allex --> staff
+    capshift --> staff
+    allex --> shifts
+    intervals --> shifts
+    settings --> shifts
+    shifts --> avgbyshift
+    settings --> avgbyshift
+    allex --> alloc
+    avgbyshift --> alloc
+    settings --> alloc
+    shifts --> shiftdist
+    demand --> ain1
+    staff --> ain1
+    capshift --> ain1
+    avgbyshift --> ain1
+    settings --> ain1
+    ain1 --> ain2
+    ain1 --> ainb
+    ain2 --> ainb
+    ainb --> capacity
+    settings --> capacity
+    alloc --> effort
+    capacity --> effort
+    demand --> effort
+    staff --> effort
+    settings --> effort
+    u2_staff --> u2_effort
+    effort --> effall
+    u2_effort --> effall
+    allocchange --> effall
+    effall --> effout
+    effout --> ineff
+    ineff --> tconn
+    ineff --> costfile
+    settings --> costfile
+    effout --> eowlog
+    eowlog --> read2d
+    grid --> read2d
