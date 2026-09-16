@@ -47,6 +47,8 @@ Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content]
 
 ### Flexible ResidentialCare Resolver
 
+This resolver convention also applies when editing any separately approved workbook-linked M source, as required by AGENTS.md. Apply it proactively to every external import in the edited source. This general convention does not expand the three-workbook worksheet-copy scope or authorize workbook inspection, synchronization or refresh. Whiddon Cost was separately approved on 16 September 2026; its organisation-level adaptation is recorded in [Cost implementation notes](2026-09-16-Whiddon-Cost-Settings-Based-FTE-Conversion.md).
+
 - Each workbook that imports external files must use one authoritative flexible ResidentialCare resolver.
 - The resolver must:
   1. read `FilePathUrl[FilePath]` from `Excel.CurrentWorkbook()`;
@@ -60,6 +62,7 @@ Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content]
   9. remove the current workbook filename to derive its containing folder; and
   10. fail clearly when no mapping matches.
 - Expose one authoritative unit-root table, normally `UnitL1PathTABLE`, plus a simple scalar path such as `Unit1Path` for imports.
+- For separately approved organisation-level sources, expose a meaningfully named workbook-path table and client-root scalar instead. Cost uses `CostPathTABLE` and `ClientPath`, removing its known `2. Calculations/Cost` folder suffix. All external imports derive from this root; do not read a legacy Folder table alongside it.
 - Do not retain competing old and new resolver implementations after migration.
 - Use relative imports from the resolved unit root, for example:
 
@@ -72,10 +75,13 @@ File.Contents(Unit1Path & "\1. Input\Demand-MasterRoster Manual Read.xlsx")
 
 ### Import Rules
 
+- Always use a separate, meaningfully named `IMPORT` query to read an external source, even when only one extraction is required. Downstream queries must reference that import.
 - Required files, tables, sheets, and columns must fail visibly when missing or malformed. Do not mask required failures with broad `try ... otherwise`, empty-table fallbacks, or `MissingField.UseNull`.
 - Import named Excel tables by default with `Source{[Item="<TableName>", Kind="Table"]}[Data]`.
 - Use a sheet import only when the source genuinely has no named table and the sheet-based contract has been explicitly confirmed.
 - When several queries read the same external workbook, open and buffer it once through a shared import query and reference that query downstream.
+- Use separate `EXTRACT` queries only when more than one distinct extraction is needed from the same imported source. For a single extraction, select and validate the value directly in the meaningfully named destination query.
+- For a single standard-FTE setting extraction, go directly from `IMPORT Settings Data` to `ShiftDuration`: read, validate and retain the value in hours. An intermediate `EXTRACT StandardFTEHours` query is unnecessary for this single extraction. This naming rule does not change workbook Power Query extraction or synchronization requirements.
 - Preserve existing query names, outputs, column names, row grain, and business transformations unless the user separately approves a business-logic change.
 - `StaffList Availability.xlsx` currently has no extracted shared queries. Adding the path worksheet does not authorize inventing imports or business queries.
 

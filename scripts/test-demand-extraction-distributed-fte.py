@@ -20,6 +20,8 @@ SOURCE = UNIT / "1. Input/2-DemandExtract.xlsx_PowerQuery.m"
 ROLES = {"RN": "RN", "REGISTERED NURSE": "RN", "AIN": "AIN", "ASSISTANT IN NURSING": "AIN",
          "EN": "AINC4", "ENROLLED NURSE": "AINC4", "AINC4": "AINC4"}
 RETAINED_ROLES = ("RN", "AIN", "AINC4")
+# Explicit test configuration; saved-workbook mode reads the actual setting.
+FIXTURE_HOURS = 7.6
 SHIFTS = ("AM", "PM", "NIGHT")
 COLUMNS = ["Date", "Day", "Shift", "Period", "Role", "StartTime", "EndTime",
            "Unit", "Facility", "DemandFTE", "DemandHRS", "DurationOfShifts"]
@@ -34,11 +36,23 @@ def finite(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
+def standard_hours(rows):
+    require(len(rows) == 1 and "ShiftDuration" in rows[0], "single ShiftDuration setting")
+    hours = rows[0]["ShiftDuration"]
+    require(finite(hours) and hours > 0, "positive finite ShiftDuration")
+    return hours
+
+
 def role(row):
     return ROLES.get(row["Role"].strip().upper())
 
 
-def pattern_from_publication(allocation, profile, checks, retained_roles=RETAINED_ROLES):
+def pattern_from_publication(allocation, profile, checks, retained_roles=RETAINED_ROLES,
+                             shift_duration=FIXTURE_HOURS):
+    require(finite(shift_duration) and shift_duration > 0, "standard hours")
+    require(all(finite(r.get("ShiftDuration")) and r["ShiftDuration"] > 0
+                and abs(r["ShiftDuration"] - shift_duration) <= 1e-7 / 60 for r in allocation + profile),
+            "saved FTE basis")
     require(checks and all(r["Severity"] in ("Pass", "Warning") for r in checks), "upstream checks")
     def select(rows):
         return [r for r in rows if r["Facility"] == "BD" and role(r) in retained_roles]
@@ -71,7 +85,8 @@ def pattern_from_publication(allocation, profile, checks, retained_roles=RETAINE
     return result
 
 
-def build_demand(pattern, dates, spans, retained_roles=RETAINED_ROLES):
+def build_demand(pattern, dates, spans, retained_roles=RETAINED_ROLES, shift_duration=FIXTURE_HOURS):
+    require(finite(shift_duration) and shift_duration > 0, "standard hours")
     require(len(dates) == 28 and dates[0].weekday() == 0 and
             dates == [dates[0] + dt.timedelta(days=i) for i in range(28)], "calendar")
     require(len(pattern) == len(retained_roles) * 14 * 3, "pattern coverage")
@@ -87,11 +102,11 @@ def build_demand(pattern, dates, spans, retained_roles=RETAINED_ROLES):
                 fte = pattern[name, offset % 14 + 1, shift]
                 require(finite(fte) and fte >= 0, "invalid FTE")
                 output.append(dict(zip(COLUMNS, [date, offset + 1, shift, offset * 3 + shift_index + 1,
-                    name, start_time, end_time, "BD", "BD", fte * 7.6 / hours, fte * 7.6, hours])))
+                    name, start_time, end_time, "BD", "BD", fte * shift_duration / hours, fte * shift_duration, hours])))
     return output
 
 
-def fixture(third_role="EN"):
+def fixture(third_role="EN", shift_duration=FIXTURE_HOURS):
     allocation, profile = [], []
     for name in RETAINED_ROLES:
         for day in range(1, 15):
@@ -102,7 +117,7 @@ def fixture(third_role="EN"):
                 p = dict(Facility="BD", Role=third_role if name == "AINC4" else name, FortnightDayIndex=day,
                          FortnightWeek=(day - 1) // 7 + 1, DayOfWeek=(day - 1) % 7 + 1,
                          Shift=shift, **{"Week No": 30 + (day - 1) // 7, "Direct Care %": 0.75})
-                p.update(HistoricalCoverageStatus="PASS", ProfileAlignmentStatus="PASS ZERO" if zero else "PASS",
+                p.update(ShiftDuration=shift_duration, HistoricalCoverageStatus="PASS", ProfileAlignmentStatus="PASS ZERO" if zero else "PASS",
                          HistoricalRosterFTE=value, RedistributedRosterFTE=value,
                          RedistributionMatchCount=0 if zero else 1)
                 profile.append(p)
@@ -135,7 +150,7 @@ class DemandTests(unittest.TestCase):
         self.assertEqual(by_key["RN", 3, "PM"]["DemandFTE"], 0)
         self.assertEqual(by_key["RN", 28, "NIGHT"]["EndTime"].date(), DATES[-1] + dt.timedelta(days=1))
         for name in RETAINED_ROLES:
-            expected = sum(v * 7.6 for (r, _, _), v in pattern.items() if r == name)
+            expected = sum(v * FIXTURE_HOURS for (r, _, _), v in pattern.items() if r == name)
             for lo, hi in ((1, 14), (15, 28)):
                 self.assertAlmostEqual(sum(r["DemandHRS"] for r in rows if r["Role"] == name and lo <= r["Day"] <= hi), expected)
 
@@ -199,6 +214,42 @@ class DemandTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_demand(pattern, DATES, spans)
 
+    def test_configured_duration_round_trip(self):
+        baseline = build_demand(pattern_from_publication(*fixture()), DATES, SPANS)
+        for hours in (7.6, 7.5, 8):
+            shift_duration = standard_hours([{"ShiftDuration": hours}])
+            a, p, c = fixture(shift_duration=shift_duration)
+            # Same roster hours represented by a different standard-FTE unit.
+            for row in a + p:
+                for field in ("FTE", "HistoricalRosterFTE", "RedistributedRosterFTE"):
+                    if field in row:
+                        row[field] *= FIXTURE_HOURS / shift_duration
+            pattern = pattern_from_publication(a, p, c, shift_duration=shift_duration)
+            rows = build_demand(pattern, DATES, SPANS, shift_duration=shift_duration)
+            for actual, expected in zip(rows, baseline):
+                self.assertAlmostEqual(actual["DemandHRS"], expected["DemandHRS"])
+                self.assertAlmostEqual(actual["DemandFTE"], expected["DemandFTE"])
+
+    def test_invalid_settings_and_saved_basis(self):
+        self.assertEqual(standard_hours([{"ShiftDuration": 1e308}]), 1e308)
+        invalid = (None, True, "7.6", 0, -1, float("nan"), float("inf"), -float("inf"))
+        for value in invalid:
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                standard_hours([{"ShiftDuration": value}])
+        for rows in ([], [{}], [{"ShiftDuration": 8}] * 2):
+            with self.assertRaises(ValueError):
+                standard_hours(rows)
+        for collection in (0, 1):
+            for value in (*invalid, FIXTURE_HOURS + 1, FIXTURE_HOURS * 60):
+                publications = fixture()
+                publications[collection][0]["ShiftDuration"] = value
+                with self.assertRaisesRegex(ValueError, "saved FTE basis"):
+                    pattern_from_publication(*publications)
+            publications = fixture()
+            del publications[collection][0]["ShiftDuration"]
+            with self.assertRaisesRegex(ValueError, "saved FTE basis"):
+                pattern_from_publication(*publications)
+
     def test_m_publication_contract(self):
         source = SOURCE.read_text(encoding="utf-8")
         names = re.findall(r'^shared (#[^=]+|\w+) =', source, re.M)
@@ -211,7 +262,7 @@ class DemandTests(unittest.TestCase):
         for name in COLUMNS:
             self.assertIn('"' + name + '"', published)
         self.assertIn('Number.Mod(Duration.Days([Date] - Start), 14) + 1', source)
-        self.assertIn('[SourceFTE] * 7.6', source)
+        self.assertIn('[SourceFTE] * ShiftDuration', source)
         self.assertIn('[DemandHRS] / [DurationOfShifts]', source)
 
 
@@ -281,10 +332,12 @@ def check_saved_workbooks():
         require(all(finite(r["Direct Care %"]) and 0 < r["Direct Care %"] <= 1
                     and finite(r["Week No"]) for r in rows), "saved source attributes")
     require(schemas[0] is not None and schemas[0] == schemas[1], "saved paired schema")
+    settings = read_tables(UNIT / "2. Calculations/Settings Data.xlsx",
+                           {"PermutationDimensions", "ShiftPeriod", "ShiftDuration"})
+    shift_duration = standard_hours(settings["ShiftDuration"])
     pattern = pattern_from_publication(published["MinuteWorkersFTE_TABLE"],
                                        published["MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE"],
-                                       published["MinuteWorkersFTE_CHECK"])
-    settings = read_tables(UNIT / "2. Calculations/Settings Data.xlsx", {"PermutationDimensions", "ShiftPeriod"})
+                                       published["MinuteWorkersFTE_CHECK"], shift_duration=shift_duration)
     calendar = [r for r in settings["PermutationDimensions"] if r["RolesList"] in RETAINED_ROLES]
     require(len(calendar) == 252, "saved calendar row count")
     require(len({(r["Date"], r["Shifts"], r["RolesList"]) for r in calendar}) == 252, "saved calendar duplicates")
@@ -300,7 +353,7 @@ def check_saved_workbooks():
     require(len(selected_spans) == 9, "saved timing uniqueness")
     spans = {(r["Role"], r["ShiftPeriod"]): (time(r["StartDay"]), time(r["EndDay"]), r["DurationOfShifts"])
              for r in selected_spans}
-    output = build_demand(pattern, dates, spans)
+    output = build_demand(pattern, dates, spans, shift_duration=shift_duration)
     # Verify actual saved IDs are preserved by the reference construction.
     saved_ids = {(origin + dt.timedelta(days=r["Date"]), r["Shifts"], r["RolesList"]): r["Period"] for r in calendar}
     require(all(r["Period"] == saved_ids[r["Date"], r["Shift"], r["Role"]] for r in output), "period preservation")

@@ -31,6 +31,19 @@
 - After syncing, re-extract the workbook’s Power Query and compare it with the approved M source. Report the exact target, sync status, validation result, and any refresh that was or was not performed.
 - Synchronization does not imply refresh. Refresh, save, and close operations require their own explicit approval unless the user’s instruction clearly includes them.
 
+## Power Query Import And EXTRACT Queries
+
+- When editing an approved workbook-linked M source, review all external imports in that file and apply the standard ResidentialCare path convention as part of the authorized source edit. Do this proactively; do not wait for a separate path-fix request. Keep the approved client, unit and source-file choices unchanged.
+- Use one authoritative resolver from `FilePathUrl[FilePath]` through the public-machine `CentriSyncPaths` table. Normalize local/SharePoint paths, handle Excel CELL filename brackets, and use case-insensitive, boundary-safe longest-prefix matching. Derive the unit or organisation root from the resolved workbook folder, then build relative imports from that root.
+- Do not retain legacy `Folder` named-table inputs, user-specific absolute paths, fixed-machine roots or competing path resolvers in the edited source. The fixed public-machine CentriSyncPaths bootstrap location is the deliberate exception. Do not fall back to stale loaded path-query outputs.
+- Apply the resolver mechanics documented under Flexible ResidentialCare Resolver in `docs/DATExx-Whiddon-Input-Workbook-Path-Setup.md` to an approved target. The original three-workbook worksheet-copy procedure and donor approval do not automatically extend to other workbooks. Source edits do not authorize workbook inspection, path-sheet installation, synchronization or refresh; record unverified FilePathUrl prerequisites in the handoff.
+- Before completion, enumerate every external file access in the edited source and verify that each uses a named IMPORT and the authoritative root. Validate the resolver and report any unresolved prerequisites. Do not expand edits to other clients, units or excluded files.
+
+- Always use a separate, meaningfully named `IMPORT` query to read an external source, even when only one extraction is required. Downstream queries must reference that import.
+- Use separate `EXTRACT` queries only when more than one distinct extraction is needed from the same imported source.
+- For a single extraction, select and validate the required value directly in the meaningfully named destination query. For example, `ShiftDuration` can read the `ShiftDuration` table from `IMPORT Settings Data` and validate the hours value directly, without an intermediate `EXTRACT StandardFTEHours` query. Keep this standard duration in hours.
+- This rule governs query structure and naming; the workbook Power Query extraction and synchronization requirements above still apply.
+
 ## Power Query Presentation And Commentary
 
 - Every new query, and every materially edited query without a useful header, must have Power Query-compatible `// Query:` and `// Purpose:` lines immediately above its `shared` definition. Add `// Inputs:`, `// Output:`, and `// Notes:` when they clarify dependencies, row grain, required columns, or an approved constraint.

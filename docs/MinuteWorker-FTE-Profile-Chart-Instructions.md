@@ -1,5 +1,7 @@
 # ChatGPT Excel instructions: master-roster versus redistributed FTE
 
+Current Unit1 standard-FTE implementation: [settings source, formulas and validation](2026-09-16-Whiddon-Unit1-Settings-Based-FTE-Conversions.md). Source only; workbook synchronization and refresh remain pending.
+
 Copy everything under "Paste into ChatGPT in Excel" below. These instructions include the query setup, readiness checks, chart design and alignment checks; no separate follow-up clarification is needed.
 
 ## Paste into ChatGPT in Excel
@@ -55,7 +57,7 @@ For each chart:
 - Series: `FortnightWeek` crossed with the two value measures. Keep Week 1 and Week 2 separate, without averaging.
 - Exactly four series: **Week 1 — Master**, **Week 1 — Redistributed**, **Week 2 — Master**, **Week 2 — Redistributed**.
 - Give Week 1 one colour and Week 2 a contrasting colour. Use **dashed lines for both Master series** and **solid lines for both Redistributed series**. Use markers and straight connecting segments; no smoothing.
-- Use a single shared vertical axis starting at zero, labelled **FTE — 7.6-hour roster shift equivalents**. Do not use a secondary axis, stacking or independent normalisation.
+- Use a single shared vertical axis starting at zero, labelled **FTE — configured standard roster equivalents**. Do not use a secondary axis, stacking or independent normalisation.
 - Keep or add slicers for Facility, Role and Shift. Title the chart with the selected facility, role and shift/all-shifts context.
 
 Use a PivotTable/PivotChart if supported. If per-series line styling is unavailable, use a standard line chart linked to the same four-column summary. Report any styling limitation instead of claiming dashed lines were applied.
@@ -68,11 +70,11 @@ Before interpreting the chart:
 2. Retain genuine zero cells. Missing/error points must remain gaps, not fabricated zeros or interpolated points.
 3. Display the expected multiplier from `ExpectedRedistributionFactor` once for the selected facility/role. Do not sum repeated factors; confirm its minimum and maximum agree.
 4. Show a small alignment summary: the ratio SUM(redistributed FTE) / SUM(historical FTE) separately for Week 1 and Week 2, plus the maximum absolute row-level `ProfileVarianceFTE`. A zero historical denominator means N/A, not zero or infinity. Do not average individual row ratios.
-5. The two weekly ratios should match the expected factor when their historical totals are positive. Residuals should be effectively zero (query tolerance: 0.000001 / 456 FTE). For a positive factor, profile peaks and troughs should occur in the same positions, even though Week 1 and Week 2 may differ from each other. A valid zero factor produces an all-zero redistributed line.
+5. The two weekly ratios should match the expected factor when their historical totals are positive. Residuals should be effectively zero (query tolerance: (0.000001 / 60) / ShiftDuration FTE). For a positive factor, profile peaks and troughs should occur in the same positions, even though Week 1 and Week 2 may differ from each other. A valid zero factor produces an all-zero redistributed line.
 
 Keep each role separate for this check. RN and OTHERS can have different scalars; a combined mixed-category profile is not guaranteed to be a constant multiple of history.
 
-Do not divide by 7.6, apply Direct Care % again, halve/double either series, average corresponding weekdays, or edit the source inputs. The two FTE columns are already at the required units and grain. Do not claim alignment solely because the chart looks similar; report the factor and residual checks.
+Do not divide by standard FTE hours again, apply Direct Care % again, halve/double either series, average corresponding weekdays, or edit the source inputs. The two FTE columns are already at the required units and grain. Do not claim alignment solely because the chart looks similar; report the factor and residual checks.
 
 ### Completion summary
 

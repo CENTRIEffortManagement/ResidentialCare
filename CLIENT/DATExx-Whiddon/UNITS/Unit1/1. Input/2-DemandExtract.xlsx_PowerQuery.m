@@ -183,7 +183,7 @@ shared #"IMPORT Distributed FTE Workbook" =
         Unit1Path & "\\1. Input\\Demand-MasterRoster Manual Read.xlsx")), null, true));
 
 // Query: IMPORT Distributed FTE Allocation
-// Purpose: Read published roster FTE, measured in 7.6-hour shift equivalents.
+// Purpose: Read published roster FTE, measured in configured standard-FTE equivalents.
 shared #"IMPORT Distributed FTE Allocation" =
     Table.Buffer(#"IMPORT Distributed FTE Workbook"{[Item="MinuteWorkersFTE_TABLE", Kind="Table"]}[Data]);
 
@@ -199,9 +199,11 @@ shared #"IMPORT Distributed FTE Checks" =
         #"IMPORT Distributed FTE Workbook"{[Item="MinuteWorkersFTE_CHECK", Kind="Table"]}[Data],
         {"Severity", "Check", "Facility", "Role", "Message"}));
 
+// Query: IMPORT Settings Data
+// Purpose: Share the unit Settings workbook across standard duration, timing and calendar queries.
 shared #"IMPORT Settings Data" =
     Table.Buffer(
-        Excel.Workbook(File.Contents(Unit1Path & "\2. Calculations\Settings Data.xlsx"), null, true)
+        Excel.Workbook(Binary.Buffer(File.Contents(Unit1Path & "\2. Calculations\Settings Data.xlsx")), null, true)
     );
 
 shared ShiftStart = let
@@ -211,13 +213,27 @@ shared ShiftStart = let
 in
     #"Changed Type";
 
-shared ShiftDuration = let
-    Source = #"IMPORT Settings Data",
-    ShiftDuration_Table = Source{[Item="ShiftDuration",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(ShiftDuration_Table,{{"StdWeekDays", Int64.Type}, {"ShiftDuration", type number}}),
-    ShiftDuration1 = #"Changed Type"{0}[ShiftDuration]
+// Query: ShiftDuration
+// Purpose: Read and validate the standard-FTE duration in hours from Settings Data.
+// Inputs: IMPORT Settings Data, named table ShiftDuration, column ShiftDuration.
+// Output: One positive finite duration in hours; missing or invalid settings stop publication.
+shared ShiftDuration =
+let
+    Matches = Table.SelectRows(#"IMPORT Settings Data",
+        each [Item] = "ShiftDuration" and [Kind] = "Table"),
+    Data = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error "Settings Data must contain exactly one ShiftDuration table.",
+    RequiredColumn = if Table.HasColumns(Data, {"ShiftDuration"}) then Data
+        else error "The ShiftDuration table must contain the ShiftDuration column.",
+    Hours = if Table.RowCount(RequiredColumn) = 1 then RequiredColumn{0}[ShiftDuration]
+        else error "ShiftDuration must contain exactly one data row.",
+    ValidatedHours = if not Value.Is(Hours, type number) then
+            error "ShiftDuration must be a numeric hours value."
+        else if Number.IsNaN(Hours) or Hours <= 0 or Number.Abs(Hours) = #infinity then
+            error "ShiftDuration must be a positive finite number of hours."
+        else Hours
 in
-    ShiftDuration1;
+    ValidatedHours;
 
 shared #"IMPORT ShiftPeriod" = let
     Source = #"IMPORT Settings Data",
@@ -320,9 +336,9 @@ let
         else null, type nullable text),
     Excluded = Table.SelectRows(WithReason, each [ExclusionReason] <> null),
     Result = Table.Group(Excluded, {"Facility", "SourceRole", "ExclusionReason"}, {
-        {"FortnightRosterHours", each List.Sum([FTE]) * 7.6, type number},
+        {"FortnightRosterHours", each List.Sum([FTE]) * ShiftDuration, type number},
         {"FortnightProductiveHours", each List.Sum(List.Transform(Table.ToRecords(_),
-            (R) => R[FTE] * 7.6 * R[#"Direct Care %"])), type number}
+            (R) => R[FTE] * ShiftDuration * R[#"Direct Care %"])), type number}
     })
 in
     Result;
@@ -378,7 +394,7 @@ let
         else Table.RemoveColumns(WithCount, {"Allocation", "AllocationCount"}),
     WithFTE = Table.AddColumn(Validated, "SourceFTE", each [RedistributedRosterFTE], type number),
     // Source FTE already represents roster time. Do not apply Direct Care % again.
-    WithHours = Table.AddColumn(WithFTE, "DemandHRS", each [SourceFTE] * 7.6, type number)
+    WithHours = Table.AddColumn(WithFTE, "DemandHRS", each [SourceFTE] * ShiftDuration, type number)
 in
     Table.Buffer(WithHours);
 
@@ -455,7 +471,7 @@ let
         {"Facility", "SourceRole", "SourceFTE", "DemandHRS", "Direct Care %", "Week No"},
         {"Facility", "SourceRole", "SourceFTE", "DemandHRS", "Direct Care %", "Week No"}),
     WithUnit = Table.AddColumn(Expanded, "Unit", each [Facility], type text),
-    // A source 7.6-hour equivalent is converted to attendance across the actual shift span.
+    // A source standard-FTE equivalent is converted to attendance across the actual shift span.
     // Leave fractional attendance unrounded so interval integration recovers the roster hours.
     WithAttendance = Table.AddColumn(WithUnit, "DemandFTE", each [DemandHRS] / [DurationOfShifts], type number),
     InvalidValues = Table.SelectRows(WithAttendance, each not #"Demand Finite Number"([DemandFTE])

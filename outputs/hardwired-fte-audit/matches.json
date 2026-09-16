@@ -1,0 +1,1286 @@
+[
+  {
+    "Path": "CLIENT/DATExx-Whiddon/2. Calculations/Cost/Cost..xlsx_PowerQuery.m",
+    "Line": 19,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "shared ShiftHrs = 7.6 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true];"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+    "Line": 231,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true];"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/SyncPathMigration-Backups/20260528-113851/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+    "Line": 7,
+    "Classification": "Backup or variant",
+    "Text": "shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true];"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/RunLogs/AllUnitsRefresh-20260912-151048.log",
+    "Line": 67,
+    "Classification": "Run log",
+    "Text": "[2026-09-12 15:18:27] [INFO] [11/48 Unit1 #11] Supervisor: WaitingForConnections; elapsed 7.6 minute(s)."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/RunLogs/AllUnitsRefresh-20260913-083634.log",
+    "Line": 235,
+    "Classification": "Run log",
+    "Text": "[2026-09-13 08:45:47] [INFO] [16/48 Unit1 #16] Supervisor: WaitingForConnections; elapsed 7.6 minute(s)."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 186,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "// Purpose: Read published roster FTE, measured in 7.6-hour shift equivalents."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 323,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "        {\"FortnightRosterHours\", each List.Sum([FTE]) * 7.6, type number},"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 325,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "            (R) => R[FTE] * 7.6 * R[#\"Direct Care %\"])), type number}"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 381,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "    WithHours = Table.AddColumn(WithFTE, \"DemandHRS\", each [SourceFTE] * 7.6, type number)"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 458,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "    // A source 7.6-hour equivalent is converted to attendance across the actual shift span."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 711,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "        each [HistoricalRosterHours] / 7.6, type nullable number),"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 847,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "// Output: Facility/role/original Week No/FortnightDay/shift with unrounded 7.6-hour shift equivalents."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 864,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "    RequiredFTE = Table.AddColumn(RosterMinutes, \"FTE\", each [WeekdayShiftRosterMinutes] / 456, type nullable number),"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 923,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "        else if Number.Abs([ProfileVarianceFTE]) <= 0.000001 / 456 then"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 1923,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "                                each [FTE] * 7.6 * [#\"Direct Care %\"]"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 1941,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "                                    \": sum of all 14 days of FTE x 7.6 x Direct Care % must equal original TargetMinutes hours per fortnight.\""
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 1991,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "// Output: One row per facility, role, FortnightDay, and shift with unrounded 7.6-hour shift equivalents in FTE."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 2121,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "            each [FTE] * 456 * [#\"Direct Care %\"],"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 2156,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "                Message = \"Sum of all 14 days of FTE x 456 x Direct Care % must equal the fortnight category target.\""
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 33,
+    "Classification": "Documentation",
+    "Text": "5. Historical FTE = roster hours / 7.6, without applying target scaling or dividing by Direct Care %."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 35,
+    "Classification": "Documentation",
+    "Text": "7. Required FTE = required roster minutes / 456. These are 7.6-hour shift equivalents, not full-time employee positions."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 60,
+    "Classification": "Documentation",
+    "Text": "RequiredRosterFTE = AllocatedProductiveMinutes / DirectCarePercent / 456"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 124,
+    "Classification": "Documentation",
+    "Text": "10. Independently, `sum(FTE × 7.6 × Direct Care %)` over **all 14 days once** equals the original RN and ALL input hours. There is no factor of two."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_Diagnosis.md",
+    "Line": 16,
+    "Classification": "Documentation",
+    "Text": "- **Whole-day exclusion threshold reached:** The current exclusion helper converts that date to a full-day exclusion when distinct excluded hours reach `EXTRACT EffectiveShiftHrs`. This includes UNAVAIL and leave. For example, eight hours of afternoon UNAVAIL can block the morning too when the threshold is 7.6 hours. This is a verified code rule, not yet a verified explanation of your worker counts."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_HoursTest.md",
+    "Line": 9,
+    "Classification": "Documentation",
+    "Text": "| Example at ShiftDuration = 7.6 | AM | PM | NIGHT |"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_HoursTest.md",
+    "Line": 11,
+    "Classification": "Documentation",
+    "Text": "| Leave 10:00â€“15:00, AM ending 14:00 | 3.6 | 6.6 | 7.6 |"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_HoursTest.md",
+    "Line": 12,
+    "Classification": "Documentation",
+    "Text": "| UNAVAIL 13:00â€“15:00 | 6.6 | 6.6 | 7.6 |"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN_22July_HoursTest.md",
+    "Line": 14,
+    "Classification": "Documentation",
+    "Text": "| UNAVAIL 06:00â€“10:00 plus leave 10:00â€“14:00 | 0 | 7.6 | 7.6 |"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Availability-Source-Replacement-Plan.md",
+    "Line": 152,
+    "Classification": "Documentation",
+    "Text": "The old scalar calculation `IMPORT OrdinaryWorkWk / StdRosterDays * 2` is superseded by `IMPORT EffectiveShiftHrs`. Its source is the `ShiftDuration` value, which was 7.6 in the inspected Settings workbook. Keep actual shift duration and the effective-hours allowance distinct: a fully available shift receives the imported allowance even where its clock duration differs."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Availability-Source-Replacement-Plan.md",
+    "Line": 173,
+    "Classification": "Documentation",
+    "Text": "These examples assume AIN AM 06:00–14:00, PM 14:00–22:00, NIGHT 22:00–06:00, and an imported allowance of 7.6 hours. Tests must also verify that different Settings values change the results."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Availability-Source-Replacement-Plan.md",
+    "Line": 185,
+    "Classification": "Documentation",
+    "Text": "| A partially available shift contains 7.8 available hours | EffectiveShiftHrs is capped at 7.6 |"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 186,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "// Purpose: Read published roster FTE, measured in 7.6-hour shift equivalents."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 323,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "        {\"FortnightRosterHours\", each List.Sum([FTE]) * 7.6, type number},"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 325,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "            (R) => R[FTE] * 7.6 * R[#\"Direct Care %\"])), type number}"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 381,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "    WithHours = Table.AddColumn(WithFTE, \"DemandHRS\", each [SourceFTE] * 7.6, type number)"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+    "Line": 458,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "    // A source 7.6-hour equivalent is converted to attendance across the actual shift span."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 705,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "        each [HistoricalRosterHours] / 7.6, type nullable number),"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 841,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "// Output: Facility/role/original Week No/FortnightDay/shift with unrounded 7.6-hour shift equivalents."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 858,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "    RequiredFTE = Table.AddColumn(RosterMinutes, \"FTE\", each [WeekdayShiftRosterMinutes] / 456, type nullable number),"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 917,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "        else if Number.Abs([ProfileVarianceFTE]) <= 0.000001 / 456 then"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 1917,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "                                each [FTE] * 7.6 * [#\"Direct Care %\"]"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 1935,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "                                    \": sum of all 14 days of FTE x 7.6 x Direct Care % must equal original TargetMinutes hours per fortnight.\""
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 1985,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "// Output: One row per facility, role, FortnightDay, and shift with unrounded 7.6-hour shift equivalents in FTE."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 2115,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "            each [FTE] * 456 * [#\"Direct Care %\"],"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+    "Line": 2150,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "                Message = \"Sum of all 14 days of FTE x 456 x Direct Care % must equal the fortnight category target.\""
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 29,
+    "Classification": "Documentation",
+    "Text": "5. Historical FTE = roster hours / 7.6, without applying target scaling or dividing by Direct Care %."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 31,
+    "Classification": "Documentation",
+    "Text": "7. Required FTE = required roster minutes / 456. These are 7.6-hour shift equivalents, not full-time employee positions."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 56,
+    "Classification": "Documentation",
+    "Text": "RequiredRosterFTE = AllocatedProductiveMinutes / DirectCarePercent / 456"
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/1. Input/MinuteWorker-FTE-Handoff-2026-08-30.md",
+    "Line": 120,
+    "Classification": "Documentation",
+    "Text": "10. Independently, `sum(FTE × 7.6 × Direct Care %)` over **all 14 days once** equals the original RN and ALL input hours. There is no factor of two."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Availability-Source-Replacement-Plan.md",
+    "Line": 152,
+    "Classification": "Documentation",
+    "Text": "The old scalar calculation `IMPORT OrdinaryWorkWk / StdRosterDays * 2` is superseded by `IMPORT EffectiveShiftHrs`. Its source is the `ShiftDuration` value, which was 7.6 in the inspected Settings workbook. Keep actual shift duration and the effective-hours allowance distinct: a fully available shift receives the imported allowance even where its clock duration differs."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Availability-Source-Replacement-Plan.md",
+    "Line": 173,
+    "Classification": "Documentation",
+    "Text": "These examples assume AIN AM 06:00–14:00, PM 14:00–22:00, NIGHT 22:00–06:00, and an imported allowance of 7.6 hours. Tests must also verify that different Settings values change the results."
+  },
+  {
+    "Path": "CLIENT/DATExx-Whiddon/UNITS/Unit2/2. Calculations/Availability-Source-Replacement-Plan.md",
+    "Line": 185,
+    "Classification": "Documentation",
+    "Text": "| A partially available shift contains 7.8 available hours | EffectiveShiftHrs is capped at 7.6 |"
+  },
+  {
+    "Path": "CLIENT/DATExx/2. Calculations/Cost/Cost..xlsx_PowerQuery.m",
+    "Line": 19,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "shared ShiftHrs = 7.6 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true];"
+  },
+  {
+    "Path": "CLIENT/DATExx/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+    "Line": 7,
+    "Classification": "Business M source (workbook parity unverified)",
+    "Text": "shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true];"
+  },
+  {
+    "Path": "CLIENT/DATExx/SyncPathMigration-Backups/20260528-113851/2. Calculations/E-O-I/Effort-All.xlsx_PowerQuery.m",
+    "Line": 7,
+    "Classification": "Backup or variant",
+    "Text": "shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true];"
+  },
+  {
+    "Path": "docs/DATExx-Whiddon-Capacity-Shift-Availability-Rules.md",
+    "Line": 78,
+    "Classification": "Documentation",
+    "Text": "The full-day threshold is the positive, finite `ShiftDuration` value from Settings Data, read by `EXTRACT EffectiveShiftHrs`. Examples below use 7.6 hours; the calculation uses the setting rather than a hard-coded threshold."
+  },
+  {
+    "Path": "docs/DATExx-Whiddon-Capacity-Shift-Availability-Rules.md",
+    "Line": 92,
+    "Classification": "Documentation",
+    "Text": "| Recorded exclusions on one date | Distinct hours | Result with ShiftDuration = 7.6 |"
+  },
+  {
+    "Path": "docs/DATExx-Whiddon-Capacity-Shift-Availability-Rules.md",
+    "Line": 128,
+    "Classification": "Documentation",
+    "Text": "A complete shift receives the standard allowance even when its clock duration differs from that allowance. For example, a fully available 7.5-hour shift receives 7.6 effective hours when `ShiftDuration` is 7.6. There are no additional break deductions or minimum-duration rules."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 24,
+    "Classification": "Documentation",
+    "Text": "- Effort-All should consume reconciled FTE without another fixed `7.6 / 8` reduction."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 45,
+    "Classification": "Documentation",
+    "Text": "| `StandardFTEHours` | Separate standard-hours convention, currently 7.6 in several places | hours per standard FTE | HR/resource and cost conversions only when explicitly required |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 67,
+    "Classification": "Documentation",
+    "Text": "- Historical FTE is `HistoricalRosterHours / 7.6` (lines 703–705)."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 72,
+    "Classification": "Documentation",
+    "Text": "The published `MinuteWorkersFTE_TABLE` is a target-based allocation using the historical profile, expressed as 7.6-hour roster shift equivalents. It is not simply a copy of raw historical hours."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 89,
+    "Classification": "Documentation",
+    "Text": "2. Convert source FTE to hours: `DemandHRS = SourceFTE * 7.6` (line 381)."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 100,
+    "Classification": "Documentation",
+    "Text": "Illustrative example, not a verified settings value: 1 source FTE becomes 7.6 demand hours. Over an 8-hour shift, average attendance is 7.6 / 8 = 0.95. Integrating 0.95 across 8 hours still gives 7.6 hours. This conversion is not an additional meal deduction."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 159,
+    "Classification": "Documentation",
+    "Text": "## Why the Demand 7.6 conversion can be simplified"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 164,
+    "Classification": "Documentation",
+    "Text": "SourceFTE = DemandRosterMinutes / 456"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 165,
+    "Classification": "Documentation",
+    "Text": "DemandHRS = SourceFTE * 7.6"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 169,
+    "Classification": "Documentation",
+    "Text": "Because `456 = 7.6 * 60`:"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 176,
+    "Classification": "Documentation",
+    "Text": "The intermediate `/456` and `*7.6` cancel. The eventual `DemandFTE` is already average attendance across the actual shift. A clearer target is:"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 182,
+    "Classification": "Documentation",
+    "Text": "The 7.6-hour equivalent can remain as a separately named compatibility or HR measure if a consumer requires it. It should not be confused with actual-shift attendance FTE."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 271,
+    "Classification": "Documentation",
+    "Text": "Assume an eight-hour gross shift, 0.5-hour unpaid meal and a separate 7.6-hour standard-FTE convention:"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 279,
+    "Classification": "Documentation",
+    "Text": "| Standard resource FTE | 0.9868421053 | `7.5 / 7.6`; a different measure |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 280,
+    "Classification": "Documentation",
+    "Text": "| Existing Effort-All factor | 0.95 | `7.6 / 8`; not the 0.5-hour meal result |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 281,
+    "Classification": "Documentation",
+    "Text": "| One 7.6-hour Demand equivalent over eight hours | 0.95 | Valid only when the Demand source quantity is 7.6 hours |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 290,
+    "Classification": "Documentation",
+    "Text": "| Effort-All efficiency via `EffortAllMatrixAG1_1D` | Actual role/facility Demand, Allocation and relevant capacity FTE | Consume reconciled FTE directly. Remove the additional `7.6 / 8` reduction once its existing business purpose is confirmed. |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 292,
+    "Classification": "Documentation",
+    "Text": "| Cost | Explicitly named FTE basis | Confirm whether Cost consumes standard resource FTE or actual-shift attendance FTE before changing the hardwired 7.6 conversion. |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 303,
+    "Classification": "Documentation",
+    "Text": "| `Demand-MasterRoster Manual Read.xlsx` | Source now uses `Shift Net Length` through the `Roster Hours` alias; assigns whole rows by start time and publishes a 7.6-hour equivalent | Net-field selection completed in source on 16 September. Splitting crossing rows and workbook validation remain outstanding. |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 304,
+    "Classification": "Documentation",
+    "Text": "| `2-DemandExtract.xlsx` | Converts `/456 -> *7.6 -> /actual shift hours` | Calculate actual-shift Demand FTE directly from Demand roster minutes and configured shift minutes; name compatibility measures separately. |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 313,
+    "Classification": "Documentation",
+    "Text": "| `Effort-All.xlsx` | Applies fixed `7.6 / 8 = 0.95` to capacity and a separate resource-availability branch | Do not apply the factor to already-net actual-shift FTE. Replace it only after confirming the affected input basis. |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 315,
+    "Classification": "Documentation",
+    "Text": "| `Cost..xlsx` | Converts effort with hardwired 7.6 hours | Confirm the incoming FTE definition before changing it. |"
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 325,
+    "Classification": "Documentation",
+    "Text": "7. Simplify Demand conversion to actual-shift FTE from Demand roster minutes and configured shift minutes. Preserve a 7.6 equivalent only for an explicit consumer."
+  },
+  {
+    "Path": "docs/Demand-Duration-and-Meal-Time-Discussion.md",
+    "Line": 356,
+    "Classification": "Documentation",
+    "Text": "5. Which consumers genuinely require a 7.6-hour standard resource FTE rather than actual-shift attendance FTE?"
+  },
+  {
+    "Path": "docs/Demand-Extraction-Distributed-FTE-Plan.md",
+    "Line": 58,
+    "Classification": "Documentation",
+    "Text": "DemandHRS = published source FTE × 7.6"
+  },
+  {
+    "Path": "docs/Demand-Extraction-Distributed-FTE-Plan.md",
+    "Line": 66,
+    "Classification": "Documentation",
+    "Text": "Source FTE represents 7.6 roster hours. For an 8.25-hour shift, one source FTE becomes approximately 0.921212 shift-average attendance. Full precision is retained. Direct Care % is applied only in productive-hour reconciliation, not a second time to roster demand."
+  },
+  {
+    "Path": "docs/MinuteWorker-FTE-Profile-Chart-Instructions.md",
+    "Line": 58,
+    "Classification": "Documentation",
+    "Text": "- Use a single shared vertical axis starting at zero, labelled **FTE — 7.6-hour roster shift equivalents**. Do not use a secondary axis, stacking or independent normalisation."
+  },
+  {
+    "Path": "docs/MinuteWorker-FTE-Profile-Chart-Instructions.md",
+    "Line": 71,
+    "Classification": "Documentation",
+    "Text": "5. The two weekly ratios should match the expected factor when their historical totals are positive. Residuals should be effectively zero (query tolerance: 0.000001 / 456 FTE). For a positive factor, profile peaks and troughs should occur in the same positions, even though Week 1 and Week 2 may differ from each other. A valid zero factor produces an all-zero redistributed line."
+  },
+  {
+    "Path": "docs/MinuteWorker-FTE-Profile-Chart-Instructions.md",
+    "Line": 75,
+    "Classification": "Documentation",
+    "Text": "Do not divide by 7.6, apply Direct Care % again, halve/double either series, average corresponding weekdays, or edit the source inputs. The two FTE columns are already at the required units and grain. Do not claim alignment solely because the chart looks similar; report the factor and residual checks."
+  },
+  {
+    "Path": "docs/Shift-Hours-FTE-Impacted-Files.md",
+    "Line": 24,
+    "Classification": "Documentation",
+    "Text": "| `1. Input/Demand-MasterRoster Manual Read.xlsx` | Source updated 16 September: selects `Shift Net Length`, aliases it as `Roster Hours`, and uses net hours for historical sums and productive-hour percentages. Assigns each full row by start time; distributes care targets over 14 days and publishes 7.6-hour equivalents. Headcount is diagnostic. | Net-field change is source-only, not synced/refreshed. Splitting crossing rows and reviewing exact-boundary/overnight attribution remain separate work. Reconcile hours and percentage denominators after an authorised refresh. |"
+  },
+  {
+    "Path": "docs/Shift-Hours-FTE-Impacted-Files.md",
+    "Line": 27,
+    "Classification": "Documentation",
+    "Text": "| `1. Input/2-DemandExtract.xlsx` | Reads Manual Read's allocation/profile/check publications; converts source FTE to hours using 7.6 and hours to shift FTE using actual duration; repeats the fortnight over 28 days. | Preserve productive and roster-hour totals, role mapping, timing, zero cells and output interfaces if the upstream units change. |"
+  },
+  {
+    "Path": "docs/Shift-Hours-FTE-Impacted-Files.md",
+    "Line": 55,
+    "Classification": "Documentation",
+    "Text": "| `2. Calculations/E-O-I/Effort-All.xlsx` | Combines unit Effort and publishes organisation comparisons and availability matrices; applies `7.6 / 8` in capacity/resource-availability branches. | Establish each input's basis before changing the factor; avoid an additional reduction of already-net actual-shift FTE. |"
+  },
+  {
+    "Path": "docs/Shift-Hours-FTE-Impacted-Files.md",
+    "Line": 59,
+    "Classification": "Documentation",
+    "Text": "| `2. Calculations/Cost/Cost..xlsx` | Reads inefficiency measures and uses a fixed 7.6-hour conversion for costs. Double dot is part of the filename. | Confirm the input FTE denominator before converting to hours/cost. Existing external source paths also require review if this branch is used. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/collect-evidence.ps1",
+    "Line": 10,
+    "Classification": "Prior audit artifact",
+    "Text": "    $pattern = '(?i)duration|shift[ _.-]*(length|hrs|hours)|effective[ _.-]*(shift|availability)|meal[ _.-]*break|unpaid|paid[ _.-]*hours|direct care|res.*effective.*ratio|intervaleffectiveratio|allocatedeffort|timeworked|ordinaryworkwk|stdrosterdays|\\bFTE\\b|\\b7[.,][56]\\b|(?<![\\w.])0?\\.(5|93[0-9]*|95)\\b|\\b(8|456|450|480|38|76)\\b|half.hour|30.minute|break time'"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/coverage.json",
+    "Line": 4,
+    "Classification": "Prior audit artifact",
+    "Text": "  \"Pattern\": \"(?i)duration|shift[ _.-]*(length|hrs|hours)|effective[ _.-]*(shift|availability)|meal[ _.-]*break|unpaid|paid[ _.-]*hours|direct care|res.*effective.*ratio|intervaleffectiveratio|allocatedeffort|timeworked|ordinaryworkwk|stdrosterdays|\\\\bFTE\\\\b|\\\\b7[.,][56]\\\\b|(?<![\\\\w.])0?\\\\.(5|93[0-9]*|95)\\\\b|\\\\b(8|456|450|480|38|76)\\\\b|half.hour|30.minute|break time\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/index.md",
+    "Line": 416,
+    "Classification": "Prior audit artifact",
+    "Text": "- `#\"Demand Extraction Prepare\"`: lines 450, 455, 456, 458, 460, 463."
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/index.md",
+    "Line": 852,
+    "Classification": "Prior audit artifact",
+    "Text": "- `#\"Demand Extraction Prepare\"`: lines 450, 455, 456, 458, 460, 463."
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 108,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        raw.push({ role: 'RN', week, day, shift: 'AM', hours: 7.6 * weekdayPattern * weeklyVariation });\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 120,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"raw.push({ role: 'CSM', week: 31, day: 1, shift: 'AM', hours: 7.6 });\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 126,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            return { role, week, day, shift, fortnightWeek, fortnightDayIndex, fortnightDay, complete, status, hours, fte: hours === null ? null : hours / 7.6 };\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 132,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        cell.fte = cell.minutes / directCare[cell.role] / 456;\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 138,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"near(sum(result.grid.map(r => r.fte)) * 7.6, sum(raw.map(r => r.hours)), 'Historical FTE uses roster hours');\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 144,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"near(result.cells.find(r => r.role === 'CSM' && r.fortnightDay === '1-Monday' && r.shift === 'AM').hours, 7.6, 'First Monday retains its own hours');\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 156,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    near(sum(cells.map(r => r.fte * 7.6 * directCare[r.role])), targets[cat], `${cat}: original fortnight hours reconstructed without doubling`);\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 168,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"near(sum(result.cells.filter(r => r.role === 'RN').map(r => r.fte)) / 14, targets.RN / 14 / 7.6, 'BD RN mean remains an informational 14-day average');\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 180,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"near(sum(rnWeeks) * 7.6, targets.RN, 'Both unequal RN weeks reconcile together');\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 222,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            Math.abs(variance) <= 0.000001 / 456 ? h.fte === 0 ? 'PASS ZERO' : 'PASS' : 'ERROR';\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 258,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"check(!/\\\\[FTE\\\\] \\\\* (?:7\\\\.6|456) \\\\* \\\\[#\\\"Direct Care %\\\"\\\\] \\\\* 2/.test(source), 'Reconciliation does not double 14-day totals');\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 264,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"check(source.includes('each [HistoricalRosterHours] / 7.6'), 'Historical FTE uses 7.6-hour denominator');\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 343,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"DemandHRS = published source FTE × 7.6\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 355,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"Source FTE represents 7.6 roster hours. For an 8.25-hour shift, one source FTE becomes approximately 0.921212 shift-average attendance. Full precision is retained. Direct Care % is applied only in productive-hour reconciliation, not a second time to roster demand.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 762,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            ConfiguredThresholdIs7_6 = Number.Abs(Threshold - 7.6) < 0.00000001,\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1448,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                    name, start_time, end_time, \\\"BD\\\", \\\"BD\\\", fte * 7.6 / hours, fte * 7.6, hours])))\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1496,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            expected = sum(v * 7.6 for (r, _, _), v in pattern.items() if r == name)\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1532,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        spans[\\\"RN\\\", \\\"AM\\\"] = (dt.time(6), dt.time(14, 15), 7.6)\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1550,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        self.assertIn('[SourceFTE] * 7.6', source)\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1625,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"The full-day threshold is the positive, finite `ShiftDuration` value from Settings Data, read by `EXTRACT EffectiveShiftHrs`. Examples below use 7.6 hours; the calculation uses the setting rather than a hard-coded threshold.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1649,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| Recorded exclusions on one date | Distinct hours | Result with ShiftDuration = 7.6 |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1703,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"A complete shift receives the standard allowance even when its clock duration differs from that allowance. For example, a fully available 7.5-hour shift receives 7.6 effective hours when `ShiftDuration` is 7.6. There are no additional break deductions or minimum-duration rules.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1871,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            Remaining = AvailabilitySubtract(Baseline({}), AvailabilityDailyExclusions(Exclusions, 7.6))\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1878,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            AvailabilitySubtract(Baseline({}), AvailabilityDailyExclusions({Window(22, 6, 22, 14)}, 7.6)),\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 1885,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                AvailabilityDailyExclusions({Window(22, 10, 22, 12)}, 7.6)),\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 2210,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"- Use a single shared vertical axis starting at zero, labelled **FTE — 7.6-hour roster shift equivalents**. Do not use a secondary axis, stacking or independent normalisation.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 2222,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"5. The two weekly ratios should match the expected factor when their historical totals are positive. Residuals should be effectively zero (query tolerance: 0.000001 / 456 FTE). For a positive factor, profile peaks and troughs should occur in the same positions, even though Week 1 and Week 2 may differ from each other. A valid zero factor produces an all-zero redistributed line.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 2228,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"Do not divide by 7.6, apply Direct Care % again, halve/double either series, average corresponding weekdays, or edit the source inputs. The two FTE columns are already at the required units and grain. Do not claim alignment solely because the chart looks similar; report the factor and residual checks.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 2234,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\\\"Any\\\", IsParameterQueryRequired=true];\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 3340,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"shared ShiftHrs = 7.6 meta [IsParameterQuery=true, Type=\\\"Any\\\", IsParameterQueryRequired=true];\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 7366,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\\\"Any\\\", IsParameterQueryRequired=true];\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 7513,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"5. Historical FTE = roster hours / 7.6, without applying target scaling or dividing by Direct Care %.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 7525,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"7. Required FTE = required roster minutes / 456. These are 7.6-hour shift equivalents, not full-time employee positions.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 7537,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"RequiredRosterFTE = AllocatedProductiveMinutes / DirectCarePercent / 456\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 7585,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"10. Independently, `sum(FTE × 7.6 × Direct Care %)` over **all 14 days once** equals the original RN and ALL input hours. There is no factor of two.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 8191,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"// Purpose: Read published roster FTE, measured in 7.6-hour shift equivalents.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 8478,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        {\\\"FortnightRosterHours\\\", each List.Sum([FTE]) * 7.6, type number},\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 8485,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            (R) => R[FTE] * 7.6 * R[#\\\"Direct Care %\\\"])), type number}\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 8548,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    WithHours = Table.AddColumn(WithFTE, \\\"DemandHRS\\\", each [SourceFTE] * 7.6, type number)\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 8644,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Line\": 456,"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 8653,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    // A source 7.6-hour equivalent is converted to attendance across the actual shift span.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9346,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        each [HistoricalRosterHours] / 7.6, type nullable number),\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9374,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"// Output: Facility/role/original Week No/FortnightDay/shift with unrounded 7.6-hour shift equivalents.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9395,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    RequiredFTE = Table.AddColumn(RosterMinutes, \\\"FTE\\\", each [WeekdayShiftRosterMinutes] / 456, type nullable number),\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9444,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        else if Number.Abs([ProfileVarianceFTE]) <= 0.000001 / 456 then\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9584,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                                each [FTE] * 7.6 * [#\\\"Direct Care %\\\"]\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9598,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                                    \\\": sum of all 14 days of FTE x 7.6 x Direct Care % must equal original TargetMinutes hours per fortnight.\\\"\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9675,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"// Output: One row per facility, role, FortnightDay, and shift with unrounded 7.6-hour shift equivalents in FTE.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9766,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            each [FTE] * 456 * [#\\\"Direct Care %\\\"],\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 9773,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                Message = \\\"Sum of all 14 days of FTE x 456 x Direct Care % must equal the fortnight category target.\\\"\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 13179,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\\\"Any\\\", IsParameterQueryRequired=true];\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 14796,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"The old scalar calculation `IMPORT OrdinaryWorkWk / StdRosterDays * 2` is superseded by `IMPORT EffectiveShiftHrs`. Its source is the `ShiftDuration` value, which was 7.6 in the inspected Settings workbook. Keep actual shift duration and the effective-hours allowance distinct: a fully available shift receives the imported allowance even where its clock duration differs.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 14808,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"These examples assume AIN AM 06:00–14:00, PM 14:00–22:00, NIGHT 22:00–06:00, and an imported allowance of 7.6 hours. Tests must also verify that different Settings values change the results.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 14814,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| A partially available shift contains 7.8 available hours | EffectiveShiftHrs is capped at 7.6 |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 15571,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"shared ShiftHrs = 7.6 meta [IsParameterQuery=true, Type=\\\"Any\\\", IsParameterQueryRequired=true];\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 18746,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type=\\\"Any\\\", IsParameterQueryRequired=true];\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 20880,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"5. Historical FTE = roster hours / 7.6, without applying target scaling or dividing by Direct Care %.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 20892,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"7. Required FTE = required roster minutes / 456. These are 7.6-hour shift equivalents, not full-time employee positions.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 20904,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"RequiredRosterFTE = AllocatedProductiveMinutes / DirectCarePercent / 456\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 20952,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"10. Independently, `sum(FTE × 7.6 × Direct Care %)` over **all 14 days once** equals the original RN and ALL input hours. There is no factor of two.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 21603,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"// Purpose: Read published roster FTE, measured in 7.6-hour shift equivalents.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 21890,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        {\\\"FortnightRosterHours\\\", each List.Sum([FTE]) * 7.6, type number},\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 21897,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            (R) => R[FTE] * 7.6 * R[#\\\"Direct Care %\\\"])), type number}\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 21960,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    WithHours = Table.AddColumn(WithFTE, \\\"DemandHRS\\\", each [SourceFTE] * 7.6, type number)\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22056,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Line\": 456,"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22065,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    // A source 7.6-hour equivalent is converted to attendance across the actual shift span.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22548,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        each [HistoricalRosterHours] / 7.6, type nullable number),\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22576,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"// Output: Facility/role/original Week No/FortnightDay/shift with unrounded 7.6-hour shift equivalents.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22597,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"    RequiredFTE = Table.AddColumn(RosterMinutes, \\\"FTE\\\", each [WeekdayShiftRosterMinutes] / 456, type nullable number),\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22646,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"        else if Number.Abs([ProfileVarianceFTE]) <= 0.000001 / 456 then\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22786,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                                each [FTE] * 7.6 * [#\\\"Direct Care %\\\"]\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22800,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                                    \\\": sum of all 14 days of FTE x 7.6 x Direct Care % must equal original TargetMinutes hours per fortnight.\\\"\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22877,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"// Output: One row per facility, role, FortnightDay, and shift with unrounded 7.6-hour shift equivalents in FTE.\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22968,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"            each [FTE] * 456 * [#\\\"Direct Care %\\\"],\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 22975,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"                Message = \\\"Sum of all 14 days of FTE x 456 x Direct Care % must equal the fortnight category target.\\\"\","
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 23737,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| Example at ShiftDuration = 7.6 | AM | PM | NIGHT |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 23743,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| Leave 10:00â€“15:00, AM ending 14:00 | 3.6 | 6.6 | 7.6 |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 23749,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| UNAVAIL 13:00â€“15:00 | 6.6 | 6.6 | 7.6 |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 23755,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| UNAVAIL 06:00â€“10:00 plus leave 10:00â€“14:00 | 0 | 7.6 | 7.6 |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 23905,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"- **Whole-day exclusion threshold reached:** The current exclusion helper converts that date to a full-day exclusion when distinct excluded hours reach `EXTRACT EffectiveShiftHrs`. This includes UNAVAIL and leave. For example, eight hours of afternoon UNAVAIL can block the morning too when the threshold is 7.6 hours. This is a verified code rule, not yet a verified explanation of your worker counts.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 25183,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"The old scalar calculation `IMPORT OrdinaryWorkWk / StdRosterDays * 2` is superseded by `IMPORT EffectiveShiftHrs`. Its source is the `ShiftDuration` value, which was 7.6 in the inspected Settings workbook. Keep actual shift duration and the effective-hours allowance distinct: a fully available shift receives the imported allowance even where its clock duration differs.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 25195,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"These examples assume AIN AM 06:00–14:00, PM 14:00–22:00, NIGHT 22:00–06:00, and an imported allowance of 7.6 hours. Tests must also verify that different Settings values change the results.\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/matches.json",
+    "Line": 25201,
+    "Classification": "Prior audit artifact",
+    "Text": "    \"Text\": \"| A partially available shift contains 7.8 available hours | EffectiveShiftHrs is capped at 7.6 |\""
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 5,
+    "Classification": "Prior audit artifact",
+    "Text": "The code uses several different quantities under similar names: clock duration, net worked hours, a standard 7.6-hour FTE equivalent, average attendance across a shift, and a capacity allowance. There are also three different percentage factors: **0.9366**, **0.936**, and **7.6/8 = 0.95**. They are not interchangeable with the half-hour meal-break factor **7.5/8 = 0.9375**."
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 13,
+    "Classification": "Prior audit artifact",
+    "Text": "The `.xlsx_PowerQuery.m` files are existing extracted source text. Their parity with today's Excel workbooks is unverified. In particular, the actual values of the `ShiftDuration`, `Meals`, `ShiftPeriod` and ordinary-work-week workbook tables are not contained in these imports. The user's reported setting of 7.6 hours is consistent with documentation and hardwired conversions, but was not independently read from the settings workbook."
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 27,
+    "Classification": "Prior audit artifact",
+    "Text": "| Same file, `ResourceShiftAllocation`, lines 153–158 | `ResShiftFTE = ResShiftEffort * 24 / IMPORT ShiftDuration`. | Net hours divided by standard FTE hours. At setting 7.6, a 7.5-hour net shift is **0.9868421053 resource FTE**. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 33,
+    "Classification": "Prior audit artifact",
+    "Text": "| W1/W2 `1. Input/Demand-MasterRoster Manual Read`, `MW Historical WeekDayShift`, line 705; `MW DayShift Allocation`, lines 855–858 | Historical FTE = roster hours / **7.6**. Required roster minutes = productive target minutes / Direct Care %. Required FTE = roster minutes / **456**. | A fixed 7.6-hour source contract. Direct Care % converts productive-care requirement to roster time; it is not documented here as a universal half-hour meal-break rule. Historical input uses `Roster Hours`, not a new start/end-minus-break calculation. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 34,
+    "Classification": "Prior audit artifact",
+    "Text": "| W1/W2 `1. Input/2-DemandExtract`, `Distributed FTE Prepare`, line 381; `Demand Extraction Prepare`, line 460 | `DemandHRS = SourceFTE * 7.6`; `DemandFTE = DemandHRS / DurationOfShifts`. | Converts standard FTE equivalents to shift-average attendance. For one source FTE and an 8-hour shift, downstream demand attendance is **0.95**. Checks at lines 323–325 and 472 onward preserve roster and productive hours separately. An imported ShiftDuration query exists but these conversions use literal 7.6. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 36,
+    "Classification": "Prior audit artifact",
+    "Text": "| W1 `2. Calculations/Capacity-ShiftAvailability`, `EXTRACT EffectiveShiftHrs`, lines 96–110; `ResDayShift_Calculated`, lines 385–389; W2 corresponding lines 96 and 383 | Full availability receives Settings ShiftDuration; partial availability receives `min(AvailableHours, allowance)`. The same allowance is the full-day exclusion threshold. | Deliberate availability policy with no additional break deduction. With 7.6 configured, a completely available 7.5-hour window receives 7.6 effective hours. This is documented in `docs/DATExx-Whiddon-Capacity-Shift-Availability-Rules.md`. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 37,
+    "Classification": "Prior audit artifact",
+    "Text": "| D1 `2. Calculations/Capacity-ShiftAvailability`, `EffectiveShiftHrs`, lines 38–44 | Ordinary weekly work hours / StdRosterDays × 2, with StdRosterDays = 10. | Older derivation, unlike W1/W2. If ordinary week = 38, this also gives 7.6, but changing the inputs can separate them. W1/W2's retained StdRosterDays values (20 and 10 respectively) do not determine the new effective-hours allowance. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 39,
+    "Classification": "Prior audit artifact",
+    "Text": "| `CLIENT/DATExx-Whiddon/2. Calculations/E-O-I/Effort-All`, `EffectiveAvailability`, line 231; consumers lines 245–246, 281. DATExx equivalents lines 7, 118–119, 168 | **7.6/8 = 0.95** multiplies aggregate Capacity, CapacityX and a separate resource-availability Effort branch. | Active hardwired factor, independent of settings and role shift duration. Does not multiply the imported resource allocation. On an 8-hour reference this represents 0.4 hours, not a half-hour break. It may intentionally normalize capacity to standard shift equivalents, but that business intent is not established by the parameter name. The resource branch also retains a Resource=108 filter in W1's organisation source. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 40,
+    "Classification": "Prior audit artifact",
+    "Text": "| Both clients `2. Calculations/Cost/Cost.`, `ShiftHrs`, line 19; consumers lines 88, 91, 94 | Hardwired **7.6** multiplies effort measures when calculating costs. | Separate conversion which will not follow a change to Settings ShiftDuration. Verify the units of its effort inputs before replacing the scalar. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 41,
+    "Classification": "Prior audit artifact",
+    "Text": "| Both clients `2. Calculations/Change/AllocationChange`, line 10; `Change/SS/ResidualAllocation` and `ResidualAllocation-ALL`, lines 152–153 | Changes divide hours by imported ShiftDuration; residual calculations multiply Demand and Allocation by imported ShiftDuration. | Potential denominator mismatch: role-level Demand/Allocation entering Effort are based on actual shift spans. If these are the fields being converted, multiplying by 7.6 does not reverse a division by 8 or 8.25. These are retained branches; workbook activation and external/manual-input meaning are unverified. |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 45,
+    "Classification": "Prior audit artifact",
+    "Text": "For a hypothetical single worker covering an entire 8-hour shift, with a 0.5-hour break eligible under the configured threshold and standard FTE hours = 7.6:"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 52,
+    "Classification": "Prior audit artifact",
+    "Text": "| Resource FTE, net hours / 7.6 | 0.9868421053 |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 54,
+    "Classification": "Prior audit artifact",
+    "Text": "| One 7.6-hour source demand FTE, distributed over 8 hours | 0.95 |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 55,
+    "Classification": "Prior audit artifact",
+    "Text": "| One unit of capacity after Effort-All's 7.6/8 multiplier | 0.95 |"
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 88,
+    "Classification": "Prior audit artifact",
+    "Text": "Define the quantities independently before changing constants: `ClockShiftHours`, `NetWorkedHours`, `StandardFTEHours`, `MealBreakHours`, `MealBreakThresholdHours`, `AverageAttendance`, and `ProductiveCareHours`. Keep the 7.6-hour source-FTE contract explicit; changing it requires synchronized interpretation across source demand, resource FTE, changes and cost."
+  },
+  {
+    "Path": "outputs/shift-duration-reconciliation/README.md",
+    "Line": 96,
+    "Classification": "Prior audit artifact",
+    "Text": "No replacement value or policy has been applied. The outstanding evidence for a workbook-level conclusion is the actual Settings tables, embedded-query parity, loaded-query/table mapping, and representative recorded roster hours/breaks. The source search and static reconciliation are complete; these limits do not require guessing that all appearances of 7.6 should become 7.5."
+  },
+  {
+    "Path": "scripts/test-demand-extraction-distributed-fte.py",
+    "Line": 90,
+    "Classification": "Test or diagnostic",
+    "Text": "                    name, start_time, end_time, \"BD\", \"BD\", fte * 7.6 / hours, fte * 7.6, hours])))"
+  },
+  {
+    "Path": "scripts/test-demand-extraction-distributed-fte.py",
+    "Line": 138,
+    "Classification": "Test or diagnostic",
+    "Text": "            expected = sum(v * 7.6 for (r, _, _), v in pattern.items() if r == name)"
+  },
+  {
+    "Path": "scripts/test-demand-extraction-distributed-fte.py",
+    "Line": 198,
+    "Classification": "Test or diagnostic",
+    "Text": "        spans[\"RN\", \"AM\"] = (dt.time(6), dt.time(14, 15), 7.6)"
+  },
+  {
+    "Path": "scripts/test-demand-extraction-distributed-fte.py",
+    "Line": 214,
+    "Classification": "Test or diagnostic",
+    "Text": "        self.assertIn('[SourceFTE] * 7.6', source)"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 80,
+    "Classification": "Test or diagnostic",
+    "Text": "        raw.push({ role: 'RN', week, day, shift: 'AM', hours: 7.6 * weekdayPattern * weeklyVariation });"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 85,
+    "Classification": "Test or diagnostic",
+    "Text": "raw.push({ role: 'CSM', week: 31, day: 1, shift: 'AM', hours: 7.6 });"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 100,
+    "Classification": "Test or diagnostic",
+    "Text": "            return { role, week, day, shift, fortnightWeek, fortnightDayIndex, fortnightDay, complete, status, hours, fte: hours === null ? null : hours / 7.6 };"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 114,
+    "Classification": "Test or diagnostic",
+    "Text": "        cell.fte = cell.minutes / directCare[cell.role] / 456;"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 121,
+    "Classification": "Test or diagnostic",
+    "Text": "near(sum(result.grid.map(r => r.fte)) * 7.6, sum(raw.map(r => r.hours)), 'Historical FTE uses roster hours');"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 123,
+    "Classification": "Test or diagnostic",
+    "Text": "near(result.cells.find(r => r.role === 'CSM' && r.fortnightDay === '1-Monday' && r.shift === 'AM').hours, 7.6, 'First Monday retains its own hours');"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 132,
+    "Classification": "Test or diagnostic",
+    "Text": "    near(sum(cells.map(r => r.fte * 7.6 * directCare[r.role])), targets[cat], `${cat}: original fortnight hours reconstructed without doubling`);"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 149,
+    "Classification": "Test or diagnostic",
+    "Text": "near(sum(result.cells.filter(r => r.role === 'RN').map(r => r.fte)) / 14, targets.RN / 14 / 7.6, 'BD RN mean remains an informational 14-day average');"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 154,
+    "Classification": "Test or diagnostic",
+    "Text": "near(sum(rnWeeks) * 7.6, targets.RN, 'Both unequal RN weeks reconcile together');"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 185,
+    "Classification": "Test or diagnostic",
+    "Text": "            Math.abs(variance) <= 0.000001 / 456 ? h.fte === 0 ? 'PASS ZERO' : 'PASS' : 'ERROR';"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 245,
+    "Classification": "Test or diagnostic",
+    "Text": "check(!/\\[FTE\\] \\* (?:7\\.6|456) \\* \\[#\"Direct Care %\"\\] \\* 2/.test(source), 'Reconciliation does not double 14-day totals');"
+  },
+  {
+    "Path": "scripts/test-minuteworker-period-allocation.mjs",
+    "Line": 251,
+    "Classification": "Test or diagnostic",
+    "Text": "check(source.includes('each [HistoricalRosterHours] / 7.6'), 'Historical FTE uses 7.6-hour denominator');"
+  },
+  {
+    "Path": "Workflows/ResidentialCare/Diagnostics/AIN_20260722_HoursTest.pq",
+    "Line": 102,
+    "Classification": "Test or diagnostic",
+    "Text": "            ConfiguredThresholdIs7_6 = Number.Abs(Threshold - 7.6) < 0.00000001,"
+  },
+  {
+    "Path": "Workflows/ResidentialCare/Diagnostics/AvailabilityDailyWindows_CHECK.pq",
+    "Line": 18,
+    "Classification": "Test or diagnostic",
+    "Text": "            Remaining = AvailabilitySubtract(Baseline({}), AvailabilityDailyExclusions(Exclusions, 7.6))"
+  },
+  {
+    "Path": "Workflows/ResidentialCare/Diagnostics/AvailabilityDailyWindows_CHECK.pq",
+    "Line": 40,
+    "Classification": "Test or diagnostic",
+    "Text": "            AvailabilitySubtract(Baseline({}), AvailabilityDailyExclusions({Window(22, 6, 22, 14)}, 7.6)),"
+  },
+  {
+    "Path": "Workflows/ResidentialCare/Diagnostics/AvailabilityDailyWindows_CHECK.pq",
+    "Line": 44,
+    "Classification": "Test or diagnostic",
+    "Text": "                AvailabilityDailyExclusions({Window(22, 10, 22, 12)}, 7.6)),"
+  }
+]

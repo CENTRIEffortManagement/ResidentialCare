@@ -1,5 +1,13 @@
 # MinuteWorker FTE Analysis — Handoff
 
+**16 September 2026 standard-FTE update:** The approved Unit1 source now imports Settings Data and validates and uses its single ShiftDuration value directly in hours. Historical net hours, required roster minutes, reconciliation and profile tolerance use that setting. Both saved allocation/profile tables publish ShiftDuration in hours, which Demand Extract validates before reversing the conversion. Earlier fixed 7.6-hour arithmetic examples below describe the previous configuration.
+
+See [implementation scope, prerequisites and validation](../../../../../docs/2026-09-16-Whiddon-Unit1-Settings-Based-FTE-Conversions.md). Both edited M sources passed Microsoft's parser; 4,394 JavaScript arithmetic/source assertions passed. No workbook synchronization or refresh was performed. Preserve this approved source; do not re-extract an older workbook over it.
+
+**16 September 2026 source update:** The user approved using `Shift Net Length` for historical hours. `Master Prepare` now selects that field and renames it to the existing internal `Roster Hours` interface. All downstream historical sums, productive-hour weights, FTE, legacy distributions and hour checks therefore use source net hours. No additional meal deduction or fallback to the original `Roster Hours` is applied. Whole-row assignment by start time remains unchanged. This update is source-only; no workbook synchronization or refresh was performed.
+
+Validation for this update: the existing `scripts/test-minuteworker-period-allocation.mjs` suite passed 544 arithmetic/source-contract assertions with 47 shared queries. The edited query headers, step dependencies, final `in` targets and unchanged output/check interfaces were reviewed; the source diff passed whitespace checks. These checks do not execute M or establish workbook parity.
+
 **Revision:** 8 September 2026 — separate Week 1 and Week 2 allocation.
 
 The user reviewed the two historical weeks and found their differences too large to justify averaging. This revision supersedes the seven-day representative-week calculation. Both historical and required FTE retain all 14 days, with labels such as `1-Tuesday` and `2-Tuesday`.

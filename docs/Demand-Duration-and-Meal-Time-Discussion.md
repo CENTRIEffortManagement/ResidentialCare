@@ -1,12 +1,18 @@
 # Shift duration, net hours and FTE reconciliation handover
 
+**16 September 2026 standard-FTE implementation:** Unit1 Manual Read and Demand Extract now use Settings Data's ShiftDuration directly in hours. See [formulas, exact scope, publication prerequisites and validation](2026-09-16-Whiddon-Unit1-Settings-Based-FTE-Conversions.md). Earlier fixed-denominator observations below are historical. The approved net-hours numerator remains; actual role/shift duration is still Demand Extract's attendance denominator. E-O-I's Effort-All remains excluded. No workbook was inspected, synchronized or refreshed.
+
 Date: 2026-09-15
+
+File-impact register expanded: 2026-09-16. See [Files affected by shift hours, meals, headcount and FTE](Shift-Hours-FTE-Impacted-Files.md) for the complete identified input, calculation and reporting chain, including retained variants and evidence limits.
 
 ## Purpose
 
 Handover for continuing this discussion on another computer. The user asked whether the demand model uses `Roster Hours` or `Shift Net Length`, whether meals are removed, and whether downstream `2-DemandExtract` incorporates meals.
 
-Scope: `CLIENT/DATExx-Whiddon/UNITS/Unit1/` only. Findings below come from reading the saved Power Query `.m` files. The embedded workbook queries, worksheet formulas, saved data, and refresh currency have not been verified. No workbooks were inspected, changed, synchronized, or refreshed. No M-code changes were requested or made.
+Scope: `CLIENT/DATExx-Whiddon/UNITS/Unit1/` only. Findings below come from reading the saved Power Query `.m` files. The embedded workbook queries, worksheet formulas, saved data, and refresh currency have not been verified. No workbooks were inspected, changed, synchronized, or refreshed. The original 15 September review made no M-code changes. On 16 September the user approved changing Manual Read to use `Shift Net Length`; that source-only change is recorded below.
+
+**16 September source update:** `Master Prepare` now selects `Shift Net Length` and renames it to the existing internal `Roster Hours` column. Historical distributions and checks therefore use the explicit net field. There is no fallback to the original `Roster Hours` or additional meal deduction. Shift splitting, synchronization and refresh were not part of this change. Line references in the original review predate this edit.
 
 ## Current agreed direction
 
@@ -46,7 +52,7 @@ Scope: `CLIENT/DATExx-Whiddon/UNITS/Unit1/` only. Findings below come from readi
 
 | Path | Current source or calculation | Was explicit net authoritative? | Revised decision |
 | --- | --- | --- | --- |
-| Demand historical distribution | `Roster Hours` from the master roster | No. `Shift Net Length` is imported but dropped by `Master Prepare`. Static code does not prove `Roster Hours` is net. | Use the approved explicit net field for historical weights. |
+| Demand historical distribution | `Shift Net Length`, renamed to internal `Roster Hours` | Yes in the M source after the approved 16 September edit; workbook parity remains unverified. | Preserve net hours; shift-boundary splitting remains separate work. |
 | Demand target quantity | Target productive minutes divided by `Direct Care %` | No explicit meal calculation is applied. Net status depends on what `Direct Care %` represents. | Define the result as net roster minutes only after confirming that business meaning. |
 | Demand intervals | `EffectiveIntervalAttendance = DemandFTE` | The separately calculated meal ratio is bypassed. | Keep shift FTE unchanged across its intervals; do not deduct a meal again. |
 | Allocation extraction | `Shift Net Length` renamed to `Hours` | The field is selected and carried at the input. | Rename clearly to `RosterNetHours` and retain a stable source-row identity. |
@@ -57,13 +63,13 @@ Scope: `CLIENT/DATExx-Whiddon/UNITS/Unit1/` only. Findings below come from readi
 Source: [Demand-MasterRoster Manual Read.xlsx_PowerQuery.m](../CLIENT/DATExx-Whiddon/UNITS/Unit1/1.%20Input/Demand-MasterRoster%20Manual%20Read.xlsx_PowerQuery.m)
 
 - `IMPORT Master` imports `Roster Hours`, `Shift Net Length`, and break fields from the `Combined` sheet of `Master Roster.xlsx` (lines 8–11).
-- `Master Prepare` selects `Roster Hours` and drops `Shift Net Length` and the break fields (lines 213–216).
-- `LocRoleWeekDaysHours` sums `Roster Hours` directly (line 292).
-- `MW Historical WeekDayShift` also sums `Roster Hours` (line 682).
+- `Master Prepare` now selects `Shift Net Length` and renames it to `Roster Hours`; the original source `Roster Hours` and break fields do not enter historical calculations.
+- `LocRoleWeekDaysHours` sums the net-hours `Roster Hours` alias.
+- `MW Historical WeekDayShift` also sums that net-hours alias.
 - Historical FTE is `HistoricalRosterHours / 7.6` (lines 703–705).
 - Historical productive hours are `HistoricalRosterHours * [Direct Care %]` (lines 706–707).
 
-**Finding:** The duration basis is `Roster Hours`. This M source does not explicitly deduct meal time. Whether the source `Roster Hours` already excludes meals is still unknown. `Direct Care %` is a separate configured adjustment; the inspected code does not establish that it represents meal time.
+**Current source finding:** The duration basis is now `Shift Net Length`. The M source applies no additional meal deduction. `Direct Care %` remains a separate configured adjustment. The meaning of the original source `Roster Hours` remains unverified, but that field no longer drives historical calculations.
 
 The published `MinuteWorkersFTE_TABLE` is a target-based allocation using the historical profile, expressed as 7.6-hour roster shift equivalents. It is not simply a copy of raw historical hours.
 
@@ -133,9 +139,9 @@ An additional check query, `Table_ShiftDemandHRSCheck`, calculates an approximat
 
 ## Static conclusion and revised decision
 
-The traced demand chain uses `Roster Hours` as its historical duration basis, produces target-based roster FTE, converts that FTE to demand hours and average attendance, and does not apply an explicit meal deduction to the resulting demand effort.
+The revised source uses `Shift Net Length` as its historical duration basis under the internal `Roster Hours` alias, produces target-based roster FTE, converts that FTE to demand hours and average attendance, and does not apply an additional meal deduction to the resulting demand effort. Saved workbook publications have not been updated by this source edit.
 
-If raw `Roster Hours` includes meals, there is no explicit correction for that in this chain. Because final FTE is target-scaled, the effect on final demand should be assessed through both the historical allocation weights and the target/direct-care definitions, rather than assuming a simple one-for-one excess in final hours.
+The prior source used raw `Roster Hours` without an explicit meal correction. Switching to net history can change the allocation weights. Because final FTE is target-scaled, assess the effect through both the historical weights and the target/direct-care definitions rather than assuming a one-for-one reduction of final demand hours.
 
 The subsequent discussion established the intended direction: use the roster's explicit net value as the allocation authority, while retaining start/end timestamps only for temporal distribution. The remaining questions are about field semantics, configuration keys and downstream consumers, not whether roster meal time should be deducted again.
 
@@ -291,10 +297,12 @@ Roster and Demand must not apply the Availability policy when their source quant
 
 ## File-by-file cleanup map
 
+This table summarises the principal calculation decisions. The [expanded file register](Shift-Hours-FTE-Impacted-Files.md) also names source inputs, all three capacity stages for RN/AIN/AINC4, staff/headcount checks, organisation consumers and Tableau reports. A listed downstream consumer needs validation; it does not necessarily need a formula edit.
+
 | File | Current duration/FTE role | Core decision |
 | --- | --- | --- |
 | `1-AllocationExtracted.xlsx` | Imports `Shift Net Length` as `Hours` plus start, end and break length | Preserve it as `RosterNetHours`; retain a stable roster-row key. |
-| `Demand-MasterRoster Manual Read.xlsx` | Uses `Roster Hours`, assigns the whole row by start time, builds Demand weights and publishes a 7.6-hour equivalent | Use the approved explicit net field and split crossing rows before calculating profile shares. |
+| `Demand-MasterRoster Manual Read.xlsx` | Source now uses `Shift Net Length` through the `Roster Hours` alias; assigns whole rows by start time and publishes a 7.6-hour equivalent | Net-field selection completed in source on 16 September. Splitting crossing rows and workbook validation remain outstanding. |
 | `2-DemandExtract.xlsx` | Converts `/456 -> *7.6 -> /actual shift hours` | Calculate actual-shift Demand FTE directly from Demand roster minutes and configured shift minutes; name compatibility measures separately. |
 | `Settings Data.xlsx` | Supplies boundaries, role shift duration, Meals and standard duration | Establish one authoritative `Facility + Role + ShiftPeriod` gross duration/boundary table and keep meal policy separate. |
 | `Intervals.xlsx` | Creates roster and shift boundaries; also contains a duration/meal calculation with inconsistent day/hour units | Use it for temporal segmentation. Remove or bypass its meal-derived duration when source net hours are carried through. |
@@ -311,11 +319,11 @@ Roster and Demand must not apply the Availability policy when their source quant
 ## Recommended implementation sequence
 
 1. Approve the measure contract: `RosterNetHours`, `RosterClockHours`, `ShiftHours`, `IntervalFTE`, `ShiftFTE`, `StandardResourceFTE`, `ProductiveCareMinutes` and `DemandRosterMinutes`.
-2. Confirm the roster source contract: whether `Shift Net Length` is authoritative in both roster sources and whether `Roster Hours` is identical, gross or differently defined.
+2. The user approved `Shift Net Length` for Manual Read on 16 September; Allocation Extraction already selects it. Verify source data quality and units when workbook inspection is authorised.
 3. Confirm how facility-specific shift boundaries and durations are supplied. Do not join duration only by role if facility can change it.
 4. Build one roster-row segmentation method that splits at configured shift and interval boundaries while preserving source row identity and total net hours.
 5. Switch Allocation first. Carry the source net ratio into worker intervals and reconcile every row back to source net hours.
-6. Switch the Demand historical profile to the same segmentation and net field before role/day/shift shares are calculated.
+6. Switch the Demand historical profile to the same segmentation before role/day/shift shares are calculated. Net-field selection is already implemented in source; segmentation is not.
 7. Simplify Demand conversion to actual-shift FTE from Demand roster minutes and configured shift minutes. Preserve a 7.6 equivalent only for an explicit consumer.
 8. Align intervals: Demand repeats shift FTE; Allocation sums worker FTE rates. Both aggregate with the same duration-weighted-average pattern.
 9. Update RosterProfile and Effort, then verify interval height and shift Demand/Allocation comparisons.
@@ -343,7 +351,7 @@ Test cases should include a shift below the break threshold, exactly six hours, 
 
 ## Remaining business decisions
 
-1. Is `Shift Net Length` the approved field in both roster sources, and what exactly does `Roster Hours` contain?
+1. Net-field selection is resolved: Manual Read now selects the user-approved `Shift Net Length`, as Allocation Extraction already does. Source-value validation and workbook parity remain pending; original `Roster Hours` is no longer used for Manual Read history.
 2. Does `DemandRosterMinutes = ProductiveCareMinutes / Direct Care %` represent net working time, paid roster time including an unpaid meal span, or another capacity concept?
 3. For a row crossing a shift boundary, is proportional net distribution sufficient, or must a trusted break timestamp locate the meal in a specific interval?
 4. Where is the approved facility-specific shift-boundary and duration configuration maintained?

@@ -1,5 +1,7 @@
 # Demand Extraction: distributed FTE integration
 
+Current Unit1 standard-FTE implementation: [settings source, formulas and validation](2026-09-16-Whiddon-Unit1-Settings-Based-FTE-Conversions.md). Source only; workbook synchronization and refresh remain pending.
+
 Implemented in M source on 9 September 2026, with a subsequent third-role compatibility change. **The original RN/AIN implementation passed saved-table reconciliation. The EN/AINC4 follow-up is source-only; no synchronization or Excel refresh has been performed for it.**
 
 ## Current scope
@@ -55,7 +57,8 @@ When synchronization is explicitly authorized later, retain the existing output 
 
 ```text
 FortnightDayIndex = ((Date - planning start) modulo 14) + 1
-DemandHRS = published source FTE × 7.6
+ShiftDuration = Settings ShiftDuration hours
+DemandHRS = published source FTE × ShiftDuration
 DemandFTE = DemandHRS / DurationOfShifts
 ```
 
@@ -63,7 +66,7 @@ DemandFTE = DemandHRS / DurationOfShifts
 
 The settings calendar must contain exactly 28 consecutive dates, begin on Monday and provide periods 1–84 shared by RN, AIN and AINC4. The adapter neither pads nor truncates an invalid calendar. A different starting weekday needs an explicit pattern-alignment change.
 
-Source FTE represents 7.6 roster hours. For an 8.25-hour shift, one source FTE becomes approximately 0.921212 shift-average attendance. Full precision is retained. Direct Care % is applied only in productive-hour reconciliation, not a second time to roster demand.
+Source FTE represents the configured standard roster hours. For example, with a 7.6-hour setting and an 8.25-hour shift, one source FTE becomes approximately 0.921212 shift-average attendance. Full precision is retained. Direct Care % is applied only in productive-hour reconciliation, not a second time to roster demand.
 
 Night shifts end on the following day. Every settings duration must equal its end timestamp minus its start timestamp, including zero-demand cells.
 
@@ -71,7 +74,7 @@ Night shifts end on the following day. Every settings duration must equal its en
 
 | Query | Check or output |
 | --- | --- |
-| `Distributed FTE Source Validate` | Required columns, matching schema family and nonempty saved upstream checks with no failures |
+| `Distributed FTE Source Validate` | Required columns, matching schema family, ShiftDuration in hours matching current settings, and nonempty saved upstream checks with no failures |
 | `Distributed FTE Rows Prepare` | Source keys, finite values, fortnight alignment, direct-care percentages and duplicate keys |
 | `Distributed FTE Prepare` | Exactly 126 unique RN/AIN/AINC4 fortnight cells for BD, two distinct ordered source weeks, allocation/profile agreement and proven zeros |
 | `Demand Calendar Prepare` | Exactly 28 dates, 252 role/shift cells and 84 consistent periods |

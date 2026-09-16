@@ -1,11 +1,168 @@
 // Power Query from: Demand-MasterRoster Manual Read.xlsx
-// Pathname: c:\Users\alexp\CentriNOTSYNC\ResidentialCare \CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Demand-MasterRoster Manual Read.xlsx
-// Extracted: 2026-08-29T20:58:10.990Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Demand-MasterRoster Manual Read.xlsx
+// Extracted: 2026-09-16T01:29:23.598Z
 
 section Section1;
 
+// Query: IMPORT CentriSyncPaths
+// Purpose: Read the machine's shared path mapping for portable workbook imports.
+shared #"IMPORT CentriSyncPaths" =
+let
+    Navigation = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
+    Mapping = Navigation{[Item="CentriSyncPaths", Kind="Table"]}[Data]
+in
+    Table.Buffer(Mapping);
+
+// Query: UnitL1PathTABLE
+// Purpose: Resolve this workbook's path through the standard CentriSyncPaths mapping.
+// Inputs: FilePathUrl, either the standard one-row FilePath table or this workbook's single named cell.
+// Output: Variable Name / Value rows for the existing UnitL1PathTABLE worksheet table.
+// Notes: The worksheet output is not a path input; reading it here would reuse stale query results.
+shared UnitL1PathTABLE =
+let
+    FilePathUrl =
+    let
+        Source = Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
+        // Excel exposes the existing single-cell FilePathUrl name as Column1.
+        // Keep the canonical FilePath column when the standard input table is installed.
+        PathInput = if Table.HasColumns(Source, {"FilePath"}) then Source
+            else if Table.ColumnNames(Source) = {"Column1"} then
+                Table.RenameColumns(Source, {{"Column1", "FilePath"}})
+            else error "FilePathUrl must be a one-row FilePath table or a single named cell.",
+        SelectedColumns = Table.SelectColumns(PathInput, {"FilePath"}),
+        ChangedType = Table.TransformColumnTypes(SelectedColumns, {{"FilePath", type text}}),
+        ReplacedValue = Table.TransformColumns(ChangedType, {{"FilePath", each if _ = null then null else Text.Replace(_, "/", "\"), type text}}),
+        ValidatedTable = if Table.RowCount(ReplacedValue) = 1 then ReplacedValue else error "FilePathUrl must contain exactly one data row.",
+        BufferedTable = Table.Buffer(ValidatedTable)
+    in
+        BufferedTable,
+
+    RawFilePathValue = FilePathUrl{0}[FilePath],
+    RawFilePath = if RawFilePathValue = null or Text.Trim(RawFilePathValue) = "" then
+        error "FilePathUrl is blank. Save this workbook and recalculate its CELL filename formula."
+        else Text.Trim(RawFilePathValue),
+    // CELL("filename", reference) returns folder\[workbook.xlsx]sheet.
+    // Remove only the workbook brackets and sheet suffix before resolving the folder.
+    WorkbookPath = if Text.Contains(RawFilePath, "[") then
+        Text.BeforeDelimiter(RawFilePath, "[") & Text.BetweenDelimiters(RawFilePath, "[", "]")
+        else RawFilePath,
+    InputFileName = Text.AfterDelimiter(WorkbookPath, "\", {0, RelativePosition.FromEnd}),
+    ValidatedWorkbookPath = if Comparer.OrdinalIgnoreCase(InputFileName, "Demand-MasterRoster Manual Read.xlsx") = 0 then
+        WorkbookPath
+        else error "FilePathUrl identifies another workbook. In the named cell use =CELL(""filename"",A1), then save and recalculate Demand-MasterRoster Manual Read.xlsx.",
+    CentriSyncPaths_Table = #"IMPORT CentriSyncPaths",
+    CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
+    NormalizePath = (value as nullable text) as nullable text =>
+        let
+            TextValue = if value = null then null else Text.From(value),
+            SlashNormalized = if TextValue = null then null else Text.Replace(TextValue, "/", "\"),
+            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
+        in
+            Trimmed,
+    FilePath = NormalizePath(ValidatedWorkbookPath),
+    CentriSyncPaths_Normalized = Table.TransformColumns(
+        CentriSyncPaths_ChangedType,
+        {
+            {"SharepointRootUrl", each NormalizePath(_), type text},
+            {"SyncedFolderRootPath", each NormalizePath(_), type text}
+        }
+    ),
+    SharePointCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SharepointRootUrl], type text),
+    SharePointDocumentsCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each if [SharepointRootUrl] = null then null else [SharepointRootUrl] & "\Shared Documents", type text),
+    LocalCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SyncedFolderRootPath], type text),
+    MatchCandidates = Table.Combine({SharePointCandidates, SharePointDocumentsCandidates, LocalCandidates}),
+    MatchCandidates_WithLength = Table.AddColumn(MatchCandidates, "MatchRootLength", each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]), Int64.Type),
+    MatchingRows = Table.SelectRows(
+        MatchCandidates_WithLength,
+        each [MatchRoot] <> null
+            and Text.Trim([MatchRoot]) <> ""
+            and [SyncedFolderRootPath] <> null
+            and Text.Trim([SyncedFolderRootPath]) <> ""
+            and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
+            and (Text.Length(FilePath) = [MatchRootLength] or Text.Range(FilePath, [MatchRootLength], 1) = "\")
+    ),
+    SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
+    BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
+    RelativePath = Text.Range(FilePath, BestMatch[MatchRootLength]),
+    RelativePath_Trimmed = Text.TrimStart(RelativePath, "\"),
+    LocalFullPath =
+        if RelativePath_Trimmed = "" then
+            BestMatch[SyncedFolderRootPath]
+        else
+            BestMatch[SyncedFolderRootPath] & "\" & RelativePath_Trimmed,
+    RootPath = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    Segments = List.Select(Text.Split(RootPath, "\"), each _ <> ""),
+    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare"),
+    UnitsIndex = List.PositionOf(Segments, "UNITS"),
+    UserName = try Text.BeforeDelimiter(Text.AfterDelimiter(RootPath, "C:\Users\"), "\") otherwise null,
+    Client = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 1 then Segments{ResidentialCareIndex + 1} else null,
+    Date = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 2 then Segments{ResidentialCareIndex + 2} else null,
+    Unit = if UnitsIndex >= 0 and List.Count(Segments) > UnitsIndex + 1 then Segments{UnitsIndex + 1} else null,
+    FileName = try Text.BetweenDelimiters(LocalFullPath, "[", "]") otherwise Text.AfterDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    TABLE = #table(
+        {"Variable Name", "Value"},
+        {
+            {"UserName", UserName},
+            {"Root Path", RootPath},
+            {"FilePathUrl", FilePath},
+            {"Client", Client},
+            {"Date", Date},
+            {"Unit", Unit},
+            {"FileName", FileName}
+        }
+    ),
+    BUFFER = Table.Buffer(TABLE)
+in
+    BUFFER;
+
+// Query: Unit1Path
+// Purpose: Derive the unit root from the resolved workbook folder for relative imports.
+shared Unit1Path = let
+    Source = UnitL1PathTABLE,
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
+    WorkbookFolder = #"Filtered Rows"{0}[Value],
+    UnitFolder =
+        if Text.EndsWith(WorkbookFolder, "\1. Input", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\1. Input"))
+        else if Text.EndsWith(WorkbookFolder, "\2. Calculations", Comparer.OrdinalIgnoreCase) then
+            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length("\2. Calculations"))
+        else
+            error "Root Path did not end in an expected Unit1 workbook folder: " & WorkbookFolder
+in
+    UnitFolder;
+
+// Query: IMPORT Settings Data
+// Purpose: Read the current unit's Settings workbook for the standard-FTE duration.
+shared #"IMPORT Settings Data" =
+    Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
+        Unit1Path & "\2. Calculations\Settings Data.xlsx")), null, true));
+
+// Query: ShiftDuration
+// Purpose: Read and validate the standard-FTE duration in hours from Settings Data.
+// Inputs: IMPORT Settings Data, named table ShiftDuration, column ShiftDuration.
+// Output: One positive finite duration in hours; missing or invalid settings stop publication.
+// Notes: This single extraction goes directly from IMPORT to the named result query.
+shared ShiftDuration =
+let
+    Matches = Table.SelectRows(#"IMPORT Settings Data",
+        each [Item] = "ShiftDuration" and [Kind] = "Table"),
+    Data = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error "Settings Data must contain exactly one ShiftDuration table.",
+    RequiredColumn = if Table.HasColumns(Data, {"ShiftDuration"}) then Data
+        else error "The ShiftDuration table must contain the ShiftDuration column.",
+    Hours = if Table.RowCount(RequiredColumn) = 1 then RequiredColumn{0}[ShiftDuration]
+        else error "ShiftDuration must contain exactly one data row.",
+    ValidatedHours = if not Value.Is(Hours, type number) then
+            error "ShiftDuration must be a numeric hours value."
+        else if Number.IsNaN(Hours) or Hours <= 0 or Number.Abs(Hours) = #infinity then
+            error "ShiftDuration must be a positive finite number of hours."
+        else Hours
+in
+    ValidatedHours;
+
+
 shared #"IMPORT Master" = let
-    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Master Roster.xlsx"), null, true),
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\Centri\4. Production - Documents\WFEffectiveness\4.1.1 AGED CARE\ResidentialCare\Whiddon\260728\UNITS\Unit1\1. Input\Master Roster.xlsx"), null, true),
     Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
     #"Promoted Headers1" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
     #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}})
@@ -194,9 +351,10 @@ in
     #"Sorted Role Assignments";
 
 // Query: Master Prepare
-// Purpose: Applies the explicit roster-role mapping, excludes NA roles, and assigns shifts before historical aggregation.
+// Purpose: Uses source net shift hours, applies the explicit roster-role mapping, excludes NA roles, and assigns shifts before historical aggregation.
 // Inputs: IMPORT Master, MW Roster Role Mapping Prepare, ShftEnd Prepare, and shift-boundary scalars.
 // Output: Historical roster rows tagged with original role, DC Role, DC Category, MinuteCategory and Direct Care %.
+// Notes: Roster Hours is the downstream compatibility name for Shift Net Length; no additional meal deduction is applied.
 shared #"Master Prepare" =
 let
     Source = #"IMPORT Master",
@@ -212,10 +370,15 @@ let
     ),
     #"Selected Historical Columns" = Table.SelectColumns(
         #"Normalised Location",
-        {"Location", "Role", "Employee Code", "Week No", "Week Day", "Start Time", "End Time", "Roster Hours"}
+        {"Location", "Role", "Employee Code", "Week No", "Week Day", "Start Time", "End Time", "Shift Net Length"}
+    ),
+    // Select only the authoritative net field, then retain the existing hours interface for all historical calculations and checks.
+    #"Named Net Roster Hours" = Table.RenameColumns(
+        #"Selected Historical Columns",
+        {{"Shift Net Length", "Roster Hours"}}
     ),
     #"Renamed Original Role" = Table.RenameColumns(
-        #"Selected Historical Columns",
+        #"Named Net Roster Hours",
         {{"Role", "OriginalRole"}}
     ),
     #"Added Roster Role Key" = Table.AddColumn(
@@ -625,7 +788,7 @@ in
     Result;
 
 // Query: MW Historical WeekDayShift
-// Purpose: Preserves each historical week's roster hours and FTE with separate fortnight-day display keys.
+// Purpose: Preserves each historical week's net roster hours and FTE with separate fortnight-day display keys.
 // Inputs: Master Prepare, MW MinuteWorkers Prepare, and ShftEnd Prepare.
 // Output: One row per observed facility/role, original Week No, weekday and AM/PM/NS shift.
 // Notes: Complete weeks have explicit zero cells; missing cells in incomplete weeks remain null. No target scaling is applied.
@@ -700,9 +863,9 @@ let
     AddedRosterHours = Table.AddColumn(AddedCellStatus, "HistoricalRosterHours",
         each if [HistoricalCellStatus] = "ERROR" or [HistoricalCellStatus] = "MISSING" then null
         else if [SourceRowCount] = 0 then 0 else [ObservedRosterHours], type nullable number),
-    // Historical FTE measures actual roster hours, without Direct Care % or target adjustment.
+    // Historical FTE uses source Shift Net Length through Master Prepare's Roster Hours alias, without Direct Care % or target adjustment.
     AddedRosterFTE = Table.AddColumn(AddedRosterHours, "HistoricalRosterFTE",
-        each [HistoricalRosterHours] / 7.6, type nullable number),
+        each [HistoricalRosterHours] / ShiftDuration, type nullable number),
     AddedProductiveHours = Table.AddColumn(AddedRosterFTE, "HistoricalProductiveHours",
         each [HistoricalRosterHours] * [#"Direct Care %"], type nullable number),
     AddedDayShift = Table.AddColumn(AddedProductiveHours, "DayShift", each [#"Week Day"] & [Shift], type text),
@@ -838,7 +1001,7 @@ in
 // Query: MW DayShift Allocation
 // Purpose: Converts the complete fortnight productive-care budget to required roster FTE for each distinct week/day/shift.
 // Inputs: MW Historical DayShift and MW Role Targets.
-// Output: Facility/role/original Week No/FortnightDay/shift with unrounded 7.6-hour shift equivalents.
+// Output: Facility/role/original Week No/FortnightDay/shift with unrounded configured standard-FTE equivalents.
 // Notes: No corresponding-weekday averaging and no divide-by-two. WeekdayShift is now a unique fortnight-day/shift key.
 shared #"MW DayShift Allocation" =
 let
@@ -855,7 +1018,8 @@ let
     RosterMinutes = Table.AddColumn(TwoStageCheck, "WeekdayShiftRosterMinutes",
         each if [#"Direct Care %"] = null or [#"Direct Care %"] <= 0 then null
         else [WeekdayShiftTargetMinutes] / [#"Direct Care %"], type nullable number),
-    RequiredFTE = Table.AddColumn(RosterMinutes, "FTE", each [WeekdayShiftRosterMinutes] / 456, type nullable number),
+    // Convert allocated roster minutes to hours before dividing by the standard-FTE hours.
+    RequiredFTE = Table.AddColumn(RosterMinutes, "FTE", each ([WeekdayShiftRosterMinutes] / 60) / ShiftDuration, type nullable number),
     AddedShiftKey = Table.AddColumn(RequiredFTE, "WeekdayShift", each [FortnightDay] & "-" & [Shift], type text),
     Result = Table.Sort(AddedShiftKey, {
         {"Facility", Order.Ascending}, {"MinuteCategory", Order.Ascending}, {"Role", Order.Ascending},
@@ -914,7 +1078,7 @@ let
         if [HistoricalCoverageStatus] <> "PASS" or [HistoricalRosterFTE] = null then "ERROR"
         else if [CategoryTargetMinutes] = null then "NO TARGET"
         else if [RedistributionMatchCount] > 1 or [RedistributedRosterFTE] = null or [ProfileVarianceFTE] = null then "ERROR"
-        else if Number.Abs([ProfileVarianceFTE]) <= 0.000001 / 456 then
+        else if Number.Abs([ProfileVarianceFTE]) <= (0.000001 / 60) / ShiftDuration then
             if [HistoricalRosterFTE] = 0 then "PASS ZERO" else "PASS"
         else "ERROR", type text),
     Result = Table.Sort(Table.RemoveColumns(WithStatus, {"Redistribution"}), {
@@ -1914,7 +2078,7 @@ let
                             // productive hours without repeating or doubling any day.
                             ReconstructedHours = List.Transform(
                                 Table.ToRecords(EligibleAllocation),
-                                each [FTE] * 7.6 * [#"Direct Care %"]
+                                each [FTE] * ShiftDuration * [#"Direct Care %"]
                             ),
                             HasInvalidAllocation = List.NonNullCount(ReconstructedHours) <> List.Count(ReconstructedHours),
                             ActualHours =
@@ -1932,7 +2096,7 @@ let
                                 Actual = ActualHours,
                                 Expected = ExpectedHours,
                                 Message = TargetType &
-                                    ": sum of all 14 days of FTE x 7.6 x Direct Care % must equal original TargetMinutes hours per fortnight."
+                                    ": sum of all 14 days of FTE x configured standard-FTE hours x Direct Care % must equal original TargetMinutes hours per fortnight."
                             ]
                 )
         )
@@ -1982,7 +2146,7 @@ in
 // Query: MinuteWorkersFTE_TABLE
 // Purpose: Publishes the validated 14-day MinuteWorker FTE allocation without weekday averaging.
 // Inputs: MW Publication Check and MW DayShift Allocation.
-// Output: One row per facility, role, FortnightDay, and shift with unrounded 7.6-hour shift equivalents in FTE.
+// Output: One row per facility, role, FortnightDay, and shift with unrounded configured standard-FTE equivalents in FTE.
 shared MinuteWorkersFTE_TABLE =
 let
     RaiseValidationError = (ErrorTitle as text, ValidationRows as table) as any =>
@@ -2112,7 +2276,7 @@ let
                 }
             ),
             "ReconciledProductiveMinutes",
-            each [FTE] * 456 * [#"Direct Care %"],
+            each [FTE] * ShiftDuration * [#"Direct Care %"] * 60,
             type number
         )
     ),
@@ -2147,7 +2311,7 @@ let
                 Role = null,
                 Actual = [Actual],
                 Expected = [Expected],
-                Message = "Sum of all 14 days of FTE x 456 x Direct Care % must equal the fortnight category target."
+                Message = "Sum of all 14 days of FTE x ShiftDuration hours x Direct Care % x 60 must equal the fortnight category target."
             ]
         )
     ),
