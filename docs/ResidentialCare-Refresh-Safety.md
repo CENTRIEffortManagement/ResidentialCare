@@ -23,14 +23,18 @@ children. PID, process name and creation time must match before termination.
 Before saving, the worker:
 
 1. Confirms Excel opened the exact requested path and did not open it read-only.
-2. Refreshes and waits for three quiet connection/query-table polls before
-   calling `CalculateUntilAsyncQueriesDone` for pending OLE DB/OLAP work, then
-   requests calculation. The synchronous drain is not called immediately after
-   starting background refresh.
-3. Requires three consecutive quiet checks of pollable workbook connections,
+2. Captures supported OLE DB, ODBC and query-table `BackgroundQuery` settings and
+   temporarily disables background refresh before calling `RefreshAll`. Original
+   settings are restored before saving. Excel documents that `RefreshAll` otherwise
+   runs objects with `BackgroundQuery` enabled asynchronously.
+3. Allows Power Query a stop-responsive 15-second settle interval, waits for a
+   successful quiet connection/query-table check, requests calculation, then requires
+   three consecutive quiet checks of pollable workbook connections,
    worksheet query tables and Excel's calculation state. A failed or unknown
    readiness read cannot count as completion.
-4. Checks read-only state again and saves to the original path.
+   `CalculateUntilAsyncQueriesDone` is deliberately not used because Excel can spin
+   indefinitely inside that API for some Power Query workbooks under automation.
+4. Restores the captured refresh settings, checks read-only state again and saves to the original path.
 5. Confirms `Workbook.Saved` and the unchanged target path, then closes and quits.
 
 Validation and workbook startup also ask Windows Restart Manager which processes

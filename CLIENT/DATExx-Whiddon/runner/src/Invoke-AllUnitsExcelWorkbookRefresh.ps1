@@ -155,8 +155,8 @@ function Release-ComObject {
     }
 
     try {
-        [System.Runtime.InteropServices.Marshal]::ReleaseComObject($ComObject) | Out-Null
-        Write-Log "Released COM object: $Name"
+        [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($ComObject) | Out-Null
+        Write-Log "Fully released COM object: $Name"
     }
     catch {
         Write-Log "Failed to release COM object $Name`: $($_.Exception.Message)" "WARN"
@@ -246,10 +246,11 @@ if ([string]::IsNullOrWhiteSpace($WorkerStatePath)) {
     $supervisorExit = Invoke-SupervisedExcelRefresh -WorkerScript $PSCommandPath -Parameters (@{} + $PSBoundParameters) -TimeoutSeconds ($supervisorMinutes * 60)
     exit $supervisorExit
 }
-$script:RefreshState = @{ phase = 'Starting'; excel = $null; saved = $false; updatedAt = '' }
+$script:RefreshState = @{ phase = 'Starting'; detail = $null; excel = $null; saved = $false; updatedAt = '' }
 Set-RefreshPhase 'Starting'
 $excel = $null
 $workbook = $null
+$backgroundRefreshSettings = @()
 $ownsExcel = $false
 
 try {
@@ -302,7 +303,7 @@ try {
     Write-CurrentStatus -State "RUNNING" -Message "Starting workbook refresh."
     Write-Log "Starting Excel refresh automation."
     Write-Log "Workbook path input: $WorkbookPath"
-    Write-Log "Mode: $(if ($visible) { 'displayed' } else { 'hidden' }); timeout: $timeoutMinutes minute(s); supervised async/calculation readiness gate: enabled."
+    Write-Log "Mode: $(if ($visible) { 'displayed' } else { 'hidden' }); timeout: $timeoutMinutes minute(s); supervised settle/connection/calculation readiness gate: enabled."
 
     if ([string]::IsNullOrWhiteSpace($WorkbookPath)) {
         throw "Workbook path is missing."
@@ -348,6 +349,8 @@ try {
     Assert-NotStopNowRequested
 
     $refreshStart = Get-Date
+    Set-RefreshPhase 'PreparingSynchronousRefresh'
+    $backgroundRefreshSettings = @(Disable-WorkbookBackgroundRefresh -Workbook $workbook)
     Set-RefreshPhase 'Refreshing'
     Write-Log "Starting workbook refresh."
     $workbook.RefreshAll()
@@ -364,6 +367,8 @@ try {
     }
 
     Write-Log ("Refresh monitoring complete after {0:n2} minute(s)." -f $elapsedMinutes)
+    Restore-WorkbookBackgroundRefresh -Settings $backgroundRefreshSettings
+    $backgroundRefreshSettings = @()
     if ($workbook.ReadOnly) { throw 'Workbook became read-only before save.' }
     Assert-NoExternalFileUsers -Path $resolvedWorkbookPath -AllowedProcessId ([int] $script:RefreshState.excel.id)
     Set-RefreshPhase 'Saving'
@@ -436,8 +441,14 @@ finally {
     Release-ComObject -ComObject $excel -Name "Excel.Application"
 
     try {
+        $cleanupTimer = [Diagnostics.Stopwatch]::StartNew()
+        Write-Log 'Starting forced garbage collection.'
         [GC]::Collect()
+        Write-Log ("Forced garbage collection completed in {0:n3} second(s)." -f $cleanupTimer.Elapsed.TotalSeconds)
+        $cleanupTimer.Restart()
+        Write-Log 'Waiting for pending .NET/COM finalizers.'
         [GC]::WaitForPendingFinalizers()
+        Write-Log ("Pending finalizers completed in {0:n3} second(s)." -f $cleanupTimer.Elapsed.TotalSeconds)
     }
     catch {
         Write-Log "Garbage collection cleanup failed: $($_.Exception.Message)" "WARN"

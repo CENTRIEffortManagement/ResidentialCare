@@ -53,13 +53,132 @@ function Assert-NoExternalFileUsers {
     }
 }
 
-function Set-RefreshPhase {
-    param([string] $Phase)
-    $script:RefreshState.phase = $Phase
+function Release-ExcelComReference {
+    param([object] $ComObject)
+    if ($null -eq $ComObject -or -not [Runtime.InteropServices.Marshal]::IsComObject($ComObject)) { return }
+    [Runtime.InteropServices.Marshal]::ReleaseComObject($ComObject) | Out-Null
+}
+
+function Disable-WorkbookBackgroundRefresh {
+    param($Workbook)
+    $settings = [Collections.Generic.List[object]]::new()
+    $connectionSettingCount = 0
+    $queryTableSettingCount = 0
+    $connections = $Workbook.Connections
+    try {
+        for ($connectionIndex = 1; $connectionIndex -le [int] $connections.Count; $connectionIndex++) {
+            $connection = if ([Runtime.InteropServices.Marshal]::IsComObject($connections)) { $connections.Item($connectionIndex) } else { $connections[$connectionIndex - 1] }
+            $target = $null
+            try {
+                if ($null -eq $connection) { throw 'Excel returned a null connection while preparing synchronous refresh.' }
+                $connectionName = [string] $connection.Name
+                $target = switch ([int] $connection.Type) {
+                    1 { $connection.OLEDBConnection; break }
+                    2 { $connection.ODBCConnection; break }
+                    default { $null }
+                }
+                if ($null -eq $target) { continue }
+                $settings.Add([pscustomobject] @{
+                    Target = $target
+                    Label = "connection '$connectionName'"
+                    Original = [bool] $target.BackgroundQuery
+                    Changed = $false
+                })
+                $connectionSettingCount++
+                $target = $null # The settings list owns this COM reference until restore.
+            }
+            catch { Write-Log "Background refresh setting unavailable for connection '$connectionName': $($_.Exception.Message)" 'WARN' }
+            finally {
+                Release-ExcelComReference $target
+                Release-ExcelComReference $connection
+            }
+        }
+    }
+    finally { Release-ExcelComReference $connections }
+
+    $worksheets = $Workbook.Worksheets
+    try {
+        for ($sheetIndex = 1; $sheetIndex -le [int] $worksheets.Count; $sheetIndex++) {
+            $sheet = if ([Runtime.InteropServices.Marshal]::IsComObject($worksheets)) { $worksheets.Item($sheetIndex) } else { $worksheets[$sheetIndex - 1] }
+            $queryTables = $null
+            try {
+                if ($null -eq $sheet) { throw 'Excel returned a null worksheet while preparing synchronous refresh.' }
+                $sheetName = [string] $sheet.Name
+                $queryTables = $sheet.QueryTables
+                for ($queryIndex = 1; $queryIndex -le [int] $queryTables.Count; $queryIndex++) {
+                    $queryTable = if ([Runtime.InteropServices.Marshal]::IsComObject($queryTables)) { $queryTables.Item($queryIndex) } else { $queryTables[$queryIndex - 1] }
+                    try {
+                        if ($null -eq $queryTable) { throw 'Excel returned a null query table while preparing synchronous refresh.' }
+                        $queryTableName = [string] $queryTable.Name
+                        $settings.Add([pscustomobject] @{
+                            Target = $queryTable
+                            Label = "query table '$sheetName/$queryTableName'"
+                            Original = [bool] $queryTable.BackgroundQuery
+                            Changed = $false
+                        })
+                        $queryTableSettingCount++
+                        $queryTable = $null # The settings list owns this COM reference until restore.
+                    }
+                    catch { Write-Log "Background refresh setting unavailable for query table '$sheetName/$queryTableName': $($_.Exception.Message)" 'WARN' }
+                    finally { Release-ExcelComReference $queryTable }
+                }
+            }
+            finally {
+                Release-ExcelComReference $queryTables
+                Release-ExcelComReference $sheet
+            }
+        }
+    }
+    finally { Release-ExcelComReference $worksheets }
+
+    $changedCount = 0
+    foreach ($setting in $settings) {
+        if (-not $setting.Original) { continue }
+        try {
+            $setting.Target.BackgroundQuery = $false
+            $setting.Changed = $true
+            $changedCount++
+        }
+        catch { Write-Log "Could not force synchronous refresh for $($setting.Label): $($_.Exception.Message)" 'WARN' }
+    }
+    Write-Log "Temporarily disabled background refresh for $changedCount of $($settings.Count) supported refresh object(s): $connectionSettingCount connection(s), $queryTableSettingCount worksheet query table(s)."
+    return @($settings)
+}
+
+function Restore-WorkbookBackgroundRefresh {
+    param([object[]] $Settings)
+    $restoreError = $null
+    foreach ($setting in @($Settings)) {
+        try {
+            if ($setting.Changed) {
+                $setting.Target.BackgroundQuery = [bool] $setting.Original
+                $setting.Changed = $false
+            }
+        }
+        catch {
+            if ($null -eq $restoreError) { $restoreError = $_ }
+        }
+        finally {
+            Release-ExcelComReference $setting.Target
+            $setting.Target = $null
+        }
+    }
+    if ($null -ne $restoreError) { throw $restoreError }
+    Write-Log 'Restored workbook background-refresh settings.'
+}
+
+function Write-RefreshWorkerState {
     $script:RefreshState.updatedAt = (Get-Date).ToString('o')
     $temporaryState = $WorkerStatePath + '.tmp'
     [IO.File]::WriteAllText($temporaryState, ($script:RefreshState | ConvertTo-Json -Depth 5))
     [IO.File]::Move($temporaryState, $WorkerStatePath, $true)
+}
+
+function Set-RefreshPhase {
+    param([string] $Phase)
+    $script:RefreshState.phase = $Phase
+    $script:RefreshState.detail = $null
+    Write-RefreshWorkerState
     Write-CurrentStatus -State 'RUNNING' -Message $Phase
     Write-Log "Phase: $Phase"
 }
@@ -164,9 +283,19 @@ function Get-RemainingRefreshProcesses {
     }
 }
 
+function Get-RefreshStatePhase {
+    param($State, [string] $MissingStatePhase = 'StartingWorker')
+    if ($null -eq $State) { return $MissingStatePhase }
+    $detailProperty = $State.PSObject.Properties['detail']
+    if ($null -ne $detailProperty -and -not [string]::IsNullOrWhiteSpace([string] $detailProperty.Value)) {
+        return "$($State.phase): $($detailProperty.Value)"
+    }
+    return [string] $State.phase
+}
+
 function Invoke-SupervisedExcelRefresh {
     param([string] $WorkerScript, [hashtable] $Parameters, [double] $TimeoutSeconds,
-        [int] $StopGraceSeconds = 5, [ValidateRange(0, 300)] [int] $ExitGraceSeconds = 15)
+        [int] $StopGraceSeconds = 5, [ValidateRange(0, 300)] [int] $ExitGraceSeconds = 5)
     if ($TimeoutSeconds -le 0) { throw 'Timeout must be positive.' }
     $stateFolder = if ($Parameters.LogPath) { Split-Path $Parameters.LogPath -Parent } else { [IO.Path]::GetTempPath() }
     $statePath = Join-Path $stateFolder ("refresh-worker-{0}.json" -f [guid]::NewGuid().ToString('N'))
@@ -214,7 +343,7 @@ function Invoke-SupervisedExcelRefresh {
                 break
             }
             if (($timer.Elapsed.TotalSeconds - $lastHeartbeat) -ge 15) {
-                $phase = if ($null -eq $state) { 'StartingWorker' } else { $state.phase }
+                $phase = Get-RefreshStatePhase $state
                 Write-Log ("Supervisor: {0}; elapsed {1:n1} minute(s)." -f $phase, ($timer.Elapsed.TotalMinutes))
                 $lastHeartbeat = $timer.Elapsed.TotalSeconds
             }
@@ -265,7 +394,7 @@ function Invoke-SupervisedExcelRefresh {
         $worker.Dispose()
     }
     if ($exitCode -ne 0) {
-        $phase = if ($null -eq $state) { 'StartingWorker (Excel ownership not registered)' } else { $state.phase }
+        $phase = Get-RefreshStatePhase $state 'StartingWorker (Excel ownership not registered)'
         $finalState = if ($exitCode -eq 3) { 'STOPPED' } else { 'FAILED' }
         $saveStatus = if ($null -ne $state -and $state.saved) { 'workbook save was confirmed' } else { 'workbook save is not confirmed' }
         Write-CurrentStatus -State $finalState -Message "Supervisor exit $exitCode during $phase; $saveStatus. State: $statePath"
@@ -277,41 +406,83 @@ function Get-ExcelActivity {
     param($Excel, $Workbook)
     $active = @()
     # Unsupported connection types are ignored explicitly; failed reads on pollable types fail closed.
-    foreach ($connection in @($Workbook.Connections)) {
-        if ($null -eq $connection) { throw 'Excel returned a null connection while checking readiness.' }
-        switch ([int] $connection.Type) {
-            1 { if ($connection.OLEDBConnection.Refreshing) { $active += [string] $connection.Name } }
-            2 { if ($connection.ODBCConnection.Refreshing) { $active += [string] $connection.Name } }
+    $connections = $Workbook.Connections
+    try {
+        for ($connectionIndex = 1; $connectionIndex -le [int] $connections.Count; $connectionIndex++) {
+            $connection = if ([Runtime.InteropServices.Marshal]::IsComObject($connections)) { $connections.Item($connectionIndex) } else { $connections[$connectionIndex - 1] }
+            $target = $null
+            try {
+                if ($null -eq $connection) { throw 'Excel returned a null connection while checking readiness.' }
+                $connectionName = [string] $connection.Name
+                $connectionType = [int] $connection.Type
+                switch ($connectionType) {
+                    1 { $target = $connection.OLEDBConnection }
+                    2 { $target = $connection.ODBCConnection }
+                }
+                if ($null -ne $target -and $target.Refreshing) { $active += $connectionName }
+            }
+            finally {
+                Release-ExcelComReference $target
+                Release-ExcelComReference $connection
+            }
         }
     }
-    foreach ($sheet in @($Workbook.Worksheets)) {
-        foreach ($queryTable in @($sheet.QueryTables)) {
-            if ($null -eq $queryTable) { throw 'Excel returned a null query table while checking readiness.' }
-            if ($queryTable.Refreshing) { $active += "$($sheet.Name)/$($queryTable.Name)" }
+    finally { Release-ExcelComReference $connections }
+
+    $worksheets = $Workbook.Worksheets
+    try {
+        for ($sheetIndex = 1; $sheetIndex -le [int] $worksheets.Count; $sheetIndex++) {
+            $sheet = if ([Runtime.InteropServices.Marshal]::IsComObject($worksheets)) { $worksheets.Item($sheetIndex) } else { $worksheets[$sheetIndex - 1] }
+            $queryTables = $null
+            try {
+                if ($null -eq $sheet) { throw 'Excel returned a null worksheet while checking readiness.' }
+                $sheetName = [string] $sheet.Name
+                $queryTables = $sheet.QueryTables
+                for ($queryIndex = 1; $queryIndex -le [int] $queryTables.Count; $queryIndex++) {
+                    $queryTable = if ([Runtime.InteropServices.Marshal]::IsComObject($queryTables)) { $queryTables.Item($queryIndex) } else { $queryTables[$queryIndex - 1] }
+                    try {
+                        if ($null -eq $queryTable) { throw 'Excel returned a null query table while checking readiness.' }
+                        $queryTableName = [string] $queryTable.Name
+                        if ($queryTable.Refreshing) { $active += "$sheetName/$queryTableName" }
+                    }
+                    finally { Release-ExcelComReference $queryTable }
+                }
+            }
+            finally {
+                Release-ExcelComReference $queryTables
+                Release-ExcelComReference $sheet
+            }
         }
     }
-    return [pscustomobject] @{ Active = $active; CalculationState = [int] $Excel.CalculationState }
+    finally { Release-ExcelComReference $worksheets }
+    $calculationState = [int] $Excel.CalculationState
+    return [pscustomobject] @{ Active = $active; CalculationState = $calculationState }
 }
 
 function Wait-ExcelReadyToSave {
     param($Excel, $Workbook)
-    # Let RefreshAll finish its background connection work before entering the
-    # synchronous async-drain call; keep that call out of the active connection phase.
-    Set-RefreshPhase 'WaitingForConnections'
-    Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook
-    Set-RefreshPhase 'WaitingForAsyncQueries'
-    # Unlike connection flags alone, this drains pending OLE DB and OLAP query work.
-    # The external supervisor enforces the deadline if this COM method never returns.
-    $Excel.CalculateUntilAsyncQueriesDone()
+    # Give Power Query the same minimum 15-second launch/settle interval that the
+    # former three-poll gate provided, without touching connection COM objects
+    # while they can be invalidated as refresh work starts or completes.
+    Set-RefreshPhase 'SettlingAfterRefresh'
+    Start-ResponsiveSleep -Seconds 15
     Assert-NotStopNowRequested
+    # CalculateUntilAsyncQueriesDone can spin indefinitely for some Power Query
+    # workbooks under /automation. Poll the supported connection/query-table
+    # refresh flags after the untouched settling interval instead.
+    Set-RefreshPhase 'WaitingForConnections'
+    # Excel can report all connections idle while its calculation state is still
+    # pending. Calling Calculate in that state intermittently fails through COM.
+    Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook -RequireCalculationDone -RequiredQuietPolls 1
     Set-RefreshPhase 'Calculating'
     $Excel.Calculate()
     Set-RefreshPhase 'CheckingReadiness'
+    # The external supervisor bounds every COM readiness read.
     Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook -RequireCalculationDone
 }
 
 function Wait-ExcelQuietPolls {
-    param($Excel, $Workbook, [switch] $RequireCalculationDone)
+    param($Excel, $Workbook, [switch] $RequireCalculationDone, [ValidateRange(1, 10)] [int] $RequiredQuietPolls = 3)
     $quietPolls = 0
     do {
         Assert-NotStopNowRequested
@@ -325,7 +496,7 @@ function Wait-ExcelQuietPolls {
             continue
         }
         if ($activity.Active.Count -eq 0 -and (-not $RequireCalculationDone -or $activity.CalculationState -eq 0)) { $quietPolls++ } else { $quietPolls = 0 }
-        Write-Log "Readiness: $($activity.Active.Count) active query/connection(s); calculation state $($activity.CalculationState); quiet polls $quietPolls/3. $($activity.Active -join ', ')"
-        if ($quietPolls -lt 3) { Start-ResponsiveSleep -Seconds 5 }
-    } while ($quietPolls -lt 3)
+        Write-Log "Readiness: $($activity.Active.Count) active query/connection(s); calculation state $($activity.CalculationState); quiet polls $quietPolls/$RequiredQuietPolls. $($activity.Active -join ', ')"
+        if ($quietPolls -lt $RequiredQuietPolls) { Start-ResponsiveSleep -Seconds 5 }
+    } while ($quietPolls -lt $RequiredQuietPolls)
 }

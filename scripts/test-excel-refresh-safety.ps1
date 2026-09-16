@@ -16,10 +16,18 @@ $testFolder = Join-Path ([IO.Path]::GetTempPath()) ('rc-refresh-tests-' + [guid]
 [void] [IO.Directory]::CreateDirectory($testFolder)
 $script:testStopPath = Join-Path $testFolder 'stop.txt'
 $WorkerStatePath = Join-Path $testFolder 'readiness.json'
-$script:RefreshState = @{ phase = ''; excel = $null; saved = $false; updatedAt = '' }
+$script:RefreshState = @{ phase = ''; detail = $null; excel = $null; saved = $false; updatedAt = '' }
 $script:pollSleeps = 0
+$script:sleepDurations = [Collections.Generic.List[int]]::new()
 $script:asyncCalls = 0
 $script:calculateCalls = 0
+$backgroundTarget = [pscustomobject] @{ BackgroundQuery = $true; Refreshing = $false }
+$backgroundConnection = [pscustomobject] @{ Name = 'Background'; Type = 1; OLEDBConnection = $backgroundTarget }
+$backgroundWorkbook = [pscustomobject] @{ Connections = @($backgroundConnection); Worksheets = @() }
+$backgroundSettings = @(Disable-WorkbookBackgroundRefresh $backgroundWorkbook)
+Assert-Test (-not $backgroundTarget.BackgroundQuery -and $backgroundSettings.Count -eq 1) 'Supported background refresh was not disabled.'
+Restore-WorkbookBackgroundRefresh $backgroundSettings
+Assert-Test $backgroundTarget.BackgroundQuery 'Original background-refresh setting was not restored.'
 $testConnection = [pscustomobject] @{ Name = 'Connection'; Type = 1; OLEDBConnection = [pscustomobject] @{ Refreshing = $false } }
 $testQuery = [pscustomobject] @{ Name = 'Table'; Refreshing = $true }
 $testWorkbook = [pscustomobject] @{ Connections = @($testConnection); Worksheets = @([pscustomobject] @{ Name = 'Sheet'; QueryTables = @($testQuery) }) }
@@ -29,13 +37,16 @@ $testExcel | Add-Member ScriptMethod Calculate { $script:calculateCalls++; $this
 function Start-ResponsiveSleep {
     param($Seconds)
     $script:pollSleeps++
-    # Connection flags are idle throughout; a query table and calculation must still block readiness.
+    $script:sleepDurations.Add([int] $Seconds)
+    # The async drain runs first; a query table and calculation must still block final readiness.
     if ($script:pollSleeps -eq 2) { $testQuery.Refreshing = $false; $testExcel.CalculationState = 0 }
     if ($script:pollSleeps -eq 6) { $testExcel.CalculationState = 0 }
 }
 Wait-ExcelReadyToSave $testExcel $testWorkbook
-Assert-Test ($script:asyncCalls -eq 1 -and $script:calculateCalls -eq 1) 'Async drain/calculation were bypassed.'
-Assert-Test ($script:pollSleeps -eq 8) 'Readiness did not wait for both query completion and subsequent calculation completion.'
+Assert-Test ($script:asyncCalls -eq 0 -and $script:calculateCalls -eq 1) 'Unsafe async drain was called or calculation was bypassed.'
+Assert-Test ($script:pollSleeps -eq 8) 'Connection and calculation readiness gates did not wait for completion.'
+Assert-Test ($script:sleepDurations[0] -eq 15) 'The pre-drain Power Query settling interval was omitted.'
+Assert-Test ([string]::IsNullOrWhiteSpace([string] $script:RefreshState.detail)) 'Successful readiness left a stale COM probe detail.'
 $originalActivityFunction = ${function:Get-ExcelActivity}
 $script:transientReads = 1
 function Get-ExcelActivity {

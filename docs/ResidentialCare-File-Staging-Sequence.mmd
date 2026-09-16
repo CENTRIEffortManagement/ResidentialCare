@@ -1,0 +1,85 @@
+flowchart TB
+    D1["D1 · Demand transformation<br/><br/>Demand-MasterRoster Manual Read.xlsx<br/>2-DemandExtract.xlsx"]
+    A1["A1 · Allocation transformation<br/><br/>1-AllocationExtracted.xlsx"]
+    S1["S1 · Shared controls<br/><br/>Settings Data.xlsx"]
+    C1["C1 · Capacity inputs<br/><br/>Worker Reconciliation.xlsx<br/>Capacity-ShiftAvailability.xlsx<br/>StaffListMaster.xlsx"]
+
+    R1{"R1 · Demand and allocation aligned"}
+
+    D1 --> R1
+    A1 --> R1
+    S1 --> R1
+
+    A1 --> C1
+    S1 --> C1
+
+    D2["D2 · Demand preparation<br/><br/>Intervals.xlsx<br/>DemandIntervals.xlsx<br/>Demand.xlsx"]
+    A2["A2 · Role-allocation basis<br/><br/>Shifts.xlsx<br/>AllocationByShiftAverage.xlsx"]
+    A3["A3 · Allocation outputs<br/><br/>Allocation.xlsx<br/>Shift-StaffDistribution.xlsx<br/>MutliRoleCheck.xlsx"]
+
+    R1 --> D2
+    R1 --> A2
+    A2 --> A3
+
+    R2{"R2 · Demand, allocation and capacity inputs reconciled"}
+
+    D2 --> R2
+    A2 --> R2
+    C1 --> R2
+    S1 --> R2
+
+    C21["C2.1 · Role 1 capacity<br/><br/>CapacityDistrib(A.1)-shifts.xlsx<br/>CapacityDistrib(A.2)-shifts.xlsx<br/>CapacityDistrib(B)-shifts.xlsx"]
+    C2More["⋮<br/>one batch per enabled role folder"]
+    C2N["C2.N · Role N capacity<br/><br/>CapacityDistrib(A.1)-shifts.xlsx<br/>CapacityDistrib(A.2)-shifts.xlsx<br/>CapacityDistrib(B)-shifts.xlsx"]
+
+    R2 --> C21
+    R2 --> C2More
+    R2 --> C2N
+
+    R3{"R3 · Role-capacity batches reconciled"}
+
+    C21 --> R3
+    C2More --> R3
+    C2N --> R3
+
+    U4["U4 · Unit consolidation<br/><br/>Capacity.xlsx<br/>Effort.xlsx"]
+
+    R3 --> U4
+    D2 --> U4
+    A3 --> U4
+    C1 --> U4
+    S1 --> U4
+
+    R4{"R4 · Unit demand, allocation and capacity reconciled"}
+    U4 --> R4
+
+    R5{"R5 · All selected units reconciled"}
+    R4 --> R5
+
+    O1["O1 · Cross-unit assembly<br/><br/>StafMasterList-All.xlsx<br/>Effort-All.xlsx"]
+    O2["O2 · Outcomes<br/><br/>EffortOutcomes.xlsx<br/>Inefficiencies.xlsx"]
+    O3["O3 · Cost<br/><br/>Cost..xlsx"]
+    O4["O4 · Outcome history<br/><br/>EffortOutcomeLogXY.xlsx<br/>2DRead.xlsx"]
+
+    R5 --> O1 --> O2
+    O2 --> O3
+    O2 --> O4
+
+    R6{"R6 · Cost and outcome history reconciled"}
+    O3 --> R6
+    O4 --> R6
+
+    O5["O5 · Reporting release<br/><br/>Tableau Connection.xlsx"]
+    R6 --> O5
+
+    classDef demand fill:#f8d7da,stroke:#b96a72,color:#3f1d21;
+    classDef allocation fill:#dff3df,stroke:#679f6c,color:#183d1c;
+    classDef capacity fill:#dbeafe,stroke:#6592c7,color:#173653;
+    classDef outcomes fill:#ffedd5,stroke:#c58a48,color:#4d2d0c;
+    classDef other fill:#e5e7eb,stroke:#8a9099,color:#25282d;
+
+    class D1,D2 demand;
+    class A1,A2,A3 allocation;
+    class C1,C21,C2More,C2N,U4 capacity;
+    class O1,O2,O3,O4,O5 outcomes;
+    class S1,R1,R2,R3,R4,R5,R6 other;
