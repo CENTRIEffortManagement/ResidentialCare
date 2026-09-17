@@ -20,6 +20,8 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot '../../../runner/src/RefreshRunGate.ps1')
+$script:BatchGateLease = $null
 
 $script:WorkflowName = "ResidentialCare Unit Refresh"
 $script:LogFile = $null
@@ -597,6 +599,9 @@ function Stop-WorkflowForOperator {
 
 try {
     $resolvedRunRoot = (Resolve-Path -LiteralPath $RunRoot -ErrorAction Stop).Path
+    if (-not $ValidateSelectionOnly) {
+        $script:BatchGateLease = Enter-RefreshRunGate -DateRoot (Find-RefreshDateRoot $resolvedRunRoot)
+    }
     $resolvedSequencePath = (Resolve-Path -LiteralPath $SequencePath -ErrorAction Stop).Path
 
     Assert-RequiredFolder -Root $resolvedRunRoot -RelativePath "1. Input" | Out-Null
@@ -733,4 +738,7 @@ catch {
     }
 
     exit $script:ExitCode
+}
+finally {
+    if ($null -ne $script:BatchGateLease) { $script:BatchGateLease.Dispose() }
 }

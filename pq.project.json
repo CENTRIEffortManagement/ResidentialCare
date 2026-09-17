@@ -6,6 +6,12 @@
     "workbookSequence": "Workflows/ResidentialCare/AutoRefresh/ResidentialCare-WorkbookSequence.psd1",
     "logFolder": "Workflows/ResidentialCare/audit"
   },
+  "batchRunner": {
+    "dateRoot": "CLIENT/DATExx-Whiddon",
+    "catalogue": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchCatalogue.psd1",
+    "approval": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchApproval.psd1",
+    "logFolder": "CLIENT/DATExx-Whiddon/RunLogs/BatchRefresh"
+  },
   "powerQuery": {
     "sourceRoots": [
       "Workflows"

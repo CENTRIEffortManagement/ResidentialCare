@@ -12,6 +12,10 @@
 *.log
 logs/
 **/RunLogs/refresh-worker-*.json
+**/RunLogs/BatchRefresh/
+**/RunLogs/ArchivedBenchmarks/
+**/RunLogs/BatchRefresh.gate
+**/RunLogs/BatchCoordinator.gate
 **/audit/*
 !**/audit/.gitkeep
 

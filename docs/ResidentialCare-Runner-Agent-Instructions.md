@@ -7,6 +7,152 @@ The executable sequence is defined by the runner `.psd1` manifests. The maps in
 `docs/ResidentialCare-Runner-Sequences.md` explain those manifests but do not
 replace them.
 
+## Expanded batch runner (separate rollout)
+
+For requests explicitly naming the expanded/new/batch runner, use
+`CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd` and follow
+`docs/ResidentialCare-Batch-Runner-Plan.md`. The legacy entry-point mapping below
+remains the fallback until rollout is accepted.
+
+The expanded runner's primary action is `-RunAll`. It runs **up to seven ready
+batches concurrently across all branches and Units**, not just C2; files within
+each batch remain sequential. `-MaxParallelBatches` accepts 1 through 7, default 7.
+Batch IDs and the saved role profile are the manual-control interface.
+
+Whenever an option leads to asking the user to pick batches, first display all
+available batch choices. This applies both to the runner menu and to an agent
+asking for a batch selection in conversation. Each choice must show its batch
+ID, title when available, and its files in square brackets, comma-separated and
+in execution order. For example:
+
+```text
+D1 - Demand transformation [Demand-MasterRoster Manual Read.xlsx, 2-DemandExtract.xlsx]
+A2 - Role-allocation basis [Shifts.xlsx, AllocationByShiftAverage.xlsx]
+```
+
+Generate the list from the current catalogue, manifests and enabled role profile;
+do not ask the user to remember IDs or refer them to a separate diagram. List
+shared Unit batch choices once, with organisation batches in a separate section.
+Show C2 as the all-enabled-roles choice and each actual C2.1 through C2.N choice
+with its role name and three filenames. Then ask for one or more comma-separated
+batch IDs. Listing choices must not open Excel or authorise a refresh.
+
+Whenever asking for Units, first list the exact available Unit IDs from current
+Unit-folder discovery, in numeric order (for example, Unit1, Unit2, Unit10).
+This applies to all Unit prompts, including those following batch or role picks,
+and to an agent asking in conversation. Display `All - all listed Units`, then
+ask for comma-separated Unit IDs or `All`. Explain the blank-input behaviour:
+blank means all Units when qualifying batches/roles, but cancels the dedicated
+Run selected Units option. Never require the user to remember Unit IDs or invent
+friendly names. Listing Units does not open Excel or alter the selection scope.
+
+Use `-ShowPlan` for a catalogue preview and `-ValidateSelectionOnly` for file-access
+validation. Neither opens Excel. Other selections execute only with
+`-RefreshSelected`. Unit-scoped all runs exclude organisation work unless
+`-IncludeOrg` is explicit. Organisation filters inside workbooks are not changed.
+Legacy global/local range numbering is preserved.
+
+The user has removed the separate live-approval gate. An explicit Run menu
+selection, `-RunAll`, or a scoped `-RefreshSelected` now proceeds through normal
+validation to refresh; do not require an Approved flag, approval evidence,
+configuration sign-off or OrganisationScopeConfirmed flag. Do not invent review
+evidence. The historical `ResidentialCare-BatchApproval.psd1` filename now holds
+only operational settings: organisation consumer Units, additional inputs and
+exclusive jobs. The configuration fingerprint still protects resume consistency.
+
+Dependency readiness, file access/lock checks, conflicting-run exclusion,
+seven-batch maximum, timeout and verified-save protections remain enforced.
+Removing the gate does not start a refresh by itself, authorise M synchronization
+or permit automatic scheduled refresh. Preview and validation never start Excel.
+
+The no-argument CMD menu keeps its window open after successful, blocked or failed
+requests until a key is pressed. Successful validation and status results also
+stay visible. Option 0 (Exit) closes immediately. Calls with command-line arguments
+never pause and preserve their exit code. Run exclusion is released before waiting
+for a key. Menu option 7 still allows validation without opening Excel.
+
+For the expanded runner, inaccessible files block their jobs and descendants,
+while unrelated ready work continues; a nonzero final result reports incomplete
+work. Invalid selectors and graph/configuration errors block execution globally.
+Do not bypass a failed selected producer with its old
+saved output. Unselected saved inputs must be reported as not refreshed this run.
+
+Use the same entry point with `-ShowStatus`, `-ResumeRun <RunId> -RefreshSelected`,
+or `-StopMode AfterCurrent|AfterBatch|Now`. Status identifies interrupted owners;
+do not force-resume an uncertain save. Use its separate `RunLogs/BatchRefresh`
+records, not the legacy current-status file, when reporting the new runner.
+
+New runs print their readable `coordinator.log` path and each file's start/result.
+Use that log, `-ShowStatus`, and the per-job `refresh.log` for monitoring. JSON
+publication retries transient Windows access/sharing denials for up to 30 seconds;
+state is written on changes and a 15-second heartbeat. Do not hold raw JSON open
+in a viewer that prevents replacement, bypass workbook locks, or treat the
+validation-only message as evidence that a subsequently requested run never started.
+
+Inspect `coordinator-error-*.json` for the original coordinator exception.
+Coordinator failures return exit 1; they are not operator stops. Shutdown must
+preserve workers with confirmed save/close receipts as completed, including
+their output stamp and finish/exit records. Uncertain saves still need inspection.
+If a `state-recovery-*.json` file exists, final state publication failed and
+`state.json` may be stale. Resume is blocked: inspect the recovery evidence and
+original workbooks, then obtain an explicit targeted-run instruction. Never edit
+the ledger to force success or automatically adopt a prepared `.tmp` replacement.
+Old records lacking coordinator diagnostics cannot establish which application
+caused a status-file denial; do not attribute one to the viewer or Git without
+evidence. Engine changes invalidate older run fingerprints.
+
+External-file-user detection is not proof that Excel attempted or failed a save.
+The hardened worker waits up to 60 seconds for external users before opening and
+saving, with stop-now and the overall deadline enforced. A narrow exception allows
+verified installed Git processes running explicitly allowlisted read-only
+working-tree commands. PID and creation time, executable path and command options
+must all be verified. Git write commands, unknown commands/options, other external
+applications and unavailable process information still wait or block. This does
+not bypass OS sharing/access denials, Excel lock files or verified-save checks.
+Never kill or suspend another application's process to clear a check.
+
+Each observed external user produces a `FILE USER` diagnostic with PID, creation
+time, executable, redacted command, parent application when available, target and
+classification. Worker diagnostics are in that attempt's `refresh.log`. A policy
+rejection explicitly says no save was attempted by that check; an actual Excel
+save error is reported separately. The original worker error also appears in
+batch completion records.
+
+Workers capture target size/modification time before opening and recheck after
+opening and immediately before saving. Expanded batches also freeze their
+declared input metadata at dispatch and check it before opening, before saving
+and after saving. Changed or missing files fail the job; an input change found
+after Save makes the outcome require inspection, not automatic retry. Legacy
+workers have the target check; input checks require an explicit input snapshot.
+These are metadata checks, not workbook-content comparison or atomic protection
+against arbitrary external writers. Keep workbook-changing Git operations out of
+an active run.
+
+Batch pre-dispatch allows 15 seconds; validation-only remains read-only and
+immediate. Exact workbook identity may settle for up to 15 seconds, but a wrong
+path, read-only workbook or permanently missing identity still blocks execution.
+The allowlist and optional longer-term Git/execution separation are documented in
+the batch runner plan. No Git suspension or external runtime root is configured
+automatically. Do not untrack workbooks, move them, alter repository-wide settings
+or substitute runtime copies implicitly.
+
+After changes, run `scripts/test-batch-refresh-runner.ps1` and
+`scripts/test-batch-runner-recovery.ps1` without Excel, the
+existing safety/mock suites, then the legacy smoke checks and new validation.
+For file-access or workbook-identity guards, also run
+`scripts/test-runner-file-access.ps1` using synthetic data only.
+For Git classification or refresh-wide metadata checks, run
+`scripts/test-git-aware-refresh.ps1`. Its optional `-LiveProcessChecks` exercises
+real Windows Git process identification and real Git reads of disposable data
+alongside serial/seven-batch simulated runs. File-user sightings are injected in
+that test; it is not a live Excel save or end-to-end Restart Manager trial.
+For menu/launcher changes, also run `scripts/test-batch-runner-launcher.ps1`;
+it verifies explicit C1/C2 Unit1 dispatch, validation-only behaviour, successful and
+failed menu hold-open handling, and run-exclusion release before waiting, in a
+disposable configuration with mock dispatch and Excel disabled.
+Report which checks passed and any access/approval blockers. Keep approved
+Mermaid styling and role expansion unchanged.
+
 ## Natural-language command contract
 
 Interpret the user's concise requests as follows:

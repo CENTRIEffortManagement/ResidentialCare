@@ -22,7 +22,9 @@ param(
 
     [string] $StopRequestPath = $null,
 
-    [string] $WorkerStatePath = $null
+    [string] $WorkerStatePath = $null,
+
+    [string] $InputSnapshotPath = $null
 )
 
 Set-StrictMode -Version Latest
@@ -320,14 +322,17 @@ try {
         throw "Workbook appears open in Excel because a temporary lock file exists: $resolvedWorkbookPath. ResidentialCare All Units Refresh safe mode will not close Excel processes."
     }
 
+    Set-RefreshPhase 'WaitingToOpen'
+    Wait-RefreshFileAccess -Path $resolvedWorkbookPath
     if (-not (Test-WorkbookWritable -Path $resolvedWorkbookPath)) {
         throw "Workbook is not writable for refresh: $resolvedWorkbookPath. ResidentialCare All Units Refresh safe mode will not close Excel processes."
     }
 
     Assert-NotStopNowRequested
 
-    Assert-NoExternalFileUsers -Path $resolvedWorkbookPath
     $preExistingExcelIds = @(Get-Process -Name EXCEL -ErrorAction SilentlyContinue | ForEach-Object { $_.Id })
+    $fileSnapshot = New-RefreshFileSnapshot -Path $resolvedWorkbookPath -InputSnapshotPath $InputSnapshotPath
+    $script:RefreshState.fileSnapshot = $fileSnapshot
     Set-RefreshPhase 'CreatingExcel'
     Write-Log "Starting a clean Excel instance."
     $excel = New-Object -ComObject Excel.Application
@@ -339,10 +344,8 @@ try {
     Set-RefreshPhase 'Opening'
     Write-Log "Opening workbook."
     $workbook = $excel.Workbooks.Open($resolvedWorkbookPath)
-    if ($workbook.ReadOnly) { throw 'Excel opened the selected workbook read-only. Refusing refresh or Save As.' }
-    if (-not ([IO.Path]::GetFullPath($workbook.FullName).Equals($resolvedWorkbookPath, [StringComparison]::OrdinalIgnoreCase))) {
-        throw 'Excel opened a different workbook path than requested.'
-    }
+    Wait-RefreshWorkbookIdentity -Workbook $workbook -ExpectedPath $resolvedWorkbookPath
+    Assert-RefreshFileSnapshot $fileSnapshot
     Write-Log "Workbook opened. Waiting $DefaultOpenSettleSeconds second(s) for Excel to settle."
     Start-ResponsiveSleep -Seconds $DefaultOpenSettleSeconds
 
@@ -370,15 +373,16 @@ try {
     Restore-WorkbookBackgroundRefresh -Settings $backgroundRefreshSettings
     $backgroundRefreshSettings = @()
     if ($workbook.ReadOnly) { throw 'Workbook became read-only before save.' }
-    Assert-NoExternalFileUsers -Path $resolvedWorkbookPath -AllowedProcessId ([int] $script:RefreshState.excel.id)
+    Set-RefreshPhase 'WaitingToSave'
+    Wait-RefreshFileAccess -Path $resolvedWorkbookPath -AllowedProcessId ([int] $script:RefreshState.excel.id)
+    Assert-RefreshFileSnapshot $fileSnapshot
     Set-RefreshPhase 'Saving'
     Write-Log "Saving workbook."
     $workbook.Save()
     Assert-NotStopNowRequested
     if (-not $workbook.Saved) { throw 'Excel returned from Save without confirming the workbook is saved.' }
-    if (-not ([IO.Path]::GetFullPath($workbook.FullName).Equals($resolvedWorkbookPath, [StringComparison]::OrdinalIgnoreCase))) {
-        throw 'Workbook path changed during save.'
-    }
+    Assert-RefreshFileSnapshot $fileSnapshot -AfterSave
+    Wait-RefreshWorkbookIdentity -Workbook $workbook -ExpectedPath $resolvedWorkbookPath
     $script:RefreshState.saved = $true
     Set-RefreshPhase 'Saved'
     Write-Log "Workbook saved."
@@ -400,6 +404,8 @@ try {
 }
 catch {
     $script:PrimaryError = $_.Exception.Message
+    $script:RefreshState.error = @{ Phase = $script:RefreshState.phase; Message = $script:PrimaryError }
+    try { Write-RefreshWorkerState } catch { Write-Log "Could not persist original worker error: $($_.Exception.Message)" 'WARN' }
     if ($script:StopRequested -or (Test-StopNowRequested)) {
         $script:StopRequested = $true
         $script:FinalStatus = "Stopped"

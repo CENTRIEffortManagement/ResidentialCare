@@ -113,10 +113,13 @@ foreach ($path in $allPaths) { Write-Host $path }
 if ($ValidateOnly) { exit 0 }
 
 $lockStream = $null
+$batchGateLease = $null
+. (Join-Path $PSScriptRoot '../../runner/src/RefreshRunGate.ps1')
 $processes = @{}
 $runDirectory = $null
 $coordinatorLog = $null
 try {
+    if (-not $MockWorkers) { $batchGateLease = Enter-RefreshRunGate -DateRoot (Find-RefreshDateRoot $unitsRoot) }
     $lockStream = [IO.File]::Open($parallelLockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
     if (-not $RunId) { $RunId = (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 6) }
     $runDirectory = Join-Path $logRoot $RunId
@@ -190,6 +193,7 @@ try {
     exit $exitCode
 }
 finally {
+    if ($null -ne $batchGateLease) { $batchGateLease.Dispose() }
     foreach ($process in @($processes.Values)) { if ($null -ne $process) { $process.Dispose() } }
     if ($null -ne $lockStream) { $lockStream.Dispose() }
     if ($runDirectory -and (Test-Path -LiteralPath $currentRunPath)) {

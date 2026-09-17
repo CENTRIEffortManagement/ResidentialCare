@@ -21,6 +21,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'src/RefreshRunGate.ps1')
 
 $script:WorkflowName = "ResidentialCare Date Refresh"
 $script:LogFile = $null
@@ -835,12 +836,14 @@ function Invoke-RefreshSelection {
     $selection = Resolve-GlobalSelection -StartSequence $StartSequence -EndSequence $EndSequence -StartWorkbook $StartWorkbook
     $lockPath = Join-Path $runLogsPath "ResidentialCareRefresh.lock"
     Acquire-DateRunLock -LockPath $lockPath
+    $batchGateLease = $null
 
     $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $script:LogFile = Join-Path $runLogsPath ("ResidentialCareRefresh-{0}.log" -f $timestamp)
     $script:StatusFile = Join-Path $runLogsPath "current-status.txt"
 
     try {
+        $batchGateLease = Enter-RefreshRunGate -DateRoot $dateRoot
         if (Test-Path -LiteralPath $stopRequestPath -PathType Leaf) {
             Remove-Item -LiteralPath $stopRequestPath -Force
         }
@@ -897,6 +900,7 @@ function Invoke-RefreshSelection {
     }
     finally {
         Release-DateRunLock
+        if ($null -ne $batchGateLease) { $batchGateLease.Dispose() }
     }
 }
 

@@ -1,5 +1,7 @@
 # Shared by the standalone and integrated all-units refresh engines.
 # The supervisor never calls Excel COM: deadlines remain enforceable during Save/Open/Quit.
+. (Join-Path $PSScriptRoot 'RefreshJson.ps1')
+. (Join-Path $PSScriptRoot 'RefreshGitAccess.ps1')
 function Get-RefreshFileUsers {
     param([string] $Path)
     if (-not ('ResidentialCare.FileUsers' -as [type])) {
@@ -45,11 +47,129 @@ namespace ResidentialCare {
 }
 
 function Assert-NoExternalFileUsers {
-    param([string] $Path, [int] $AllowedProcessId = 0)
-    $blockers = @(Get-RefreshFileUsers $Path | Where-Object { $_.Process.Id -ne $AllowedProcessId })
-    if ($blockers.Count -gt 0) {
+    param([string] $Path, [int] $AllowedProcessId = 0,
+        [ValidateRange(0, 600)] [double] $WaitSeconds = 0,
+        [ValidateRange(1, 1000)] [int] $PollMilliseconds = 500,
+        [scriptblock] $CheckStop = {}, [scriptblock] $OnWait = {},
+        [scriptblock] $OnDecision = { param($decision) Write-RefreshAccessDecision $decision })
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    $lastNotice = -5.0
+    $notices = @{}
+    while ($true) {
+        & $CheckStop
+        # Resource use is evidence, not proof of a blocking OS lock. Only
+        # verified read-only Git is exempted; unidentified processes still wait.
+        $blockers = @(foreach ($user in @(Get-RefreshFileUsers $Path)) {
+            if ($user.Process.Id -eq $AllowedProcessId) { continue }
+            $decision = Get-RefreshFileUserDecision $user
+            $decision | Add-Member NoteProperty Target $Path
+            $key = $decision | ConvertTo-Json -Compress
+            if (-not $notices.ContainsKey($key)) { & $OnDecision $decision; $notices[$key] = $true }
+            if (-not $decision.Allowed) { $user }
+        })
+        if ($blockers.Count -eq 0) { return }
         $description = ($blockers | ForEach-Object { "$($_.AppName) (PID $($_.Process.Id))" }) -join ', '
-        throw "Workbook is in use by $description. Close/disconnect those applications before refresh: $Path"
+        if ($timer.Elapsed.TotalSeconds -ge $WaitSeconds) {
+            throw "External-user policy blocked access: $description after waiting $WaitSeconds second(s). No save attempted by this check; this is not an Excel save error. Close/disconnect those applications before retrying: $Path"
+        }
+        if (($timer.Elapsed.TotalSeconds - $lastNotice) -ge 5) {
+            & $OnWait $description
+            $lastNotice = $timer.Elapsed.TotalSeconds
+        }
+        Start-Sleep -Milliseconds $PollMilliseconds
+    }
+}
+
+function Get-RefreshTargetStamp {
+    param([string] $Path)
+    $item = Get-Item -LiteralPath $Path -ErrorAction Stop
+    return "$($item.Length):$($item.LastWriteTimeUtc.Ticks)"
+}
+
+function Wait-RefreshFileAccess {
+    param([string] $Path, [int] $AllowedProcessId = 0,
+        [ValidateRange(0, 600)] [double] $WaitSeconds = 60)
+    $originalStamp = Get-RefreshTargetStamp $Path
+    Assert-NoExternalFileUsers -Path $Path -AllowedProcessId $AllowedProcessId -WaitSeconds $WaitSeconds `
+        -CheckStop { Assert-NotStopNowRequested } -OnWait {
+            param($description)
+            $script:RefreshState.detail = "Waiting for file access: $description"
+            Write-RefreshWorkerState
+            Write-CurrentStatus -State 'RUNNING' -Message $script:RefreshState.detail
+            Write-Log "$($script:RefreshState.detail). Will recheck; no save has been attempted." 'WARN'
+        }
+    Assert-NotStopNowRequested
+    if ((Get-RefreshTargetStamp $Path) -ne $originalStamp) {
+        throw "Workbook changed while waiting for external file users; refusing to overwrite it: $Path"
+    }
+    $script:RefreshState.detail = $null
+    Write-RefreshWorkerState
+    Write-Log 'File access policy passed; any permitted Git readers were recorded. OS access and save checks remain enforced.'
+}
+
+function New-RefreshFileSnapshot {
+    param([string] $Path, [string] $InputSnapshotPath = '')
+    $snapshot = @{ Target = [IO.Path]::GetFullPath($Path); TargetStamp = (Get-RefreshTargetStamp $Path); Inputs = @{} }
+    if ($InputSnapshotPath) {
+        $source = Read-RefreshWorkerState $InputSnapshotPath
+        if ($source.SchemaVersion -ne 1 -or -not $source.Target.Equals($snapshot.Target, [StringComparison]::OrdinalIgnoreCase)) { throw 'Input snapshot does not belong to this workbook.' }
+        foreach ($entry in $source.Inputs.PSObject.Properties) {
+            if (-not [IO.Path]::IsPathRooted($entry.Name)) { throw 'Input snapshot paths must be fully resolved.' }
+            $snapshot.Inputs[$entry.Name] = [string] $entry.Value
+        }
+    }
+    Assert-RefreshFileSnapshot $snapshot
+    return $snapshot
+}
+
+function Assert-RefreshFileSnapshot {
+    param([hashtable] $Snapshot, [switch] $AfterSave)
+    if (-not $AfterSave -and (Get-RefreshTargetStamp $Snapshot.Target) -ne $Snapshot.TargetStamp) {
+        throw "Target workbook changed since pre-open capture; refusing to overwrite it: $($Snapshot.Target)"
+    }
+    foreach ($path in $Snapshot.Inputs.Keys) {
+        if ((Get-RefreshTargetStamp $path) -ne $Snapshot.Inputs[$path]) {
+            throw "Declared input changed since dispatch: $path. The refresh cannot be accepted."
+        }
+    }
+}
+
+function Wait-RefreshWorkbookIdentity {
+    param($Workbook, [string] $ExpectedPath,
+        [ValidateRange(0, 120)] [double] $WaitSeconds = 15,
+        [ValidateRange(1, 1000)] [int] $PollMilliseconds = 250)
+    $expected = [IO.Path]::GetFullPath($ExpectedPath)
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    $lastNotice = -5.0
+    while ($true) {
+        Assert-NotStopNowRequested
+        $name = $null; $readOnly = $null; $detail = 'Excel has not returned a usable workbook object/path.'
+        try {
+            if ($null -ne $Workbook) {
+                $name = [string] $Workbook.FullName
+                $readOnly = $Workbook.ReadOnly
+            }
+        } catch { $detail = "Workbook identity is temporarily unavailable: $($_.Exception.Message)" }
+        if (-not [string]::IsNullOrWhiteSpace($name)) {
+            # A nonblank wrong identity is a hard failure, not a reason to retry,
+            # substitute another workbook, rename it or use Save As.
+            if (-not [IO.Path]::IsPathRooted($name) -or
+                -not ([IO.Path]::GetFullPath($name).Equals($expected, [StringComparison]::OrdinalIgnoreCase))) {
+                throw "Excel workbook identity mismatch. Expected '$expected'; returned '$name'. No refresh or save is permitted."
+            }
+            if ($null -ne $readOnly) {
+                if ([bool] $readOnly) { throw 'Excel opened the selected workbook read-only. Refusing refresh or Save As.' }
+                return
+            }
+        }
+        if ($timer.Elapsed.TotalSeconds -ge $WaitSeconds) {
+            throw "Excel did not confirm the requested workbook path within $WaitSeconds second(s): $expected. $detail No refresh or save was permitted."
+        }
+        if (($timer.Elapsed.TotalSeconds - $lastNotice) -ge 5) {
+            Write-Log "Waiting for Excel to confirm the opened workbook path: $expected. $detail" 'WARN'
+            $lastNotice = $timer.Elapsed.TotalSeconds
+        }
+        Start-Sleep -Milliseconds $PollMilliseconds
     }
 }
 
@@ -169,9 +289,7 @@ function Restore-WorkbookBackgroundRefresh {
 
 function Write-RefreshWorkerState {
     $script:RefreshState.updatedAt = (Get-Date).ToString('o')
-    $temporaryState = $WorkerStatePath + '.tmp'
-    [IO.File]::WriteAllText($temporaryState, ($script:RefreshState | ConvertTo-Json -Depth 5))
-    [IO.File]::Move($temporaryState, $WorkerStatePath, $true)
+    Write-RefreshJson $WorkerStatePath $script:RefreshState -Depth 5
 }
 
 function Set-RefreshPhase {
