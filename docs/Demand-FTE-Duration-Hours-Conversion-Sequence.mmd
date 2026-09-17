@@ -1,0 +1,27 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#ffffff","primaryTextColor":"#333333","primaryBorderColor":"#777777","clusterBkg":"#f7f7f7","clusterBorder":"#999999","titleColor":"#333333"}}}%%
+flowchart TD
+    manual["Demand-MasterRoster<br/>Manual Read.xlsx"]
+    extract["2-DemandExtract.xlsx"]
+    demandintervals["DemandIntervals.xlsx"]
+    demand["Demand.xlsx<br/><b>ShiftEffort !!</b><br/><b>ShiftDurations!!</b>"]
+    settings["Settings Data.xlsx"]
+    intervals["Intervals.xlsx"]
+
+    manual ==>|"<b>MinuteWorkersFTE_TABLE</b><br/><b>MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE</b><br/><b>MinuteWorkersFTE_CHECK</b><br/>FTE = (WeekdayShiftTargetMinutes / Direct Care % / 60) / ShiftDuration<br/>RedistributedRosterFTE = matched FTE<br/>[target standard FTE; meals excluded]"| extract
+    extract ==>|"<b>ShiftUnitDemandHRS</b><br/>DemandHRS = RedistributedRosterFTE × ShiftDuration<br/>DurationOfShifts = hours between StartTime and EndTime<br/>[no meal deducted]<br/>DemandFTE = DemandHRS / DurationOfShifts"| demandintervals
+    demandintervals ==>|"<b>Table_ShiftDemandUnitINTERVAL</b><br/>EffectiveIntervalAttendance = DemandFTE<br/>[direct copy; IntervalEffectiveRatio is not applied;<br/>no additional meal deduction]<br/>DemandEffort = Duration × 24 × EffectiveIntervalAttendance<br/>[shift demand split across intervals]"| demand
+
+    settings -.->|"ShiftDuration and DurationOfShifts<br/>[standard hours exclude meals; elapsed shift duration does not]"| extract
+    extract -.->|"StartTime and EndTime<br/>[demand shift boundaries]"| intervals
+    intervals -.->|"<b>RoleIntervalID</b> and <b>Intervals</b><br/>Duration = EndPrecise − StartInterval<br/>[interval width stored in days]"| demandintervals
+    intervals -.->|"<b>IntervalsList</b><br/>[timeline for the interval view]"| demand
+
+    demand --> result["<b>ShiftDemandHCAverageANACC</b><br/>UnitIntervalEffort = EffectiveIntervalAttendance × Duration<br/>UnitShiftEffort = SUM UnitIntervalEffort<br/>ShiftDemandHCAverage = UnitShiftEffort / summed Duration<br/>[demand returned to shift-period grain]"]
+
+    classDef main fill:#e8f1ff,stroke:#527ab7,color:#173a68;
+    classDef support fill:#fff4cc,stroke:#b28a18,color:#4c3a00;
+    classDef output fill:#e7f6e7,stroke:#438443,color:#153f15;
+
+    class manual,extract,demandintervals,demand main;
+    class settings,intervals support;
+    class result output;

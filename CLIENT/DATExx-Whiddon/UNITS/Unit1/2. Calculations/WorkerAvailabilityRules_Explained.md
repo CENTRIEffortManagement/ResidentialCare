@@ -229,4 +229,3 @@ let
 in
     WorkerRules
 ```
- I cover on three minutes cold to the list, add it to the list. Yeah, d'ar I cover on three minutes cold to the list, add it to the list. Yeah, d'art for low I cover on three minutes cold to the list, add it to the list. Yeah, d'art for low one

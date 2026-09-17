@@ -292,7 +292,7 @@ let
             NoOverlapChecks, "Disjoint",
             each List.AllTrue([NoOverlapChecks]), type logical
         )
-    in I cover on three minutes cold to the list, add it to the list. Yeah
+    in
         Table.Buffer(Disjoint)
 in
     DisjointChecks
