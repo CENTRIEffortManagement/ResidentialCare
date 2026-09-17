@@ -11,13 +11,15 @@
 # Logs and local diagnostics
 *.log
 logs/
-**/RunLogs/refresh-worker-*.json
-**/RunLogs/BatchRefresh/
-**/RunLogs/ArchivedBenchmarks/
-**/RunLogs/BatchRefresh.gate
-**/RunLogs/BatchCoordinator.gate
+**/RunLogs/
 **/audit/*
 !**/audit/.gitkeep
+
+# Local parallel-refresh test workbook copies (keep test scripts tracked)
+/CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/TestRole[1-4]/
+
+# Tableau recovery files
+*.twbr
 
 # Local tool configuration and generated symbols
 .vscode/excel-pq-symbols/
