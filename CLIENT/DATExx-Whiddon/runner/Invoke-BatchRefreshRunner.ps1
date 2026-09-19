@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [ValidateSet('Current', 'ParallelInputs-Unit1Priority')] [string] $SequenceProfile = 'Current',
+    [ValidateSet('Current', 'AIN2')] [string] $RoleProfile = 'Current',
     [switch] $ExportGantt, [string] $ReportRun,
     [switch] $RunAll,
     [string[]] $Units, [string[]] $Batches, [string[]] $Roles, [string[]] $Workbooks,
@@ -30,6 +31,7 @@ function Show-ResolvedBatchPlan {
     param($Plan, $Catalogue)
     Write-Host "Selected: $($Plan.Jobs.Count) files in $(@($Plan.Jobs | Group-Object BatchKey).Count) batches."
     Write-Host "Sequence profile: $($Plan.SequenceProfile)"
+    Write-Host "Role profile: $($Plan.RoleProfile)"
     Write-Host "Parallel batches: $MaxParallelBatches (maximum 7); files within each batch are sequential."
     Write-Host "Catalogue fingerprint: $($Catalogue.Fingerprint)"
     if (@($Plan.Jobs | Where-Object Unit -eq 'Org').Count) {
@@ -80,20 +82,20 @@ try {
         switch ($menuOption) {
             '1' { $RunAll = $true }
             '2' {
-                $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile
+                $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile $RoleProfile
                 foreach ($line in (Get-BatchPickList $pickCatalogue)) { Write-Host $line }
                 $Batches = @(Read-Host 'Batch IDs, comma-separated')
                 $Units = @(Read-UnitSelection $pickCatalogue -BlankMeansAll)
                 $RefreshSelected = $true
             }
             '3' {
-                $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile
+                $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile $RoleProfile
                 $Units = @(Read-UnitSelection $pickCatalogue)
                 $RunAll = $true
             }
             '4' {
                 $Roles = @(Read-Host 'Saved role names, comma-separated')
-                $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile
+                $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile $RoleProfile
                 $Units = @(Read-UnitSelection $pickCatalogue -BlankMeansAll)
                 $RefreshSelected = $true
             }
@@ -149,12 +151,15 @@ try {
         $savedProfile = if ($savedProfilePlan.PSObject.Properties['SequenceProfile']) { $savedProfilePlan.SequenceProfile } else { 'Current' }
         if ($PSBoundParameters.ContainsKey('SequenceProfile') -and $SequenceProfile -ne $savedProfile) { throw 'Explicit sequence profile conflicts with the saved run.' }
         $SequenceProfile = $savedProfile
+        $savedRoleProfile = if ($savedProfilePlan.PSObject.Properties['RoleProfile']) { $savedProfilePlan.RoleProfile } else { 'Current' }
+        if ($PSBoundParameters.ContainsKey('RoleProfile') -and $RoleProfile -ne $savedRoleProfile) { throw 'Explicit role profile conflicts with the saved run.' }
+        $RoleProfile = $savedRoleProfile
         if ($savedProfilePlan.PSObject.Properties['MaxParallelBatches']) {
             if ($PSBoundParameters.ContainsKey('MaxParallelBatches') -and $MaxParallelBatches -ne $savedProfilePlan.MaxParallelBatches) { throw 'Resume must preserve the saved slot limit.' }
             $MaxParallelBatches = $savedProfilePlan.MaxParallelBatches
         }
     }
-    $catalogue = Get-BatchCatalogue $repoRoot $SequenceProfile
+    $catalogue = Get-BatchCatalogue $repoRoot $SequenceProfile $RoleProfile
     if ($ResumeRun) {
         if ($ResumeRun -notmatch '^[a-zA-Z0-9-]+$') { throw 'Invalid run ID.' }
         if ($RunAll -or $Units -or $Batches -or $Roles -or $Workbooks -or $StartAtWorkbook -or $StartAtSequence -or $EndAtSequence -or $IncludeOrg -or $IncludeDependencies) { throw 'Resume uses its immutable saved selection; do not supply a new selection.' }

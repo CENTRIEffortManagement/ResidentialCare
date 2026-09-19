@@ -38,7 +38,8 @@ function Expand-BatchArguments {
 
 function Get-BatchCatalogue {
     param([string] $RepoRoot,
-        [ValidateSet('Current', 'ParallelInputs-Unit1Priority')] [string] $SequenceProfile = 'Current')
+        [ValidateSet('Current', 'ParallelInputs-Unit1Priority')] [string] $SequenceProfile = 'Current',
+        [ValidateSet('Current', 'AIN2')] [string] $RoleProfile = 'Current')
     $project = Get-Content -LiteralPath (Join-Path $RepoRoot 'pq.project.json') -Raw | ConvertFrom-Json
     $config = $project.batchRunner
     $dateRoot = Resolve-BatchPath $RepoRoot $config.dateRoot
@@ -49,7 +50,11 @@ function Get-BatchCatalogue {
     }
     # Keep the historical project key/file path, now used only for batch settings.
     $settingsPath = Resolve-BatchPath $RepoRoot $config.approval
-    $profilePath = Join-Path $dateRoot 'runner/ResidentialCare-ClientRunProfile.psd1'
+    $profilePath = if ($config.PSObject.Properties['roleProfiles']) {
+        Resolve-BatchPath $RepoRoot $config.roleProfiles.$RoleProfile
+    } elseif ($RoleProfile -eq 'Current') {
+        Join-Path $dateRoot 'runner/ResidentialCare-ClientRunProfile.psd1'
+    } else { throw 'AIN2 role profile is not configured.' }
     $unitPath = Join-Path $dateRoot 'runner/ResidentialCare-UnitWorkbookSequence.psd1'
     $orgPath = Join-Path $dateRoot 'runner/ResidentialCare-OrgWorkbookSequence.psd1'
     $catalogue = Import-PowerShellDataFile -LiteralPath $cataloguePath
@@ -61,7 +66,8 @@ function Get-BatchCatalogue {
     $unitNames = @(Get-ChildItem -LiteralPath (Join-Path $dateRoot 'UNITS') -Directory |
         Where-Object Name -match '^Unit[0-9]+$' | Sort-Object { [int] ($_.Name -replace '^Unit', '') } | ForEach-Object Name)
     if ($unitNames.Count -eq 0) { throw 'No Unit folders found.' }
-    $roles = @($profile.Roles | Where-Object Enabled | ForEach-Object Folder)
+    $enabledRoleEntries = @($profile.Roles | Where-Object Enabled)
+    $roles = @($enabledRoleEntries | ForEach-Object Folder)
     foreach ($entry in $profile.Roles) {
         if ($entry.Enabled -isnot [bool] -or $entry.Folder -isnot [string] -or [string]::IsNullOrWhiteSpace($entry.Folder)) { throw 'Each role requires a folder name and a boolean Enabled value.' }
     }
@@ -69,9 +75,22 @@ function Get-BatchCatalogue {
     foreach ($role in $roles) {
         if ($role -match '[\\/:]' -or $role -in @('.', '..')) { throw "Invalid role folder: $role" }
     }
-    if (@($profile.RoleWorkbookOrder).Count -ne 3) { throw 'Each role batch requires exactly three ordered workbooks.' }
-    foreach ($file in $profile.RoleWorkbookOrder) {
-        if ($file -match '[\\/:]' -or [IO.Path]::GetExtension($file) -ne '.xlsx') { throw "Invalid role workbook filename: $file" }
+    $defaultRoleOrder = if ($profile.ContainsKey('RoleWorkbookOrder')) { @($profile.RoleWorkbookOrder) } else { @() }
+    $roleWorkbookOrders = @{}
+    foreach ($entry in $enabledRoleEntries) {
+        $order = @(if ($entry.ContainsKey('WorkbookOrder')) { @($entry.WorkbookOrder) } else { $defaultRoleOrder })
+        if ($order.Count -eq 0) { throw "Enabled role $($entry.Folder) requires at least one ordered workbook." }
+        if (@($order | Select-Object -Unique).Count -ne $order.Count) { throw "Role $($entry.Folder) contains duplicate workbook names." }
+        foreach ($file in $order) {
+            if ($file -isnot [string] -or $file -match '[\\/:]' -or [IO.Path]::GetExtension($file) -ne '.xlsx') { throw "Invalid role workbook filename: $file" }
+        }
+        $roleWorkbookOrders[$entry.Folder] = $order
+    }
+    $isolatedRoleOnly = $profile.ContainsKey('IsolatedRoleOnly') -and [bool] $profile.IsolatedRoleOnly
+    $allowedUnits = @(if ($isolatedRoleOnly -and $profile.ContainsKey('AllowedUnits')) { @($profile.AllowedUnits) } else { $unitNames })
+    if ($isolatedRoleOnly) {
+        if ($allowedUnits.Count -eq 0) { throw 'An isolated role profile requires at least one AllowedUnits entry.' }
+        foreach ($unit in $allowedUnits) { if ($unit -notin $unitNames) { throw "Isolated role profile Unit not found: $unit" } }
     }
     $orgUnits = @($settings.OrganisationUnits)
     if ($orgUnits.Count -eq 0) { throw 'Declare organisation consumer Units in the batch settings file.' }
@@ -92,7 +111,7 @@ function Get-BatchCatalogue {
                 "$($entry[0].Folder)/$($entry[0].FileName)"
             } else { $spec.Path }
             $dependencies = @($spec.Depends | ForEach-Object {
-                if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$unit/Role:$role/3" } }
+                if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$unit/Role:$role/$(@($roleWorkbookOrders[$role]).Count)" } }
                 else { "$unit/$_" }
             })
             $inputs = if ($spec.ContainsKey('Inputs')) { @($spec.Inputs | ForEach-Object { "UNITS/$unit/$_" }) } else { @() }
@@ -104,12 +123,13 @@ function Get-BatchCatalogue {
         }
         for ($r = 0; $r -lt $roles.Count; $r++) {
             $role = $roles[$r]
-            for ($f = 0; $f -lt 3; $f++) {
+            $workbookOrder = @($roleWorkbookOrders[$role])
+            for ($f = 0; $f -lt $workbookOrder.Count; $f++) {
                 $deps = @($catalogue.RoleDependencies | ForEach-Object { "$unit/$_" })
                 if ($f -gt 0) { $deps += "$unit/Role:$role/$f" }
                 $jobs.Add([pscustomobject]@{
                     Id = "$unit/Role:$role/$($f + 1)"; Unit = $unit; Batch = "C2.$($r + 1)"; BatchKey = "$unit/C2:$role"; Role = $role
-                    RelativePath = "UNITS/$unit/2. Calculations/$role/$($profile.RoleWorkbookOrder[$f])"
+                    RelativePath = "UNITS/$unit/2. Calculations/$role/$($workbookOrder[$f])"
                     Dependencies = $deps; InputPaths = @(); BatchOrder = [array]::IndexOf($catalogue.BatchOrder, 'C2'); RoleOrder = $r; FileOrder = $f
                 })
             }
@@ -154,7 +174,7 @@ function Get-BatchCatalogue {
             $definition = @($catalogue.UnitJobs | Where-Object { "$($job.Unit)/$($_.Id)" -eq $job.Id })[0]
             if ($definition.ContainsKey('ReadJobs')) {
                 $readJobs = @($definition.ReadJobs | ForEach-Object {
-                    if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$($job.Unit)/Role:$role/3" } }
+                    if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$($job.Unit)/Role:$role/$(@($roleWorkbookOrders[$role]).Count)" } }
                     else { "$($job.Unit)/$_" }
                 })
             }
@@ -199,7 +219,8 @@ function Get-BatchCatalogue {
     $fingerprint = Get-BatchFingerprint $files
     return [pscustomobject]@{
         SchemaVersion = 1; DateRoot = $dateRoot; LogRoot = (Resolve-BatchPath $RepoRoot $config.logFolder)
-        SequenceProfile = $SequenceProfile
+        SequenceProfile = $SequenceProfile; RoleProfile = $RoleProfile
+        IsolatedRoleOnly = $isolatedRoleOnly; AllowedUnits = @($allowedUnits)
         Units = $unitNames; Roles = $roles; OrgUnits = $orgUnits; Settings = $settings; Fingerprint = $fingerprint
         BatchTitles = $(if ($catalogue.ContainsKey('BatchTitles')) { $catalogue.BatchTitles } else { @{} })
         Jobs = @($jobs | Sort-Object @{Expression={ if ($_.Unit -eq 'Org') { [int]::MaxValue } else { [int] ($_.Unit -replace '^Unit', '') } }}, BatchOrder, RoleOrder, FileOrder)
@@ -268,6 +289,13 @@ function Select-BatchPlan {
         [switch] $IncludeOrg, [switch] $IncludeDependencies)
     $Units = @(Expand-BatchArguments $Units); $Batches = @(Expand-BatchArguments $Batches)
     $Roles = @(Expand-BatchArguments $Roles); $Workbooks = @(Expand-BatchArguments $Workbooks)
+    if ($Catalogue.IsolatedRoleOnly) {
+        if ($RunAll) { throw 'RunAll is disabled for an isolated role profile.' }
+        if ($IncludeOrg) { throw 'Organisation jobs are disabled for an isolated role profile.' }
+        if ($IncludeDependencies) { throw 'Scheduling production dependencies is disabled for an isolated role profile; they remain read-only inputs.' }
+        if ($StartAtWorkbook -or $StartAtSequence -or $EndAtSequence) { throw 'Legacy range selection is disabled for an isolated role profile.' }
+        if (-not ($Batches.Count -or $Roles.Count -or $Workbooks.Count)) { throw 'Select the isolated role or its exact workbooks explicitly.' }
+    }
     $modes = [int] [bool] $RunAll + [int] [bool] $Batches.Count + [int] [bool] $Workbooks.Count + [int] [bool] $StartAtWorkbook + [int] [bool] ($StartAtSequence -or $EndAtSequence)
     if ($modes -gt 1) { throw 'Choose one selection mode: all, batches, workbooks, start-at-workbook, or sequence range.' }
     if ($Roles.Count -and ($RunAll -or $Workbooks.Count -or $StartAtWorkbook -or $StartAtSequence -or $EndAtSequence)) { throw 'Roles may qualify C2 batches or be selected on their own.' }
@@ -275,10 +303,13 @@ function Select-BatchPlan {
     $explicitUnits = $Units.Count -gt 0
     if ($Units -contains 'All') {
         if ($Units.Count -ne 1) { throw 'Use All alone in the Unit selector.' }
-        $Units = @($Catalogue.Units)
+        $Units = @($Catalogue.AllowedUnits)
     }
-    if (-not $Units.Count) { $Units = @($Catalogue.Units) }
+    if (-not $Units.Count) { $Units = @($Catalogue.AllowedUnits) }
     foreach ($unit in $Units) { if ($unit -notin $Catalogue.Units) { throw "Unknown Unit: $unit" } }
+    if ($Catalogue.IsolatedRoleOnly) {
+        foreach ($unit in $Units) { if ($unit -notin $Catalogue.AllowedUnits) { throw "Unit is outside the isolated role profile: $unit" } }
+    }
     foreach ($role in $Roles) { if ($role -notin $Catalogue.Roles) { throw "Unknown or disabled role: $role" } }
     $eligible = @($Catalogue.Jobs | Where-Object { $_.Unit -in $Units -or $_.Unit -eq 'Org' })
     $selected = @()
@@ -318,6 +349,10 @@ function Select-BatchPlan {
     } else {
         $selected = @($eligible | Where-Object { $_.Unit -ne 'Org' -or (-not $explicitUnits -or $IncludeOrg) })
     }
+    if ($Catalogue.IsolatedRoleOnly) {
+        $disallowed = @($selected | Where-Object { -not $_.Role -or $_.Role -notin $Catalogue.Roles -or $_.Unit -notin $Catalogue.AllowedUnits })
+        if ($disallowed.Count) { throw 'The selection includes jobs outside the isolated role profile.' }
+    }
     if ($IncludeOrg) { $selected += @($Catalogue.Jobs | Where-Object Unit -eq 'Org') }
     $ids = @{}; foreach ($job in $selected) { $ids[$job.Id] = $true }
     if ($IncludeDependencies) {
@@ -332,7 +367,8 @@ function Select-BatchPlan {
     if (-not $selected.Count) { throw 'The selection is empty.' }
     return [pscustomobject]@{
         SchemaVersion = 1; Fingerprint = $Catalogue.Fingerprint; DateRoot = $Catalogue.DateRoot
-        SequenceProfile = $Catalogue.SequenceProfile
+        SequenceProfile = $Catalogue.SequenceProfile; RoleProfile = $Catalogue.RoleProfile
+        IsolatedRoleOnly = $Catalogue.IsolatedRoleOnly
         Roles = $Catalogue.Roles; OrgUnits = $Catalogue.OrgUnits; Jobs = $selected
     }
 }

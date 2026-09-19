@@ -110,6 +110,25 @@ try {
     Assert-True ('Unit1/Intervals' -in $shifts.Dependencies -and 'Unit1/Demand' -notin $shifts.Dependencies) 'A2 waits for Intervals, not all D2'
     $settings = $all.Jobs | Where-Object Id -eq 'Unit1/Settings'
     Assert-True ('Unit1/AllocationInput' -in $settings.Dependencies) 'allocation before settings'
+    $capacity = $all.Jobs | Where-Object Id -eq 'Unit1/Capacity'
+    Assert-True (@('Unit1/Role:AIN/3','Unit1/Role:AINC4/3','Unit1/Role:RN/3' | Where-Object { $_ -notin $capacity.Dependencies }).Count -eq 0) 'production RoleOutputs still use each role terminal workbook'
+
+    $ain2Catalogue = Get-BatchCatalogue $repoRoot Current AIN2
+    $ain2Plan = Select-BatchPlan $ain2Catalogue -Units Unit1 -Roles AIN2
+    Assert-True (($ain2Plan.Jobs.Id -join ',') -eq 'Unit1/Role:AIN2/1,Unit1/Role:AIN2/2') 'isolated AIN2 profile resolves only its ordered A1 and B workbooks'
+    Assert-True ((Split-Path $ain2Plan.Jobs[1].RelativePath -Leaf) -eq 'CapacityDistrib(B)-shifts.xlsx') 'AIN2 terminal workbook is B'
+    $ain2Capacity = $ain2Catalogue.Jobs | Where-Object Id -eq 'Unit1/Capacity'
+    Assert-True ('Unit1/Role:AIN2/2' -in $ain2Capacity.Dependencies -and 'Unit1/Role:AIN2/3' -notin $ain2Capacity.Dependencies) 'RoleOutputs dependency follows the configured AIN2 terminal index'
+    Assert-Throws { Select-BatchPlan $ain2Catalogue -RunAll } 'isolated AIN2 profile rejects RunAll'
+    Assert-Throws { Select-BatchPlan $ain2Catalogue -Units Unit2 -Roles AIN2 } 'isolated AIN2 profile rejects other Units'
+    Assert-Throws { Select-BatchPlan $ain2Catalogue -Units Unit1 -Batches U4 } 'isolated AIN2 profile rejects production Capacity jobs'
+    Assert-Throws { Select-BatchPlan $ain2Catalogue -Units Unit1 -Roles AIN2 -IncludeDependencies } 'isolated AIN2 profile cannot schedule production dependencies'
+    Assert-Throws { Select-BatchPlan $ain2Catalogue -Units Unit1 -Roles AIN2 -IncludeOrg } 'isolated AIN2 profile rejects organisation jobs'
+    $preparedProfile = Import-PowerShellDataFile (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner/ResidentialCare-ClientRunProfile-AINTwoFile-Prepared.psd1')
+    $preparedAIN = @($preparedProfile.Roles | Where-Object Folder -eq 'AIN')[0]
+    $preparedThreeFileRoles = @($preparedProfile.Roles | Where-Object Folder -in @('AINC4', 'RN'))
+    Assert-True (@($preparedAIN.WorkbookOrder).Count -eq 2 -and $preparedAIN.WorkbookOrder[-1] -eq 'CapacityDistrib(B)-shifts.xlsx') 'prepared promotion profile makes B the AIN terminal workbook'
+    Assert-True (@($preparedThreeFileRoles | Where-Object { @($_.WorkbookOrder).Count -ne 3 }).Count -eq 0) 'prepared promotion profile leaves AINC4 and RN on three workbooks'
 
     # A disposable configuration fixture tests dynamic discovery without touching
     # any workbook or the user's saved production role profile.
@@ -135,6 +154,14 @@ try {
         Assert-True (@($dynamicPicks | Where-Object { $_ -like "C2.$count - Role capacity - Role$count *" }).Count -eq 1) 'batch picker expands current enabled roles'
         Assert-True (@($dynamicPicks | Where-Object { $_ -match 'Disabled|TestRole' }).Count -eq 0) 'batch picker excludes disabled or unapproved roles'
     }
+    $content = "@{ SchemaVersion = 1; Roles = @(@{ Folder = 'Role1'; Enabled = `$true; WorkbookOrder = @('CapacityDistrib(A.1)-shifts.xlsx','CapacityDistrib(B)-shifts.xlsx') }, @{ Folder = 'Role2'; Enabled = `$true }); RoleWorkbookOrder = @('CapacityDistrib(A.1)-shifts.xlsx','CapacityDistrib(A.2)-shifts.xlsx','CapacityDistrib(B)-shifts.xlsx') }"
+    [IO.File]::WriteAllText($profilePath, $content)
+    $perRole = Get-BatchCatalogue $fixtureRoot
+    $role1Jobs = @($perRole.Jobs | Where-Object Role -eq 'Role1')
+    $role2Jobs = @($perRole.Jobs | Where-Object Role -eq 'Role2')
+    Assert-True ($role1Jobs.Count -eq 4 -and $role2Jobs.Count -eq 6) 'per-role workbook order overrides the shared default across two Units'
+    $fixtureCapacity = $perRole.Jobs | Where-Object Id -eq 'Unit1/Capacity'
+    Assert-True ('Unit1/Role:Role1/2' -in $fixtureCapacity.Dependencies -and 'Unit1/Role:Role2/3' -in $fixtureCapacity.Dependencies) 'mixed role lengths resolve their own terminal dependencies'
     $missing = @(Test-BatchPlan (Select-BatchPlan $dynamic -Units Unit1 -Batches A1))
     Assert-True ($missing.Count -gt 0) 'missing files fail validation without Excel'
     $settingsPath = Join-Path $fixtureDate 'runner/ResidentialCare-BatchApproval.psd1'
