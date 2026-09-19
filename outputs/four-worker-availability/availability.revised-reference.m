@@ -1,17 +1,173 @@
-// Power Query from: Capacity-ShiftAvailability.xlsx
-// Pathname: CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Capacity-ShiftAvailability.xlsx
-// Source status: authoritative .m; revised availability rule merged 2026-09-19.
+// Capacity-ShiftAvailability: approved DATExx-Whiddon source.
+// Rules revised 2026-09-12: UNAVAIL intervals, recognised daily leave, residual effective hours.
 
 section Section1;
 
+// Query: UnitL1PathTABLE
+// Purpose: Resolve the configured workbook location through the existing CentriSyncPaths mapping.
+shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
+let
+    FilePathUrl =
+    let
+        Source = try Excel.CurrentWorkbook(){[Name="FilePAthUrl"]}[Content] otherwise Excel.CurrentWorkbook(){[Name="FilePathUrl"]}[Content],
+        FirstColumn = Table.ColumnNames(Source){0},
+        RenamedColumns = if FirstColumn = "FilePath" then Source else Table.RenameColumns(Source, {{FirstColumn, "FilePath"}}, MissingField.Ignore),
+        ReplacedValue = Table.TransformColumns(RenamedColumns, {{"FilePath", each Text.Replace(Text.From(_), "/", "\"), type text}}),
+        BufferedTable = Table.Buffer(ReplacedValue)
+    in
+        BufferedTable,
+
+    RawFilePath = FilePathUrl{0}[FilePath],
+    CentriSyncPaths_Source = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
+    CentriSyncPaths_Table = CentriSyncPaths_Source{[Item="CentriSyncPaths",Kind="Table"]}[Data],
+    CentriSyncPaths_ChangedType = Table.TransformColumnTypes(Table.SelectColumns(CentriSyncPaths_Table, {"SharepointRootUrl", "SyncedFolderRootPath"}), {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}),
+    NormalizePath = (value as nullable text) as nullable text =>
+        let
+            TextValue = if value = null then null else Text.From(value),
+            SlashNormalized = if TextValue = null then null else Text.Replace(TextValue, "/", "\"),
+            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
+        in
+            Trimmed,
+    FilePath = NormalizePath(RawFilePath),
+    CentriSyncPaths_Normalized = Table.TransformColumns(
+        CentriSyncPaths_ChangedType,
+        {
+            {"SharepointRootUrl", each NormalizePath(_), type text},
+            {"SyncedFolderRootPath", each NormalizePath(_), type text}
+        }
+    ),
+    SharePointCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SharepointRootUrl], type text),
+    SharePointDocumentsCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each if [SharepointRootUrl] = null then null else [SharepointRootUrl] & "\Shared Documents", type text),
+    LocalCandidates = Table.AddColumn(CentriSyncPaths_Normalized, "MatchRoot", each [SyncedFolderRootPath], type text),
+    MatchCandidates = Table.Combine({SharePointCandidates, SharePointDocumentsCandidates, LocalCandidates}),
+    MatchCandidates_WithLength = Table.AddColumn(MatchCandidates, "MatchRootLength", each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]), Int64.Type),
+    MatchingRows = Table.SelectRows(
+        MatchCandidates_WithLength,
+        each [MatchRoot] <> null
+            and Text.Trim([MatchRoot]) <> ""
+            and [SyncedFolderRootPath] <> null
+            and Text.Trim([SyncedFolderRootPath]) <> ""
+            and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
+    ),
+    SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
+    BestMatch = if Table.RowCount(SortedMatches) > 0 then SortedMatches{0} else error "FilePathUrl did not match any CentriSyncPaths root: " & FilePath,
+    RelativePath = Text.Range(FilePath, BestMatch[MatchRootLength]),
+    RelativePath_Trimmed = Text.TrimStart(RelativePath, "\"),
+    LocalFullPath =
+        if RelativePath_Trimmed = "" then
+            BestMatch[SyncedFolderRootPath]
+        else
+            BestMatch[SyncedFolderRootPath] & "\" & RelativePath_Trimmed,
+    RootPath = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    Segments = List.Select(Text.Split(RootPath, "\"), each _ <> ""),
+    ResidentialCareIndex = List.PositionOf(Segments, "ResidentialCare"),
+    UnitsIndex = List.PositionOf(Segments, "UNITS"),
+    UserName = try Text.BeforeDelimiter(Text.AfterDelimiter(RootPath, "C:\Users\"), "\") otherwise null,
+    Client = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 1 then Segments{ResidentialCareIndex + 1} else null,
+    Date = if ResidentialCareIndex >= 0 and List.Count(Segments) > ResidentialCareIndex + 2 then Segments{ResidentialCareIndex + 2} else null,
+    Unit = if UnitsIndex >= 0 and List.Count(Segments) > UnitsIndex + 1 then Segments{UnitsIndex + 1} else null,
+    FileName = try Text.BetweenDelimiters(LocalFullPath, "[", "]") otherwise Text.AfterDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
+    TABLE = #table(
+        {"Variable Name", "Value"},
+        {
+            {"UserName", UserName},
+            {"Root Path", RootPath},
+            {"Client", Client},
+            {"Date", Date},
+            {"Unit", Unit},
+            {"FileName", FileName}
+        }
+    ),
+    BUFFER = Table.Buffer(TABLE)
+in
+    BUFFER;
+
+// Query: FilePath - 2Calculations
+// Purpose: Return the calculation folder from the configured workbook location.
+shared #"FilePath - 2Calculations" = let
+    Source = #"UnitL1PathTABLE",
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
+    Value = #"Filtered Rows"{0}[Value]
+in
+    Value;
+
+// Query: FilePath - 1Input
+// Purpose: Return the input folder using the established Unit1 path convention.
+shared #"FilePath - 1Input" = let
+    Source = #"UnitL1PathTABLE",
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Variable Name] = "Root Path")),
+    #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows","2. Calculations","1. Input",Replacer.ReplaceText,{"Value"}),
+    Value = #"Replaced Value"{0}[Value]
+in
+    Value;
+
 // Query: IMPORT MultiRolesResRolesProportion
-// Purpose: Read the selected Unit1 allocation proportions for multi-role names.
+// Purpose: Read the existing role-suffix source and the externally consumed MultiRoles output.
 shared #"IMPORT MultiRolesResRolesProportion" = let
     Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\1-AllocationExtracted.xlsx"), null, true),
     ResRolesProportion_Table = Source{[Item="ResRolesProportion",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(ResRolesProportion_Table,{{"Name", type text}, {"AINC4", type number}, {"AIN", type number}, {"Total", type number}, {"AINC4HrsAvilPref", type number}})
 in
     #"Changed Type";
+
+// Query: IMPORT Combined Availabilities
+// Purpose: Read dated availability and leave, temporarily restricted to Beaudesert.
+// Inputs: Combined Output sheet in 1. Input/whiddon_availability_leave_extraction.xlsx.
+shared #"IMPORT Combined Availabilities" = let
+    Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\whiddon_availability_leave_extraction.xlsx"), null, true),
+    PromotedHeaders = Table.PromoteHeaders(Source{[Item = "Combined Output", Kind = "Sheet"]}[Data], [PromoteAllScalars = true]),
+    // Temporary approved facility restriction; apply the same restriction to reconciled workers.
+    FilteredBeaudesert = Table.SelectRows(PromotedHeaders, each [Site Name] = "BD: Beaudesert"),
+    AddedFacility = Table.AddColumn(FilteredBeaudesert, "Facility-Abbrev", each Text.Start([Site Name], 2), type text),
+    SelectedColumns = Table.SelectColumns(AddedFacility,
+        {"Site Name", "Employee Name", "Payroll Code", "Department", "Date From", "Date To", "Availability or Leave Reason", "Facility-Abbrev"}),
+    NormalizedIdentity = Table.TransformColumns(SelectedColumns,
+        {{"Payroll Code", AvailabilityText, type nullable text}, {"Employee Name", AvailabilityText, type nullable text}}),
+    IndexedRecords = Table.AddIndexColumn(NormalizedIdentity, "SourceRecord", 1, 1, Int64.Type)
+// Buffer the reduced scalar source shared by name resolution, parsing and diagnostics.
+in Table.Buffer(IndexedRecords);
+
+// Query: IMPORT Reconciled Workers
+// Purpose: Read the authoritative worker population from the existing local reconciliation table.
+shared #"IMPORT Reconciled Workers" = let
+    Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\Worker Reconciliation.xlsx"), null, true),
+    Workers = Table.SelectColumns(Source{[Item = "Employees_TABLE", Kind = "Table"]}[Data],
+        {"EmployeeID", "Facility-Abbrev", "Role", "Employee Roster Name", "EmploymentType"}),
+    Normalized = Table.TransformColumns(Workers, List.Transform(Table.ColumnNames(Workers),
+        each {_, AvailabilityText, type nullable text}))
+in Normalized;
+
+// Query: IMPORT Availability Settings
+// Purpose: Share the Settings workbook navigation among the shift, calendar and allowance imports.
+shared #"IMPORT Availability Settings" =
+    let
+        Navigation = Excel.Workbook(File.Contents(#"FilePath - 2Calculations" & "\Settings Data.xlsx"), null, true),
+        Required = Table.SelectRows(Navigation, each
+            ([Item] = "ShiftDuration" and List.Contains({"Table", "DefinedName"}, [Kind]))
+            or (List.Contains({"ShiftPeriod", "PermutationDimensions"}, [Item]) and [Kind] = "Table")),
+        // Buffer only required data tables; navigation buffering alone is shallow.
+        BufferedData = Table.TransformColumns(Required, {{"Data", each Table.Buffer(_), type table}})
+    in Table.Buffer(BufferedData);
+
+// Query: AvailabilityLeaveReasons
+// Purpose: List exact recognised leave descriptions; new descriptions require an explicit mapping.
+// Notes: Includes source descriptions confirmed in the 197-record diagnosis. Matching ignores surrounding spaces and letter case.
+shared AvailabilityLeaveReasons = #table(type table [Reason = text], {
+    {"Annual Rec Lve"},
+    {"Maternity Lve Unpaid"},
+    {"Unpaid Leave"},
+    {"Study Leave Unpaid"},
+    {"Workers Comp Not Worked Sec 40"},
+    {"Personal Sick Leave Unpaid"},
+    {"Personal Sick Leave Paid"},
+    {"WC Sec 37 13-130wks unfit"},
+    {"WC Sec 36 3-13 wks unfit"},
+    {"Personal Carer Leave Paid"},
+    {"Personal Carer Leave Unpaid"},
+    {"Long Service Lve"},
+    {"Compassionate Lve Paid"},
+    {"Personal Emergency Leave (PEL)"}
+});
 
 // Query: AvailabilityText
 // Purpose: Normalize optional identifiers and names without converting text identifiers to numbers.
@@ -48,162 +204,6 @@ shared AvailabilitySubtract = (available as list, excluded as list) as list =>
                     {[Start = segment[Start], End = cut[Start]]} else {}) &
                 (if cut[End] < segment[End] then
                     {[Start = cut[End], End = segment[End]]} else {}))));
-
-// Query: IMPORT Reconciled Workers
-// Purpose: Read the authoritative worker population from the existing local reconciliation table.
-shared #"IMPORT Reconciled Workers" = let
-    Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\Worker Reconciliation.xlsx"), null, true),
-    Workers = Table.SelectColumns(Source{[Item = "Employees_TABLE", Kind = "Table"]}[Data],
-        {"EmployeeID", "Facility-Abbrev", "Role", "Employee Roster Name", "EmploymentType"}),
-    Normalized = Table.TransformColumns(Workers, List.Transform(Table.ColumnNames(Workers),
-        each {_, AvailabilityText, type nullable text}))
-in Normalized;
-
-// Query: IMPORT Worker's Report
-// Purpose: Read the Unit1 employee contract source once for downstream contract preparation.
-// Inputs: Table1 in 1. Input/Worker's Report.xlsx.
-// Output: Employee Code and Contracted FN Hours at source-row grain.
-shared #"IMPORT Worker's Report" = let
-    Navigation = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\Worker's Report.xlsx"), null, true),
-    Matches = Table.SelectRows(Navigation, each [Item] = "Table1" and [Kind] = "Table"),
-    ContractTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("Worker contract import", "Expected exactly one Table1 table in Worker's Report.xlsx.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"Employee Code", "Contracted FN Hours"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ContractTable)),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(ContractTable, RequiredColumns)
-        else error Error.Record("Worker contract import", "Worker's Report.xlsx/Table1 is missing required columns.", [MissingColumns = MissingColumns])
-in Table.Buffer(Selected);
-
-// Query: IMPORT Availability Leave Source
-// Purpose: Read dated availability and leave for Beaudesert workers.
-// Inputs: Combined Output sheet in 1. Input/whiddon_availability_leave_extraction.xlsx.
-shared #"IMPORT Availability Leave Source" = let
-    Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\whiddon_availability_leave_extraction.xlsx"), null, true),
-    PromotedHeaders = Table.PromoteHeaders(Source{[Item = "Combined Output", Kind = "Sheet"]}[Data], [PromoteAllScalars = true]),
-    // Temporary approved facility restriction; apply the same restriction to reconciled workers.
-    FilteredBeaudesert = Table.SelectRows(PromotedHeaders, each [Site Name] = "BD: Beaudesert"),
-    AddedFacility = Table.AddColumn(FilteredBeaudesert, "Facility-Abbrev", each Text.Start([Site Name], 2), type text),
-    SelectedColumns = Table.SelectColumns(AddedFacility,
-        {"Site Name", "Employee Name", "Payroll Code", "Department", "Date From", "Date To", "Availability or Leave Reason", "Facility-Abbrev"}),
-    NormalizedIdentity = Table.TransformColumns(SelectedColumns,
-        {{"Payroll Code", AvailabilityText, type nullable text}, {"Employee Name", AvailabilityText, type nullable text}}),
-    IndexedRecords = Table.AddIndexColumn(NormalizedIdentity, "SourceRecord", 1, 1, Int64.Type)
-// Buffer the reduced scalar source shared by name resolution, parsing and diagnostics.
-in Table.Buffer(IndexedRecords);
-
-// Query: WorkerContracts_Prepare
-// Purpose: Resolve Worker's Report to one validated fortnightly contract value per employee.
-// Notes: Identical duplicate rows are allowed; blank versus populated, distinct values, non-numeric values, negative values and non-finite values are invalid.
-shared WorkerContracts_Prepare = let
-    NormalizedEmployee = Table.TransformColumns(#"IMPORT Worker's Report",
-        {{"Employee Code", AvailabilityText, type nullable text}}),
-    ParsedContract = Table.AddColumn(NormalizedEmployee, "ContractParse", each
-        let
-            RawAttempt = try [Contracted FN Hours],
-            RawValue = if RawAttempt[HasError] then null else RawAttempt[Value],
-            IsBlank = not RawAttempt[HasError] and AvailabilityText(RawValue) = null,
-            Attempt = if RawAttempt[HasError] or IsBlank then null else try Number.From(RawValue),
-            ParseError = if RawAttempt[HasError] then true else if IsBlank then false else Attempt[HasError],
-            ContractValue = if ParseError or IsBlank then null else Attempt[Value]
-        in [ContractValue = ContractValue, IsBlank = IsBlank, ParseError = ParseError],
-        type [ContractValue = nullable number, IsBlank = logical, ParseError = logical]),
-    ExpandedContract = Table.ExpandRecordColumn(ParsedContract, "ContractParse",
-        {"ContractValue", "IsBlank", "ParseError"}),
-    // Rows without an employee code cannot participate in an employee contract join.
-    IdentifiedRows = Table.SelectRows(ExpandedContract, each [Employee Code] <> null),
-    RenamedEmployee = Table.RenameColumns(IdentifiedRows, {{"Employee Code", "EmployeeID"}}),
-    Grouped = Table.Group(RenamedEmployee, {"EmployeeID"},
-        {{"ContractValues", each List.Distinct(List.RemoveNulls([ContractValue])), type list},
-         {"BlankRows", each List.Count(List.Select([IsBlank], each _ = true)), Int64.Type},
-         {"ParseErrors", each List.Count(List.Select([ParseError], each _ = true)), Int64.Type}}),
-    Resolved = Table.AddColumn(Grouped, "ContractResolution", each
-        let
-            Values = [ContractValues],
-            HasNonFinite = List.AnyTrue(List.Transform(Values, each Number.IsNaN(_) or Number.Abs(_) = #infinity)),
-            HasNegative = List.AnyTrue(List.Transform(Values, each _ < 0)),
-            HasConflict = List.Count(Values) > 1 or ([BlankRows] > 0 and List.Count(Values) > 0),
-            Issue = if [ParseErrors] > 0 then "Non-numeric Contracted FN Hours"
-                else if HasNonFinite then "Non-finite Contracted FN Hours"
-                else if HasNegative then "Negative Contracted FN Hours"
-                else if HasConflict then "Conflicting Contracted FN Hours"
-                else null,
-            ContractHours = if List.Count(Values) = 1 then Values{0} else null
-        in [Contracted FN Hours = ContractHours, Issue = Issue],
-        type [Contracted FN Hours = nullable number, Issue = nullable text]),
-    ExpandedResolution = Table.ExpandRecordColumn(Resolved, "ContractResolution",
-        {"Contracted FN Hours", "Issue"}),
-    Output = Table.SelectColumns(ExpandedResolution, {"EmployeeID", "Contracted FN Hours", "Issue"})
-in Table.Buffer(Output);
-
-// Query: IMPORT Availability Settings
-// Purpose: Share the Settings workbook navigation among the shift, calendar, allowance and maximum-availability extracts.
-shared #"IMPORT Availability Settings" =
-    let
-        Navigation = Excel.Workbook(File.Contents(#"FilePath - 2Calculations" & "\Settings Data.xlsx"), null, true),
-        Required = Table.SelectRows(Navigation, each
-            (List.Contains({"ShiftDuration", "MaxAvailability"}, [Item]) and List.Contains({"Table", "DefinedName"}, [Kind]))
-            or (List.Contains({"ShiftPeriod", "PermutationDimensions"}, [Item]) and [Kind] = "Table")),
-        // Buffer only required data tables; navigation buffering alone is shallow.
-        BufferedData = Table.TransformColumns(Required, {{"Data", each Table.Buffer(_), type table}})
-    in Table.Buffer(BufferedData);
-
-// Query: EXTRACT EffectiveShiftHrs
-// Purpose: Import the full-shift effective-hours allowance; never derive it from roster-day caps.
-// Inputs: ShiftDuration table or named range, with one ShiftDuration value.
-shared #"EXTRACT EffectiveShiftHrs" = let
-    Matches = Table.SelectRows(#"IMPORT Availability Settings",
-        each [Item] = "ShiftDuration" and List.Contains({"Table", "DefinedName"}, [Kind])),
-    Data = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error "Expected exactly one ShiftDuration table or named range in Settings Data.",
-    WithHeaders = if Table.HasColumns(Data, "ShiftDuration") then Data
-        else Table.PromoteHeaders(Data, [PromoteAllScalars = true]),
-    Values = Table.Column(WithHeaders, "ShiftDuration"),
-    Allowance = if List.Count(Values) = 1 then Number.From(Values{0})
-        else error "ShiftDuration must contain exactly one allowance.",
-    Validated = if Allowance = null then error "ShiftDuration is blank."
-        else if Number.IsNaN(Allowance) or Allowance <= 0 or Allowance = #infinity then
-            error "ShiftDuration must be a positive finite number."
-        else Allowance
-in Validated;
-
-// Query: EXTRACT MaxAvailability
-// Purpose: Validate the Settings maximum number of shifts available to one resource for the roster.
-// Inputs: MaxAvailability table or named range, containing exactly one positive whole number.
-shared #"EXTRACT MaxAvailability" = let
-    Matches = Table.SelectRows(#"IMPORT Availability Settings",
-        each [Item] = "MaxAvailability" and List.Contains({"Table", "DefinedName"}, [Kind])),
-    Data = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("Maximum availability settings", "Expected exactly one MaxAvailability table or defined name in Settings Data.", [Matches = Table.RowCount(Matches)]),
-    WithHeaders = if Table.HasColumns(Data, "MaxAvailability") then Data
-        else Table.PromoteHeaders(Data, [PromoteAllScalars = true]),
-    Values = Table.Column(WithHeaders, "MaxAvailability"),
-    Maximum = if List.Count(Values) = 1 then Number.From(Values{0})
-        else error "MaxAvailability must contain exactly one value.",
-    Validated = if Maximum = null or Number.IsNaN(Maximum) or Number.Abs(Maximum) = #infinity
-        or Maximum <= 0 or Maximum <> Number.RoundDown(Maximum) then
-            error "MaxAvailability must be one positive whole number."
-        else Int64.From(Maximum)
-in Validated;
-
-// Query: AvailabilityLeaveReasons
-// Purpose: List exact recognised leave descriptions; new descriptions require an explicit mapping.
-// Notes: Includes source descriptions confirmed in the 197-record diagnosis. Matching ignores surrounding spaces and letter case.
-shared AvailabilityLeaveReasons = #table(type table [Reason = text], {
-    {"Annual Rec Lve"},
-    {"Maternity Lve Unpaid"},
-    {"Unpaid Leave"},
-    {"Study Leave Unpaid"},
-    {"Workers Comp Not Worked Sec 40"},
-    {"Personal Sick Leave Unpaid"},
-    {"Personal Sick Leave Paid"},
-    {"WC Sec 37 13-130wks unfit"},
-    {"WC Sec 36 3-13 wks unfit"},
-    {"Personal Carer Leave Paid"},
-    {"Personal Carer Leave Unpaid"},
-    {"Long Service Lve"},
-    {"Compassionate Lve Paid"},
-    {"Personal Emergency Leave (PEL)"}
-});
 
 // Query: AvailabilityIntervalHours
 // Purpose: Sum clock hours in an already disjoint interval list.
@@ -304,11 +304,38 @@ shared AvailabilityLeaveDayTotals = (intervals as list) as table =>
             {"LeaveRecordCount", each Table.RowCount(_), Int64.Type}})
     in Days;
 
+// Query: AvailabilityCheckResult
+// Purpose: Convert a validation count or evaluation error into a consistent check row.
+shared AvailabilityCheckResult = (name as text, evaluate as function) as record =>
+    let Result = try evaluate()
+    in [Check = name, Status = if Result[HasError] then "Fail" else if Result[Value] = 0 then "Pass" else "Fail",
+        Failures = if Result[HasError] then null else Result[Value],
+        Details = if Result[HasError] then (try Result[Error][Message] otherwise "Evaluation failed") else null];
+
+// Query: EXTRACT EffectiveShiftHrs
+// Purpose: Import the full-shift effective-hours allowance; never derive it from roster-day caps.
+// Inputs: ShiftDuration table or named range, with one ShiftDuration value.
+shared #"EXTRACT EffectiveShiftHrs" = let
+    Matches = Table.SelectRows(#"IMPORT Availability Settings",
+        each [Item] = "ShiftDuration" and List.Contains({"Table", "DefinedName"}, [Kind])),
+    Data = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error "Expected exactly one ShiftDuration table or named range in Settings Data.",
+    WithHeaders = if Table.HasColumns(Data, "ShiftDuration") then Data
+        else Table.PromoteHeaders(Data, [PromoteAllScalars = true]),
+    Values = Table.Column(WithHeaders, "ShiftDuration"),
+    Allowance = if List.Count(Values) = 1 then Number.From(Values{0})
+        else error "ShiftDuration must contain exactly one allowance.",
+    Validated = if Allowance = null then error "ShiftDuration is blank."
+        else if Number.IsNaN(Allowance) or Allowance <= 0 or Allowance = #infinity then
+            error "ShiftDuration must be a positive finite number."
+        else Allowance
+in Validated;
+
 // Query: AvailabilityRecords
 // Purpose: Parse source intervals and retain separate record kinds and traceable validation issues.
 // Notes: Available remains a compatibility flag; only RecordKind = Leave contributes to daily leave hours.
 shared AvailabilityRecords = let
-    Parsed = Table.AddColumn(#"IMPORT Availability Leave Source", "Parsed", each
+    Parsed = Table.AddColumn(#"IMPORT Combined Availabilities", "Parsed", each
         let
             Start = try DateTime.From([Date From]) otherwise null,
             End = try DateTime.From([Date To]) otherwise null,
@@ -330,7 +357,7 @@ in Table.Buffer(Table.SelectColumns(Expanded,
 // Purpose: Resolve nursing roles and worker names while retaining explicit eligibility diagnostics.
 // Output: One row per reconciled employee/facility/source-role, including excluded rows.
 shared ReconciledWorkers_Prepare = let
-    SourceNames = Table.Group(#"IMPORT Availability Leave Source", {"Payroll Code", "Facility-Abbrev"},
+    SourceNames = Table.Group(#"IMPORT Combined Availabilities", {"Payroll Code", "Facility-Abbrev"},
         {{"SourceNames", each List.Distinct(List.RemoveNulls([Employee Name])), type list}}),
     WorkerGroups = Table.Group(#"IMPORT Reconciled Workers", {"EmployeeID", "Facility-Abbrev", "Role"},
         {{"RosterNames", each List.Distinct(List.RemoveNulls([Employee Roster Name])), type list},
@@ -340,12 +367,7 @@ shared ReconciledWorkers_Prepare = let
         if [SourceRole] = "Registered Nurse" then "RN"
         else if [SourceRole] = "Assistant in Nursing" then "AIN"
         else if [SourceRole] = "Enrolled Nurse" then "AINC4" else null, type nullable text),
-    // Contract hours belong to the employee, not to an employee-period or role split.
-    JoinedContracts = Table.NestedJoin(MappedRole, {"EmployeeID"},
-        WorkerContracts_Prepare, {"EmployeeID"}, "Contract", JoinKind.LeftOuter),
-    ExpandedContracts = Table.ExpandTableColumn(JoinedContracts, "Contract",
-        {"Contracted FN Hours", "Issue"}, {"Contracted FN Hours", "ContractIssue"}),
-    JoinedNames = Table.NestedJoin(ExpandedContracts, {"EmployeeID", "Facility-Abbrev"},
+    JoinedNames = Table.NestedJoin(MappedRole, {"EmployeeID", "Facility-Abbrev"},
         SourceNames, {"Payroll Code", "Facility-Abbrev"}, "Names", JoinKind.LeftOuter),
     ResolvedNames = Table.AddColumn(JoinedNames, "NameCandidates", each
         if not List.IsEmpty([RosterNames]) then [RosterNames]
@@ -358,7 +380,6 @@ shared ReconciledWorkers_Prepare = let
         else if [#"Facility-Abbrev"] <> "BD" then "Outside temporary BD scope"
         else if [SourceRole] = null then "Missing role"
         else if [Role] = null then "Role outside approved nursing mappings"
-        else if [ContractIssue] <> null then [ContractIssue]
         else if [BaseName] = null then "Missing or ambiguous worker name"
         else null, type nullable text),
     Result = Table.RemoveColumns(Eligibility, {"Names", "RosterNames", "NameCandidates"})
@@ -371,7 +392,7 @@ in Table.Buffer(Result);
 shared ReconciledWorkers_Eligible = let
     Included = Table.SelectRows(ReconciledWorkers_Prepare, each [Issue] = null),
     UniqueWorkers = Table.Distinct(Table.SelectColumns(Included,
-        {"EmployeeID", "Facility-Abbrev", "Role", "BaseName", "EmploymentType", "Contracted FN Hours"})),
+        {"EmployeeID", "Facility-Abbrev", "Role", "BaseName", "EmploymentType"})),
     RoleCounts = Table.Group(UniqueWorkers, {"EmployeeID", "Facility-Abbrev"},
         {{"RoleCount", each List.Count(List.Distinct([Role])), Int64.Type}}),
     JoinedCounts = Table.NestedJoin(UniqueWorkers, {"EmployeeID", "Facility-Abbrev"},
@@ -382,38 +403,8 @@ shared ReconciledWorkers_Eligible = let
     // StaffListMaster deduplicates by Name: every reconciled multi-role worker needs the same suffix convention.
     DisplayNames = Table.AddColumn(JoinedCounts, "Name", each
         if [Roles]{0}[RoleCount] > 1 or List.Contains(MultiRoleNames, [BaseName]) then [BaseName] & " (" & [Role] & ")"
-        else [BaseName], type text),
-    // Worker Reconciliation has already selected the preferred role; retain it explicitly for downstream joins and reporting.
-    PreferredRole = Table.AddColumn(DisplayNames, "PreferredRole", each [Role], type text)
-in Table.Buffer(Table.RemoveColumns(PreferredRole, {"Roles"}));
-
-// Query: WorkerAvailability_DIAGNOSTICS
-// Purpose: Show excluded reconciliation rows and extraction workers absent from the selected register.
-shared WorkerAvailability_DIAGNOSTICS = let
-    Excluded = Table.SelectRows(ReconciledWorkers_Prepare, each [Issue] <> null),
-    SourceWorkers = Table.Distinct(Table.SelectColumns(#"IMPORT Availability Leave Source", {"Payroll Code", "Facility-Abbrev"})),
-    NotRegistered = Table.NestedJoin(SourceWorkers, {"Payroll Code", "Facility-Abbrev"},
-        #"IMPORT Reconciled Workers", {"EmployeeID", "Facility-Abbrev"}, "Register", JoinKind.LeftAnti),
-    MissingWorkers = Table.RenameColumns(Table.RemoveColumns(NotRegistered, {"Register"}), {{"Payroll Code", "EmployeeID"}}),
-    MarkedMissing = Table.AddColumn(MissingWorkers, "Issue", each "Extraction worker absent from reconciliation", type text)
-in Table.Combine({Excluded, MarkedMissing});
-
-// Query: AvailabilityRecords_Invalid
-// Purpose: Identify invalid intervals for included workers, plus records without a usable worker ID.
-shared AvailabilityRecords_Invalid = let
-    Invalid = Table.SelectRows(AvailabilityRecords, each [Issue] <> null),
-    WorkerKeys = Table.Distinct(Table.SelectColumns(ReconciledWorkers_Eligible, {"EmployeeID", "Facility-Abbrev"})),
-    Matched = Table.NestedJoin(Invalid, {"Payroll Code", "Facility-Abbrev"},
-        WorkerKeys, {"EmployeeID", "Facility-Abbrev"}, "Worker", JoinKind.LeftOuter),
-    RequiredFailures = Table.SelectRows(Matched, each [Payroll Code] = null or not Table.IsEmpty([Worker]))
-in Table.RemoveColumns(RequiredFailures, {"Worker"});
-
-// Query: AvailabilityReasons_DIAGNOSTICS
-// Purpose: Show unknown source reasons and their record IDs for explicit mapping review.
-shared AvailabilityReasons_DIAGNOSTICS = let
-    Unknown = Table.SelectRows(AvailabilityRecords, each [RecordKind] = "Unknown")
-in Table.SelectColumns(Unknown,
-    {"SourceRecord", "Payroll Code", "Facility-Abbrev", "OriginalReason", "Start", "End", "Issue"});
+        else [BaseName], type text)
+in Table.Buffer(Table.RemoveColumns(DisplayNames, {"Roles"}));
 
 // Query: AvailabilityShiftDefinitions
 // Purpose: Validate the role-specific shift endpoints and durations from Settings Data.
@@ -575,26 +566,76 @@ shared ResDayShift_Calculated = let
         else "Residual availability", type text)
 in Outcome;
 
-// Query: AvailabilityCheckResult
-// Purpose: Convert a validation count or evaluation error into a consistent check row.
-shared AvailabilityCheckResult = (name as text, evaluate as function) as record =>
-    let Result = try evaluate()
-    in [Check = name, Status = if Result[HasError] then "Fail" else if Result[Value] = 0 then "Pass" else "Fail",
-        Failures = if Result[HasError] then null else Result[Value],
-        Details = if Result[HasError] then (try Result[Error][Message] otherwise "Evaluation failed") else null];
+// Query: ResDayShift
+// Purpose: Publish validated worker/date/shift availability with reconciled worker and facility identifiers.
+// Output: The original seven columns followed by ID (reconciled EmployeeID) and Facility-Abbrev, both text.
+// Notes: CapacityDistrib still assigns one availability unit per row; partial-hour weighting is deferred.
+shared ResDayShift = let
+    Failures = Table.SelectRows(ResDayShift_CHECK, each [Status] <> "Pass"),
+    Checked = if Table.IsEmpty(Failures) then ResDayShift_Calculated
+        else error Error.Record("ResDayShift validation", "Required availability checks failed.", Failures),
+    // Preserve the original seven columns in order and append identifiers for future downstream matching.
+    Positive = Table.SelectRows(Checked, each [EffectiveShiftHrs] > 0),
+    Identified = Table.RenameColumns(Positive, {{"EmployeeID", "ID"}}),
+    Output = Table.SelectColumns(Identified, {"Role", "Week", "Day", "Shift", "EffectiveShiftHrs", "Date", "Name", "ID", "Facility-Abbrev"}),
+    Typed = Table.TransformColumnTypes(Output, {{"Role", type text}, {"Week", Int64.Type}, {"Day", type text},
+        {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", type date}, {"Name", type text},
+        {"ID", type text}, {"Facility-Abbrev", type text}})
+in Table.Sort(Typed, {{"Week", Order.Ascending}, {"Date", Order.Ascending}, {"Role", Order.Ascending}, {"Name", Order.Ascending}, {"Shift", Order.Ascending}});
+
+// Query: Availability-StaffList
+// Purpose: Preserve the staff identity interface, including eligible workers with no available shifts.
+shared #"Availability-StaffList" = let
+    Failures = Table.SelectRows(ReconciledWorkers_CHECK, each [Status] <> "Pass"),
+    Workers = if Table.IsEmpty(Failures) then ReconciledWorkers_Eligible
+        else error Error.Record("Availability staff validation", "Required worker identity checks failed.", Failures),
+    Output = Table.Distinct(Table.SelectColumns(Workers, {"Name", "Role"}))
+in Table.Sort(Output, {{"Name", Order.Ascending}, {"Role", Order.Ascending}});
+
+// Query: MultiRoles
+// Purpose: Preserve the table imported by MutliRoleCheck; independent of daily leave decisions.
+shared MultiRoles = let
+    Source = #"IMPORT MultiRolesResRolesProportion",
+    #"Removed Columns1" = Table.RemoveColumns(Source,{"Total"}),
+    #"Unpivoted Other Columns1" = Table.UnpivotOtherColumns(#"Removed Columns1", {"Name", "AINC4HrsAvilPref"}, "MultiRole", "Value"),
+    #"Removed Columns" = Table.RemoveColumns(#"Unpivoted Other Columns1",{"Value"})
+in
+    #"Removed Columns";
+
+// Query: AvailabilityReasons_DIAGNOSTICS
+// Purpose: Surface every unknown reason for mapping review, including records outside the eligible population.
+shared AvailabilityReasons_DIAGNOSTICS = let
+    Unknown = Table.SelectRows(AvailabilityRecords, each [RecordKind] = "Unknown")
+in Table.SelectColumns(Unknown, {"SourceRecord", "Payroll Code", "Facility-Abbrev", "OriginalReason", "Start", "End", "Issue"});
+
+// Query: WorkerAvailability_DIAGNOSTICS
+// Purpose: Show excluded reconciliation rows and extraction workers absent from the selected register.
+shared WorkerAvailability_DIAGNOSTICS = let
+    Excluded = Table.SelectRows(ReconciledWorkers_Prepare, each [Issue] <> null),
+    SourceWorkers = Table.Distinct(Table.SelectColumns(#"IMPORT Combined Availabilities", {"Payroll Code", "Facility-Abbrev"})),
+    NotRegistered = Table.NestedJoin(SourceWorkers, {"Payroll Code", "Facility-Abbrev"},
+        #"IMPORT Reconciled Workers", {"EmployeeID", "Facility-Abbrev"}, "Register", JoinKind.LeftAnti),
+    MissingWorkers = Table.RenameColumns(Table.RemoveColumns(NotRegistered, {"Register"}), {{"Payroll Code", "EmployeeID"}}),
+    MarkedMissing = Table.AddColumn(MissingWorkers, "Issue", each "Extraction worker absent from reconciliation", type text)
+in Table.Combine({Excluded, MarkedMissing});
+
+// Query: AvailabilityRecords_Invalid
+// Purpose: Identify invalid intervals for included workers, plus records without a usable worker ID.
+shared AvailabilityRecords_Invalid = let
+    Invalid = Table.SelectRows(AvailabilityRecords, each [Issue] <> null),
+    WorkerKeys = Table.Distinct(Table.SelectColumns(ReconciledWorkers_Eligible, {"EmployeeID", "Facility-Abbrev"})),
+    Matched = Table.NestedJoin(Invalid, {"Payroll Code", "Facility-Abbrev"},
+        WorkerKeys, {"EmployeeID", "Facility-Abbrev"}, "Worker", JoinKind.LeftOuter),
+    RequiredFailures = Table.SelectRows(Matched, each [Payroll Code] = null or not Table.IsEmpty([Worker]))
+in Table.RemoveColumns(RequiredFailures, {"Worker"});
 
 // Query: ReconciledWorkers_CHECK
 // Purpose: Gate worker outputs using identity checks without evaluating shift intervals.
 shared ReconciledWorkers_CHECK = let
     Workers = ReconciledWorkers_Eligible,
-    RelevantContractIssues = Table.SelectRows(ReconciledWorkers_Prepare, each
-        [#"Facility-Abbrev"] = "BD" and [Role] <> null and [ContractIssue] <> null),
     Checks = {
         AvailabilityCheckResult("Unique worker keys", () => Table.RowCount(Workers) -
             Table.RowCount(Table.Distinct(Workers, {"EmployeeID", "Facility-Abbrev", "Role"}))),
-        AvailabilityCheckResult("One preferred role per employee and facility", () => Table.RowCount(Workers) -
-            Table.RowCount(Table.Distinct(Workers, {"EmployeeID", "Facility-Abbrev"}))),
-        AvailabilityCheckResult("Valid relevant worker contracts", () => Table.RowCount(RelevantContractIssues)),
         // Names alone must remain unique because the existing master list uses that key.
         AvailabilityCheckResult("Unambiguous published names", () => Table.RowCount(Workers) -
             Table.RowCount(Table.Distinct(Workers, {"Name"})))
@@ -698,142 +739,3 @@ shared ResDayShift_CHECK = let
         Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text])})
 // Buffer the small check output; buffers are scoped to an evaluation, not shared across refreshes.
 in Table.Buffer(Result);
-
-// Query: ResDayShift
-// Purpose: Publish validated worker/date/shift availability with reconciled worker and facility identifiers.
-// Output: The original seven columns followed by ID (reconciled EmployeeID) and Facility-Abbrev, both text.
-// Notes: CapacityDistrib still assigns one availability unit per row; partial-hour weighting is deferred.
-shared ResDayShift = let
-    Failures = Table.SelectRows(ResDayShift_CHECK, each [Status] <> "Pass"),
-    Checked = if Table.IsEmpty(Failures) then ResDayShift_Calculated
-        else error Error.Record("ResDayShift validation", "Required availability checks failed.", Failures),
-    // Preserve the original seven columns in order and append identifiers for future downstream matching.
-    Positive = Table.SelectRows(Checked, each [EffectiveShiftHrs] > 0),
-    Identified = Table.RenameColumns(Positive, {{"EmployeeID", "ID"}}),
-    Output = Table.SelectColumns(Identified, {"Role", "Week", "Day", "Shift", "EffectiveShiftHrs", "Date", "Name", "ID", "Facility-Abbrev"}),
-    Typed = Table.TransformColumnTypes(Output, {{"Role", type text}, {"Week", Int64.Type}, {"Day", type text},
-        {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", type date}, {"Name", type text},
-        {"ID", type text}, {"Facility-Abbrev", type text}})
-in Table.Sort(Typed, {{"Week", Order.Ascending}, {"Date", Order.Ascending}, {"Role", Order.Ascending}, {"Name", Order.Ascending}, {"Shift", Order.Ascending}});
-
-shared MultiRoles = let
-    Source = #"IMPORT MultiRolesResRolesProportion",
-    #"Removed Columns1" = Table.RemoveColumns(Source,{"Total"}),
-    #"Unpivoted Other Columns1" = Table.UnpivotOtherColumns(#"Removed Columns1", {"Name", "AINC4HrsAvilPref"}, "MultiRole", "Value"),
-    #"Removed Columns" = Table.RemoveColumns(#"Unpivoted Other Columns1",{"Value"})
-in
-    #"Removed Columns";
-
-shared RoleResDayAvailabilityCapped = let
-    Source = ResDayShift,
-    SettingsMaximum = #"EXTRACT MaxAvailability",
-    #"Grouped Rows" = Table.Group(Source, {"Role", "Name"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
-    // Preserve the existing output column name while sourcing its value from Settings Data.
-    #"Added STDDAYSAVAIL" = Table.AddColumn(#"Grouped Rows", "StdRosterDays", each SettingsMaximum, Int64.Type),
-    #"Merged Queries" = Table.NestedJoin(#"Added STDDAYSAVAIL", {"Name"}, MultiRoles, {"Name"}, "IMPORT ResRolesProportion2", JoinKind.LeftOuter),
-    #"Expanded IMPORT ResRolesProportion2" = Table.ExpandTableColumn(#"Merged Queries", "IMPORT ResRolesProportion2", {"AINC4HrsAvilPref", "MultiRole"}, {"AINC4HrsAvilPref", "MultiRole"}),
-    #"Added ROLESPLIT" = Table.AddColumn(#"Expanded IMPORT ResRolesProportion2", "RoleSplit", each if [MultiRole] = null then null  
-else if [MultiRole] = "AIN" and [MultiRole] = [Role] then 1 - [AINC4HrsAvilPref]
-else if [MultiRole] = [Role] then [AINC4HrsAvilPref]
-else 99),
-    #"Filtered ROLESPLIT" = Table.SelectRows(#"Added ROLESPLIT", each ([RoleSplit] <> 99)),
-    #"Added SPLITAVAIL" = Table.AddColumn(#"Filtered ROLESPLIT", "AvailabilityCapped", each if [Count] <= [StdRosterDays] then [Count] else [StdRosterDays] * (if [MultiRole] <> null then [RoleSplit] else 1)),
-    #"Transformed Columns" = Table.TransformColumns(
-        #"Added SPLITAVAIL",
-        {"Name", each if try Record.Field(_, "MultiRole") <> null otherwise false then _ & "(" & Record.Field(_, "MultiRole") & ")" else _}
-    ),
-    #"Renamed Columns" = Table.RenameColumns(#"Transformed Columns",{{"Name", "NameX"}}),
-    #"NEW NAME" = Table.AddColumn(#"Renamed Columns", "Name", each if [MultiRole] <> null then [NameX] & " (" & [MultiRole] & ")" else [NameX]),
-    #"Renamed Columns1" = Table.RenameColumns(#"NEW NAME",{{"Role", "RoleX"}}),
-    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns1", "Role", each if [MultiRole] <> null then [MultiRole] else [RoleX]),
-    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column",{"AINC4HrsAvilPref", "MultiRole", "RoleSplit", "RoleX", "NameX"})
-in
-    #"Removed Columns";
-
-shared RoleAvailabilityCapped = let
-    Source = RoleResDayAvailabilityCapped,
-    #"Grouped Rows" = Table.Group(Source, {"Role"}, {{"AvailabilityCapped", each List.Sum([AvailabilityCapped]), type number}})
-in
-    #"Grouped Rows";
-
-// Query: Availability-StaffList
-// Purpose: Publish eligible staff identity and fortnightly contract fields, including workers with no available shifts.
-// Output: One row per reconciled preferred employee/resource with facility, employment type and Contracted FN Hours.
-shared #"Availability-StaffList" = let
-    Failures = Table.SelectRows(ReconciledWorkers_CHECK, each [Status] <> "Pass"),
-    Workers = if Table.IsEmpty(Failures) then ReconciledWorkers_Eligible
-        else error Error.Record("Availability staff validation", "Required worker identity checks failed.", Failures),
-    Output = Table.Distinct(Table.SelectColumns(Workers,
-        {"EmployeeID", "Facility-Abbrev", "Name", "Role", "PreferredRole", "EmploymentType", "Contracted FN Hours"}))
-in Table.Sort(Output, {{"Facility-Abbrev", Order.Ascending}, {"PreferredRole", Order.Ascending}, {"Name", Order.Ascending}});
-
-// Query: UnitL1PathTABLE
-// Purpose: Resolve this workbook to its Unit1 folder using FilePathUrl and CentriSyncPaths.
-// Output: Existing Variable Name/Value interface plus the authoritative Unit Root.
-shared UnitL1PathTABLE = let
-    NormalizePath = (value as nullable text) as nullable text =>
-        if value = null then null else Text.TrimEnd(Text.Replace(Text.Trim(value), "/", "\"), "\"),
-    PathInput = Excel.CurrentWorkbook(){[Name = "FilePathUrl"]}[Content],
-    // Excel exposes this workbook's existing FilePathUrl named cell as Column1.
-    // Also accept the standard FilePath table through the same resolver.
-    PathColumn = if Table.HasColumns(PathInput, {"FilePath"}) then Table.SelectColumns(PathInput, {"FilePath"})
-        else if Table.ColumnNames(PathInput) = {"Column1"} then
-            Table.RenameColumns(PathInput, {{"Column1", "FilePath"}})
-        else error "FilePathUrl must be a one-row FilePath table or a single named cell.",
-    PathRows = if Table.RowCount(PathColumn) = 1 then PathColumn
-        else error "FilePathUrl must contain exactly one path value.",
-    RawPath = NormalizePath(Text.From(PathRows{0}[FilePath])),
-    NonBlankPath = if RawPath <> null and RawPath <> "" then RawPath
-        else error "FilePathUrl is blank. Save and recalculate this workbook.",
-    // CELL("filename") includes [workbook.xlsx]sheet; discard the sheet suffix.
-    WorkbookPath = if Text.Contains(NonBlankPath, "[") then
-        Text.BeforeDelimiter(NonBlankPath, "[") & Text.BetweenDelimiters(NonBlankPath, "[", "]")
-        else NonBlankPath,
-    InputFileName = Text.AfterDelimiter(WorkbookPath, "\", {0, RelativePosition.FromEnd}),
-    FilePath = if Comparer.OrdinalIgnoreCase(InputFileName, "Capacity-ShiftAvailability.xlsx") = 0 then WorkbookPath
-        else error "FilePathUrl must identify Capacity-ShiftAvailability.xlsx.",
-    MappingSource = Excel.Workbook(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx"), null, true),
-    MappingTable = MappingSource{[Item = "CentriSyncPaths", Kind = "Table"]}[Data],
-    Mapping = Table.TransformColumns(Table.SelectColumns(MappingTable, {"SharepointRootUrl", "SyncedFolderRootPath"}), {
-        {"SharepointRootUrl", each NormalizePath(Text.From(_)), type nullable text},
-        {"SyncedFolderRootPath", each NormalizePath(Text.From(_)), type nullable text}}),
-    SharePoint = Table.AddColumn(Mapping, "MatchRoot", each [SharepointRootUrl], type nullable text),
-    Documents = Table.AddColumn(Mapping, "MatchRoot", each if [SharepointRootUrl] = null then null
-        else [SharepointRootUrl] & "\Shared Documents", type nullable text),
-    Local = Table.AddColumn(Mapping, "MatchRoot", each [SyncedFolderRootPath], type nullable text),
-    Candidates = Table.AddColumn(Table.Combine({SharePoint, Documents, Local}), "RootLength",
-        each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]), Int64.Type),
-    // The folder boundary prevents one mapping from matching a similarly prefixed folder.
-    Matching = Table.SelectRows(Candidates, each [MatchRoot] <> null and [MatchRoot] <> ""
-        and [SyncedFolderRootPath] <> null and [SyncedFolderRootPath] <> ""
-        and Text.StartsWith(FilePath, [MatchRoot], Comparer.OrdinalIgnoreCase)
-        and (Text.Length(FilePath) = [RootLength] or Text.Range(FilePath, [RootLength], 1) = "\")),
-    Ordered = Table.Sort(Matching, {{"RootLength", Order.Descending}}),
-    Longest = if Table.IsEmpty(Ordered) then error "FilePathUrl has no CentriSyncPaths mapping." else Ordered{0},
-    SameLength = Table.SelectRows(Ordered, each [RootLength] = Longest[RootLength]),
-    Best = if List.Count(List.Distinct(SameLength[SyncedFolderRootPath], Comparer.OrdinalIgnoreCase)) = 1 then Longest
-        else error "CentriSyncPaths has conflicting longest-prefix destinations.",
-    Relative = Text.TrimStart(Text.Range(FilePath, Best[RootLength]), "\"),
-    LocalWorkbook = if Relative = "" then Best[SyncedFolderRootPath]
-        else Best[SyncedFolderRootPath] & "\" & Relative,
-    WorkbookFolder = Text.BeforeDelimiter(LocalWorkbook, "\", {0, RelativePosition.FromEnd}),
-    FolderSegments = List.Select(Text.Split(WorkbookFolder, "\"), each _ <> ""),
-    UnitsIndex = List.PositionOf(FolderSegments, "UNITS", Occurrence.Last, Comparer.OrdinalIgnoreCase),
-    CalcIndex = List.PositionOf(FolderSegments, "2. Calculations", Occurrence.Last, Comparer.OrdinalIgnoreCase),
-    ValidFolder = UnitsIndex >= 0 and CalcIndex = UnitsIndex + 2 and List.Count(FolderSegments) = CalcIndex + 1,
-    RootPath = if ValidFolder then WorkbookFolder else error "Workbook must be under UNITS/<unit>/2. Calculations.",
-    UnitRoot = Text.BeforeDelimiter(RootPath, "\", {0, RelativePosition.FromEnd}),
-    CareIndex = List.PositionOf(FolderSegments, "ResidentialCare", Occurrence.First, Comparer.OrdinalIgnoreCase),
-    Client = if CareIndex >= 0 and List.Count(FolderSegments) > CareIndex + 1 then FolderSegments{CareIndex + 1} else null,
-    Unit = FolderSegments{UnitsIndex + 1},
-    Output = #table({"Variable Name", "Value"}, {{"UserName", null}, {"Root Path", RootPath},
-        {"Unit Root", UnitRoot}, {"Client", Client}, {"Date", null}, {"Unit", Unit}, {"FileName", InputFileName}})
-in Table.Buffer(Output);
-
-// Query: FilePath - 2Calculations
-// Purpose: Expose the resolved workbook folder to existing calculation imports.
-shared #"FilePath - 2Calculations" = UnitL1PathTABLE{[Variable Name = "Root Path"]}[Value];
-
-// Query: FilePath - 1Input
-// Purpose: Build the sibling input folder from the resolved unit root.
-shared #"FilePath - 1Input" = UnitL1PathTABLE{[Variable Name = "Unit Root"]}[Value] & "\1. Input";

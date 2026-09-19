@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(B)-shifts.xlsx
 // Workbook: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
-// Source status: authoritative .m; availability lineage gate added 2026-09-19.
+// Extracted: 2026-05-21T00:54:05.796Z
 
 section Section1;
 
@@ -597,25 +597,6 @@ in
     // Reuse these four scalar diagnostic rows within the output's validation and failure reporting.
     Table.Buffer(TypedChecks);
 
-// Query: CapacityDistribB_AVAILABILITY_LINEAGE_CHECK
-// Purpose: Identify positive A.2 Resource/Period availability without positive original A.1 availability.
-// Output: One diagnostic row per unsupported positive C#; an empty table passes the final B gate.
-// Notes: B must not carry stale A.2 capacity into a Resource/Period absent from the current A.1 source.
-shared CapacityDistribB_AVAILABILITY_LINEAGE_CHECK = let
-    PositiveCapped = Table.SelectRows(#"ResPeriodAvailabilityCapped(C#)TABLE", each [#"C#"] <> null and [#"C#"] > 0),
-    Original = Table.SelectColumns(#"IMPORT AvailabilityOriginal", {"Role", "Resource", "Period", "Availability"}),
-    Joined = Table.NestedJoin(PositiveCapped, {"Role", "Resource", "Period"},
-        Original, {"Role", "Resource", "Period"}, "OriginalRows", JoinKind.LeftOuter),
-    Assessed = Table.AddColumn(Joined, "LineageIssue", each
-        if Table.IsEmpty([OriginalRows]) then "No original A.1 availability row"
-        else if Table.RowCount([OriginalRows]) <> 1 then "Ambiguous original A.1 availability rows"
-        else if [OriginalRows]{0}[Availability] = null or [OriginalRows]{0}[Availability] <= 0 then
-            "Original A.1 availability is not positive"
-        else null, type nullable text),
-    Failures = Table.SelectRows(Assessed, each [LineageIssue] <> null),
-    Output = Table.RemoveColumns(Failures, {"OriginalRows"})
-in Table.Buffer(Output);
-
 shared #"ResPeriodAvailabilityCapped(C#)SUM" = let
     Source = #"ResPeriodAvailabilityTABLE",
     #"C#" = Source[#"C#"],
@@ -869,18 +850,14 @@ in
 shared #"C###TABLE B" = let
     InputChecks = CapacityDistribB_INPUT_CHECK,
     ContractChecks = BResourceContract_CHECK,
-    AvailabilityLineageFailures = CapacityDistribB_AVAILABILITY_LINEAGE_CHECK,
     // Gate the source actually consumed below so lazy evaluation cannot skip required validation.
-    Source = if List.AllTrue(InputChecks[Passed])
-        and List.AllTrue(List.Transform(ContractChecks[Status], each _ = "Pass"))
-        and Table.IsEmpty(AvailabilityLineageFailures) then #"C##TABLE"
+    Source = if List.AllTrue(InputChecks[Passed]) and List.AllTrue(List.Transform(ContractChecks[Status], each _ = "Pass")) then #"C##TABLE"
         else error Error.Record(
             "CapacityDistribB.InputValidation",
-            "Required join keys, Resource contracts or A.2-to-A.1 availability lineage failed validation.",
+            "Required join keys or Resource contracts failed validation. Review CapacityDistribB_INPUT_CHECK and BResourceContract_CHECK.",
             [
                 InputFailures = Table.SelectRows(InputChecks, each [Passed] <> true),
-                ContractFailures = Table.SelectRows(ContractChecks, each [Status] <> "Pass"),
-                AvailabilityLineageFailures = AvailabilityLineageFailures
+                ContractFailures = Table.SelectRows(ContractChecks, each [Status] <> "Pass")
             ]
         ),
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, SubtractOverallocatedResources, {"Resource", "Period"}, "SubtractAvailablilityTABLE", JoinKind.LeftOuter),
@@ -930,7 +907,7 @@ in
 
 // Query: RolePathTABLE
 // Purpose: Resolve this workbook's folder and dynamic role through the standard CentriSyncPaths mapping.
-// Inputs: FilePathUrl (one-row FilePath table) and the public CentriSyncPaths table.
+// Inputs: FilePathUrl (one-row FilePath table or single named cell) and the public CentriSyncPaths table.
 // Output: Existing Variable Name / Value rows used by RolePath and Role.
 shared RolePathTABLE =
 let
@@ -938,12 +915,14 @@ let
         if value = null then null else Text.TrimEnd(Text.Replace(Text.Trim(value), "/", "\"), "\"),
     FilePathUrl =
     let
-        Source = Excel.CurrentWorkbook(){[Name = "FilePathUrl"]}[Content],
-        // Excel exposes this workbook's existing FilePathUrl named cell as Column1.
+        // Accept the legacy FilePAthUrl casing without masking a missing or malformed input.
+        PathInputs = Table.SelectRows(Excel.CurrentWorkbook(), each Comparer.OrdinalIgnoreCase([Name], "FilePathUrl") = 0),
+        Source = if Table.RowCount(PathInputs) = 1 then PathInputs{0}[Content]
+            else error "Expected exactly one FilePathUrl table or named cell in this workbook.",
+        // A single named cell is exposed by Excel as Column1.
         PathColumn = if Table.HasColumns(Source, {"FilePath"}) then Table.SelectColumns(Source, {"FilePath"})
-            else if Table.ColumnNames(Source) = {"Column1"} then
-                Table.RenameColumns(Source, {{"Column1", "FilePath"}})
-            else error "FilePathUrl must be a one-row FilePath table or a single named cell.",
+            else if Table.ColumnNames(Source) = {"Column1"} then Table.RenameColumns(Source, {{"Column1", "FilePath"}})
+            else error "FilePathUrl must contain a FilePath column or be a single named cell.",
         ValidatedRows = if Table.RowCount(PathColumn) = 1 then PathColumn
             else error "FilePathUrl must contain exactly one data row.",
         TypedPath = Table.TransformColumnTypes(ValidatedRows, {{"FilePath", type text}}),
