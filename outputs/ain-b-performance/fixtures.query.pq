@@ -1,1 +1,1 @@
-Table.Combine({CapacityDistribB_RunningTotals_CHECK, CapacityDistribB_InputKeys_CHECK})
+Table.Combine({CapacityDistribB_RunningTotals_CHECK, CapacityDistribB_InputKeys_CHECK, CapacityDistribB_ResourceContract_CHECK})

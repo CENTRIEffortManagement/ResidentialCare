@@ -1,0 +1,47 @@
+%%{init: {"theme":"base","flowchart":{"curve":"linear"}}}%%
+flowchart TB
+    SRC["Published Roster.xlsx<br/><b>Beaudesert</b><br/>[source roster row]<br/>Shift Net Length = source net hours"]
+
+    A["1-AllocationExtracted.xlsx<br/><b>AllocationExtracted</b><br/>[source roster row]<br/>Hours = Shift Net Length<br/>[Hours is net; no meal arithmetic]"]
+
+    I["Intervals.xlsx<br/><b>Table_StartTime_Duration</b><br/><b>Table_Intervals</b><br/><b>Table_IntervalsList</b><br/>[roster rows and supporting interval grid]"]
+
+    S["Shifts.xlsx<br/><b>NAMES_INTERVALSLIST</b><br/>[worker × date × shift × interval]<br/>[configured meals removed once on the active path]"]
+
+    B["AllocationByShiftAverage.xlsx<br/><b>ResourceShiftAllocation___less_Intervals</b><br/>[worker × date × shift; standard FTE]<br/><b>Table_RoleShiftIntervalAllocation</b><br/>[role × date × shift; actual-shift FTE / average attendance]"]
+
+    L["Allocation.xlsx<br/><b>ResourceShiftAllocation</b><br/>[worker × date × shift; standard FTE preserved]<br/><b>Allocation</b><br/>[role × date × shift; actual-shift FTE preserved]"]
+
+    E["Effort.xlsx<br/><b>ResShiftAllocation</b><br/>[worker × date × shift; standard FTE preserved]<br/><b>EffortAllMatrixAG1-1D</b><br/>[role × date × shift; RoleShiftFTE renamed Allocation]"]
+
+    SET["Settings Data.xlsx<br/><b>Meals</b><br/><b>ShiftDuration</b><br/><b>ShiftPeriod</b><br/>[supporting inputs]"]
+
+    SUPPORT["Demand.xlsx / Capacity.xlsx / StaffListMaster.xlsx<br/>[supporting inputs]"]
+
+    SRC -->|"Hours = Shift Net Length"| A
+
+    A -->|"Start, End, Break, Hours, worker and role<br/>[the primary effort calculation does not use Hours]"| I
+
+    I -->|"gross roster-row duration = EndDateTime - StartDateTime<br/>interval duration = EndPrecise - StartInterval"| S
+
+    S -->|"real duration = gross roster-row or combined-shift duration<br/>effective duration = real duration - configured meal deduction<br/>effective ratio = effective duration / real duration<br/>worker interval effort = effective ratio × interval duration"| B
+
+    B -->|"worker effective hours = SUM worker interval effort days × 24<br/>ResShiftFTE = worker effective hours / configured standard shift hours<br/>[standard FTE]"| L
+
+    B -->|"role effective hours = SUM matching worker interval effort days × 24<br/>RoleShiftFTE = role effective hours / configured role-shift duration hours<br/>[actual-shift FTE = average attendance]<br/>[calculated from effort hours, not from ResShiftFTE]"| L
+
+    L -->|"RoleShiftFTE is preserved and renamed Allocation<br/>[same actual-shift basis]"| E
+
+    SET -.->|"MealBreakTime and MealBreakStart"| I
+    SET -.->|"configured meal rules"| S
+    SET -.->|"ShiftDuration = configured standard shift hours<br/>DurationOfShifts = configured role-shift duration hours"| B
+    SET -.->|"calendar role-date-shift combinations"| L
+    SUPPORT -.->|"demand, capacity and resource mapping"| E
+
+    C1["[CAUTION: source net hours equal calculated effective hours only when source breaks match configured meal deductions]"]
+    C2["[CAUTION: SUM ResShiftFTE does not normally equal RoleShiftFTE because their denominators differ]"]
+    C3["[HOURS RECONCILIATION: SUM ResShiftFTE × ShiftDuration = RoleShiftFTE × DurationOfShifts, when both sides contain the same effort population]"]
+
+    A -.-> C1
+    B -.-> C2
+    B -.-> C3
