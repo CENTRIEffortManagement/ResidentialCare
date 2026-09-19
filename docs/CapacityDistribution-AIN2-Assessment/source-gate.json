@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-09-19T09:18:00+10:00",
+  "method": "Excel Power Query Editor v0.5.1 saved-byte extraction from each exact AIN2 workbook",
+  "status": "FreshExtractionEstablished",
+  "metadataNormalization": "Removed the three generated metadata lines and following blank line; normalized line endings to LF; authoritative workflow files end with one LF.",
+  "files": [
+    {
+      "workbook": "CapacityDistrib(A.1)-shifts.xlsx",
+      "workbookSha256": "E255CE7D4E84D0DB7CEFA79F450B4D637DDAC2E2C5060AC8B84B15385591253A",
+      "copiedProvenanceSidecarSha256": "793FA63E22370F070161FBE23E18D062E9ADE82E08332A397DB247FF70056A1D",
+      "freshSidecarSha256": "27438BA3F80CA11D86630E50C5CF2EAA7017AD0B91846D8623781FBD79E3F587",
+      "authoritativeSource": "Workflows/ResidentialCare/CapacityDistribution/CapacityDistrib-A1.pq",
+      "authoritativeBaselineSha256": "23CFC7C9E0A2A507F7256D75A62BCE1F6B4DB185A97F32F427A3769FFF813FE0",
+      "provenanceMatchedWorkbook": false,
+      "placeholderRejected": true
+    },
+    {
+      "workbook": "CapacityDistrib(A.2)-shifts.xlsx",
+      "workbookSha256": "4115A5ED591E5D67A1BEC57E4650B724D7D8332188A06125234F17EAC74D9771",
+      "copiedProvenanceSidecarSha256": "D62F84540DD545849E654D8BF26C487E2BC72D66A75FE6E222803AF916F40757",
+      "freshSidecarSha256": "9BA0BD9F1937CA7D7F6179D23A3A5D69BCE00283E02CDE01EC96C51BC34C226A",
+      "authoritativeSource": "Workflows/ResidentialCare/CapacityDistribution/CapacityDistrib-A2.pq",
+      "authoritativeBaselineSha256": "F390D8CB01E0284D88BD0B73AF2D4BD0F678A443CC566BE165293D56B7F78A39",
+      "provenanceMatchedWorkbook": false,
+      "placeholderRejected": true
+    },
+    {
+      "workbook": "CapacityDistrib(B)-shifts.xlsx",
+      "workbookSha256": "BF46ADABEBC8750DB6D69F9E1595027396DEDAEED893AA338E79FDEB83319740",
+      "copiedProvenanceSidecarSha256": "99A9703A80E5482C1102D83621B706A90058D2A8D401AA9264803A625E183605",
+      "freshSidecarSha256": "23A130461DB6B80222C6619B583EC5F0E5D999598D6241125B48465D0FEA071D",
+      "authoritativeSource": "Workflows/ResidentialCare/CapacityDistribution/CapacityDistrib-B.pq",
+      "authoritativeBaselineSha256": "2B6A4DC01E7400884047D4102E0AE0BB653BC8145B062E7A8065A3544E5C7820",
+      "provenanceMatchedWorkbook": false,
+      "placeholderRejected": true
+    }
+  ],
+  "notes": [
+    "All fresh sidecar headers identify the physical AIN2 workbook path.",
+    "The copied sidecars were stale relative to the saved workbook DataMashup and remain provenance only.",
+    "No workbook was recalculated, saved, synchronized, or refreshed during extraction."
+  ]
+}

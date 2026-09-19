@@ -1,0 +1,220 @@
+%%{init: {"markdownAutoWrap": false, "flowchart": {"htmlLabels": false}}}%%
+flowchart TD
+    %% Legend: QUERY = Power Query; TABLE = workbook interface table.
+    %% Role-specific files are repeated for RN, AIN and AINC4.
+
+    subgraph INPUT_AVAIL["FILE 01: AVAILABILITY INPUT<br/>StaffList Availability.xlsx"]
+        AM["TABLE: AvailabilityMatrix"]
+    end
+
+    subgraph INPUT_ALLOC["FILE 02: ROLE PROPORTION INPUT<br/>1&#45;AllocationExtracted.xlsx"]
+        RRP["TABLE: ResRolesProportion"]
+    end
+
+    subgraph SETTINGS["FILE 03: DATES, PERIODS AND LIMITS<br/>Settings Data.xlsx"]
+        T13["TABLE: Table13"]
+        TMD["TABLE: Table_Min_Date"]
+        PD["TABLE: PermutationDimensions"]
+        MAX["TABLE: MaxAvailability"]
+        DF["TABLE: DateFrom"]
+    end
+
+    subgraph SHIFT_AVAIL["FILE 04: NORMALISE THE AVAILABILITY MATRIX<br/>Capacity&#45;ShiftAvailability.xlsx"]
+        IA["QUERY: IMPORT AvailabilityDayShiftMATRIXRaw"]
+        PREP["QUERY: AvailabilityDayShift Prepare"]
+        RDSQ["QUERY: ResDayShift"]
+        RDST["TABLE: Table_ResDayShift<br/>Capacity pipeline interface"]
+
+        MR["QUERY: IMPORT MultiRolesResRolesProportion"]
+        RC["QUERY: RoleResDayAvailabilityCapped"]
+        RAC["QUERY/TABLE: RoleAvailabilityCapped<br/>Ancillary summary"]
+
+        ASLQ["QUERY: Availability&#45;StaffList"]
+        ASLT["SHEET: Availability&#45;StaffList<br/>Staff validation interface"]
+
+        IA --> PREP --> RDSQ --> RDST
+        MR --> RDSQ
+        RDSQ --> RC --> RAC
+        RC --> ASLQ --> ASLT
+    end
+
+    AM --> IA
+    RRP --> MR
+    T13 --> RDSQ
+    TMD --> RDSQ
+
+    subgraph STAFF_MASTER["FILE 05: MAP STAFF NAMES TO RESOURCE IDS<br/>StaffListMaster.xlsx"]
+        IASL["QUERY: Import Availability&#45;StaffList"]
+        AVL["QUERY: AvailableStaffList"]
+        MASTERQ["QUERY: Staff/master list processing"]
+        MASTERT["TABLE: Table_Masterlist<br/>Name to Resource ID"]
+
+        IASL --> AVL --> MASTERQ --> MASTERT
+    end
+
+    ASLT --> IASL
+
+    subgraph DEMAND["FILE 06: SHIFT DEMAND<br/>Demand.xlsx"]
+        DEMT["TABLE: ShiftDemandHCAverageANACC"]
+    end
+
+    subgraph ALLOCATION["FILE 07: EXISTING SHIFT ALLOCATION<br/>AllocationByShiftAverage.xlsx"]
+        RSAT["TABLE: ResourceShiftAllocation"]
+    end
+
+    subgraph A1["ROLE FILE 08A: BUILD ORIGINAL AVAILABILITY<br/>RN, AIN or AINC4/CapacityDistrib(A.1)&#45;shifts.xlsx"]
+        IRDS["QUERY: IMPORT ResDayShift"]
+        IMASTER["QUERY: IMPORT Masterlist"]
+        IPERM["QUERY: IMPORT PermutationDimensions"]
+        IDEM["QUERY: IMPORT ShiftUnitDemandHRS"]
+        IALLOC["QUERY: IMPORT ResourceShiftAllocation"]
+        IMAX["QUERY: IMPORT MaxAvailability"]
+
+        RPAV0["QUERY: ResPeriodAvailabilityTABLE !!<br/>Name + date + shift to resource + period<br/>Availability = 1"]
+        RPAVT["TABLE: ResPeriodAvailabilityTABLE<br/>OriginalAvailability<br/>SUPERSEDED by C#"]
+
+        RPALLOC["QUERY/TABLE: ResPeriodAllocationTABLE"]
+        DPREP["QUERY/TABLE: Demand Prepare"]
+        RPWD["QUERY/TABLE: ResPeriodWDTABLE"]
+        MULTI["QUERY/TABLE: MultiDayPeriod&#45;Remove"]
+        EMPTY["QUERY/TABLE: ResourcePeriodTABLE_empty"]
+        PRIOR["QUERY/TABLE: ResPeriodCapPrioritised"]
+
+        IRDS --> RPAV0
+        IMASTER --> RPAV0
+        IPERM --> RPAV0
+        RPAV0 --> RPAVT
+
+        IALLOC --> RPALLOC
+        IDEM --> DPREP
+        IMAX --> PRIOR
+        RPAV0 --> RPWD
+        RPAV0 --> MULTI
+        RPAV0 --> EMPTY
+        RPAV0 --> PRIOR
+        RPALLOC --> PRIOR
+        DPREP --> PRIOR
+    end
+
+    RDST --> IRDS
+    MASTERT --> IMASTER
+    PD --> IPERM
+    DEMT --> IDEM
+    RSAT --> IALLOC
+    MAX --> IMAX
+    DF --> A1
+
+    subgraph A2["ROLE FILE 08B: APPLY FIRST CAP C#<br/>RN, AIN or AINC4/CapacityDistrib(A.2)&#45;shifts.xlsx"]
+        IPRIOR["QUERY: IMPORT ResPeriodCapPrioritised"]
+        IMULTI["QUERY: IMPORT MultiPeriod Remove"]
+        IRPWD["QUERY: IMPORT ResPeriodWDTABLE"]
+        IORIG["QUERY: IMPORT ResPeriodAvailabilityTABLE"]
+        IEMPTY["QUERY: IMPORT ResourcePeriodTABLE_empty"]
+
+        PCRUN["QUERY: Period Running Total"]
+        RCRUN["QUERY: Resource Running Total"]
+
+        C1CALC["QUERY: ResPeriodCappedAvailability(C#)TABLE<br/>AvailabilityCapped = Availability + Reduction"]
+        C1BT["TABLE: ResPeriodCappedAvailability_C__TABLE<br/>C# interface for B"]
+
+        C1ALIAS["QUERY: ResPeriodAvailabilityCapped(C#)TABLE<br/>Pass through alias"]
+        C1T["TABLE: ResPeriodAvailabilityCapped_C__TABLE<br/>C# interface for Capacity.xlsx<br/>SUPERSEDED by C##"]
+
+        IPRIOR --> PCRUN --> RCRUN
+        IMULTI --> C1CALC
+        IRPWD --> C1CALC
+        IORIG --> C1CALC
+        IEMPTY --> C1CALC
+        RCRUN --> C1CALC
+        C1CALC --> C1BT
+        C1CALC --> C1ALIAS --> C1T
+    end
+
+    PRIOR --> IPRIOR
+    MULTI --> IMULTI
+    RPWD --> IRPWD
+    RPAVT --> IORIG
+    EMPTY --> IEMPTY
+
+    subgraph B["ROLE FILE 08C: PRODUCE C## AND FINAL C###<br/>RN, AIN or AINC4/CapacityDistrib(B)&#45;shifts.xlsx"]
+        IC1["QUERY: IMPORT ResPeriodAvailabilityCapped(C#)"]
+        IBO["QUERY: IMPORT AvailabilityOriginal"]
+        IBA["QUERY: IMPORT Allocation"]
+        IBD["QUERY: IMPORT Demand"]
+        IBNWD["QUERY: IMPORT ResPeriodNWDTABLE"]
+
+        REDIST["QUERY: ReDistribPeriodAvailbility TABLE"]
+        C2Q["QUERY: C##TABLE<br/>C## = C# minus selected redistribution"]
+        C2T["TABLE: C__TABLE<br/>C##<br/>SUPERSEDED by C###"]
+
+        MAXRED["QUERY: ResRosterAvailabilityC##CapReduction"]
+        PERIODRED["QUERY: ResPeriodMaxC##Reduction"]
+        FINALRED["QUERY: SubtractOverallocatedResources"]
+
+        C3Q["QUERY: C###TABLE B<br/>C### = C## minus final reduction"]
+        C3T["TABLE: C___TABLE_B<br/>C### FINAL"]
+
+        IC1 --> REDIST --> C2Q --> C2T
+        IBO --> REDIST
+        IBA --> REDIST
+        IBD --> REDIST
+        IBNWD --> REDIST
+
+        C2Q --> MAXRED
+        C2Q --> PERIODRED
+        MAXRED --> FINALRED
+        PERIODRED --> FINALRED
+        FINALRED --> C3Q
+        C2Q --> C3Q --> C3T
+    end
+
+    C1BT --> IC1
+    RPAVT --> IBO
+    RPALLOC --> IBA
+    DPREP --> IBD
+    RPWD --> IBNWD
+
+    subgraph CAPACITY["FILE 09: CONSOLIDATE ALL ROLES AND CAPACITY STAGES<br/>Capacity.xlsx"]
+        ROLEMAP["TABLE: Table6<br/>Role1, Role2, Role3"]
+
+        IORIGALL["QUERY: IMPORT OriginalResPeriodAvailability<br/>All three roles"]
+        IC1ALL["QUERY: IMPORT C#<br/>All three roles"]
+        IC2ALL["QUERY: IMPORT C##<br/>All three roles"]
+        IC3ALL["QUERY: IMPORT C###<br/>All three roles"]
+
+        DEVQ["QUERY: AvailabilityDeveloped<br/>Appends all roles and stages"]
+        DEVT["TABLE: AvailabilityDeveloped<br/>Canonical downstream interface"]
+
+        MATQ["QUERY/TABLE: AvailabilityDevelopedMATRIX<br/>Display/audit pivot"]
+        CAPQ["QUERY/TABLE: Capacity<br/>C### only; Resource = 94<br/>Narrow diagnostic"]
+
+        ROLEMAP --> IORIGALL
+        ROLEMAP --> IC1ALL
+        ROLEMAP --> IC2ALL
+        ROLEMAP --> IC3ALL
+
+        IORIGALL --> DEVQ
+        IC1ALL --> DEVQ
+        IC2ALL --> DEVQ
+        IC3ALL --> DEVQ
+        DEVQ --> DEVT
+        DEVQ --> MATQ
+
+        IC3ALL --> CAPQ
+    end
+
+    RPAVT --> IORIGALL
+    C1T --> IC1ALL
+    C2T --> IC2ALL
+    C3T --> IC3ALL
+    PD --> CAPQ
+
+    subgraph EFFORT["FILE 10: CONSUME FINAL C### CAPACITY<br/>Effort.xlsx"]
+        IAD["QUERY: IMPORT AvailabilityDeveloped"]
+        RSC["QUERY: RoleShiftCapacity<br/>Filters AvailabilityType = C###"]
+        EFFOUT["QUERY/TABLE: Effort outputs"]
+
+        IAD --> RSC --> EFFOUT
+    end
+
+    DEVT --> IAD
