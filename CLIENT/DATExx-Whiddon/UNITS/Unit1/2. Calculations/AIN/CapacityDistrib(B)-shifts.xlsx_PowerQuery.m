@@ -1,5 +1,5 @@
 // Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\RoleA\CapacityDistrib(B)-shifts.xlsx
+// Workbook: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
 // Extracted: 2026-05-21T00:54:05.796Z
 
 section Section1;
@@ -201,11 +201,21 @@ shared #"ResRosterAvailabilityC##CapReduction" = let
     Source = #"C##TABLE",
     #"Grouped Rows" = Table.Group(Source, {"Resource"}, {{"RosterAvailability", each List.Sum([#"C##"]), type nullable number}}),
     #"Replaced Value" = Table.ReplaceValue(#"Grouped Rows",null,0,Replacer.ReplaceValue,{"RosterAvailability"}),
-    #"Added AVAILCAP" = Table.AddColumn(#"Replaced Value", "RosterAvailabilityCAPPED", each if [RosterAvailability] > MaxAvailability
-then MaxAvailability
-else [RosterAvailability]),
+    // Join the cap only after aggregation so contract totals are never repeated at Resource-Period grain.
+    #"Merged Resource Contract" = Table.NestedJoin(#"Replaced Value", {"Resource"}, BResourceContract, {"Resource"}, "ResourceContract", JoinKind.LeftOuter),
+    #"Expanded Effective Shift Cap" = Table.ExpandTableColumn(#"Merged Resource Contract", "ResourceContract", {"Effective Shift Cap"}, {"Effective Shift Cap"}),
+    #"Added AVAILCAP" = Table.AddColumn(#"Expanded Effective Shift Cap", "RosterAvailabilityCAPPED", each
+        // Allocation-only Resources can remain in the grid with zero availability and no contract cap.
+        if [RosterAvailability] = 0 then 0
+        else if [Effective Shift Cap] = null then error Error.Record(
+            "CapacityDistribB.MissingResourceCap",
+            "A Resource with positive C## availability has no Effective Shift Cap.",
+            [Resource = [Resource], RosterAvailability = [RosterAvailability]]
+        )
+        else if [RosterAvailability] > [Effective Shift Cap] then [Effective Shift Cap]
+        else [RosterAvailability], type number),
     #"Inserted Subtraction" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
-    #"Removed Columns" = Table.RemoveColumns(#"Inserted Subtraction",{"RosterAvailability", "RosterAvailabilityCAPPED"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Inserted Subtraction",{"RosterAvailability", "RosterAvailabilityCAPPED", "Effective Shift Cap"}),
     #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"AvailabilityReduction", "MaxC##Reduction"}}),
     #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each ([#"MaxC##Reduction"] <> 0))
 in
@@ -251,6 +261,111 @@ in
 shared MaxAvailability = #"EXTRACT MaxAvailability";
 
 shared AllocationThreshold = 0.8 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
+
+// Query: IMPORTSource StaffListMaster
+// Purpose: Import the Unit1 StaffListMaster workbook once for B's Resource-grain contract caps.
+shared #"IMPORTSource StaffListMaster" = let
+    CalculationsPath = Text.BeforeDelimiter(RolePath, "\", {0, RelativePosition.FromEnd}),
+    WorkbookBinary = Binary.Buffer(File.Contents(CalculationsPath & "\StaffListMaster.xlsx")),
+    WorkbookNavigation = Excel.Workbook(WorkbookBinary, null, true)
+in
+    Table.Buffer(WorkbookNavigation);
+
+// Query: IMPORT ResourceContract
+// Purpose: Extract preferred-role contracts plus approved missing-worker fallbacks from Table_Masterlist for this role.
+// Output: One candidate cap row per applicable AIN Resource before B's independent checks.
+shared #"IMPORT ResourceContract" = let
+    Matches = Table.SelectRows(#"IMPORTSource StaffListMaster", each [Item] = "Table_Masterlist" and [Kind] = "Table"),
+    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("B resource contract import", "Expected exactly one Table_Masterlist table in StaffListMaster.xlsx.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Resource", "Role", "PreferredRole", "Source", "Worker Record Status", "Effective Shift Cap", "Limit Basis"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
+        else error Error.Record("B resource contract import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(Selected, {
+        {"Resource", Int64.Type}, {"Role", type text}, {"PreferredRole", type text},
+        {"Source", type text}, {"Worker Record Status", type text},
+        {"Effective Shift Cap", type number}, {"Limit Basis", type text}
+    }),
+    NormalizedRoles = Table.TransformColumns(Typed, {
+        {"Role", each if _ = null then null else Text.Clean(Text.Trim(_)), type nullable text},
+        {"PreferredRole", each if _ = null then null else Text.Clean(Text.Trim(_)), type nullable text}
+    }),
+    RoleValue = Role,
+    // Preserve preferred-role ownership, while allowing the approved Settings fallback for allocation-only employees absent from Worker's Report.
+    ApplicableRoleCaps = Table.SelectRows(NormalizedRoles, each
+        [Role] = RoleValue
+            and ([PreferredRole] = RoleValue
+                or ([Source] = "Allocation" and [Worker Record Status] = "Not found")))
+in
+    Table.Buffer(ApplicableRoleCaps);
+
+// Query: BResourceContract_CHECK
+// Purpose: Validate unique Resource contracts, usable caps and complete coverage of AIN availability resources.
+// Output: Connection-only diagnostic rows used by BResourceContract and the final B publication gate.
+shared BResourceContract_CHECK = let
+    Contracts = #"IMPORT ResourceContract",
+    ContractKeys = Table.SelectColumns(Contracts, {"Resource"}),
+    ErrorKeyRows = Table.RowCount(Table.SelectRowsWithErrors(ContractKeys, {"Resource"})),
+    KeysWithoutErrors = Table.RemoveRowsWithErrors(ContractKeys, {"Resource"}),
+    MissingKeyRows = Table.RowCount(Table.SelectRows(KeysWithoutErrors, each [Resource] = null)),
+    CompleteKeys = Table.SelectRows(KeysWithoutErrors, each [Resource] <> null),
+    ContractCounts = Table.Group(CompleteKeys, {"Resource"}, {{"ContractRows", each Table.RowCount(_), Int64.Type}}),
+    DuplicateResourceGroups = Table.RowCount(Table.SelectRows(ContractCounts, each [ContractRows] > 1)),
+    ContractValues = Table.SelectColumns(Contracts, {"Effective Shift Cap", "Limit Basis"}),
+    ErrorContractRows = Table.RowCount(Table.SelectRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"})),
+    ContractValuesWithoutErrors = Table.RemoveRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"}),
+    InvalidCapRows = ErrorContractRows + Table.RowCount(Table.SelectRows(ContractValuesWithoutErrors, each
+        [Effective Shift Cap] = null
+            or [Effective Shift Cap] <= 0
+            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])
+            or [Limit Basis] = null
+            or Text.Trim([Limit Basis]) = "")),
+    // Coverage is assessed at Resource grain before any Resource-Period distribution joins.
+    AvailabilityResources = Table.Distinct(Table.SelectColumns(
+        // Only Resources contributing positive availability require contract coverage.
+        Table.SelectRows(#"IMPORT AvailabilityOriginal", each
+            [Resource] <> null and [Availability] <> null and [Availability] > 0),
+        {"Resource"}
+    )),
+    MissingCoverage = Table.RowCount(Table.NestedJoin(
+        AvailabilityResources, {"Resource"}, CompleteKeys, {"Resource"}, "Contract", JoinKind.LeftAnti
+    )),
+    MissingWorkerKeys = Table.Distinct(Table.SelectColumns(
+        Table.SelectRows(Table.RemoveRowsWithErrors(Contracts, {"Resource", "Worker Record Status"}), each
+            [Resource] <> null and [Worker Record Status] = "Not found"),
+        {"Resource"}
+    )),
+    // The Settings fallback is allowed only for allocation-only Resources that contribute no AIN availability.
+    MissingWorkerPositiveAvailability = Table.RowCount(Table.NestedJoin(
+        AvailabilityResources, {"Resource"}, MissingWorkerKeys, {"Resource"}, "MissingWorker", JoinKind.Inner
+    )),
+    Checks = #table(
+        type table [Check = text, Status = text, Failures = number, Details = nullable text],
+        {
+            {"Populated Resource contract keys", if ErrorKeyRows + MissingKeyRows = 0 then "Pass" else "Fail", ErrorKeyRows + MissingKeyRows, null},
+            {"Unique Resource contracts", if DuplicateResourceGroups = 0 then "Pass" else "Fail", DuplicateResourceGroups, null},
+            {"Valid effective Resource caps", if InvalidCapRows = 0 then "Pass" else "Fail", InvalidCapRows, null},
+            {"Complete AIN availability contract coverage", if MissingCoverage = 0 then "Pass" else "Fail", MissingCoverage, null},
+            {"Missing-worker fallback has zero AIN availability", if MissingWorkerPositiveAvailability = 0 then "Pass" else "Fail", MissingWorkerPositiveAvailability, null}
+        }
+    )
+in
+    Table.Buffer(Checks);
+
+// Query: BResourceContract
+// Purpose: Publish one validated Effective Shift Cap per Resource for B's Resource-grain calculations.
+shared BResourceContract = let
+    Failures = Table.SelectRows(BResourceContract_CHECK, each [Status] <> "Pass"),
+    Checked = if Table.IsEmpty(Failures) then #"IMPORT ResourceContract"
+        else error Error.Record(
+            "CapacityDistribB.ResourceContractValidation",
+            "Resource contracts are missing, duplicated or invalid. Review BResourceContract_CHECK.",
+            Failures
+        ),
+    Output = Table.SelectColumns(Checked, {"Resource", "Effective Shift Cap", "Limit Basis"})
+in
+    Table.Buffer(Output);
 
 // Query: IMPORTSource A1
 // Purpose: Provide the A.1 workbook binary and navigation table for the four existing imports.
@@ -330,11 +445,21 @@ shared ResRosterAvailabilityCapReduction = let
     Source = ResPeriodAvailabilityTABLE,
     #"Grouped ROSTERAVAILABILITY" = Table.Group(Source, {"Resource"}, {{"RosterAvailability", each List.Sum([#"C#"]), type nullable number}}),
     #"Replaced Value" = Table.ReplaceValue(#"Grouped ROSTERAVAILABILITY",null,0,Replacer.ReplaceValue,{"RosterAvailability"}),
-    #"Added AVAILCAP" = Table.AddColumn(#"Replaced Value", "RosterAvailabilityCAPPED", each if [RosterAvailability] > MaxAvailability
-then MaxAvailability
-else [RosterAvailability]),
+    // Join the cap only after aggregation so contract totals are never repeated at Resource-Period grain.
+    #"Merged Resource Contract" = Table.NestedJoin(#"Replaced Value", {"Resource"}, BResourceContract, {"Resource"}, "ResourceContract", JoinKind.LeftOuter),
+    #"Expanded Effective Shift Cap" = Table.ExpandTableColumn(#"Merged Resource Contract", "ResourceContract", {"Effective Shift Cap"}, {"Effective Shift Cap"}),
+    #"Added AVAILCAP" = Table.AddColumn(#"Expanded Effective Shift Cap", "RosterAvailabilityCAPPED", each
+        // Allocation-only Resources can remain in the grid with zero availability and no contract cap.
+        if [RosterAvailability] = 0 then 0
+        else if [Effective Shift Cap] = null then error Error.Record(
+            "CapacityDistribB.MissingResourceCap",
+            "A Resource with positive C# availability has no Effective Shift Cap.",
+            [Resource = [Resource], RosterAvailability = [RosterAvailability]]
+        )
+        else if [RosterAvailability] > [Effective Shift Cap] then [Effective Shift Cap]
+        else [RosterAvailability], type number),
     #"Inserted Subtraction" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
-    #"Removed Columns" = Table.RemoveColumns(#"Inserted Subtraction",{"RosterAvailability", "RosterAvailabilityCAPPED"})
+    #"Removed Columns" = Table.RemoveColumns(#"Inserted Subtraction",{"RosterAvailability", "RosterAvailabilityCAPPED", "Effective Shift Cap"})
 in
     #"Removed Columns";
 
@@ -627,11 +752,23 @@ in
 shared ResMaxAvailability = let
     Source = #"IMPORT AvailabilityOriginal",
     #"Grouped Rows" = Table.Group(Source, {"Resource"}, {{"ResAvailability", each List.Sum([Availability]), type nullable number}}),
-    #"Added RESMAXAVAILABILITY" = Table.AddColumn(#"Grouped Rows", "ResMaxAvail", each if [ResAvailability] > MaxAvailability 
-then MaxAvailability
-else [ResAvailability])
+    // ResMaxAvail is a Resource measure, so attach the contract cap after Resource aggregation.
+    #"Merged Resource Contract" = Table.NestedJoin(#"Grouped Rows", {"Resource"}, BResourceContract, {"Resource"}, "ResourceContract", JoinKind.LeftOuter),
+    #"Expanded Effective Shift Cap" = Table.ExpandTableColumn(#"Merged Resource Contract", "ResourceContract", {"Effective Shift Cap"}, {"Effective Shift Cap"}),
+    #"Added RESMAXAVAILABILITY" = Table.AddColumn(#"Expanded Effective Shift Cap", "ResMaxAvail", each
+        // A Resource with no original availability does not need a contract cap in this calculation.
+        if [ResAvailability] = null then 0
+        else if [ResAvailability] = 0 then 0
+        else if [Effective Shift Cap] = null then error Error.Record(
+            "CapacityDistribB.MissingResourceCap",
+            "A Resource with positive original availability has no Effective Shift Cap.",
+            [Resource = [Resource], ResAvailability = [ResAvailability]]
+        )
+        else if [ResAvailability] > [Effective Shift Cap] then [Effective Shift Cap]
+        else [ResAvailability], type number),
+    #"Removed Effective Shift Cap" = Table.RemoveColumns(#"Added RESMAXAVAILABILITY", {"Effective Shift Cap"})
 in
-    #"Added RESMAXAVAILABILITY";
+    #"Removed Effective Shift Cap";
 
 shared ResourcesLIST = let
     Source = ResPeriodAvailabilityTABLE,
@@ -712,12 +849,16 @@ in
 // Output: Preserve the existing final-capacity table interface used by C###SUM and C###MATRIX.
 shared #"C###TABLE B" = let
     InputChecks = CapacityDistribB_INPUT_CHECK,
+    ContractChecks = BResourceContract_CHECK,
     // Gate the source actually consumed below so lazy evaluation cannot skip required validation.
-    Source = if List.AllTrue(InputChecks[Passed]) then #"C##TABLE"
+    Source = if List.AllTrue(InputChecks[Passed]) and List.AllTrue(List.Transform(ContractChecks[Status], each _ = "Pass")) then #"C##TABLE"
         else error Error.Record(
             "CapacityDistribB.InputValidation",
-            "Required join keys are missing, erroneous or duplicated. Review CapacityDistribB_INPUT_CHECK.",
-            Table.SelectRows(InputChecks, each [Passed] <> true)
+            "Required join keys or Resource contracts failed validation. Review CapacityDistribB_INPUT_CHECK and BResourceContract_CHECK.",
+            [
+                InputFailures = Table.SelectRows(InputChecks, each [Passed] <> true),
+                ContractFailures = Table.SelectRows(ContractChecks, each [Status] <> "Pass")
+            ]
         ),
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, SubtractOverallocatedResources, {"Resource", "Period"}, "SubtractAvailablilityTABLE", JoinKind.LeftOuter),
     #"Expanded SubtractAvailablilityTABLE" = Table.ExpandTableColumn(#"Merged Queries", "SubtractAvailablilityTABLE", {"MinimumAvailable", "KeepPR"}, {"MinimumAvailable", "KeepPR"}),

@@ -1,5 +1,5 @@
 // Power Query from: Capacity-ShiftAvailability.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\Capacity-ShiftAvailability.xlsx
+// Workbook: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\Capacity-ShiftAvailability.xlsx
 // Extracted: 2026-05-18T06:14:10.401Z
 
 section Section1;
@@ -10,10 +10,6 @@ shared #"IMPORT MultiRolesResRolesProportion" = let
     #"Changed Type" = Table.TransformColumnTypes(ResRolesProportion_Table,{{"Name", type text}, {"AINC4", type number}, {"AIN", type number}, {"Total", type number}, {"AINC4HrsAvilPref", type number}})
 in
     #"Changed Type";
-
-// Query: StdRosterDays
-// Purpose: Preserve the existing ancillary roster-day cap; this does not set effective shift hours.
-shared StdRosterDays = 20 meta [IsParameterQuery=true, Type="Number", IsParameterQueryRequired=true];
 
 // Query: AvailabilityText
 // Purpose: Normalize optional identifiers and names without converting text identifiers to numbers.
@@ -78,13 +74,72 @@ shared #"IMPORT Reconciled Workers" = let
         each {_, AvailabilityText, type nullable text}))
 in Normalized;
 
+// Query: IMPORT Worker's Report
+// Purpose: Read the Unit1 employee contract source once for downstream contract preparation.
+// Inputs: Table1 in 1. Input/Worker's Report.xlsx.
+// Output: Employee Code and Contracted FN Hours at source-row grain.
+shared #"IMPORT Worker's Report" = let
+    Navigation = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\Worker's Report.xlsx"), null, true),
+    Matches = Table.SelectRows(Navigation, each [Item] = "Table1" and [Kind] = "Table"),
+    ContractTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("Worker contract import", "Expected exactly one Table1 table in Worker's Report.xlsx.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Employee Code", "Contracted FN Hours"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ContractTable)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(ContractTable, RequiredColumns)
+        else error Error.Record("Worker contract import", "Worker's Report.xlsx/Table1 is missing required columns.", [MissingColumns = MissingColumns])
+in Table.Buffer(Selected);
+
+// Query: WorkerContracts_Prepare
+// Purpose: Resolve Worker's Report to one validated fortnightly contract value per employee.
+// Notes: Identical duplicate rows are allowed; blank versus populated, distinct values, non-numeric values, negative values and non-finite values are invalid.
+shared WorkerContracts_Prepare = let
+    NormalizedEmployee = Table.TransformColumns(#"IMPORT Worker's Report",
+        {{"Employee Code", AvailabilityText, type nullable text}}),
+    ParsedContract = Table.AddColumn(NormalizedEmployee, "ContractParse", each
+        let
+            RawAttempt = try [Contracted FN Hours],
+            RawValue = if RawAttempt[HasError] then null else RawAttempt[Value],
+            IsBlank = not RawAttempt[HasError] and AvailabilityText(RawValue) = null,
+            Attempt = if RawAttempt[HasError] or IsBlank then null else try Number.From(RawValue),
+            ParseError = if RawAttempt[HasError] then true else if IsBlank then false else Attempt[HasError],
+            ContractValue = if ParseError or IsBlank then null else Attempt[Value]
+        in [ContractValue = ContractValue, IsBlank = IsBlank, ParseError = ParseError],
+        type [ContractValue = nullable number, IsBlank = logical, ParseError = logical]),
+    ExpandedContract = Table.ExpandRecordColumn(ParsedContract, "ContractParse",
+        {"ContractValue", "IsBlank", "ParseError"}),
+    // Rows without an employee code cannot participate in an employee contract join.
+    IdentifiedRows = Table.SelectRows(ExpandedContract, each [Employee Code] <> null),
+    RenamedEmployee = Table.RenameColumns(IdentifiedRows, {{"Employee Code", "EmployeeID"}}),
+    Grouped = Table.Group(RenamedEmployee, {"EmployeeID"},
+        {{"ContractValues", each List.Distinct(List.RemoveNulls([ContractValue])), type list},
+         {"BlankRows", each List.Count(List.Select([IsBlank], each _ = true)), Int64.Type},
+         {"ParseErrors", each List.Count(List.Select([ParseError], each _ = true)), Int64.Type}}),
+    Resolved = Table.AddColumn(Grouped, "ContractResolution", each
+        let
+            Values = [ContractValues],
+            HasNonFinite = List.AnyTrue(List.Transform(Values, each Number.IsNaN(_) or Number.Abs(_) = #infinity)),
+            HasNegative = List.AnyTrue(List.Transform(Values, each _ < 0)),
+            HasConflict = List.Count(Values) > 1 or ([BlankRows] > 0 and List.Count(Values) > 0),
+            Issue = if [ParseErrors] > 0 then "Non-numeric Contracted FN Hours"
+                else if HasNonFinite then "Non-finite Contracted FN Hours"
+                else if HasNegative then "Negative Contracted FN Hours"
+                else if HasConflict then "Conflicting Contracted FN Hours"
+                else null,
+            ContractHours = if List.Count(Values) = 1 then Values{0} else null
+        in [Contracted FN Hours = ContractHours, Issue = Issue],
+        type [Contracted FN Hours = nullable number, Issue = nullable text]),
+    ExpandedResolution = Table.ExpandRecordColumn(Resolved, "ContractResolution",
+        {"Contracted FN Hours", "Issue"}),
+    Output = Table.SelectColumns(ExpandedResolution, {"EmployeeID", "Contracted FN Hours", "Issue"})
+in Table.Buffer(Output);
+
 // Query: IMPORT Availability Settings
-// Purpose: Share the Settings workbook navigation among the shift, calendar and allowance imports.
+// Purpose: Share the Settings workbook navigation among the shift, calendar, allowance and maximum-availability extracts.
 shared #"IMPORT Availability Settings" =
     let
         Navigation = Excel.Workbook(File.Contents(#"FilePath - 2Calculations" & "\Settings Data.xlsx"), null, true),
         Required = Table.SelectRows(Navigation, each
-            ([Item] = "ShiftDuration" and List.Contains({"Table", "DefinedName"}, [Kind]))
+            (List.Contains({"ShiftDuration", "MaxAvailability"}, [Item]) and List.Contains({"Table", "DefinedName"}, [Kind]))
             or (List.Contains({"ShiftPeriod", "PermutationDimensions"}, [Item]) and [Kind] = "Table")),
         // Buffer only required data tables; navigation buffering alone is shallow.
         BufferedData = Table.TransformColumns(Required, {{"Data", each Table.Buffer(_), type table}})
@@ -107,6 +162,25 @@ shared #"EXTRACT EffectiveShiftHrs" = let
         else if Number.IsNaN(Allowance) or Allowance <= 0 or Allowance = #infinity then
             error "ShiftDuration must be a positive finite number."
         else Allowance
+in Validated;
+
+// Query: EXTRACT MaxAvailability
+// Purpose: Validate the Settings maximum number of shifts available to one resource for the roster.
+// Inputs: MaxAvailability table or named range, containing exactly one positive whole number.
+shared #"EXTRACT MaxAvailability" = let
+    Matches = Table.SelectRows(#"IMPORT Availability Settings",
+        each [Item] = "MaxAvailability" and List.Contains({"Table", "DefinedName"}, [Kind])),
+    Data = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("Maximum availability settings", "Expected exactly one MaxAvailability table or defined name in Settings Data.", [Matches = Table.RowCount(Matches)]),
+    WithHeaders = if Table.HasColumns(Data, "MaxAvailability") then Data
+        else Table.PromoteHeaders(Data, [PromoteAllScalars = true]),
+    Values = Table.Column(WithHeaders, "MaxAvailability"),
+    Maximum = if List.Count(Values) = 1 then Number.From(Values{0})
+        else error "MaxAvailability must contain exactly one value.",
+    Validated = if Maximum = null or Number.IsNaN(Maximum) or Number.Abs(Maximum) = #infinity
+        or Maximum <= 0 or Maximum <> Number.RoundDown(Maximum) then
+            error "MaxAvailability must be one positive whole number."
+        else Int64.From(Maximum)
 in Validated;
 
 // Query: AvailabilityRecords
@@ -151,7 +225,12 @@ shared ReconciledWorkers_Prepare = let
         if [SourceRole] = "Registered Nurse" then "RN"
         else if [SourceRole] = "Assistant in Nursing" then "AIN"
         else if [SourceRole] = "Enrolled Nurse" then "AINC4" else null, type nullable text),
-    JoinedNames = Table.NestedJoin(MappedRole, {"EmployeeID", "Facility-Abbrev"},
+    // Contract hours belong to the employee, not to an employee-period or role split.
+    JoinedContracts = Table.NestedJoin(MappedRole, {"EmployeeID"},
+        WorkerContracts_Prepare, {"EmployeeID"}, "Contract", JoinKind.LeftOuter),
+    ExpandedContracts = Table.ExpandTableColumn(JoinedContracts, "Contract",
+        {"Contracted FN Hours", "Issue"}, {"Contracted FN Hours", "ContractIssue"}),
+    JoinedNames = Table.NestedJoin(ExpandedContracts, {"EmployeeID", "Facility-Abbrev"},
         SourceNames, {"Payroll Code", "Facility-Abbrev"}, "Names", JoinKind.LeftOuter),
     ResolvedNames = Table.AddColumn(JoinedNames, "NameCandidates", each
         if not List.IsEmpty([RosterNames]) then [RosterNames]
@@ -164,6 +243,7 @@ shared ReconciledWorkers_Prepare = let
         else if [#"Facility-Abbrev"] <> "BD" then "Outside temporary BD scope"
         else if [SourceRole] = null then "Missing role"
         else if [Role] = null then "Role outside approved nursing mappings"
+        else if [ContractIssue] <> null then [ContractIssue]
         else if [BaseName] = null then "Missing or ambiguous worker name"
         else null, type nullable text),
     Result = Table.RemoveColumns(Eligibility, {"Names", "RosterNames", "NameCandidates"})
@@ -176,7 +256,7 @@ in Table.Buffer(Result);
 shared ReconciledWorkers_Eligible = let
     Included = Table.SelectRows(ReconciledWorkers_Prepare, each [Issue] = null),
     UniqueWorkers = Table.Distinct(Table.SelectColumns(Included,
-        {"EmployeeID", "Facility-Abbrev", "Role", "BaseName", "EmploymentType"})),
+        {"EmployeeID", "Facility-Abbrev", "Role", "BaseName", "EmploymentType", "Contracted FN Hours"})),
     RoleCounts = Table.Group(UniqueWorkers, {"EmployeeID", "Facility-Abbrev"},
         {{"RoleCount", each List.Count(List.Distinct([Role])), Int64.Type}}),
     JoinedCounts = Table.NestedJoin(UniqueWorkers, {"EmployeeID", "Facility-Abbrev"},
@@ -187,8 +267,10 @@ shared ReconciledWorkers_Eligible = let
     // StaffListMaster deduplicates by Name: every reconciled multi-role worker needs the same suffix convention.
     DisplayNames = Table.AddColumn(JoinedCounts, "Name", each
         if [Roles]{0}[RoleCount] > 1 or List.Contains(MultiRoleNames, [BaseName]) then [BaseName] & " (" & [Role] & ")"
-        else [BaseName], type text)
-in Table.Buffer(Table.RemoveColumns(DisplayNames, {"Roles"}));
+        else [BaseName], type text),
+    // Worker Reconciliation has already selected the preferred role; retain it explicitly for downstream joins and reporting.
+    PreferredRole = Table.AddColumn(DisplayNames, "PreferredRole", each [Role], type text)
+in Table.Buffer(Table.RemoveColumns(PreferredRole, {"Roles"}));
 
 // Query: WorkerAvailability_DIAGNOSTICS
 // Purpose: Show excluded reconciliation rows and extraction workers absent from the selected register.
@@ -400,9 +482,14 @@ shared AvailabilityCheckResult = (name as text, evaluate as function) as record 
 // Purpose: Gate worker outputs using identity checks without evaluating shift intervals.
 shared ReconciledWorkers_CHECK = let
     Workers = ReconciledWorkers_Eligible,
+    RelevantContractIssues = Table.SelectRows(ReconciledWorkers_Prepare, each
+        [#"Facility-Abbrev"] = "BD" and [Role] <> null and [ContractIssue] <> null),
     Checks = {
         AvailabilityCheckResult("Unique worker keys", () => Table.RowCount(Workers) -
             Table.RowCount(Table.Distinct(Workers, {"EmployeeID", "Facility-Abbrev", "Role"}))),
+        AvailabilityCheckResult("One preferred role per employee and facility", () => Table.RowCount(Workers) -
+            Table.RowCount(Table.Distinct(Workers, {"EmployeeID", "Facility-Abbrev"}))),
+        AvailabilityCheckResult("Valid relevant worker contracts", () => Table.RowCount(RelevantContractIssues)),
         // Names alone must remain unique because the existing master list uses that key.
         AvailabilityCheckResult("Unambiguous published names", () => Table.RowCount(Workers) -
             Table.RowCount(Table.Distinct(Workers, {"Name"})))
@@ -466,8 +553,10 @@ in
 
 shared RoleResDayAvailabilityCapped = let
     Source = ResDayShift,
+    SettingsMaximum = #"EXTRACT MaxAvailability",
     #"Grouped Rows" = Table.Group(Source, {"Role", "Name"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
-    #"Added STDDAYSAVAIL" = Table.AddColumn(#"Grouped Rows", "StdRosterDays", each StdRosterDays),
+    // Preserve the existing output column name while sourcing its value from Settings Data.
+    #"Added STDDAYSAVAIL" = Table.AddColumn(#"Grouped Rows", "StdRosterDays", each SettingsMaximum, Int64.Type),
     #"Merged Queries" = Table.NestedJoin(#"Added STDDAYSAVAIL", {"Name"}, MultiRoles, {"Name"}, "IMPORT ResRolesProportion2", JoinKind.LeftOuter),
     #"Expanded IMPORT ResRolesProportion2" = Table.ExpandTableColumn(#"Merged Queries", "IMPORT ResRolesProportion2", {"AINC4HrsAvilPref", "MultiRole"}, {"AINC4HrsAvilPref", "MultiRole"}),
     #"Added ROLESPLIT" = Table.AddColumn(#"Expanded IMPORT ResRolesProportion2", "RoleSplit", each if [MultiRole] = null then null  
@@ -495,13 +584,15 @@ in
     #"Grouped Rows";
 
 // Query: Availability-StaffList
-// Purpose: Preserve the staff identity interface, including eligible workers with no available shifts.
+// Purpose: Publish eligible staff identity and fortnightly contract fields, including workers with no available shifts.
+// Output: One row per reconciled preferred employee/resource with facility, employment type and Contracted FN Hours.
 shared #"Availability-StaffList" = let
     Failures = Table.SelectRows(ReconciledWorkers_CHECK, each [Status] <> "Pass"),
     Workers = if Table.IsEmpty(Failures) then ReconciledWorkers_Eligible
         else error Error.Record("Availability staff validation", "Required worker identity checks failed.", Failures),
-    Output = Table.Distinct(Table.SelectColumns(Workers, {"Name", "Role"}))
-in Table.Sort(Output, {{"Name", Order.Ascending}, {"Role", Order.Ascending}});
+    Output = Table.Distinct(Table.SelectColumns(Workers,
+        {"EmployeeID", "Facility-Abbrev", "Name", "Role", "PreferredRole", "EmploymentType", "Contracted FN Hours"}))
+in Table.Sort(Output, {{"Facility-Abbrev", Order.Ascending}, {"PreferredRole", Order.Ascending}, {"Name", Order.Ascending}});
 
 shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
 let

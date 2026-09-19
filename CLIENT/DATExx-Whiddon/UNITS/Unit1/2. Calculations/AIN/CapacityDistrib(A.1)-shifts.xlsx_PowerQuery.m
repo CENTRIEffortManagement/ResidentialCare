@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(A.1)-shifts.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\RoleA\CapacityDistrib(A.1)-shifts.xlsx
-// Extracted: 2026-05-21T00:53:59.335Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\AIN\CapacityDistrib(A.1)-shifts.xlsx
+// Extracted: 2026-09-18T04:03:23.214Z
 
 section Section1;
 
@@ -13,18 +13,41 @@ shared #"IMPORT ShiftUnitDemandHRS !!" = let
 in
     #"Changed Type";
 
+// Query: IMPORT Masterlist !!
+// Purpose: Import the Unit1 master list and retain the employee-level effective cap for this role.
+// Output: One row per master-list Resource before A.1 coverage validation.
 shared #"IMPORT Masterlist !!" = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\StaffListMaster.xlsx"), null, true),
-    Table_Masterlist_Table = Source{[Item="Table_Masterlist",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(Table_Masterlist_Table, each ([Role] = Role)),
-    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"Role", type text}})
+    Navigation = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\StaffListMaster.xlsx"), null, true),
+    Matches = Table.SelectRows(Navigation, each [Item] = "Table_Masterlist" and [Kind] = "Table"),
+    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 master-list import", "Expected exactly one Table_Masterlist table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Name", "Role", "Resource", "EmployeeID", "Facility-Abbrev", "PreferredRole", "Contracted FN Hours",
+        "Contracted Shifts", "Settings Max Availability", "Effective Shift Cap", "Limit Basis"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
+        else error Error.Record("A.1 master-list import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
+    FilteredRole = Table.SelectRows(Selected, each [Role] = Role),
+    Typed = Table.TransformColumnTypes(FilteredRole,
+        {{"Name", type text}, {"Role", type text}, {"Resource", Int64.Type}, {"EmployeeID", type text},
+         {"Facility-Abbrev", type text}, {"PreferredRole", type text}, {"Contracted FN Hours", type nullable number},
+         {"Contracted Shifts", Int64.Type}, {"Settings Max Availability", Int64.Type},
+         {"Effective Shift Cap", Int64.Type}, {"Limit Basis", type text}})
 in
-    #"Changed Type";
+    Typed;
+
+// Query: A1CheckResult
+// Purpose: Convert an A.1 contract validation count or evaluation error into a consistent check row.
+shared A1CheckResult = (name as text, evaluate as function) as record =>
+    let Result = try evaluate()
+    in [Check = name, Status = if Result[HasError] then "Fail" else if Result[Value] = 0 then "Pass" else "Fail",
+        Failures = if Result[HasError] then null else Result[Value],
+        Details = if Result[HasError] then (try Result[Error][Message] otherwise "Evaluation failed") else null];
 
 shared #"IMPORT ResDayShift !!" = let
     Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Capacity-ShiftAvailability.xlsx"), null, true),
-    Table_ResDayShift_Table = Source{[Item="Table_ResDayShift",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(Table_ResDayShift_Table, each ([Role] = Role)),
+    ResDayShift_Table = Source{[Item="ResDayShift",Kind="Table"]}[Data],
+    #"Changed Type2" = Table.TransformColumnTypes(ResDayShift_Table,{{"Role", type text}, {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", type date}, {"Name", type text}, {"ID", Int64.Type}, {"Facility-Abbrev", type text}}),
+    #"Filtered ROLE" = Table.SelectRows(#"Changed Type2", each ([Role] = Role)),
     #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"Role", type text}, {"Name", type text},  {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", Int64.Type}}),
     #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Date", type date}})
 in
@@ -61,10 +84,22 @@ shared Resources = let
 in
     Source;
 
+// Query: A1ResourceContract
+// Purpose: Expose the role-filtered master-list contract at one row per Resource for the A.1 cap join.
+shared A1ResourceContract = let
+    Source = #"IMPORT Masterlist !!",
+    Selected = Table.SelectColumns(Source,
+        {"Resource", "Role", "EmployeeID", "Facility-Abbrev", "PreferredRole", "Contracted FN Hours",
+         "Contracted Shifts", "Settings Max Availability", "Effective Shift Cap", "Limit Basis"})
+in Table.Buffer(Selected);
+
+// Query: ResourcePeriodTABLE-empty
+// Purpose: Build the Resource-period skeleton while standardising Settings input Shifts to downstream Shift.
 shared #"ResourcePeriodTABLE-empty" = let
     Source = Resources,
     #"Added Custom" = Table.AddColumn(Source, "Periods", each #"PeriodShiftDay B"),
-    #"Expanded Periods" = Table.ExpandTableColumn(#"Added Custom", "Periods", {"Period", "Shift", "Day"}, {"Period", "Shift", "Day"}),
+    // Settings exposes Shifts; downstream A.1 calculations use the singular Shift interface.
+    #"Expanded Periods" = Table.ExpandTableColumn(#"Added Custom", "Periods", {"Period", "Shifts", "Day"}, {"Period", "Shift", "Day"}),
     #"Filtered Rows" = Table.SelectRows(#"Expanded Periods", each ([Period] <> "W")),
     #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows",{{"Resource", Int64.Type}, {"Period", Int64.Type}})
 in
@@ -206,11 +241,42 @@ shared #"ResC'" = let
 in
     #"Grouped Rows";
 
+// Query: A1ResourceContract_CHECK
+// Purpose: Require one valid preferred-role contract for every Resource contributing AIN availability.
+shared A1ResourceContract_CHECK = let
+    Contracts = A1ResourceContract,
+    AvailabilityResources = Table.Distinct(Table.SelectColumns(#"ResC'", {"Resource"})),
+    Coverage = Table.NestedJoin(AvailabilityResources, {"Resource"}, Contracts, {"Resource"}, "Contract", JoinKind.LeftOuter),
+    WithMatchCount = Table.AddColumn(Coverage, "ContractMatchCount", each Table.RowCount([Contract]), Int64.Type),
+    SingleMatches = Table.SelectRows(WithMatchCount, each [ContractMatchCount] = 1),
+    ExpandedMatches = Table.ExpandTableColumn(SingleMatches, "Contract",
+        {"Role", "EmployeeID", "PreferredRole", "Effective Shift Cap"},
+        {"Contract Role", "EmployeeID", "PreferredRole", "Effective Shift Cap"}),
+    Checks = {
+        A1CheckResult("Unique Resource contracts", () => Table.RowCount(Contracts) -
+            Table.RowCount(Table.Distinct(Contracts, {"Resource"}))),
+        A1CheckResult("Complete AIN availability contract coverage", () =>
+            Table.RowCount(Table.SelectRows(WithMatchCount, each [ContractMatchCount] <> 1))),
+        A1CheckResult("Valid AIN effective shift caps", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
+            [Effective Shift Cap] = null or [Effective Shift Cap] <= 0
+            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])))),
+        A1CheckResult("Preferred role matches AIN contract", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
+            [Contract Role] <> Role or [PreferredRole] <> Role or [EmployeeID] = null)))
+    }
+in Table.Buffer(Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text]));
+
+// Query: ResAv-C'
+// Purpose: Apply the employee contract cap to redistributable roster availability at Resource grain.
 shared #"ResAv-C'" = let
-    Source = #"ResC'",
-    #"Added AVAILCAP" = Table.AddColumn(Source, "RosterAvailabilityCAPPED", each if [RosterAvailability] > #"EXTRACT MaxAvailability"
-then #"EXTRACT MaxAvailability"
-else [RosterAvailability]),
+    Failures = Table.SelectRows(A1ResourceContract_CHECK, each [Status] <> "Pass"),
+    Source = if Table.IsEmpty(Failures) then #"ResC'"
+        else error Error.Record("A.1 resource contract validation", "Required Resource contract checks failed.", Failures),
+    // Join once at Resource grain; never repeat roster contract totals across Resource-period rows.
+    JoinedContract = Table.NestedJoin(Source, {"Resource"}, A1ResourceContract, {"Resource"}, "ResourceContract", JoinKind.LeftOuter),
+    ExpandedContract = Table.ExpandTableColumn(JoinedContract, "ResourceContract",
+        {"Effective Shift Cap", "Limit Basis"}, {"Effective Shift Cap", "Limit Basis"}),
+    #"Added AVAILCAP" = Table.AddColumn(ExpandedContract, "RosterAvailabilityCAPPED", each
+        if [RosterAvailability] > [Effective Shift Cap] then [Effective Shift Cap] else [RosterAvailability], type number),
     #"Inserted REDUCTION" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
     #"Renamed Columns" = Table.RenameColumns(#"Inserted REDUCTION",{{"AvailabilityReduction", "ResAv-C'"}})
 in
