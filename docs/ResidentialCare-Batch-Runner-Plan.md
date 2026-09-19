@@ -183,6 +183,12 @@ per-job `refresh.log` files contain detailed refresh/readiness heartbeats.
 Validation-only explicitly says Excel was not opened; execution instead announces
 that the selected refresh is starting.
 
+At the end of each execution attempt, the window displays `Run duration` in
+hours:minutes:seconds, including setup, refresh, reporting and cleanup after
+run exclusion is acquired. It excludes selection/validation and the final key
+wait. Resumed runs time the current attempt only. Failed and stopped attempts
+also show the duration; preview, validation and status requests do not.
+
 Coordinator and worker JSON publication retries transient Windows access/sharing
 denials for up to 30 seconds per write. It preserves atomic replacement: it never
 truncates the published file or changes permissions to defeat a reader. The
