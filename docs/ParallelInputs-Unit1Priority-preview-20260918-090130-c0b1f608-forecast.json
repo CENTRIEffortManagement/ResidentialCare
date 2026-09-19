@@ -1,0 +1,720 @@
+{
+  "TotalSeconds": null,
+  "Complete": false,
+  "Rows": [
+    {
+      "Id": "Unit1/AllocationInput",
+      "Status": "Forecast",
+      "Finish": 116.3198193,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Settings",
+      "Status": "Forecast",
+      "Finish": 39.0448557,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/DemandMaster",
+      "Status": "Forecast",
+      "Finish": 170.8952376,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/AllocationInput",
+      "Status": "Forecast",
+      "Finish": 88.0229117,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Settings",
+      "Status": "Forecast",
+      "Finish": 39.4065591,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/DemandMaster",
+      "Status": "Forecast",
+      "Finish": 46.4546549,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/DemandInput",
+      "Status": "Forecast",
+      "Finish": 87.79081959999999,
+      "Start": 46.4546549,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Workers",
+      "Status": "Forecast",
+      "Finish": 132.3601188,
+      "Start": 88.0229117,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Intervals",
+      "Status": "Forecast",
+      "Finish": 131.1056925,
+      "Start": 88.0229117,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Workers",
+      "Status": "Forecast",
+      "Finish": 159.4025795,
+      "Start": 116.3198193,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/DemandIntervals",
+      "Status": "Forecast",
+      "Finish": 173.69242930000001,
+      "Start": 131.1056925,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Shifts",
+      "Status": "Forecast",
+      "Finish": 250.3761753,
+      "Start": 131.1056925,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Availability",
+      "Status": "Forecast",
+      "Finish": 182.37710370000002,
+      "Start": 132.3601188,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Availability",
+      "Status": "Forecast",
+      "Finish": 218.5766451,
+      "Start": 159.4025795,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/DemandInput",
+      "Status": "Forecast",
+      "Finish": 210.984149,
+      "Start": 170.8952376,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Demand",
+      "Status": "Forecast",
+      "Finish": 215.7039067,
+      "Start": 173.69242930000001,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Staff",
+      "Status": "Forecast",
+      "Finish": 223.07838260000003,
+      "Start": 182.37710370000002,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Intervals",
+      "Status": "Forecast",
+      "Finish": 251.7474915,
+      "Start": 210.984149,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Staff",
+      "Status": "Forecast",
+      "Finish": 261.0713745,
+      "Start": 218.5766451,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/ShiftAverage",
+      "Status": "Forecast",
+      "Finish": 308.3923687,
+      "Start": 250.3761753,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/DemandIntervals",
+      "Status": "Forecast",
+      "Finish": 292.5588003,
+      "Start": 251.7474915,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Shifts",
+      "Status": "Forecast",
+      "Finish": 367.811474,
+      "Start": 251.7474915,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/StaffAll",
+      "Status": "Forecast",
+      "Finish": 300.715574,
+      "Start": 261.0713745,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Demand",
+      "Status": "Forecast",
+      "Finish": 334.7503784,
+      "Start": 292.5588003,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Allocation",
+      "Status": "Forecast",
+      "Finish": 350.28469520000004,
+      "Start": 308.3923687,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:AIN/1",
+      "Status": "Forecast",
+      "Finish": 364.50630920000003,
+      "Start": 308.3923687,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:AINC4/1",
+      "Status": "Forecast",
+      "Finish": 362.1088915,
+      "Start": 308.3923687,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:RN/1",
+      "Status": "Forecast",
+      "Finish": 362.92589350000003,
+      "Start": 308.3923687,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Distribution",
+      "Status": "Forecast",
+      "Finish": 393.34764020000006,
+      "Start": 350.28469520000004,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:AINC4/2",
+      "Status": "Forecast",
+      "Finish": 404.42369900000006,
+      "Start": 362.1088915,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:RN/2",
+      "Status": "Forecast",
+      "Finish": 405.13777460000006,
+      "Start": 362.92589350000003,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:AIN/2",
+      "Status": "Forecast",
+      "Finish": 405.95294340000004,
+      "Start": 364.50630920000003,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/ShiftAverage",
+      "Status": "Forecast",
+      "Finish": 424.67528699999997,
+      "Start": 367.811474,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/MultiRole",
+      "Status": "Forecast",
+      "Finish": 432.9744256000001,
+      "Start": 393.34764020000006,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:AINC4/3",
+      "Status": "Forecast",
+      "Finish": 454.55232820000003,
+      "Start": 404.42369900000006,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:RN/3",
+      "Status": "Forecast",
+      "Finish": 449.47674090000004,
+      "Start": 405.13777460000006,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Role:AIN/3",
+      "Status": "Forecast",
+      "Finish": 450.32697900000005,
+      "Start": 405.95294340000004,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Allocation",
+      "Status": "Forecast",
+      "Finish": 465.2087946,
+      "Start": 424.67528699999997,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:AIN/1",
+      "Status": "Forecast",
+      "Finish": 473.23301389999995,
+      "Start": 424.67528699999997,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:AINC4/1",
+      "Status": "Forecast",
+      "Finish": 472.92027249999995,
+      "Start": 424.67528699999997,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:RN/1",
+      "Status": "Forecast",
+      "Finish": 481.03777270000006,
+      "Start": 432.9744256000001,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Capacity",
+      "Status": "Forecast",
+      "Finish": 495.2029706,
+      "Start": 454.55232820000003,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Distribution",
+      "Status": "Forecast",
+      "Finish": 507.3400411,
+      "Start": 465.2087946,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:AINC4/2",
+      "Status": "Forecast",
+      "Finish": 515.7081614,
+      "Start": 472.92027249999995,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:AIN/2",
+      "Status": "Forecast",
+      "Finish": 520.0370846,
+      "Start": 473.23301389999995,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:RN/2",
+      "Status": "Forecast",
+      "Finish": 523.1908855,
+      "Start": 481.03777270000006,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit2/Effort",
+      "Status": "Forecast",
+      "Finish": 538.2160391,
+      "Start": 495.2029706,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/MultiRole",
+      "Status": "Forecast",
+      "Finish": 546.840843,
+      "Start": 507.3400411,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:AINC4/3",
+      "Status": "Forecast",
+      "Finish": 560.2799102,
+      "Start": 515.7081614,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:AIN/3",
+      "Status": "Forecast",
+      "Finish": 566.6952865999999,
+      "Start": 520.0370846,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Role:RN/3",
+      "Status": "Forecast",
+      "Finish": 565.542552,
+      "Start": 523.1908855,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Capacity",
+      "Status": "Forecast",
+      "Finish": 607.3701958999999,
+      "Start": 566.6952865999999,
+      "Attempt": 1
+    },
+    {
+      "Id": "Unit1/Effort",
+      "Status": "Forecast",
+      "Finish": 652.4007740999999,
+      "Start": 607.3701958999999,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/EffortAll",
+      "Status": "Forecast",
+      "Finish": 703.7244724,
+      "Start": 652.4007740999999,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Status": "Forecast",
+      "Finish": 742.9385914,
+      "Start": 703.7244724,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Status": "Forecast",
+      "Finish": 789.1409215,
+      "Start": 742.9385914,
+      "Attempt": 1
+    }
+  ],
+  "Untimed": [
+    {
+      "Id": "Org/Cost",
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Predecessors": [
+        "Org/Inefficiencies",
+        "Unit1/Settings"
+      ]
+    },
+    {
+      "Id": "Org/History",
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Predecessors": [
+        "Org/Outcomes"
+      ]
+    },
+    {
+      "Id": "Org/HistoryRead",
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Predecessors": [
+        "Org/History"
+      ]
+    },
+    {
+      "Id": "Org/Reporting",
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ]
+    }
+  ],
+  "Durations": {
+    "Unit1/Role:AINC4/2": {
+      "Observed": "2026-09-17T07:20:25.1697165+00:00",
+      "Seconds": 42.7878889,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Role:AINC4/2": {
+      "Observed": "2026-09-16T11:17:16.0315248+00:00",
+      "Seconds": 42.3148075,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit2/Role:RN/3": {
+      "Observed": "2026-09-16T11:18:01.2292516+00:00",
+      "Seconds": 44.3389663,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit2/Intervals": {
+      "Observed": "2026-09-16T12:37:06.1841698+00:00",
+      "Seconds": 43.0827808,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/Role:RN/2": {
+      "Observed": "2026-09-16T11:17:16.8686314+00:00",
+      "Seconds": 42.2118811,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit1/MultiRole": {
+      "Observed": "2026-09-17T07:20:52.3703306+00:00",
+      "Seconds": 39.5008019,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/DemandMaster": {
+      "Observed": "2026-09-17T07:14:36.2366021+00:00",
+      "Seconds": 170.8952376,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Settings": {
+      "Observed": "2026-09-16T12:34:55.2121783+00:00",
+      "Seconds": 39.4065591,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/Availability": {
+      "Observed": "2026-09-16T12:36:29.6838077+00:00",
+      "Seconds": 50.0169849,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Org/StaffAll": {
+      "Observed": "2026-09-17T07:25:26.4967259+00:00",
+      "Seconds": 39.6441995,
+      "SourceRun": "20260917-172446-fb023b1a"
+    },
+    "Unit1/DemandIntervals": {
+      "Observed": "2026-09-17T07:16:37.9591152+00:00",
+      "Seconds": 40.8113088,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Demand": {
+      "Observed": "2026-09-17T07:17:20.1850206+00:00",
+      "Seconds": 42.1915781,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/DemandInput": {
+      "Observed": "2026-09-17T07:15:16.3474000+00:00",
+      "Seconds": 40.0889114,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Effort": {
+      "Observed": "2026-09-17T07:22:39.3396684+00:00",
+      "Seconds": 45.0305782,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Effort": {
+      "Observed": "2026-09-16T11:19:29.8854889+00:00",
+      "Seconds": 43.0130685,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit2/Staff": {
+      "Observed": "2026-09-16T12:37:10.4078618+00:00",
+      "Seconds": 40.7012789,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/Staff": {
+      "Observed": "2026-09-17T07:14:10.1831967+00:00",
+      "Seconds": 42.4947294,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Role:RN/1": {
+      "Observed": "2026-09-16T11:16:34.6357238+00:00",
+      "Seconds": 54.5335248,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit2/Workers": {
+      "Observed": "2026-09-16T12:35:39.6398027+00:00",
+      "Seconds": 44.3372071,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/Role:AIN/1": {
+      "Observed": "2026-09-17T07:47:28.1825089+00:00",
+      "Seconds": 48.5577269,
+      "SourceRun": "20260917-174639-0b4a3552"
+    },
+    "Unit2/AllocationInput": {
+      "Observed": "2026-09-16T12:34:15.7870606+00:00",
+      "Seconds": 88.0229117,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/AllocationInput": {
+      "Observed": "2026-09-17T07:11:06.2486925+00:00",
+      "Seconds": 116.3198193,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Role:AINC4/1": {
+      "Observed": "2026-09-17T07:48:16.4520346+00:00",
+      "Seconds": 48.2449855,
+      "SourceRun": "20260917-174639-0b4a3552"
+    },
+    "Unit1/Shifts": {
+      "Observed": "2026-09-17T07:17:53.2589217+00:00",
+      "Seconds": 116.0639825,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/ShiftAverage": {
+      "Observed": "2026-09-16T12:40:03.5651204+00:00",
+      "Seconds": 58.0161934,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/Availability": {
+      "Observed": "2026-09-17T07:13:27.6660411+00:00",
+      "Seconds": 59.1740656,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Settings": {
+      "Observed": "2026-09-17T07:11:45.3207085+00:00",
+      "Seconds": 39.0448557,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/DemandInput": {
+      "Observed": "2026-09-16T12:36:23.0732396+00:00",
+      "Seconds": 41.3361647,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Org/EffortAll": {
+      "Observed": "2026-09-17T07:26:17.8426115+00:00",
+      "Seconds": 51.3236983,
+      "SourceRun": "20260917-172446-fb023b1a"
+    },
+    "Org/Inefficiencies": {
+      "Observed": "2026-09-17T07:27:43.3280015+00:00",
+      "Seconds": 46.2023301,
+      "SourceRun": "20260917-172446-fb023b1a"
+    },
+    "Org/Reporting": {
+      "Observed": "2026-09-17T07:28:22.8101887+00:00",
+      "Seconds": 39.4611803,
+      "SourceRun": "20260917-172446-fb023b1a"
+    },
+    "Unit1/Capacity": {
+      "Observed": "2026-09-17T07:21:54.2872283+00:00",
+      "Seconds": 40.6749093,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Role:AIN/3": {
+      "Observed": "2026-09-17T07:21:13.5906500+00:00",
+      "Seconds": 46.658202,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Allocation": {
+      "Observed": "2026-09-16T12:40:45.4781896+00:00",
+      "Seconds": 41.8923265,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/Allocation": {
+      "Observed": "2026-09-17T07:19:30.6948234+00:00",
+      "Seconds": 40.5335076,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Role:RN/3": {
+      "Observed": "2026-09-17T07:21:07.1840091+00:00",
+      "Seconds": 42.3516665,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Role:AIN/1": {
+      "Observed": "2026-09-16T12:40:59.7488100+00:00",
+      "Seconds": 56.1139405,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/DemandMaster": {
+      "Observed": "2026-09-16T12:35:41.7137343+00:00",
+      "Seconds": 46.4546549,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/Role:RN/1": {
+      "Observed": "2026-09-17T07:49:04.5387648+00:00",
+      "Seconds": 48.0633471,
+      "SourceRun": "20260917-174639-0b4a3552"
+    },
+    "Unit2/Role:AIN/3": {
+      "Observed": "2026-09-16T11:18:00.7913417+00:00",
+      "Seconds": 44.3740356,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit1/ShiftAverage": {
+      "Observed": "2026-09-17T07:18:50.1426897+00:00",
+      "Seconds": 56.863813,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Capacity": {
+      "Observed": "2026-09-16T11:18:46.8535342+00:00",
+      "Seconds": 40.6506424,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit1/Role:AIN/2": {
+      "Observed": "2026-09-17T07:20:26.9095852+00:00",
+      "Seconds": 46.8040707,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/Distribution": {
+      "Observed": "2026-09-16T12:41:28.5804659+00:00",
+      "Seconds": 43.062945,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/DemandIntervals": {
+      "Observed": "2026-09-16T12:37:48.7921700+00:00",
+      "Seconds": 42.5867368,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/Role:AINC4/3": {
+      "Observed": "2026-09-16T11:18:06.1824402+00:00",
+      "Seconds": 50.1286292,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit1/Workers": {
+      "Observed": "2026-09-17T07:12:28.4713618+00:00",
+      "Seconds": 43.0827602,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Distribution": {
+      "Observed": "2026-09-17T07:20:12.8482815+00:00",
+      "Seconds": 42.1312465,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Org/Outcomes": {
+      "Observed": "2026-09-17T07:26:57.1088007+00:00",
+      "Seconds": 39.214119,
+      "SourceRun": "20260917-172446-fb023b1a"
+    },
+    "Unit2/Demand": {
+      "Observed": "2026-09-16T12:38:30.8270883+00:00",
+      "Seconds": 42.0114774,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/Role:AIN/2": {
+      "Observed": "2026-09-16T12:41:41.2683203+00:00",
+      "Seconds": 41.4466342,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit1/Role:AINC4/3": {
+      "Observed": "2026-09-17T07:21:09.7997613+00:00",
+      "Seconds": 44.5717488,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit1/Intervals": {
+      "Observed": "2026-09-17T07:15:57.1299511+00:00",
+      "Seconds": 40.7633425,
+      "SourceRun": "20260917-170909-5106fe61"
+    },
+    "Unit2/MultiRole": {
+      "Observed": "2026-09-16T12:42:08.2297219+00:00",
+      "Seconds": 39.6267854,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/Shifts": {
+      "Observed": "2026-09-16T12:39:05.5270070+00:00",
+      "Seconds": 119.2704828,
+      "SourceRun": "20260916-223247-20885912"
+    },
+    "Unit2/Role:AINC4/1": {
+      "Observed": "2026-09-16T11:16:33.6955921+00:00",
+      "Seconds": 53.7165228,
+      "SourceRun": "20260916-210832-dd2a6f05"
+    },
+    "Unit1/Role:RN/2": {
+      "Observed": "2026-09-17T07:20:24.8036391+00:00",
+      "Seconds": 42.1531128,
+      "SourceRun": "20260917-170909-5106fe61"
+    }
+  },
+  "Peak": 7,
+  "UnknownAdmission": "Org/History"
+}

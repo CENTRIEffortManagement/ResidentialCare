@@ -117,6 +117,15 @@ function Test-BatchConflict {
     return $false
 }
 
+function Test-BatchAdmission {
+    param($Job, [hashtable] $Statuses, [object[]] $ActiveJobs, [int] $Limit)
+    if ($Statuses[$Job.Id] -ne 'Pending' -or $ActiveJobs.Count -ge $Limit) { return $false }
+    foreach ($dep in $Job.Dependencies) {
+        if ($Statuses.ContainsKey($dep) -and $Statuses[$dep] -ne 'Completed') { return $false }
+    }
+    return -not (Test-BatchConflict $Job $ActiveJobs)
+}
+
 function Get-BatchStopMode {
     param([string] $Path, [string] $CurrentMode)
     if (-not (Test-Path -LiteralPath $Path)) { return $CurrentMode }
@@ -221,6 +230,23 @@ function Invoke-BatchSchedule {
         param([switch] $Force)
         $snapshot = $State | ConvertTo-Json -Depth 40 -Compress
         if ($Force -or $snapshot -ne $persistence.Snapshot -or $persistence.Timer.Elapsed.TotalSeconds -ge $HeartbeatSeconds) {
+            # One durable record per attempt: a later resume never overwrites it.
+            foreach ($job in $Plan.Jobs) {
+                $record = $State.Jobs[$job.Id]
+                if ($record.Started -and $record.Directory) {
+                    $attemptPath = Join-Path (Join-Path $RunDirectory $record.Directory) 'attempt.json'
+                    if (Test-Path -LiteralPath $attemptPath) {
+                        $previous = Read-BatchJson $attemptPath
+                        if ($previous.Status -ne 'Running') { continue }
+                    }
+                    $attempt = @{
+                        Id = $job.Id; Attempt = $record.Attempt; Started = $record.Started
+                        Finished = $record.Finished; Status = $record.Status; ExitCode = $record.ExitCode
+                        NeedsInspection = $record.NeedsInspection; Message = $record.Message
+                    }
+                    Write-BatchJson $attemptPath $attempt
+                }
+            }
             Update-BatchSummary $Plan $State
             & $PersistState $statePath $State
             $persistence.Snapshot = $State | ConvertTo-Json -Depth 40 -Compress
@@ -273,7 +299,8 @@ function Invoke-BatchSchedule {
                 if ($null -ne $drainBatches -and -not $drainBatches.ContainsKey($job.BatchKey)) { continue }
                 $waiting = @($job.Dependencies | Where-Object { $jobs.ContainsKey($_) -and $State.Jobs[$_].Status -ne 'Completed' })
                 if ($waiting.Count) { $record.Message = "Waiting for $($waiting -join ', ')"; continue }
-                if (Test-BatchConflict $job @($active.Keys | ForEach-Object { $jobs[$_] })) { continue }
+                $statuses = @{}; foreach ($id in $jobs.Keys) { $statuses[$id] = $State.Jobs[$id].Status }
+                if (-not (Test-BatchAdmission $job $statuses @($active.Keys | ForEach-Object { $jobs[$_] }) $MaxParallelBatches)) { continue }
                 $publishingStart = $false
                 try {
                     foreach ($dep in $job.Dependencies) {
@@ -286,7 +313,8 @@ function Invoke-BatchSchedule {
                     }
                     & $ValidateJob $job
                     $record.Inputs = @{}; foreach ($path in $job.Reads) { $record.Inputs[$path] = Get-BatchFileStamp $path }
-                    $record.Attempt++; $record.Started = [datetime]::UtcNow.ToString('o'); $record.Status = 'Running'; $record.Message = ''
+                    $record.Attempt++; $record.Started = [datetime]::UtcNow.ToString('o'); $record.Finished = ''
+                    $record.Status = 'Running'; $record.Message = ''
                     $index = [array]::IndexOf($Plan.Jobs, $job)
                     $directory = Join-Path $RunDirectory ('job-{0:d3}/attempt-{1}' -f $index, $record.Attempt)
                     [void] [IO.Directory]::CreateDirectory($directory)

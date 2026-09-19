@@ -9,6 +9,11 @@
   "batchRunner": {
     "dateRoot": "CLIENT/DATExx-Whiddon",
     "catalogue": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchCatalogue.psd1",
+    "sequenceProfiles": {
+      "Current": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchCatalogue.psd1",
+      "ParallelInputs-Unit1Priority": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchCatalogue-ParallelInputs-Unit1Priority.psd1"
+    },
+    "reportFolder": "docs",
     "approval": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchApproval.psd1",
     "logFolder": "CLIENT/DATExx-Whiddon/RunLogs/BatchRefresh"
   },

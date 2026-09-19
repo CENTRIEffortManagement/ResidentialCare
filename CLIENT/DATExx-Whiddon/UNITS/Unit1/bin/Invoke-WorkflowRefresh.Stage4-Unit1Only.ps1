@@ -609,10 +609,11 @@ try {
     Assert-RequiredFolder -Root $resolvedRunRoot -RelativePath "2. Calculations/AIN" | Out-Null
     Assert-RequiredFolder -Root $resolvedRunRoot -RelativePath "2. Calculations/AINC4" | Out-Null
     Assert-RequiredFolder -Root $resolvedRunRoot -RelativePath "2. Calculations/RN" | Out-Null
-    Assert-RequiredFolder -Root $resolvedRunRoot -RelativePath "runner" | Out-Null
-    Assert-RequiredFolder -Root $resolvedRunRoot -RelativePath "runner/src" | Out-Null
+    $sharedUnitsRoot = Split-Path $resolvedRunRoot -Parent
+    Assert-RequiredFolder -Root $sharedUnitsRoot -RelativePath "runner" | Out-Null
+    Assert-RequiredFolder -Root $sharedUnitsRoot -RelativePath "runner/src" | Out-Null
 
-    $excelRefreshScript = Join-Path $PSScriptRoot "Invoke-ExcelWorkbookRefresh.ps1"
+    $excelRefreshScript = Join-Path $PSScriptRoot "../../runner/src/Invoke-ExcelWorkbookRefresh.ps1"
     if (-not (Test-Path -LiteralPath $excelRefreshScript -PathType Leaf)) {
         $script:ExitCode = 10
         throw "Required refresh engine is missing: runner/src/Invoke-ExcelWorkbookRefresh.ps1"
