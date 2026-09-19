@@ -1,4 +1,4 @@
-param([string] $Query = 'Table.Combine({CapacityDistribB_RunningTotals_CHECK, CapacityDistribB_InputKeys_CHECK})', [string] $ResultName = 'source-tests-result.json')
+param([string] $Query = 'Table.Combine({CapacityDistribB_RunningTotals_CHECK, CapacityDistribB_InputKeys_CHECK, CapacityDistribB_ResourceContract_CHECK})', [string] $ResultName = 'source-tests-result.json')
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $sourcePath = Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m'
@@ -19,6 +19,32 @@ $checkFixture = $checkFixture.Replace('CheckKeys("PeriodDemandTABLE", PeriodDema
 $checkFixture = $checkFixture.Replace('CheckKeys("ResPeriodAllocationTABLE", ResPeriodAllocationTABLE,', 'CheckKeys("ResPeriodAllocationTABLE", allocationInput,')
 $checkFixture = $checkFixture.Replace('CheckKeys("ResPeriodAvailabilityCapped(C#)TABLE", #"ResPeriodAvailabilityCapped(C#)TABLE",', 'CheckKeys("ResPeriodAvailabilityCapped(C#)TABLE", cappedInput,')
 $checkFixture = $checkFixture.Replace('CheckKeys("IMPORT ResPeriodNWDTABLE", #"IMPORT ResPeriodNWDTABLE",', 'CheckKeys("IMPORT ResPeriodNWDTABLE", priorityInput,')
+$contractCheckStart = $source.IndexOf('shared BResourceContract_CHECK = ')
+$contractCheckEnd = $source.IndexOf('shared BResourceContract = ', $contractCheckStart)
+if ($contractCheckStart -lt 0 -or $contractCheckEnd -lt 0) { throw 'Cannot isolate the production Resource contract check.' }
+$contractCheckDefinition = $source.Substring($contractCheckStart, $contractCheckEnd - $contractCheckStart)
+$contractCheckFixture = $contractCheckDefinition.Replace('shared BResourceContract_CHECK = ', 'shared fnBResourceContractTestCheck = (contractInput as table, availabilityInput as table) as table => ')
+$contractCheckFixture = $contractCheckFixture.Replace('Contracts = #"IMPORT ResourceContract"', 'Contracts = contractInput')
+$contractCheckFixture = $contractCheckFixture.Replace('Table.SelectRows(#"IMPORT AvailabilityOriginal",', 'Table.SelectRows(availabilityInput,')
+$cDoubleStart = $source.IndexOf('shared #"ResRosterAvailabilityC##CapReduction" = ')
+$cDoubleEnd = $source.IndexOf('shared Role = ', $cDoubleStart)
+if ($cDoubleStart -lt 0 -or $cDoubleEnd -lt 0) { throw 'Cannot isolate the production C## Resource cap calculation.' }
+$cDoubleFixture = $source.Substring($cDoubleStart, $cDoubleEnd - $cDoubleStart)
+$cDoubleFixture = $cDoubleFixture.Replace('shared #"ResRosterAvailabilityC##CapReduction" = ', 'shared fnBTestCDoubleCap = (sourceInput as table, contractInput as table) as table => ')
+$cDoubleFixture = $cDoubleFixture.Replace('Source = #"C##TABLE"', 'Source = sourceInput').Replace('BResourceContract', 'contractInput')
+$cSingleStart = $source.IndexOf('shared ResRosterAvailabilityCapReduction = ')
+$cSingleEnd = $source.IndexOf('shared ResPeriodOverallocationReduction = ', $cSingleStart)
+if ($cSingleStart -lt 0 -or $cSingleEnd -lt 0) { throw 'Cannot isolate the production C# Resource cap calculation.' }
+$cSingleFixture = $source.Substring($cSingleStart, $cSingleEnd - $cSingleStart)
+$cSingleFixture = [regex]::Replace($cSingleFixture, '\[ Description = "BUFFER" \]\s*$', '')
+$cSingleFixture = $cSingleFixture.Replace('shared ResRosterAvailabilityCapReduction = ', 'shared fnBTestCSingleCap = (sourceInput as table, contractInput as table) as table => ')
+$cSingleFixture = $cSingleFixture.Replace('Source = ResPeriodAvailabilityTABLE', 'Source = sourceInput').Replace('BResourceContract', 'contractInput')
+$resMaxStart = $source.IndexOf('shared ResMaxAvailability = ')
+$resMaxEnd = $source.IndexOf('shared ResourcesLIST = ', $resMaxStart)
+if ($resMaxStart -lt 0 -or $resMaxEnd -lt 0) { throw 'Cannot isolate the production Resource maximum calculation.' }
+$resMaxFixture = $source.Substring($resMaxStart, $resMaxEnd - $resMaxStart)
+$resMaxFixture = $resMaxFixture.Replace('shared ResMaxAvailability = ', 'shared fnBTestResMax = (sourceInput as table, contractInput as table) as table => ')
+$resMaxFixture = $resMaxFixture.Replace('Source = #"IMPORT AvailabilityOriginal"', 'Source = sourceInput').Replace('BResourceContract', 'contractInput')
 $priorityStart = $source.IndexOf('shared #"PrioritiseReductionAvail-Setup" = let')
 $joinStart = $source.IndexOf('    #"Merged Queries" = Table.NestedJoin', $priorityStart)
 $joinEnd = $source.IndexOf('    #"Inserted MINAVAILABLEREDUCTION"', $joinStart)
@@ -31,11 +57,13 @@ $gateStart = $source.IndexOf('    InputChecks = ', $outputStart)
 $gateEnd = $source.IndexOf('    #"Merged Queries" = ', $gateStart)
 if ($outputStart -lt 0 -or $gateStart -lt 0 -or $gateEnd -lt 0) { throw 'Cannot isolate the production output gate.' }
 $gateSteps = $source.Substring($gateStart, $gateEnd - $gateStart).Trim().TrimEnd(',')
-$gateSteps = $gateSteps.Replace('InputChecks = CapacityDistribB_INPUT_CHECK', 'InputChecks = checks').Replace('#"C##TABLE"', 'outputThunk()')
-$gateFixture = "shared fnCapacityDistribBTestOutputGate = (checks as table, outputThunk as function) as table => let`n$gateSteps`nin Source;`n"
+$gateSteps = $gateSteps.Replace('InputChecks = CapacityDistribB_INPUT_CHECK', 'InputChecks = checks').Replace('ContractChecks = BResourceContract_CHECK', 'ContractChecks = contractChecks').Replace('#"C##TABLE"', 'outputThunk()')
+$gateFixture = "shared fnCapacityDistribBTestOutputGate = (checks as table, contractChecks as table, outputThunk as function) as table => let`n$gateSteps`nin Source;`n"
 $inputFixtures = [IO.File]::ReadAllText((Join-Path $repoRoot 'Workflows/ResidentialCare/Diagnostics/CapacityDistribB_InputKeys_TEST.pq'))
 $inputFixtures = [regex]::Replace($inputFixtures, '^section [^;]+;', '')
-$extensionText = "section CapacityDistribBTestExtension;`n`n" + $helper + $checkFixture + $joinFixture + $gateFixture + $fixtures + $inputFixtures
+$contractFixtures = [IO.File]::ReadAllText((Join-Path $repoRoot 'Workflows/ResidentialCare/Diagnostics/CapacityDistribB_ResourceContract_TEST.pq'))
+$contractFixtures = [regex]::Replace($contractFixtures, '^section [^;]+;', '')
+$extensionText = "section CapacityDistribBTestExtension;`n`n" + $helper + $checkFixture + $contractCheckFixture + $cDoubleFixture + $cSingleFixture + $resMaxFixture + $joinFixture + $gateFixture + $fixtures + $inputFixtures + $contractFixtures
 if ($extensionText -match 'File\.Contents\s*\(|Excel\.(Workbook|CurrentWorkbook)\s*\(') { throw 'Synthetic fixture package must not contain workbook/file imports.' }
 $extensionPath = Join-Path $PSScriptRoot 'CapacityDistribBTests.mez'
 $extensionStream = [IO.FileStream]::new($extensionPath, [IO.FileMode]::Create)
