@@ -1,0 +1,138 @@
+{
+  "path": "CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/Capacity.xlsx",
+  "modified": "2026-09-19T17:25:55.8996789+10:00",
+  "tables": [
+    {
+      "table": "UnitL1PathTABLE",
+      "sheet": "UnitL1Path",
+      "ref": "A3:B9",
+      "columns": [
+        "Variable Name",
+        "Value"
+      ],
+      "counts": {
+        "Value": {
+          "Capacity.xlsx": 1,
+          "Alex": 1,
+          "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\Unit1\\2. Calculations": 1,
+          "CLIENT": 1,
+          "Unit1": 1,
+          "DATExx-Whiddon": 1
+        }
+      },
+      "filter": "<autoFilter ref=\"A3:B9\" xr:uid=\"{A113DC27-B8ED-4EDF-AF47-1961F3753494}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "IMPORT_Role1C___TABLE1",
+      "sheet": "IMPORT Role1C###TABLE1",
+      "ref": "A1:G5797",
+      "columns": [
+        "Role",
+        "Resource",
+        "Period",
+        "Availability",
+        "ResAvailability",
+        "ResMaxAvail",
+        "AvailabilityType"
+      ],
+      "counts": {
+        "Role": {
+          "AIN": 5796
+        },
+        "AvailabilityType": {
+          "C###": 5796
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:G5797\" xr:uid=\"{F1D6E7D4-10B5-465A-956D-E7CFBD9FEE28}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"1\"><filters><filter val=\"10\" /><filter val=\"12\" /><filter val=\"26\" /><filter val=\"27\" /></filters></filterColumn><filterColumn colId=\"3\"><customFilters><customFilter operator=\"notEqual\" val=\" \" /></customFilters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    },
+    {
+      "table": "AvailabilityDevelopedMATRIX",
+      "sheet": "AvailabilityDevelopedMATRIX",
+      "ref": "A1:H11851",
+      "columns": [
+        "Role",
+        "Resource",
+        "Period",
+        "Facility",
+        "OriginalAvailability",
+        "C#",
+        "C##",
+        "C###"
+      ],
+      "counts": {
+        "Role": {
+          "RN": 2617,
+          "AINC4": 1672,
+          "AIN": 5796
+        },
+        "Facility": {
+          "Unit1": 11850
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:H11851\" xr:uid=\"{F2A03A8B-5FF1-4467-9C5E-607E2150B315}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"1\"><filters><filter val=\"10\" /><filter val=\"105\" /><filter val=\"12\" /><filter val=\"26\" /><filter val=\"27\" /></filters></filterColumn><filterColumn colId=\"7\"><customFilters><customFilter operator=\"notEqual\" val=\" \" /></customFilters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    },
+    {
+      "table": "AvailabilityDeveloped",
+      "sheet": "AvailabilityDeveloped",
+      "ref": "A1:H29873",
+      "columns": [
+        "Role",
+        "Resource",
+        "Period",
+        "Availability",
+        "AvailabilityType",
+        "ResAvailability",
+        "ResMaxAvail",
+        "Facility"
+      ],
+      "counts": {
+        "Facility": {
+          "Unit1": 29872
+        },
+        "AvailabilityType": {
+          "OriginalAvailability": 3934,
+          "C#": 8482,
+          "C##": 8728,
+          "C###": 8728
+        },
+        "Role": {
+          "RN": 5221,
+          "AINC4": 2372,
+          "AIN": 19921
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:H29873\" xr:uid=\"{CB115D0A-01B0-418B-8DFA-59EEA71296CE}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"0\"><filters><filter val=\"AIN\" /></filters></filterColumn><filterColumn colId=\"2\"><filters><filter val=\"16\" /><filter val=\"17\" /><filter val=\"18\" /></filters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    },
+    {
+      "table": "Capacity",
+      "sheet": "Capacity",
+      "ref": "A1:H8729",
+      "columns": [
+        "Role",
+        "Resource",
+        "Period",
+        "Availability",
+        "ResAvailability",
+        "ResMaxAvail",
+        "AvailabilityType",
+        "Date"
+      ],
+      "counts": {
+        "Role": {
+          "RN": 2604,
+          "AINC4": 328,
+          "AIN": 5796
+        },
+        "AvailabilityType": {
+          "C###": 8728
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:H8729\" xr:uid=\"{D93BC272-50ED-4AAD-868C-E70D64D41394}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"1\"><filters><filter val=\"10\" /><filter val=\"12\" /><filter val=\"26\" /><filter val=\"27\" /></filters></filterColumn><filterColumn colId=\"3\"><customFilters><customFilter operator=\"notEqual\" val=\" \" /></customFilters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    }
+  ]
+}

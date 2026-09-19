@@ -1,0 +1,318 @@
+{
+  "path": "CLIENT/DATExx-Whiddon/2. Calculations/E-O-I/Effort-All.xlsx",
+  "modified": "2026-09-19T11:38:37.9488466+10:00",
+  "tables": [
+    {
+      "table": "UnitL1PathTABLE",
+      "sheet": "Unit1Path",
+      "ref": "A3:B12",
+      "columns": [
+        "Variable Name",
+        "Value"
+      ],
+      "counts": {
+        "Value": {
+          "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS": 1,
+          "Alex": 1,
+          "DATExx-Whiddon": 1,
+          "Effort-All.xlsx": 1,
+          "CLIENT": 1,
+          "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon": 1,
+          "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\[Effort-All.xlsx]AvailabilityDevelopedMAT": 1,
+          "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I": 1
+        }
+      },
+      "filter": "<autoFilter ref=\"A3:B12\" xr:uid=\"{18E228BD-F4C9-495C-93BB-2E5E15601F97}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "EffortAllSettings",
+      "sheet": "SETTINGS",
+      "ref": "A1:C2",
+      "columns": [
+        "Facility1",
+        "Facility2",
+        "DateAlignment"
+      ],
+      "counts": {
+        "Facility1": {
+          "Unit1": 1
+        },
+        "DateAlignment": {
+          "0": 1
+        },
+        "Facility2": {
+          "Unit2": 1
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:C2\" xr:uid=\"{E9ED18C0-1F4F-4E6A-A439-4DD7079D377E}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "Availabilities_Appended",
+      "sheet": "Availabilities Appended",
+      "ref": "A1:J59807",
+      "columns": [
+        "Role",
+        "Resource",
+        "Period",
+        "Effort",
+        "EffortType",
+        "ResAvailability",
+        "ResMaxAvail",
+        "Facility",
+        "Date",
+        "Shift"
+      ],
+      "counts": {
+        "EffortType": {
+          "OriginalAvailability": 4174,
+          "C#": 18380,
+          "C##": 18626,
+          "C###": 18626
+        },
+        "Facility": {
+          "Unit1": 28025,
+          "Unit2": 31781
+        },
+        "Role": {
+          "RN": 10442,
+          "AINC4": 10060,
+          "AIN": 34342
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:J59807\" xr:uid=\"{6498167F-8863-49E5-893F-F025EB663143}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "ResShiftAllocation",
+      "sheet": "ResShiftAllocation",
+      "ref": "A1:H3177",
+      "columns": [
+        "Shift",
+        "Role",
+        "Date",
+        "Effort",
+        "Resource",
+        "Period",
+        "Facility",
+        "EffortType"
+      ],
+      "counts": {
+        "EffortType": {
+          "Allocation": 3176
+        },
+        "Facility": {
+          "Unit1": 1540,
+          "Unit2": 1636
+        },
+        "Role": {
+          "RN": 754,
+          "AINC4": 792,
+          "AIN": 1630
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:H3177\" xr:uid=\"{B14D465F-EB80-4A35-A6E4-6729440D61EA}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "RoleAvailabilityDevelopedMATRIXDELTA",
+      "sheet": "RoleAvailabilityDevelopedMATRIX",
+      "ref": "A1:L676",
+      "columns": [
+        "Facility",
+        "Role",
+        "Shift",
+        "Date",
+        "Demand",
+        "C###",
+        "Allocation",
+        "Original Availability",
+        "C###-D",
+        "A-D",
+        "A-C###",
+        "CO-D"
+      ],
+      "counts": {
+        "Role": {
+          "RN": 170,
+          "AINC4": 168,
+          "AIN": 168
+        },
+        "Facility": {
+          "Unit1": 338,
+          "Unit2": 337
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:L676\" xr:uid=\"{D35675E8-A599-4829-940B-A75E1F11BCEB}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"1\"><filters><filter val=\"AIN\" /></filters></filterColumn><filterColumn colId=\"3\"><filters><dateGroupItem year=\"2026\" month=\"7\" day=\"23\" dateTimeGrouping=\"day\" /></filters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    },
+    {
+      "table": "ResourceContractOverage",
+      "sheet": "ResourceContractOverage",
+      "ref": "A1:X13",
+      "columns": [
+        "Facility",
+        "Facility-Abbrev",
+        "Preferred Role",
+        "Resource",
+        "EmployeeID",
+        "Name",
+        "Employment Type",
+        "Roster Start",
+        "Roster End",
+        "Roster Fortnights",
+        "Contracted FN Hours",
+        "Contracted Roster Hours",
+        "Contracted Shift Equivalent",
+        "Contracted Shifts",
+        "Settings Max Availability",
+        "Effective Shift Cap",
+        "Allocated Roster Hours",
+        "Allocated Shift Equivalent",
+        "Over-Contract Hours",
+        "Over-Contract Shift Equivalent",
+        "Allocated Role List",
+        "Limit Basis",
+        "Is Over Contract",
+        "Coverage Scope"
+      ],
+      "counts": {
+        "Facility": {
+          "Unit1": 12
+        },
+        "Preferred Role": {
+          "AIN": 12
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:X13\" xr:uid=\"{52E95549-321B-44D6-AAD0-606718C4E73E}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "MaxAvailabilities",
+      "sheet": "MaxAvailabilities",
+      "ref": "A1:F18627",
+      "columns": [
+        "Role",
+        "Resource",
+        "C###",
+        "Facility",
+        "ResAvailability",
+        "ResMaxAvail"
+      ],
+      "counts": {
+        "Role": {
+          "RN": 5208,
+          "AINC4": 2428,
+          "AIN": 10990
+        },
+        "Facility": {
+          "Unit1": 8728,
+          "Unit2": 9898
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:F18627\" xr:uid=\"{479444FE-CC60-452B-A7EB-82F9B07C8C08}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "ResRoleAvailabilityDevelopedMATRIX",
+      "sheet": "AvailabilityDevelopedMAT",
+      "ref": "A1:L25955",
+      "columns": [
+        "Facility",
+        "Role",
+        "Shift",
+        "Date",
+        "Resource",
+        "Period",
+        "C#",
+        "Demand",
+        "OriginalAvailability",
+        "C##",
+        "C###",
+        "Allocation"
+      ],
+      "counts": {
+        "Role": {
+          "RN": 5981,
+          "AINC4": 4304,
+          "AIN": 11299
+        },
+        "Facility": {
+          "Unit1": 12765,
+          "Unit2": 13188
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:L25954\" xr:uid=\"{5783F94F-10E2-48AE-B442-F5689B134F15}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"4\"><filters><filter val=\"10\" /><filter val=\"12\" /><filter val=\"26\" /><filter val=\"27\" /></filters></filterColumn><filterColumn colId=\"10\"><customFilters><customFilter operator=\"notEqual\" val=\" \" /></customFilters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    },
+    {
+      "table": "Availability_Effort",
+      "sheet": "Availability Effort",
+      "ref": "A1:H63487",
+      "columns": [
+        "Facility",
+        "Role",
+        "Shift",
+        "Effort",
+        "Date",
+        "EffortType",
+        "Resource",
+        "Period"
+      ],
+      "counts": {
+        "EffortType": {
+          "Allocation": 3176,
+          "Demand": 504,
+          "C##": 18626,
+          "C#": 18380,
+          "C###": 18626,
+          "OriginalAvailability": 4174
+        },
+        "Facility": {
+          "Unit1": 29817,
+          "Unit2": 33669
+        },
+        "Role": {
+          "RN": 11364,
+          "AINC4": 11020,
+          "AIN": 36140
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:H63487\" xr:uid=\"{E78F216E-2FDB-4680-9021-E01A2EA40B65}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" />",
+      "sheetFilter": null
+    },
+    {
+      "table": "EffortAllMatrixAG1_1D_2",
+      "sheet": "EffortAllMatrixAG1_1D",
+      "ref": "A1:L505",
+      "columns": [
+        "Facility",
+        "Role",
+        "Shift",
+        "Demand",
+        "Capacity",
+        "CapacityMaxHC",
+        "CapacityX",
+        "Allocation",
+        "DATESHIFT",
+        "ShiftDurations.ShiftDuration",
+        "Date",
+        "DateX"
+      ],
+      "counts": {
+        "Role": {
+          "RN": 168,
+          "AINC4": 168,
+          "AIN": 168
+        },
+        "Facility": {
+          "Unit1": 252,
+          "Unit2": 252
+        }
+      },
+      "filter": "<autoFilter ref=\"A1:L505\" xr:uid=\"{3A466EBC-51A2-4160-856F-9FC2BC043635}\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><filterColumn colId=\"0\"><filters><filter val=\"Unit1\" /></filters></filterColumn><filterColumn colId=\"1\"><filters><filter val=\"AIN\" /></filters></filterColumn><filterColumn colId=\"2\"><filters><filter val=\"AM\" /></filters></filterColumn></autoFilter>",
+      "sheetFilter": null
+    }
+  ]
+}
