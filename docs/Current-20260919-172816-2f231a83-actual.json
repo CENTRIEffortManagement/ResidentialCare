@@ -1,0 +1,56 @@
+{
+  "ElapsedSeconds": 154.8380233,
+  "PeakConcurrency": 1,
+  "RunId": "20260919-172816-2f231a83",
+  "ActiveIntervalSeconds": 154.4071244,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "IncompleteAttempts": [],
+  "Untimed": [
+    {
+      "Reason": "Prerequisite Org/EffortAll did not complete.",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ],
+      "Id": "Org/Outcomes"
+    },
+    {
+      "Reason": "Prerequisite Org/Outcomes did not complete.",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Outcomes"
+      ],
+      "Id": "Org/Inefficiencies"
+    },
+    {
+      "Reason": "Prerequisite Org/Inefficiencies did not complete.",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ],
+      "Id": "Org/Reporting"
+    }
+  ],
+  "GapSeconds": 0,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Rows": [
+    {
+      "Finish": 40.2579002,
+      "Status": "Completed",
+      "Attempt": 1,
+      "Id": "Org/StaffAll",
+      "Start": 0.3924188
+    },
+    {
+      "Finish": 154.8249477,
+      "Status": "Failed",
+      "Attempt": 1,
+      "Id": "Org/EffortAll",
+      "Start": 40.2833047
+    }
+  ],
+  "Status": "PartialOrFailed"
+}

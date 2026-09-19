@@ -1,0 +1,92 @@
+{
+  "path": "CLIENT/DATExx-Whiddon/2. Calculations/E-O-I/Effort-All.xlsx",
+  "modified": "2026-09-19T11:38:37.9488466+10:00",
+  "summary": {
+    "AIN": {
+      "positiveDemand": 168,
+      "rows": 11299,
+      "positiveOriginal": 1224,
+      "positiveAllocation": 1630,
+      "positiveC3": 1139
+    },
+    "RN": {
+      "positiveDemand": 168,
+      "rows": 5981,
+      "positiveOriginal": 26,
+      "positiveAllocation": 754,
+      "positiveC3": 206
+    },
+    "AINC4": {
+      "positiveDemand": 112,
+      "rows": 4304,
+      "positiveOriginal": 2776,
+      "positiveAllocation": 792,
+      "positiveC3": 237
+    }
+  },
+  "first1000": {
+    "AIN": 672,
+    "RN": 168,
+    "AINC4": 76
+  },
+  "firstOccurrence": {
+    "AIN": 2,
+    "RN": 749,
+    "AINC4": 86
+  },
+  "visible": {
+    "AIN": 56
+  },
+  "firstRows": [
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 2,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 3,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 4,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 5,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 6,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 7,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 8,
+      "facility": "Unit1"
+    },
+    {
+      "resource": "2",
+      "role": "AIN",
+      "row": 9,
+      "facility": "Unit1"
+    }
+  ],
+  "matrixQuery": "shared ResRoleAvailabilityDevelopedMATRIX = let\r\n    Source = #\"Availability Effort\",\r\n    #\"Sorted Rows2\" = Table.Sort(Source,{{\"Date\", Order.Ascending}, {\"EffortType\", Order.Ascending}}),\r\n    #\"Sorted Rows\" = Table.Sort(#\"Sorted Rows2\",{{\"Effort\", Order.Descending}}),\r\n    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Sorted Rows\",{{\"Effort\", type number}}),\r\n    #\"Sorted Rows1\" = Table.Sort(#\"Changed Type1\",{{\"Resource\", Order.Ascending}, {\"Date\", Order.Ascending}, {\"Shift\", Order.Ascending}, {\"EffortType\", Order.Ascending}}),\r\n    #\"Pivoted Column\" = Table.Pivot(#\"Sorted Rows1\", List.Distinct(#\"Sorted Rows1\"[EffortType]), \"EffortType\", \"Effort\")\r\nin\r\n    #\"Pivoted Column\";\r\n",
+  "availabilityQuery": "shared #\"Availabilities Appended\" = let\n    Source = #\"EXTRACT Facility2 RoleShiftAvailabilities\",\n    #\"Appended FAC1\" = Table.Combine({Source, #\"EXTRACT Facility1 RoleShiftAvailabilities\"}),\n    //Table.Combine({#\"EXTRACT Facility1 RoleShiftAvailabilities\", #\"EXTRACT Facility2 RoleShiftAvailabilities\"}),    //return Facility 1\n    #\"Renamed Columns\" = Table.RenameColumns(#\"Appended FAC1\",{{\"Capacity\", \"EffortType\"}, {\"Availability\", \"Effort\"}}),\r\n    #\"Multiplied Column\" = Table.TransformColumns(#\"Renamed Columns\", {{\"Effort\", each _ * EffectiveAvailability, type number}}),\r\n    #\"Sorted Rows\" = Table.Sort(#\"Multiplied Column\",{{\"Facility\", Order.Ascending}, {\"Date\", Order.Ascending}, {\"Shift\", Order.Ascending}, {\"Resource\", Order.Ascending}, {\"EffortType\", Order.Ascending}})\r\nin\r\n    #\"Sorted Rows\";\r\n"
+}

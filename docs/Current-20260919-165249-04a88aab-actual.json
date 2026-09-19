@@ -1,0 +1,196 @@
+{
+  "Status": "Completed",
+  "ActiveIntervalSeconds": 829.3629260000001,
+  "IncompleteAttempts": [],
+  "RunId": "20260919-165249-04a88aab",
+  "GapSeconds": 1,
+  "Untimed": [],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "PeakConcurrency": 4,
+  "Rows": [
+    {
+      "Finish": 130.053948,
+      "Attempt": 1,
+      "Id": "Unit1/AllocationInput",
+      "Status": "Completed",
+      "Start": 0.3981237
+    },
+    {
+      "Finish": 169.6429198,
+      "Attempt": 1,
+      "Id": "Unit1/Settings",
+      "Status": "Completed",
+      "Start": 130.0787762
+    },
+    {
+      "Finish": 343.8119842,
+      "Attempt": 1,
+      "Id": "Unit1/DemandMaster",
+      "Status": "Completed",
+      "Start": 169.6615779
+    },
+    {
+      "Finish": 384.8448155,
+      "Attempt": 1,
+      "Id": "Unit1/DemandInput",
+      "Status": "Completed",
+      "Start": 343.8409989
+    },
+    {
+      "Finish": 213.3005741,
+      "Attempt": 1,
+      "Id": "Unit1/Workers",
+      "Status": "Completed",
+      "Start": 169.7214914
+    },
+    {
+      "Finish": 328.0503611,
+      "Attempt": 1,
+      "Id": "Unit1/Availability",
+      "Status": "Completed",
+      "Start": 213.335501
+    },
+    {
+      "Finish": 371.3121891,
+      "Attempt": 1,
+      "Id": "Unit1/Staff",
+      "Status": "Completed",
+      "Start": 328.0966263
+    },
+    {
+      "Finish": 426.0413126,
+      "Attempt": 1,
+      "Id": "Unit1/Intervals",
+      "Status": "Completed",
+      "Start": 384.8711931
+    },
+    {
+      "Finish": 468.2334882,
+      "Attempt": 1,
+      "Id": "Unit1/DemandIntervals",
+      "Status": "Completed",
+      "Start": 426.0713635
+    },
+    {
+      "Finish": 510.3318853,
+      "Attempt": 1,
+      "Id": "Unit1/Demand",
+      "Status": "Completed",
+      "Start": 468.264334
+    },
+    {
+      "Finish": 542.2561319,
+      "Attempt": 1,
+      "Id": "Unit1/Shifts",
+      "Status": "Completed",
+      "Start": 426.1315545
+    },
+    {
+      "Finish": 599.9864682,
+      "Attempt": 1,
+      "Id": "Unit1/ShiftAverage",
+      "Status": "Completed",
+      "Start": 542.2835067
+    },
+    {
+      "Finish": 641.1134178,
+      "Attempt": 1,
+      "Id": "Unit1/Allocation",
+      "Status": "Completed",
+      "Start": 600.0153032
+    },
+    {
+      "Finish": 684.390932,
+      "Attempt": 1,
+      "Id": "Unit1/Distribution",
+      "Status": "Completed",
+      "Start": 641.1425773
+    },
+    {
+      "Finish": 724.5763051,
+      "Attempt": 1,
+      "Id": "Unit1/MultiRole",
+      "Status": "Completed",
+      "Start": 684.4224456
+    },
+    {
+      "Finish": 653.4152884,
+      "Attempt": 1,
+      "Id": "Unit1/Role:AIN/1",
+      "Status": "Completed",
+      "Start": 600.0696644
+    },
+    {
+      "Finish": 702.0754809,
+      "Attempt": 1,
+      "Id": "Unit1/Role:AIN/2",
+      "Status": "Completed",
+      "Start": 653.4535874
+    },
+    {
+      "Finish": 745.7715882,
+      "Attempt": 1,
+      "Id": "Unit1/Role:AIN/3",
+      "Status": "Completed",
+      "Start": 702.1223954
+    },
+    {
+      "Finish": 654.5751583,
+      "Attempt": 1,
+      "Id": "Unit1/Role:AINC4/1",
+      "Status": "Completed",
+      "Start": 600.167451
+    },
+    {
+      "Finish": 697.6335754,
+      "Attempt": 1,
+      "Id": "Unit1/Role:AINC4/2",
+      "Status": "Completed",
+      "Start": 654.6106821
+    },
+    {
+      "Finish": 741.2323494,
+      "Attempt": 1,
+      "Id": "Unit1/Role:AINC4/3",
+      "Status": "Completed",
+      "Start": 697.66697
+    },
+    {
+      "Finish": 660.0909623,
+      "Attempt": 1,
+      "Id": "Unit1/Role:RN/1",
+      "Status": "Completed",
+      "Start": 600.2522347
+    },
+    {
+      "Finish": 701.3460029,
+      "Attempt": 1,
+      "Id": "Unit1/Role:RN/2",
+      "Status": "Completed",
+      "Start": 660.1448383
+    },
+    {
+      "Finish": 743.7535941,
+      "Attempt": 1,
+      "Id": "Unit1/Role:RN/3",
+      "Status": "Completed",
+      "Start": 701.378471
+    },
+    {
+      "Finish": 787.08582,
+      "Attempt": 1,
+      "Id": "Unit1/Capacity",
+      "Status": "Completed",
+      "Start": 745.8029525
+    },
+    {
+      "Finish": 829.9794389,
+      "Attempt": 1,
+      "Id": "Unit1/Effort",
+      "Status": "Completed",
+      "Start": 787.1167203
+    }
+  ],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ElapsedSeconds": 829.994386
+}
