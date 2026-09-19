@@ -25,6 +25,7 @@ $holdSuccessfulMenuResult = $false
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
 $gate = $null
 $runDirectory = $null
+$runTimer = $null
 
 function Show-ResolvedBatchPlan {
     param($Plan, $Catalogue)
@@ -201,6 +202,7 @@ try {
     }
     if ($ShowPlan -or $ValidateSelectionOnly -or (-not $RunAll -and -not $RefreshSelected)) { exit 0 }
     $gate = Enter-RefreshRunGate -DateRoot $catalogue.DateRoot -Exclusive
+    $runTimer = [Diagnostics.Stopwatch]::StartNew()
     if (-not $ResumeRun) {
         $runId = (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8)
         $runDirectory = Resolve-BatchPath $logRoot $runId
@@ -248,6 +250,12 @@ catch {
 }
 finally {
     if ($null -ne $gate) { $gate.Dispose() }
+    if ($null -ne $runTimer) {
+        # Time this execution attempt, excluding menu input and the final key wait.
+        $runTimer.Stop()
+        $elapsed = $runTimer.Elapsed
+        Write-Host ('Run duration: {0:00}:{1:00}:{2:00} (hours:minutes:seconds)' -f [math]::Floor($elapsed.TotalHours), $elapsed.Minutes, $elapsed.Seconds)
+    }
     # Release run exclusion before waiting. The CMD launcher already holds failed
     # menus open; scripted calls and explicit menu Exit must never wait for input.
     if ($holdSuccessfulMenuResult) {
