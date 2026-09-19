@@ -1,0 +1,26 @@
+{
+  "recordedAt": "2026-09-19T09:39:30.4769936+10:00",
+  "stages": {
+    "baseline-extracted": {
+      "description": "Fresh source extracted from the exact AIN2 workbook copies before edits."
+    },
+    "corrected-three-file": {
+      "description": "Role, join, predicate, skeleton, grid and deterministic-order correctness changes while retaining A1, A2 and B."
+    },
+    "performance-three-file": {
+      "description": "Improved three-file source with linear A2 running totals, narrow grids and centralized A1 navigation.",
+      "files": {
+        "CapacityDistrib-A1.pq": "1A2831182E9440EDA9C90979CCD77E29F778F495D6A300C24544D352EF1ED6A7",
+        "CapacityDistrib-A2.pq": "DA732C52E1E1708DC305BA43498C8B0591D8E671AE697A3DF36F25C6954344A3",
+        "CapacityDistrib-B.pq": "23CF73B6F35B8861172A3333E34425F26378E7C3160AF7E16E70B54838BE5A8E"
+      }
+    },
+    "merged-two-file": {
+      "description": "Authoritative two-file source: A1 checkpoint plus B containing the former A2 cap stages.",
+      "files": {
+        "CapacityDistrib-A1.pq": "1A2831182E9440EDA9C90979CCD77E29F778F495D6A300C24544D352EF1ED6A7",
+        "CapacityDistrib-B.pq": "EEFDD1590419AF9364982B91DB14B688414025DDD8FB6B4E31F38EF43CEBC4AA"
+      }
+    }
+  }
+}

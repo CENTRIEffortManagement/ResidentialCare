@@ -18,6 +18,12 @@ logs/
 # Local parallel-refresh test workbook copies (keep test scripts tracked)
 /CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/TestRole[1-4]/
 
+# Local AIN capacity-distribution pilot (authoritative Power Query source is under Workflows/)
+/CLIENT/DATExx-Whiddon/UNITS/Unit1/2. Calculations/AIN2/
+
+# Chat-specific Capacity Distribution assessment bundle (copies of tracked evidence)
+/docs/CapacityDistribution-AIN2-Assessment/
+
 # Tableau recovery files
 *.twbr
 
