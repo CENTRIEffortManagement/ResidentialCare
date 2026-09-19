@@ -56,14 +56,16 @@ shared #"IMPORT Reconciled Workers" = let
     Workers = Table.SelectColumns(Source{[Item = "Employees_TABLE", Kind = "Table"]}[Data],
         {"EmployeeID", "Facility-Abbrev", "Role", "Employee Roster Name", "EmploymentType"}),
     Normalized = Table.TransformColumns(Workers, List.Transform(Table.ColumnNames(Workers),
-        each {_, AvailabilityText, type nullable text}))
-in Normalized;
+        each {_, AvailabilityText, type nullable text})),
+    #"Filtered Rows" = Table.SelectRows(Normalized, each ([EmployeeID] = "19835" or [EmployeeID] = "25376" or [EmployeeID] = "24562" or [EmployeeID] = "19822"))
+in #"Filtered Rows";
 
 // Query: IMPORT Worker's Report
 // Purpose: Read the Unit1 employee contract source once for downstream contract preparation.
 // Inputs: Table1 in 1. Input/Worker's Report.xlsx.
 // Output: Employee Code and Contracted FN Hours at source-row grain.
 shared #"IMPORT Worker's Report" = let
+    #"IMPORT Worker's Report" = let
     Navigation = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\Worker's Report.xlsx"), null, true),
     Matches = Table.SelectRows(Navigation, each [Item] = "Table1" and [Kind] = "Table"),
     ContractTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
@@ -72,12 +74,20 @@ shared #"IMPORT Worker's Report" = let
     MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ContractTable)),
     Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(ContractTable, RequiredColumns)
         else error Error.Record("Worker contract import", "Worker's Report.xlsx/Table1 is missing required columns.", [MissingColumns = MissingColumns])
-in Table.Buffer(Selected);
+in Table.Buffer(Selected),
+    #"Filtered Rows" = Table.SelectRows(#"IMPORT Worker's Report", each ([Employee Code] = 19835
+ or [Employee Code] = 25376
+ or [Employee Code] = 24562
+ or [Employee Code] = 19822
+))
+in
+    #"Filtered Rows";
 
 // Query: IMPORT Availability Leave Source
-// Purpose: Read dated availability and leave for Beaudesert workers.
+// Purpose: Read dated availability and leave for the four selected Beaudesert workers.
 // Inputs: Combined Output sheet in 1. Input/whiddon_availability_leave_extraction.xlsx.
 shared #"IMPORT Availability Leave Source" = let
+    #"IMPORT Availability Leave Source" = let
     Source = Excel.Workbook(File.Contents(#"FilePath - 1Input" & "\whiddon_availability_leave_extraction.xlsx"), null, true),
     PromotedHeaders = Table.PromoteHeaders(Source{[Item = "Combined Output", Kind = "Sheet"]}[Data], [PromoteAllScalars = true]),
     // Temporary approved facility restriction; apply the same restriction to reconciled workers.
@@ -89,7 +99,10 @@ shared #"IMPORT Availability Leave Source" = let
         {{"Payroll Code", AvailabilityText, type nullable text}, {"Employee Name", AvailabilityText, type nullable text}}),
     IndexedRecords = Table.AddIndexColumn(NormalizedIdentity, "SourceRecord", 1, 1, Int64.Type)
 // Buffer the reduced scalar source shared by name resolution, parsing and diagnostics.
-in Table.Buffer(IndexedRecords);
+in Table.Buffer(IndexedRecords),
+    #"Filtered Rows" = Table.SelectRows(#"IMPORT Availability Leave Source", each ([Payroll Code] = "19835"or  [Payroll Code] = "25376" or [Payroll Code] = "24562" or  [Payroll Code] = "19822"))
+in
+    #"Filtered Rows";
 
 // Query: WorkerContracts_Prepare
 // Purpose: Resolve Worker's Report to one validated fortnightly contract value per employee.
@@ -774,14 +787,8 @@ shared UnitL1PathTABLE = let
     NormalizePath = (value as nullable text) as nullable text =>
         if value = null then null else Text.TrimEnd(Text.Replace(Text.Trim(value), "/", "\"), "\"),
     PathInput = Excel.CurrentWorkbook(){[Name = "FilePathUrl"]}[Content],
-    // Excel exposes this workbook's existing FilePathUrl named cell as Column1.
-    // Also accept the standard FilePath table through the same resolver.
-    PathColumn = if Table.HasColumns(PathInput, {"FilePath"}) then Table.SelectColumns(PathInput, {"FilePath"})
-        else if Table.ColumnNames(PathInput) = {"Column1"} then
-            Table.RenameColumns(PathInput, {{"Column1", "FilePath"}})
-        else error "FilePathUrl must be a one-row FilePath table or a single named cell.",
-    PathRows = if Table.RowCount(PathColumn) = 1 then PathColumn
-        else error "FilePathUrl must contain exactly one path value.",
+    PathRows = if Table.HasColumns(PathInput, {"FilePath"}) and Table.RowCount(PathInput) = 1 then PathInput
+        else error "FilePathUrl must have one row and a FilePath column.",
     RawPath = NormalizePath(Text.From(PathRows{0}[FilePath])),
     NonBlankPath = if RawPath <> null and RawPath <> "" then RawPath
         else error "FilePathUrl is blank. Save and recalculate this workbook.",

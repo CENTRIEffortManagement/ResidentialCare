@@ -1,6 +1,6 @@
 # DATExx-Whiddon capacity shift availability rules
 
-This document explains how the current Power Query source determines which workers are available for each roster shift and how many effective hours they contribute. It describes the source implementation as of 11 September 2026; it does not confirm that the source has been synchronized to, or refreshed in, Excel.
+This document explains how the authoritative Power Query `.m` source determines which workers are available for each roster shift and how many effective hours they contribute. It describes the source implementation as of 19 September 2026. The four-worker refresh matched all 336 independently calculated day/shift rows. The sample filters were then removed from the source; full BD and downstream Capacity results are under review after a user-run Unit1 refresh.
 
 Source: [Capacity-ShiftAvailability.xlsx_PowerQuery.m](../CLIENT/DATExx-Whiddon/UNITS/Unit1/2.%20Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m).
 
@@ -14,7 +14,7 @@ All workbook paths below are relative to `CLIENT/DATExx-Whiddon/UNITS/Unit1/`.
 | `1. Input/whiddon_availability_leave_extraction.xlsx` | `Combined Output` sheet | Availability and exclusion records, including payroll code, dates, times and reason |
 | `2. Calculations/Settings Data.xlsx` | `PermutationDimensions` table | Roster dates, roles, shifts and period identifiers |
 | `2. Calculations/Settings Data.xlsx` | `ShiftPeriod` table | Role-specific shift start and end boundaries |
-| `2. Calculations/Settings Data.xlsx` | `ShiftDuration` table or named range | Effective hours for a full shift and the threshold for a full day of exclusion |
+| `2. Calculations/Settings Data.xlsx` | `ShiftDuration` table or named range | Effective hours for a full shift and the threshold for a full day of recognised leave |
 | `1. Input/1-AllocationExtracted.xlsx` | `ResRolesProportion` table | Existing multiple-role display-name convention |
 
 The temporary facility restriction is exactly `Site Name = "BD: Beaudesert"`. It is applied after promoting the extraction sheet's headers. `Facility-Abbrev` is the first two characters of `Site Name`, giving `BD`. Reconciled workers must also belong to `BD`.
@@ -47,9 +47,10 @@ Classification uses `Availability or Leave Reason`, in this order:
 
 | Reason text | Treatment |
 | --- | --- |
-| Contains uppercase `UNAVAIL` | Exclusion |
+| Contains uppercase `UNAVAIL` | Timed unavailability; subtract only its recorded overlap |
 | Otherwise contains uppercase `AVAIL` | Explicit availability |
-| Any other non-null reason, including leave descriptions | Exclusion |
+| Matches a recognised leave description | Leave; subtract its overlap and count it toward the daily leave threshold |
+| Any other reason or blank | Unknown; validation failure |
 
 Matching is case-sensitive. `UNAVAIL` must be checked first because it also contains `AVAIL`. A null or invalid reason is a validation failure, not an unrestricted availability instruction.
 
@@ -69,36 +70,36 @@ Exclusions always take precedence on the dates they affect. Adding a leave recor
 
 For example, AVAIL from 06:00 to 14:00 on 22 July restricts 22 July to those hours. On 23 July the worker starts fully available unless that date has its own AVAIL or exclusion intervals. An AVAIL outside the roster calendar dates has no effect on the roster.
 
-`AvailabilityDailyWindows` constructs these daily baselines, which `WorkerAvailabilityRules` clips to the roster horizon and publishes as `AvailableIntervals`. `HasAvailability` is retained only as an informational flag for explicit AVAIL within the calendar horizon; shift calculation does not use it to choose a worker-wide mode. Even workers with no records receive baseline intervals covering the roster.
+`AvailabilityDailyWindows` constructs these daily baselines, which `WorkerAvailabilityRules` publishes as `AvailableIntervals`. Even workers with no records receive baseline intervals covering the roster.
 
 Midnight is an exclusive endpoint. AVAIL ending at midnight does not restrict the following day. A recorded AVAIL spanning midnight affects both dates for the portions actually recorded, and a night shift uses the rules of each calendar date it crosses.
 
-## 5. Convert exclusions into full or partial days
+## 5. Apply recognised leave and timed UNAVAIL
 
 The full-day threshold is the positive, finite `ShiftDuration` value from Settings Data, read by `EXTRACT EffectiveShiftHrs`. Examples below use 7.6 hours; the calculation uses the setting rather than a hard-coded threshold.
 
 For each worker and facility:
 
-1. Split exclusion intervals at calendar midnight where necessary.
-2. Combine duplicate, overlapping and touching intervals within each date.
-3. Sum the distinct excluded hours for that date. Overlapping time counts once, even when records have different leave reasons.
-4. If the total is at least `ShiftDuration`, replace that day's exclusions with `00:00` on that date through `00:00` the following date.
-5. If the total is below `ShiftDuration`, retain the actual excluded times. Other times remain subject to the worker's baseline availability.
+1. Split recognised leave intervals at calendar midnight where necessary.
+2. Combine duplicate and overlapping leave intervals within each date.
+3. Sum distinct leave hours for each date. Overlaps count once.
+4. If that date's leave hours reach `ShiftDuration`, block every shift **starting** on that date, including NIGHT.
+5. Otherwise, subtract only the recorded leave and UNAVAIL overlap from each shift's baseline. Union leave and UNAVAIL before subtraction so overlapping records are counted once.
 
-An existing midnight-to-midnight exclusion already blocks the whole calendar day. Its exclusive midnight end does not add an extra day. The daily threshold applies to all records classified as exclusions, including `UNAVAIL`, not just reasons containing the word leave. Explicit AVAIL records are never expanded by this rule.
+`UNAVAIL` never contributes to the daily leave threshold. A midnight-to-midnight UNAVAIL record removes the time it covers, but it does not automatically block a NIGHT shift's hours after midnight. A midnight end is exclusive and does not add an extra day.
 
 Complete boundary dates are considered before clipping to the roster's shift hours. This prevents leave before the first shift's start from being omitted from that date's total. Totals are calculated per worker/facility, not multiplied by the worker's number of roles.
 
-| Recorded exclusions on one date | Distinct hours | Result with ShiftDuration = 7.6 |
+| Recorded source on one date | Distinct leave hours | Result with ShiftDuration = 7.6 |
 | --- | --- | --- |
-| 00:00 to next-day 00:00 | 24 | Entire calendar day excluded |
-| 08:00–16:00 maternity leave | 8 | Entire calendar day excluded |
-| 06:00–14:30 unpaid leave plus identical study leave | 8.5, not 17 | Entire calendar day excluded |
-| 06:00–10:00 plus 12:00–16:00 | 8 | Entire calendar day excluded |
-| Two identical 06:00–10:00 records | 4, not 8 | Only 06:00–10:00 excluded |
-| 10:00–12:00 | 2 | Only 10:00–12:00 excluded |
+| 00:00 to next-day 00:00 UNAVAIL | 0 | Recorded time only; next-day NIGHT portion remains possible |
+| 08:00–16:00 maternity leave | 8 | All shifts starting on that date blocked |
+| 06:00–14:30 unpaid leave plus identical study leave | 8.5, not 17 | All shifts starting on that date blocked |
+| 06:00–10:00 plus 12:00–16:00 recognised leave | 8 | All shifts starting on that date blocked |
+| Two identical 06:00–10:00 leave records | 4, not 8 | Only recorded shift overlap deducted |
+| 10:00–12:00 UNAVAIL | 0 | Only recorded shift overlap deducted |
 
-No additional overnight-leave policy is applied. Full-day exclusions remain calendar-day intervals; ordinary shift intersection handles any overlap. A night shift crossing into a date without exclusions may therefore retain time after midnight. A dated leave entry does not imply an unrecorded longer leave period.
+The full-day leave decision follows the shift's start date. A NIGHT shift starting on a full-day leave date is blocked in full. A NIGHT shift starting on another date uses the recorded interval overlaps, including after midnight.
 
 ## 6. Apply the configured shift boundaries
 
@@ -107,7 +108,7 @@ No additional overnight-leave policy is applied. Full-day exclusions remain cale
 For each eligible worker and configured shift:
 
 1. Intersect the worker's baseline availability with that shift's start and end.
-2. Subtract the adjusted exclusion intervals.
+2. Subtract the union of actual leave and UNAVAIL intervals, unless full-day leave blocks the starting date.
 3. Retain the remaining disjoint available segments.
 4. Sum those segments once to obtain available clock hours.
 
@@ -120,8 +121,9 @@ Overnight shifts retain the date on which they start. Their end is on the follow
 | Remaining availability within a shift | EffectiveShiftHrs |
 | --- | --- |
 | Covers the complete configured shift | `ShiftDuration` |
-| Covers only part of the shift | Smaller of total remaining clock hours and `ShiftDuration` |
+| Covers only part of the shift | Greater of zero and the smaller of remaining clock hours and `ShiftDuration` minus distinct shift absence hours |
 | No remaining available time | No published ResDayShift row |
+| Full-day leave on the shift's start date | Zero; no published ResDayShift row |
 
 Several separate available segments within a shift produce one row and one summed hours value. Overlaps cannot increase the total.
 
@@ -131,7 +133,7 @@ A complete shift receives the standard allowance even when its clock duration di
 
 `ReconciledWorkers_CHECK` checks worker-key and published-name uniqueness. It gates `Availability-StaffList`, which includes eligible workers even when they have no available shifts. Staff-list publication does not require calculation of every shift.
 
-`ResDayShift_CHECK` includes the worker checks and validates settings and role coverage, required source records, unique worker/shift rows, segment boundaries, exclusions, disjointness, hours, facility and roles. Invalid records for eligible workers, and records without a usable payroll code, block shift publication. Invalid records tied only to ineligible workers do not enter the eligible calculation.
+`ResDayShift_CHECK` includes the worker checks, known-answer availability-rule tests, unique daily leave totals, settings and role coverage, required source records, unique worker/shift rows, segment boundaries, exclusions, disjointness, hours, facility and roles. Invalid records for eligible workers, and records without a usable payroll code, block shift publication. Invalid records tied only to ineligible workers do not enter the eligible calculation.
 
 Failed required checks stop `ResDayShift` from publishing results. Zero-hour rows remain available internally for checks but are omitted from the public output.
 

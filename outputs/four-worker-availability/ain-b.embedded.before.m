@@ -1,7 +1,3 @@
-// Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Workbook: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
-// Source status: authoritative .m; availability lineage gate added 2026-09-19.
-
 section Section1;
 
 // Query: fnAddIndexedRunningTotal
@@ -262,97 +258,6 @@ shared MaxAvailability = #"EXTRACT MaxAvailability";
 
 shared AllocationThreshold = 0.8 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
 
-// Query: IMPORTSource StaffListMaster
-// Purpose: Import the Unit1 StaffListMaster workbook once for B's Resource-grain contract caps.
-shared #"IMPORTSource StaffListMaster" = let
-    CalculationsPath = Text.BeforeDelimiter(RolePath, "\", {0, RelativePosition.FromEnd}),
-    WorkbookBinary = Binary.Buffer(File.Contents(CalculationsPath & "\StaffListMaster.xlsx")),
-    WorkbookNavigation = Excel.Workbook(WorkbookBinary, null, true)
-in
-    Table.Buffer(WorkbookNavigation);
-
-// Query: IMPORT ResourceContract
-// Purpose: Extract preferred-role contracts plus approved missing-worker fallbacks from Table_Masterlist for this role.
-// Output: One candidate cap row per applicable AIN Resource before B's independent checks.
-shared #"IMPORT ResourceContract" = let
-    Matches = Table.SelectRows(#"IMPORTSource StaffListMaster", each [Item] = "Table_Masterlist" and [Kind] = "Table"),
-    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("B resource contract import", "Expected exactly one Table_Masterlist table in StaffListMaster.xlsx.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"Resource", "Role", "PreferredRole", "Source", "Worker Record Status", "Effective Shift Cap", "Limit Basis"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
-        else error Error.Record("B resource contract import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
-    Typed = Table.TransformColumnTypes(Selected, {
-        {"Resource", Int64.Type}, {"Role", type text}, {"PreferredRole", type text},
-        {"Source", type text}, {"Worker Record Status", type text},
-        {"Effective Shift Cap", type number}, {"Limit Basis", type text}
-    }),
-    NormalizedRoles = Table.TransformColumns(Typed, {
-        {"Role", each if _ = null then null else Text.Clean(Text.Trim(_)), type nullable text},
-        {"PreferredRole", each if _ = null then null else Text.Clean(Text.Trim(_)), type nullable text}
-    }),
-    RoleValue = Role,
-    // Preserve preferred-role ownership, while allowing the approved Settings fallback for allocation-only employees absent from Worker's Report.
-    ApplicableRoleCaps = Table.SelectRows(NormalizedRoles, each
-        [Role] = RoleValue
-            and ([PreferredRole] = RoleValue
-                or ([Source] = "Allocation" and [Worker Record Status] = "Not found")))
-in
-    Table.Buffer(ApplicableRoleCaps);
-
-// Query: BResourceContract_CHECK
-// Purpose: Validate unique Resource contracts, usable caps and complete coverage of AIN availability resources.
-// Output: Connection-only diagnostic rows used by BResourceContract and the final B publication gate.
-shared BResourceContract_CHECK = let
-    Contracts = #"IMPORT ResourceContract",
-    ContractKeys = Table.SelectColumns(Contracts, {"Resource"}),
-    ErrorKeyRows = Table.RowCount(Table.SelectRowsWithErrors(ContractKeys, {"Resource"})),
-    KeysWithoutErrors = Table.RemoveRowsWithErrors(ContractKeys, {"Resource"}),
-    MissingKeyRows = Table.RowCount(Table.SelectRows(KeysWithoutErrors, each [Resource] = null)),
-    CompleteKeys = Table.SelectRows(KeysWithoutErrors, each [Resource] <> null),
-    ContractCounts = Table.Group(CompleteKeys, {"Resource"}, {{"ContractRows", each Table.RowCount(_), Int64.Type}}),
-    DuplicateResourceGroups = Table.RowCount(Table.SelectRows(ContractCounts, each [ContractRows] > 1)),
-    ContractValues = Table.SelectColumns(Contracts, {"Effective Shift Cap", "Limit Basis"}),
-    ErrorContractRows = Table.RowCount(Table.SelectRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"})),
-    ContractValuesWithoutErrors = Table.RemoveRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"}),
-    InvalidCapRows = ErrorContractRows + Table.RowCount(Table.SelectRows(ContractValuesWithoutErrors, each
-        [Effective Shift Cap] = null
-            or [Effective Shift Cap] <= 0
-            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])
-            or [Limit Basis] = null
-            or Text.Trim([Limit Basis]) = "")),
-    // Coverage is assessed at Resource grain before any Resource-Period distribution joins.
-    AvailabilityResources = Table.Distinct(Table.SelectColumns(
-        // Only Resources contributing positive availability require contract coverage.
-        Table.SelectRows(#"IMPORT AvailabilityOriginal", each
-            [Resource] <> null and [Availability] <> null and [Availability] > 0),
-        {"Resource"}
-    )),
-    MissingCoverage = Table.RowCount(Table.NestedJoin(
-        AvailabilityResources, {"Resource"}, CompleteKeys, {"Resource"}, "Contract", JoinKind.LeftAnti
-    )),
-    MissingWorkerKeys = Table.Distinct(Table.SelectColumns(
-        Table.SelectRows(Table.RemoveRowsWithErrors(Contracts, {"Resource", "Worker Record Status"}), each
-            [Resource] <> null and [Worker Record Status] = "Not found"),
-        {"Resource"}
-    )),
-    // The Settings fallback is allowed only for allocation-only Resources that contribute no AIN availability.
-    MissingWorkerPositiveAvailability = Table.RowCount(Table.NestedJoin(
-        AvailabilityResources, {"Resource"}, MissingWorkerKeys, {"Resource"}, "MissingWorker", JoinKind.Inner
-    )),
-    Checks = #table(
-        type table [Check = text, Status = text, Failures = number, Details = nullable text],
-        {
-            {"Populated Resource contract keys", if ErrorKeyRows + MissingKeyRows = 0 then "Pass" else "Fail", ErrorKeyRows + MissingKeyRows, null},
-            {"Unique Resource contracts", if DuplicateResourceGroups = 0 then "Pass" else "Fail", DuplicateResourceGroups, null},
-            {"Valid effective Resource caps", if InvalidCapRows = 0 then "Pass" else "Fail", InvalidCapRows, null},
-            {"Complete AIN availability contract coverage", if MissingCoverage = 0 then "Pass" else "Fail", MissingCoverage, null},
-            {"Missing-worker fallback has zero AIN availability", if MissingWorkerPositiveAvailability = 0 then "Pass" else "Fail", MissingWorkerPositiveAvailability, null}
-        }
-    )
-in
-    Table.Buffer(Checks);
-
 // Query: BResourceContract
 // Purpose: Publish one validated Effective Shift Cap per Resource for B's Resource-grain calculations.
 shared BResourceContract = let
@@ -366,16 +271,6 @@ shared BResourceContract = let
     Output = Table.SelectColumns(Checked, {"Resource", "Effective Shift Cap", "Limit Basis"})
 in
     Table.Buffer(Output);
-
-// Query: IMPORTSource A1
-// Purpose: Provide the A.1 workbook binary and navigation table for the four existing imports.
-// Notes: Navigation buffering is shallow; selected table transformations remain in their owning imports.
-shared #"IMPORTSource A1" = let
-    // Reuse the saved file bytes within an evaluation; separately loaded outputs can still evaluate this again.
-    WorkbookBinary = Binary.Buffer(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx")),
-    WorkbookNavigation = Table.Buffer(Excel.Workbook(WorkbookBinary, null, true))
-in
-    WorkbookNavigation;
 
 // Query: IMPORT Demand
 // Purpose: Read the existing A.1 Demand_Prepare table without changing its schema or grain.
@@ -424,6 +319,93 @@ shared #"IMPORT ResPeriodNWDTABLE" = let
     #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Resource", Int64.Type}, {"Day", Int64.Type}, {"PotentialAvailability", type text}, {"Period", Int64.Type}, {"Availability", Int64.Type}, {"RosteredPeriodStatus", type text}})
 in
     #"Changed Type";
+
+// Query: IMPORTSource StaffListMaster
+// Purpose: Import the Unit1 StaffListMaster workbook once for B's Resource-grain contract caps.
+shared #"IMPORTSource StaffListMaster" = let
+    CalculationsPath = Text.BeforeDelimiter(RolePath, "\", {0, RelativePosition.FromEnd}),
+    WorkbookBinary = Binary.Buffer(File.Contents(CalculationsPath & "\StaffListMaster.xlsx")),
+    WorkbookNavigation = Excel.Workbook(WorkbookBinary, null, true)
+in
+    Table.Buffer(WorkbookNavigation);
+
+// Query: IMPORTSource A1
+// Purpose: Provide the A.1 workbook binary and navigation table for the four existing imports.
+// Notes: Navigation buffering is shallow; selected table transformations remain in their owning imports.
+shared #"IMPORTSource A1" = let
+    // Reuse the saved file bytes within an evaluation; separately loaded outputs can still evaluate this again.
+    WorkbookBinary = Binary.Buffer(File.Contents(RolePath&"\CapacityDistrib(A.1)-shifts.xlsx")),
+    WorkbookNavigation = Table.Buffer(Excel.Workbook(WorkbookBinary, null, true))
+in
+    WorkbookNavigation;
+
+// Query: IMPORT ResourceContract
+// Purpose: Extract the validated preferred-role contract fields from Table_Masterlist for this role.
+// Output: One candidate contract row per preferred AIN Resource before B's independent checks.
+shared #"IMPORT ResourceContract" = let
+    Matches = Table.SelectRows(#"IMPORTSource StaffListMaster", each [Item] = "Table_Masterlist" and [Kind] = "Table"),
+    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("B resource contract import", "Expected exactly one Table_Masterlist table in StaffListMaster.xlsx.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Resource", "Role", "PreferredRole", "Effective Shift Cap", "Limit Basis"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
+        else error Error.Record("B resource contract import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(Selected, {
+        {"Resource", Int64.Type}, {"Role", type text}, {"PreferredRole", type text},
+        {"Effective Shift Cap", type number}, {"Limit Basis", type text}
+    }),
+    NormalizedRoles = Table.TransformColumns(Typed, {
+        {"Role", each if _ = null then null else Text.Clean(Text.Trim(_)), type nullable text},
+        {"PreferredRole", each if _ = null then null else Text.Clean(Text.Trim(_)), type nullable text}
+    }),
+    RoleValue = Role,
+    // Preserve Worker Reconciliation's preferred-role decision; no contract is split across roles.
+    PreferredRoleContracts = Table.SelectRows(NormalizedRoles, each [Role] = RoleValue and [PreferredRole] = RoleValue)
+in
+    Table.Buffer(PreferredRoleContracts);
+
+// Query: BResourceContract_CHECK
+// Purpose: Validate unique Resource contracts, usable caps and complete coverage of AIN availability resources.
+// Output: Connection-only diagnostic rows used by BResourceContract and the final B publication gate.
+shared BResourceContract_CHECK = let
+    Contracts = #"IMPORT ResourceContract",
+    ContractKeys = Table.SelectColumns(Contracts, {"Resource"}),
+    ErrorKeyRows = Table.RowCount(Table.SelectRowsWithErrors(ContractKeys, {"Resource"})),
+    KeysWithoutErrors = Table.RemoveRowsWithErrors(ContractKeys, {"Resource"}),
+    MissingKeyRows = Table.RowCount(Table.SelectRows(KeysWithoutErrors, each [Resource] = null)),
+    CompleteKeys = Table.SelectRows(KeysWithoutErrors, each [Resource] <> null),
+    ContractCounts = Table.Group(CompleteKeys, {"Resource"}, {{"ContractRows", each Table.RowCount(_), Int64.Type}}),
+    DuplicateResourceGroups = Table.RowCount(Table.SelectRows(ContractCounts, each [ContractRows] > 1)),
+    ContractValues = Table.SelectColumns(Contracts, {"Effective Shift Cap", "Limit Basis"}),
+    ErrorContractRows = Table.RowCount(Table.SelectRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"})),
+    ContractValuesWithoutErrors = Table.RemoveRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"}),
+    InvalidCapRows = ErrorContractRows + Table.RowCount(Table.SelectRows(ContractValuesWithoutErrors, each
+        [Effective Shift Cap] = null
+            or [Effective Shift Cap] <= 0
+            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])
+            or [Limit Basis] = null
+            or Text.Trim([Limit Basis]) = "")),
+    // Coverage is assessed at Resource grain before any Resource-Period distribution joins.
+    AvailabilityResources = Table.Distinct(Table.SelectColumns(
+        // Only Resources contributing positive availability require contract coverage.
+        Table.SelectRows(#"IMPORT AvailabilityOriginal", each
+            [Resource] <> null and [Availability] <> null and [Availability] > 0),
+        {"Resource"}
+    )),
+    MissingCoverage = Table.RowCount(Table.NestedJoin(
+        AvailabilityResources, {"Resource"}, CompleteKeys, {"Resource"}, "Contract", JoinKind.LeftAnti
+    )),
+    Checks = #table(
+        type table [Check = text, Status = text, Failures = number, Details = nullable text],
+        {
+            {"Populated Resource contract keys", if ErrorKeyRows + MissingKeyRows = 0 then "Pass" else "Fail", ErrorKeyRows + MissingKeyRows, null},
+            {"Unique Resource contracts", if DuplicateResourceGroups = 0 then "Pass" else "Fail", DuplicateResourceGroups, null},
+            {"Valid effective Resource caps", if InvalidCapRows = 0 then "Pass" else "Fail", InvalidCapRows, null},
+            {"Complete AIN availability contract coverage", if MissingCoverage = 0 then "Pass" else "Fail", MissingCoverage, null}
+        }
+    )
+in
+    Table.Buffer(Checks);
 
 shared PeriodAllocationTABLE = let
     Source = ResPeriodAllocationTABLE,
@@ -596,25 +578,6 @@ shared CapacityDistribB_INPUT_CHECK = let
 in
     // Reuse these four scalar diagnostic rows within the output's validation and failure reporting.
     Table.Buffer(TypedChecks);
-
-// Query: CapacityDistribB_AVAILABILITY_LINEAGE_CHECK
-// Purpose: Identify positive A.2 Resource/Period availability without positive original A.1 availability.
-// Output: One diagnostic row per unsupported positive C#; an empty table passes the final B gate.
-// Notes: B must not carry stale A.2 capacity into a Resource/Period absent from the current A.1 source.
-shared CapacityDistribB_AVAILABILITY_LINEAGE_CHECK = let
-    PositiveCapped = Table.SelectRows(#"ResPeriodAvailabilityCapped(C#)TABLE", each [#"C#"] <> null and [#"C#"] > 0),
-    Original = Table.SelectColumns(#"IMPORT AvailabilityOriginal", {"Role", "Resource", "Period", "Availability"}),
-    Joined = Table.NestedJoin(PositiveCapped, {"Role", "Resource", "Period"},
-        Original, {"Role", "Resource", "Period"}, "OriginalRows", JoinKind.LeftOuter),
-    Assessed = Table.AddColumn(Joined, "LineageIssue", each
-        if Table.IsEmpty([OriginalRows]) then "No original A.1 availability row"
-        else if Table.RowCount([OriginalRows]) <> 1 then "Ambiguous original A.1 availability rows"
-        else if [OriginalRows]{0}[Availability] = null or [OriginalRows]{0}[Availability] <= 0 then
-            "Original A.1 availability is not positive"
-        else null, type nullable text),
-    Failures = Table.SelectRows(Assessed, each [LineageIssue] <> null),
-    Output = Table.RemoveColumns(Failures, {"OriginalRows"})
-in Table.Buffer(Output);
 
 shared #"ResPeriodAvailabilityCapped(C#)SUM" = let
     Source = #"ResPeriodAvailabilityTABLE",
@@ -869,18 +832,14 @@ in
 shared #"C###TABLE B" = let
     InputChecks = CapacityDistribB_INPUT_CHECK,
     ContractChecks = BResourceContract_CHECK,
-    AvailabilityLineageFailures = CapacityDistribB_AVAILABILITY_LINEAGE_CHECK,
     // Gate the source actually consumed below so lazy evaluation cannot skip required validation.
-    Source = if List.AllTrue(InputChecks[Passed])
-        and List.AllTrue(List.Transform(ContractChecks[Status], each _ = "Pass"))
-        and Table.IsEmpty(AvailabilityLineageFailures) then #"C##TABLE"
+    Source = if List.AllTrue(InputChecks[Passed]) and List.AllTrue(List.Transform(ContractChecks[Status], each _ = "Pass")) then #"C##TABLE"
         else error Error.Record(
             "CapacityDistribB.InputValidation",
-            "Required join keys, Resource contracts or A.2-to-A.1 availability lineage failed validation.",
+            "Required join keys or Resource contracts failed validation. Review CapacityDistribB_INPUT_CHECK and BResourceContract_CHECK.",
             [
                 InputFailures = Table.SelectRows(InputChecks, each [Passed] <> true),
-                ContractFailures = Table.SelectRows(ContractChecks, each [Status] <> "Pass"),
-                AvailabilityLineageFailures = AvailabilityLineageFailures
+                ContractFailures = Table.SelectRows(ContractChecks, each [Status] <> "Pass")
             ]
         ),
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, SubtractOverallocatedResources, {"Resource", "Period"}, "SubtractAvailablilityTABLE", JoinKind.LeftOuter),
@@ -930,7 +889,7 @@ in
 
 // Query: RolePathTABLE
 // Purpose: Resolve this workbook's folder and dynamic role through the standard CentriSyncPaths mapping.
-// Inputs: FilePathUrl (one-row FilePath table) and the public CentriSyncPaths table.
+// Inputs: FilePathUrl (one-row FilePath table or single named cell) and the public CentriSyncPaths table.
 // Output: Existing Variable Name / Value rows used by RolePath and Role.
 shared RolePathTABLE =
 let
@@ -938,12 +897,14 @@ let
         if value = null then null else Text.TrimEnd(Text.Replace(Text.Trim(value), "/", "\"), "\"),
     FilePathUrl =
     let
-        Source = Excel.CurrentWorkbook(){[Name = "FilePathUrl"]}[Content],
-        // Excel exposes this workbook's existing FilePathUrl named cell as Column1.
+        // Accept the legacy FilePAthUrl casing without masking a missing or malformed input.
+        PathInputs = Table.SelectRows(Excel.CurrentWorkbook(), each Comparer.OrdinalIgnoreCase([Name], "FilePathUrl") = 0),
+        Source = if Table.RowCount(PathInputs) = 1 then PathInputs{0}[Content]
+            else error "Expected exactly one FilePathUrl table or named cell in this workbook.",
+        // A single named cell is exposed by Excel as Column1.
         PathColumn = if Table.HasColumns(Source, {"FilePath"}) then Table.SelectColumns(Source, {"FilePath"})
-            else if Table.ColumnNames(Source) = {"Column1"} then
-                Table.RenameColumns(Source, {{"Column1", "FilePath"}})
-            else error "FilePathUrl must be a one-row FilePath table or a single named cell.",
+            else if Table.ColumnNames(Source) = {"Column1"} then Table.RenameColumns(Source, {{"Column1", "FilePath"}})
+            else error "FilePathUrl must contain a FilePath column or be a single named cell.",
         ValidatedRows = if Table.RowCount(PathColumn) = 1 then PathColumn
             else error "FilePathUrl must contain exactly one data row.",
         TypedPath = Table.TransformColumnTypes(ValidatedRows, {{"FilePath", type text}}),

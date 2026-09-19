@@ -1,8 +1,8 @@
 # AvailabilityRecords: separate reason categories
 
-Updated 12 September 2026. The current source is [Capacity-ShiftAvailability.xlsx_PowerQuery.m](Capacity-ShiftAvailability.xlsx_PowerQuery.m). This replaces the earlier inspection code that grouped every false record together.
+Updated 19 September 2026. The authoritative source is [Capacity-ShiftAvailability.xlsx_PowerQuery.m](Capacity-ShiftAvailability.xlsx_PowerQuery.m). The four-worker refresh matched the independent day/shift matrix on all 336 rows. The sample filters have since been removed from the source; the full BD result is under review after a user-run Unit1 refresh.
 
-`IMPORT Combined Availabilities` reads the BD extraction. `AvailabilityRecords` preserves SourceRecord, OriginalReason, parsed Start/End, worker/facility keys, RecordKind and Issue. No workbook access was performed to prepare this explanation.
+`IMPORT Availability Leave Source` reads the BD extraction. `AvailabilityRecords` preserves SourceRecord, OriginalReason, parsed Start/End, worker/facility keys, RecordKind and Issue.
 
 | RecordKind | Classification | Effect |
 | --- | --- | --- |
