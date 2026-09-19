@@ -24,8 +24,8 @@ $ErrorActionPreference = "Stop"
 
 $runnerRoot = $PSScriptRoot
 $runRoot = Split-Path -Path $runnerRoot -Parent
-$workflowScript = Join-Path $runnerRoot "src\Invoke-WorkflowRefresh.ps1"
-$sequencePath = Join-Path $runnerRoot "RN-WorkbookSequence.psd1"
+$workflowScript = Join-Path $runnerRoot "Invoke-WorkflowRefresh.Stage4-Unit1Only.ps1"
+$sequencePath = Join-Path $runnerRoot "RN-WorkbookSequence.Stage1-RNOnly.psd1"
 $runLogsPath = Join-Path $runRoot "RunLogs"
 $stopRequestPath = Join-Path $runLogsPath "stop-request.txt"
 

@@ -37,11 +37,16 @@ function Expand-BatchArguments {
 }
 
 function Get-BatchCatalogue {
-    param([string] $RepoRoot)
+    param([string] $RepoRoot,
+        [ValidateSet('Current', 'ParallelInputs-Unit1Priority')] [string] $SequenceProfile = 'Current')
     $project = Get-Content -LiteralPath (Join-Path $RepoRoot 'pq.project.json') -Raw | ConvertFrom-Json
     $config = $project.batchRunner
     $dateRoot = Resolve-BatchPath $RepoRoot $config.dateRoot
     $cataloguePath = Resolve-BatchPath $RepoRoot $config.catalogue
+    if ($SequenceProfile -ne 'Current') {
+        if (-not $config.PSObject.Properties['sequenceProfiles']) { throw 'Sequence profiles are not configured.' }
+        $cataloguePath = Resolve-BatchPath $RepoRoot $config.sequenceProfiles.$SequenceProfile
+    }
     # Keep the historical project key/file path, now used only for batch settings.
     $settingsPath = Resolve-BatchPath $RepoRoot $config.approval
     $profilePath = Join-Path $dateRoot 'runner/ResidentialCare-ClientRunProfile.psd1'
@@ -142,7 +147,19 @@ function Get-BatchCatalogue {
         }
         $job.Dependencies = @($job.Dependencies | Select-Object -Unique)
         $reads = @($job.InputPaths | ForEach-Object { Resolve-BatchPath $dateRoot $_ })
-        foreach ($dep in $job.Dependencies) {
+        # ReadJobs is independent of ordering edges. Existing catalogues retain
+        # their implicit producer reads; explicit reads survive an ordering edit.
+        $readJobs = @($job.Dependencies)
+        if ($job.Unit -ne 'Org' -and -not $job.Role) {
+            $definition = @($catalogue.UnitJobs | Where-Object { "$($job.Unit)/$($_.Id)" -eq $job.Id })[0]
+            if ($definition.ContainsKey('ReadJobs')) {
+                $readJobs = @($definition.ReadJobs | ForEach-Object {
+                    if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$($job.Unit)/Role:$role/3" } }
+                    else { "$($job.Unit)/$_" }
+                })
+            }
+        }
+        foreach ($dep in $readJobs) {
             if (-not $byId.ContainsKey($dep)) { throw "Unknown dependency $dep for $($job.Id)" }
             $reads += $byId[$dep].Path
         }
@@ -182,6 +199,7 @@ function Get-BatchCatalogue {
     $fingerprint = Get-BatchFingerprint $files
     return [pscustomobject]@{
         SchemaVersion = 1; DateRoot = $dateRoot; LogRoot = (Resolve-BatchPath $RepoRoot $config.logFolder)
+        SequenceProfile = $SequenceProfile
         Units = $unitNames; Roles = $roles; OrgUnits = $orgUnits; Settings = $settings; Fingerprint = $fingerprint
         BatchTitles = $(if ($catalogue.ContainsKey('BatchTitles')) { $catalogue.BatchTitles } else { @{} })
         Jobs = @($jobs | Sort-Object @{Expression={ if ($_.Unit -eq 'Org') { [int]::MaxValue } else { [int] ($_.Unit -replace '^Unit', '') } }}, BatchOrder, RoleOrder, FileOrder)
@@ -314,6 +332,7 @@ function Select-BatchPlan {
     if (-not $selected.Count) { throw 'The selection is empty.' }
     return [pscustomobject]@{
         SchemaVersion = 1; Fingerprint = $Catalogue.Fingerprint; DateRoot = $Catalogue.DateRoot
+        SequenceProfile = $Catalogue.SequenceProfile
         Roles = $Catalogue.Roles; OrgUnits = $Catalogue.OrgUnits; Jobs = $selected
     }
 }

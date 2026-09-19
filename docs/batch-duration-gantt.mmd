@@ -1,0 +1,38 @@
+gantt
+    title Dependency-scheduled batch plan — total 17m 23s
+    dateFormat YYYY-MM-DD HH:mm:ss
+    axisFormat %M:%S
+    todayMarker off
+
+    section Unit 1
+    A1 Allocation — start                    :u1a1, 2026-01-01 00:00:00, 116s
+    S1 Settings — start                      :u1s1, 2026-01-01 00:00:00, 39s
+    D1 Demand transformation — start         :u1d1, 2026-01-01 00:00:00, 211s
+    C1 Capacity inputs — after A1 and S1      :u1c1, 2026-01-01 00:01:56, 145s
+    D2 Demand preparation — after A1 S1 D1   :u1d2, 2026-01-01 00:03:31, 124s
+    A2 Role-allocation basis — after D2       :u1a2, 2026-01-01 00:05:35, 173s
+    A3 Allocation outputs — after A2          :u1a3, 2026-01-01 00:08:28, 122s
+    C2.1 AIN — after C1 D2 A2                :u1c21, 2026-01-01 00:08:28, 143s
+    C2.2 AINC4 — after C1 D2 A2              :u1c22, 2026-01-01 00:08:28, 140s
+    C2.3 RN — after C1 D2 A2                 :u1c23, 2026-01-01 00:08:28, 137s
+    U4 Consolidation — after A3 and all C2    :u1u4, 2026-01-01 00:10:51, 86s
+
+    section Unit 2
+    A1 Allocation — start                    :u2a1, 2026-01-01 00:00:00, 88s
+    S1 Settings — start                      :u2s1, 2026-01-01 00:00:00, 39s
+    D1 Demand transformation — start         :u2d1, 2026-01-01 00:00:00, 86s
+    C1 Capacity inputs — after A1 and S1      :u2c1, 2026-01-01 00:01:28, 131s
+    D2 Demand preparation — after A1 S1 D1   :u2d2, 2026-01-01 00:01:28, 124s
+    A2 Role-allocation basis — after D2       :u2a2, 2026-01-01 00:03:32, 173s
+    A3 Allocation outputs — after A2          :u2a3, 2026-01-01 00:06:25, 123s
+    C2.1 AIN — after C1 D2 A2                :u2c21, 2026-01-01 00:06:25, 141s
+    C2.2 AINC4 — after C1 D2 A2              :u2c22, 2026-01-01 00:06:25, 146s
+    C2.3 RN — after C1 D2 A2                 :u2c23, 2026-01-01 00:06:25, 141s
+    U4 Consolidation — after A3 and all C2    :u2u4, 2026-01-01 00:08:51, 84s
+
+    section Organisation
+    O1 Cross-unit assembly — after both U4    :o1, 2026-01-01 00:12:17, 91s
+    O2 Outcomes — after O1                    :o2, 2026-01-01 00:13:48, 85s
+    O3 Cost — after O2 — estimate             :o3, 2026-01-01 00:15:13, 45s
+    O4 Outcome history — after O2 — estimate  :o4, 2026-01-01 00:15:13, 90s
+    O5 Reporting — after O3 and O4            :o5, 2026-01-01 00:16:43, 40s

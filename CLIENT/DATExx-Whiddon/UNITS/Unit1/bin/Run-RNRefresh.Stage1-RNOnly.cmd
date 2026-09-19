@@ -2,7 +2,7 @@
 setlocal
 
 set "RUN_ROOT=%~dp0"
-set "RN_SCRIPT=%RUN_ROOT%runner\Invoke-RNRefresh.ps1"
+set "RN_SCRIPT=%RUN_ROOT%Invoke-RNRefresh.Stage1-RNOnly.ps1"
 
 if not exist "%RN_SCRIPT%" (
     echo Required ResidentialCare RN runner script is missing:
