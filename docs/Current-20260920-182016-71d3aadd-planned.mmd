@@ -1,0 +1,18 @@
+gantt
+    title Current forecast - elapsed 00 03 36
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section Org/O1
+    %% Predecessors: Unit1/Staff, Unit2/Staff
+    Org/StaffAll attempt 1 Forecast :task1, 2000-01-01 00:00:00.000, 2000-01-01 00:00:39.865
+    %% Predecessors: Org/StaffAll, Unit1/Effort, Unit2/Effort
+    Org/EffortAll attempt 1 Forecast :task2, 2000-01-01 00:00:39.865, 2000-01-01 00:01:31.592
+    section Org/O2
+    %% Predecessors: Org/EffortAll, Org/StaffAll
+    Org/Outcomes attempt 1 Forecast :task3, 2000-01-01 00:01:31.592, 2000-01-01 00:02:11.040
+    %% Predecessors: Org/Outcomes
+    Org/Inefficiencies attempt 1 Forecast :task4, 2000-01-01 00:02:11.040, 2000-01-01 00:02:56.704
+    section Org/O5
+    %% Predecessors: Org/Cost, Org/HistoryRead, Org/Inefficiencies
+    Org/Reporting attempt 1 Forecast :task5, 2000-01-01 00:02:56.704, 2000-01-01 00:03:36.832

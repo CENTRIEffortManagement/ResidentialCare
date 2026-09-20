@@ -1,0 +1,68 @@
+gantt
+    title Current 20260920-175851-54dc0b19 Completed - elapsed 00 12 38 - peak 4
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section Unit1/A1
+    %% Predecessors:
+    Unit1/AllocationInput attempt 1 Completed :done, task1, 2000-01-01 00:00:00.491, 2000-01-01 00:00:45.382
+    section Unit1/S1
+    %% Predecessors: Unit1/AllocationInput
+    Unit1/Settings attempt 1 Completed :done, task2, 2000-01-01 00:00:45.415, 2000-01-01 00:01:26.269
+    section Unit1/D1
+    %% Predecessors: Unit1/Settings
+    Unit1/DemandMaster attempt 1 Completed :done, task3, 2000-01-01 00:01:26.294, 2000-01-01 00:04:28.032
+    %% Predecessors: Unit1/DemandMaster, Unit1/Settings
+    Unit1/DemandInput attempt 1 Completed :done, task4, 2000-01-01 00:04:28.057, 2000-01-01 00:05:11.190
+    section Unit1/C1
+    %% Predecessors: Unit1/AllocationInput, Unit1/Settings
+    Unit1/Workers attempt 1 Completed :done, task5, 2000-01-01 00:01:26.353, 2000-01-01 00:02:10.189
+    %% Predecessors: Unit1/Workers, Unit1/AllocationInput, Unit1/Settings
+    Unit1/Availability attempt 1 Completed :done, task6, 2000-01-01 00:02:10.214, 2000-01-01 00:03:08.845
+    %% Predecessors: Unit1/Availability, Unit1/Workers, Unit1/AllocationInput, Unit1/Settings
+    Unit1/Staff attempt 1 Completed :done, task7, 2000-01-01 00:03:08.876, 2000-01-01 00:03:51.228
+    section Unit1/D2
+    %% Predecessors: Unit1/AllocationInput, Unit1/DemandInput, Unit1/Settings
+    Unit1/Intervals attempt 1 Completed :done, task8, 2000-01-01 00:05:11.220, 2000-01-01 00:05:52.999
+    %% Predecessors: Unit1/Intervals, Unit1/DemandInput, Unit1/Settings
+    Unit1/DemandIntervals attempt 1 Completed :done, task9, 2000-01-01 00:05:53.024, 2000-01-01 00:06:34.555
+    %% Predecessors: Unit1/DemandIntervals, Unit1/Settings
+    Unit1/Demand attempt 1 Completed :done, task10, 2000-01-01 00:06:34.580, 2000-01-01 00:07:17.251
+    section Unit1/A2
+    %% Predecessors: Unit1/Intervals, Unit1/AllocationInput, Unit1/Settings
+    Unit1/Shifts attempt 1 Completed :done, task11, 2000-01-01 00:05:53.113, 2000-01-01 00:07:49.992
+    %% Predecessors: Unit1/Shifts, Unit1/Settings
+    Unit1/ShiftAverage attempt 1 Completed :done, task12, 2000-01-01 00:07:50.017, 2000-01-01 00:08:45.247
+    section Unit1/A3
+    %% Predecessors: Unit1/ShiftAverage, Unit1/AllocationInput, Unit1/Settings
+    Unit1/Allocation attempt 1 Completed :done, task13, 2000-01-01 00:08:45.276, 2000-01-01 00:09:29.961
+    %% Predecessors: Unit1/Allocation, Unit1/Settings
+    Unit1/Distribution attempt 1 Completed :done, task14, 2000-01-01 00:09:29.991, 2000-01-01 00:10:12.390
+    %% Predecessors: Unit1/Distribution, Unit1/Settings
+    Unit1/MultiRole attempt 1 Completed :done, task15, 2000-01-01 00:10:12.418, 2000-01-01 00:10:53.469
+    section Unit1/C2 AIN
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings
+    Unit1/Role AIN/1 attempt 1 Completed :done, task16, 2000-01-01 00:08:45.364, 2000-01-01 00:09:39.496
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings, Unit1/Role:AIN/1
+    Unit1/Role AIN/2 attempt 1 Completed :done, task17, 2000-01-01 00:09:39.532, 2000-01-01 00:10:28.885
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings, Unit1/Role:AIN/2
+    Unit1/Role AIN/3 attempt 1 Completed :done, task18, 2000-01-01 00:10:28.915, 2000-01-01 00:11:12.683
+    section Unit1/C2 AINC4
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings
+    Unit1/Role AINC4/1 attempt 1 Completed :done, task19, 2000-01-01 00:08:45.459, 2000-01-01 00:09:38.560
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings, Unit1/Role:AINC4/1
+    Unit1/Role AINC4/2 attempt 1 Completed :done, task20, 2000-01-01 00:09:38.602, 2000-01-01 00:10:21.455
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings, Unit1/Role:AINC4/2
+    Unit1/Role AINC4/3 attempt 1 Completed :done, task21, 2000-01-01 00:10:21.505, 2000-01-01 00:11:05.416
+    section Unit1/C2 RN
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings
+    Unit1/Role RN/1 attempt 1 Completed :done, task22, 2000-01-01 00:08:45.544, 2000-01-01 00:09:40.107
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings, Unit1/Role:RN/1
+    Unit1/Role RN/2 attempt 1 Completed :done, task23, 2000-01-01 00:09:40.141, 2000-01-01 00:10:22.753
+    %% Predecessors: Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/ShiftAverage, Unit1/Settings, Unit1/Role:RN/2
+    Unit1/Role RN/3 attempt 1 Completed :done, task24, 2000-01-01 00:10:22.789, 2000-01-01 00:11:06.316
+    section Unit1/U4
+    %% Predecessors: Unit1/Role:AIN/3, Unit1/Role:AINC4/3, Unit1/Role:RN/3, Unit1/Demand, Unit1/Staff, Unit1/Availability, Unit1/Settings
+    Unit1/Capacity attempt 1 Completed :done, task25, 2000-01-01 00:11:12.709, 2000-01-01 00:11:54.887
+    %% Predecessors: Unit1/Capacity, Unit1/Demand, Unit1/Allocation, Unit1/Distribution, Unit1/MultiRole, Unit1/Staff, Unit1/Settings
+    Unit1/Effort attempt 1 Completed :done, task26, 2000-01-01 00:11:54.921, 2000-01-01 00:12:38.160
