@@ -260,6 +260,7 @@ function Get-BatchPickList {
     }
     ''
     'Pick one or more batch IDs, comma-separated (for example: D1,A2,C2.1). C2 selects every enabled role batch.'
+    'Organisation IDs start with the letter O (for example O5); 05 with a zero is also accepted.'
 }
 
 function Test-BatchSelectionNeedsUnits {
@@ -277,6 +278,13 @@ function Select-BatchPlan {
         [string[]] $Workbooks, [string] $StartAtWorkbook, [int] $StartAtSequence, [int] $EndAtSequence,
         [switch] $IncludeOrg, [switch] $IncludeDependencies)
     $Units = @(Expand-BatchArguments $Units); $Batches = @(Expand-BatchArguments $Batches)
+    $Batches = @($Batches | ForEach-Object {
+        if ($_ -match '^0([1-5])$') {
+            $orgBatch = "O$($Matches[1])"
+            Write-Host "Interpreting batch ID $_ as $orgBatch (letter O)."
+            $orgBatch
+        } else { $_ }
+    } | Select-Object -Unique)
     $Roles = @(Expand-BatchArguments $Roles); $Workbooks = @(Expand-BatchArguments $Workbooks)
     $modes = [int] [bool] $RunAll + [int] [bool] $Batches.Count + [int] [bool] $Workbooks.Count + [int] [bool] $StartAtWorkbook + [int] [bool] ($StartAtSequence -or $EndAtSequence)
     if ($modes -gt 1) { throw 'Choose one selection mode: all, batches, workbooks, start-at-workbook, or sequence range.' }

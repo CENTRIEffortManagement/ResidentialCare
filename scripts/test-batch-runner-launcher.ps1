@@ -141,6 +141,10 @@ function Invoke-BatchSchedule {
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu selection skips the Unit prompt'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Reporting') 'organisation-only menu dispatches the selected batches once'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,05') -ExpectPause -CheckGateReleased
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Interpreting batch ID 05 as O5' -and $result.Output -notmatch 'Available Unit IDs:') 'zero-prefixed organisation ID is accepted and explained without a Unit prompt'
+    $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
+    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Reporting') 'zero-prefixed O5 selects the intended organisation jobs once'
     $result = Invoke-LauncherFixture -InputLines @('2', 'C1,O1', 'Unit1') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Available Unit IDs:') 'mixed batch selection still asks for Units'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
