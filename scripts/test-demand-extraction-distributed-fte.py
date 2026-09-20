@@ -1,7 +1,11 @@
-"""Independent demand-adapter fixtures and optional saved-table reconciliation.
+"""Independent demand arithmetic fixtures and optional legacy fixed-role reference.
 Run from the repo root: python scripts/test-demand-extraction-distributed-fte.py
 Add --saved-workbooks to read the two exact input workbooks without changing them.
 These checks do not execute Power Query or refresh Excel.
+The RN/AIN/AINC4 mapping below is an explicit historical test configuration, not
+the production role policy. Test the current linked-role policy with
+scripts/test-demand-role-mapping-native.ps1, which executes the actual M queries.
+Saved-workbook mode does not verify the live SharePoint role configuration.
 """
 import copy
 import datetime as dt
@@ -254,7 +258,8 @@ class DemandTests(unittest.TestCase):
         source = SOURCE.read_text(encoding="utf-8")
         names = re.findall(r'^shared (#[^=]+|\w+) =', source, re.M)
         self.assertEqual(len(names), len(set(names)))
-        self.assertIn('shared #"Demand Roles" = {"RN", "AIN", "AINC4"};', source)
+        self.assertIn('shared #"Demand Role Mapping" =', source)
+        self.assertNotIn('shared #"Demand Roles" = {"RN", "AIN", "AINC4"};', source)
         self.assertNotIn('shared #"IMPORT LocRoleDayShift%"', source)
         published = source[source.index("shared ShiftUnitDemandHRS ="):]
         self.assertIn("DemandExtraction_CHECK", published)
@@ -357,7 +362,7 @@ def check_saved_workbooks():
     # Verify actual saved IDs are preserved by the reference construction.
     saved_ids = {(origin + dt.timedelta(days=r["Date"]), r["Shifts"], r["RolesList"]): r["Period"] for r in calendar}
     require(all(r["Period"] == saved_ids[r["Date"], r["Shift"], r["Role"]] for r in output), "period preservation")
-    print("Saved-table reference reconciliation: 252 rows; 28 days; 84 periods.")
+    print("Legacy fixed-role reference only: 252 rows; 28 days; 84 periods. Linked role policy not verified.")
     for name in RETAINED_ROLES:
         one = sum(r["DemandHRS"] for r in output if r["Role"] == name and r["Day"] <= 14)
         two = sum(r["DemandHRS"] for r in output if r["Role"] == name and r["Day"] > 14)

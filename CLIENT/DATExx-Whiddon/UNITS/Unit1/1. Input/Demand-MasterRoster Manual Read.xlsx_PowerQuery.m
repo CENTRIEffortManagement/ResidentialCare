@@ -229,7 +229,7 @@ let
     #"Added DC Role Key" = Table.AddColumn(
         #"Added Roster Role Key",
         "RoleKey",
-        each if [DC Role] = null then null else Text.Upper([DC Role]),
+        each if [DC Role] = null then null else [DC Role],
         type nullable text
     ),
     #"Added Minute Category" = Table.AddColumn(

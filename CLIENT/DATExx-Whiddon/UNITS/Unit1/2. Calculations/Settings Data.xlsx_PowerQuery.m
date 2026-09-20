@@ -1,6 +1,6 @@
 // Power Query from: Settings Data.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\Settings Data.xlsx
-// Extracted: 2026-09-08T23:22:31.834Z
+// Extracted: 2026-09-20T07:24:18.714Z
 
 section Section1;
 
@@ -52,8 +52,15 @@ shared PermutationDimensions = let
 in
     #"Sorted Rows";
 
+shared Roles = let
+    Source = #"IMPORT AllocationExtracted",
+    Role = Source[Role],
+    #"Removed Duplicates" = List.Distinct(Role)
+in
+    #"Removed Duplicates";
+
 shared DateNameRoleShiftAllocation = let
-    Source = AllocationExtracted,
+    Source = #"IMPORT AllocationExtracted",
     #"Changed Type1" = Table.TransformColumnTypes(Source,{{"Start", type number}, {"End", type number}}),
     #"Added Custom" = Table.AddColumn(#"Changed Type1", "Custom", each (if [End]<[Start]
 then (1-[Start])+[End]
@@ -72,19 +79,12 @@ shared DateRoleShiftAllocation = let
 in
     #"Grouped Rows";
 
-shared AllocationExtracted = let
+shared #"IMPORT AllocationExtracted" = let
     Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\1-AllocationExtracted.xlsx"), null, true),
     AllocationExtracted_Table = Source{[Item="AllocationExtracted",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(AllocationExtracted_Table,{{"Date", type date}, {"Start", type time}, {"End", type time}, {"Break", Int64.Type}, {"Hours", type number}, {"Name", type text}, {"Code", Int64.Type}, {"Role", type text}})
 in
     #"Changed Type";
-
-shared Roles = let
-    Source = Excel.CurrentWorkbook(){[Name="Roles"]}[Content],
-    #"Changed Type" = Table.TransformColumnTypes(Source,{{"ROLES", type text}}),
-    ROLES = #"Changed Type"[ROLES]
-in
-    ROLES;
 
 shared Shifts = let
     Source = Excel.CurrentWorkbook(){[Name="Shifts"]}[Content],
