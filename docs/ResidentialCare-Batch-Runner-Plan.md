@@ -69,14 +69,21 @@ C2 all-enabled-roles choice and dynamically generated C2.1 through C2.N choices,
 with role names and filenames. The same list-before-prompt rule applies when an
 agent asks the user to choose batches in conversation. The list is generated
 from current configuration, not copied from a potentially outdated diagram.
+Organisation batch IDs use the letter `O`, as in `O1,O2,O5`. The runner also
+accepts `01` through `05` with a leading zero as aliases for `O1` through `O5`
+and prints the interpretation before resolving the plan. A batch selection
+containing only organisation IDs runs those batches once and does not ask for
+Units. A mixed Unit and organisation batch selection asks for Units; that answer
+limits only the Unit jobs, not the organisation workbooks or their configured
+consumer Units. Unknown IDs still stop before refresh.
 
 Every Unit-selection prompt also first lists the currently discovered Unit IDs
 in numeric order, followed by `All - all listed Units`. This applies to option 3
-and the Unit questions after batch or role selection. Accept comma-separated
+and the Unit questions after Unit batch or role selection. Accept comma-separated
 IDs or `All`. State that blank means all Units for batch/role qualification;
 blank cancels option 3. Agents must show the same available IDs before asking
-the user to select Units in conversation. Unit discovery and selection behaviour
-are otherwise unchanged.
+the user to select Units in conversation. Unit IDs come from current folder
+discovery.
 
 `-RunAll` authorises execution. Other selections require `-RefreshSelected`;
 without it they resolve and validate only. `-ShowPlan` is read-only catalogue

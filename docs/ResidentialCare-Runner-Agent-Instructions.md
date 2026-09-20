@@ -36,6 +36,11 @@ shared Unit batch choices once, with organisation batches in a separate section.
 Show C2 as the all-enabled-roles choice and each actual C2.1 through C2.N choice
 with its role name and three filenames. Then ask for one or more comma-separated
 batch IDs. Listing choices must not open Excel or authorise a refresh.
+Organisation batch IDs start with the letter `O`. The runner accepts `01` through
+`05` as aliases for `O1` through `O5` and prints that interpretation. After an
+organisation-only batch pick, do not ask for Units; those batches run once with
+their configured consumer Units. For mixed Unit and organisation picks, ask for
+Units to qualify only the Unit jobs. Unknown IDs remain invalid.
 
 Whenever asking for Units, first list the exact available Unit IDs from current
 Unit-folder discovery, in numeric order (for example, Unit1, Unit2, Unit10).
