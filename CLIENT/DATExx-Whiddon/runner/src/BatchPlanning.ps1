@@ -262,6 +262,16 @@ function Get-BatchPickList {
     'Pick one or more batch IDs, comma-separated (for example: D1,A2,C2.1). C2 selects every enabled role batch.'
 }
 
+function Test-BatchSelectionNeedsUnits {
+    param($Catalogue, [string[]] $Batches)
+    foreach ($batch in (Expand-BatchArguments $Batches)) {
+        if ($batch -eq 'C2' -or @($Catalogue.Jobs | Where-Object { $_.Unit -ne 'Org' -and $_.Batch -eq $batch }).Count) {
+            return $true
+        }
+    }
+    return $false
+}
+
 function Select-BatchPlan {
     param($Catalogue, [switch] $RunAll, [string[]] $Units, [string[]] $Batches, [string[]] $Roles,
         [string[]] $Workbooks, [string] $StartAtWorkbook, [int] $StartAtSequence, [int] $EndAtSequence,

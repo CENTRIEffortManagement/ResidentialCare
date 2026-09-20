@@ -137,6 +137,14 @@ function Invoke-BatchSchedule {
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0') 'successful C2 menu keeps the completion result visible'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest ($dispatch.Jobs.Count -eq 9 -and @($dispatch.Jobs | Where-Object { $_ -notlike 'Unit1/Role:*' }).Count -eq 0) 'C2 still dispatches exactly the nine Unit1 role files'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o5') -ExpectPause -CheckGateReleased
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu selection skips the Unit prompt'
+    $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
+    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Reporting') 'organisation-only menu dispatches the selected batches once'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'C1,O1', 'Unit1') -ExpectPause -CheckGateReleased
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Available Unit IDs:') 'mixed batch selection still asks for Units'
+    $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
+    Assert-LauncherTest (@($dispatch.Jobs | Where-Object { $_ -like 'Unit2/*' }).Count -eq 0 -and @($dispatch.Jobs | Where-Object { $_ -like 'Org/*' }).Count -eq 2) 'mixed selection scopes Unit work and retains organisation work'
     $result = Invoke-LauncherFixture -InputLines @('1') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0') 'Run all keeps the completion result visible'
     $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)

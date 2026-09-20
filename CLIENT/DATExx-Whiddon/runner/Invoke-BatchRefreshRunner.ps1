@@ -84,7 +84,9 @@ try {
                 $pickCatalogue = Get-BatchCatalogue $repoRoot $SequenceProfile
                 foreach ($line in (Get-BatchPickList $pickCatalogue)) { Write-Host $line }
                 $Batches = @(Read-Host 'Batch IDs, comma-separated')
-                $Units = @(Read-UnitSelection $pickCatalogue -BlankMeansAll)
+                if (Test-BatchSelectionNeedsUnits $pickCatalogue $Batches) {
+                    $Units = @(Read-UnitSelection $pickCatalogue -BlankMeansAll)
+                }
                 $RefreshSelected = $true
             }
             '3' {
