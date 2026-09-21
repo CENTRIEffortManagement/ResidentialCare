@@ -206,7 +206,7 @@ function Complete-BatchJob {
 
 function Invoke-BatchSchedule {
     param($Plan, [hashtable] $State, [string] $RunDirectory,
-        [ValidateRange(1, 7)] [int] $MaxParallelBatches = 7,
+        [ValidateRange(1, 12)] [int] $MaxParallelBatches = 12,
         [string] $Visible = 'false', [double] $TimeoutMinutes = 30,
         [scriptblock] $StartWorker = ${function:Start-BatchWorkbookProcess},
         [scriptblock] $PollWorker = ${function:Receive-BatchWorkbookProcess},

@@ -67,7 +67,7 @@ function Get-BatchDurationHistory {
 }
 
 function Get-BatchForecast {
-    param($Plan, [hashtable] $Durations, [ValidateRange(1,7)] [int] $Limit = 7)
+    param($Plan, [hashtable] $Durations, [ValidateRange(1,12)] [int] $Limit = 12)
     $status = @{}; $active = @{}; $ends = @{}; $rows = [Collections.Generic.List[object]]::new()
     foreach ($job in $Plan.Jobs) { $status[$job.Id] = 'Pending' }
     $time = 0.0; $peak = 0

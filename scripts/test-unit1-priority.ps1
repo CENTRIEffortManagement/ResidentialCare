@@ -23,7 +23,7 @@ try {
     Check (($roots -join ',') -eq 'Unit1/AllocationInput,Unit1/Settings,Unit1/DemandMaster,Unit2/AllocationInput,Unit2/Settings,Unit2/DemandMaster') 'six roots in Unit priority order'
     $plan = Select-BatchPlan $new -RunAll
     $times = @{}; foreach ($job in $plan.Jobs) { $times[$job.Id] = @{ Seconds = 10; SourceRun = 'synthetic'; Observed = '2026-01-01T00:00:00Z' } }
-    foreach ($limit in 1..7) {
+    foreach ($limit in 1..12) {
         $forecast = Get-BatchForecast $plan $times $limit
         Check ($forecast.Complete -and $forecast.Rows.Count -eq $plan.Jobs.Count -and $forecast.Peak -le $limit) "complete bounded forecast $limit"
         $byId = @{}; foreach ($row in $forecast.Rows) { $byId[$row.Id] = $row }
@@ -31,18 +31,18 @@ try {
             foreach ($dep in $job.Dependencies) { Check ($byId[$job.Id].Start -ge $byId[$dep].Finish) "edge $dep -> $($job.Id)" }
         }
     }
-    $forecast = Get-BatchForecast $plan $times 7
+    $forecast = Get-BatchForecast $plan $times 12
     Check (($forecast.Rows | Select-Object -First 6 | ForEach-Object Id) -join ',' -eq ($roots -join ',')) 'startup dispatch order'
     $status=@{}; foreach($job in $plan.Jobs){$status[$job.Id]='Pending'}
     $first=$plan.Jobs[0]; $other=$plan.Jobs | Where-Object Id -eq 'Unit2/AllocationInput'
     $other.Exclusive=$true
-    Check (-not (Test-BatchAdmission $first $status @($other) 7)) 'exclusive worker blocks other admissions'
+    Check (-not (Test-BatchAdmission $first $status @($other) 12)) 'exclusive worker blocks other admissions'
     $other.Exclusive=$false
     $savedReads=$first.Reads; $first.Reads=@($other.Path)
-    Check (-not (Test-BatchAdmission $first $status @($other) 7)) 'active writer excludes readers'
+    Check (-not (Test-BatchAdmission $first $status @($other) 12)) 'active writer excludes readers'
     $first.Reads=$savedReads
     $times.Remove('Org/Cost')
-    $unknown = Get-BatchForecast $plan $times 7
+    $unknown = Get-BatchForecast $plan $times 12
     Check (-not $unknown.Complete -and $null -eq $unknown.TotalSeconds) 'unknown timings cannot produce a total'
     Check ('Org/Reporting' -notin @($unknown.Rows | ForEach-Object Id)) 'unknown successor is not assigned a bar'
     $portable = ConvertTo-PortableBatchPlan $plan

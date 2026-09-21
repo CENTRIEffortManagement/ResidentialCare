@@ -8,9 +8,16 @@ passes its separately approved controlled refresh trial. This implementation doe
 not start a refresh or install a watcher.
 
 **Run any independent, ready batches in parallel, with a default and hard maximum
-of seven active batches across the entire Date-level run.** This is not limited
+of twelve active batches across the entire Date-level run.** This is not limited
 to C2. Every batch refreshes its selected files sequentially, with one workbook
 active per batch. A lower `-MaxParallelBatches` value is supported; one is serial.
+
+The ceiling was raised from seven to twelve on 21 September 2026. The latest
+completed production run, `20260921-154942-fd516fc7`, reached nine concurrent
+batches, completed successfully in approximately three minutes and peaked at
+61% total memory with approximately 38% background use. Twelve remains available
+for future plans with enough simultaneously ready batches, but has not yet been
+reached in a live refresh.
 
 The executable catalogue and operational settings are located beside the new
 runner. Project-relative locations are configured in `pq.project.json`.
@@ -168,7 +175,7 @@ workflow; workbook/source changes still follow the project's source-of-truth and
 opt-in synchronization rules. No M source or workbook logic is changed here.
 
 Read/write exclusion, selected-producer failure blocking, file-user checks,
-timeouts, verified saves and the seven-batch maximum remain enforced. Configuration,
+timeouts, verified saves and the twelve-batch maximum remain enforced. Configuration,
 profile, manifest and relevant engine changes still invalidate the identity used
 for resume; this fingerprint is no longer a live-approval signature.
 
@@ -250,7 +257,7 @@ operator stop; 124 preserves a workbook timeout when the run was not stopped.
 ## Verification and rollout
 
 `pwsh -NoProfile -File scripts/test-batch-refresh-runner.ps1` exercises selection,
-dynamic identities, seven-batch admission, cross-branch/Unit scheduling, serial
+dynamic identities, twelve-batch admission, cross-branch/Unit scheduling, serial
 batch files, file-level release, waiting slots, read/write conflicts, partial
 failure, stop/resume and exclusion with synthetic non-workbook files.
 
@@ -434,7 +441,7 @@ Verification of the refinement, without Excel:
    Validate that workbook imports and path resolution target that runtime tree,
    not the repository originals, before enabling refresh there. This needs a
    deliberate runner/path design and approval; do not silently run temporary or
-   same-stem copies. Continue to allow up to seven independent batches.
+   same-stem copies. Continue to allow up to twelve independent batches.
 3. **Controlled publication.** After refresh/save/close verification, publish
    only the explicitly selected successful output set, with recovery records,
    input provenance and checks against changes to destination originals. Report

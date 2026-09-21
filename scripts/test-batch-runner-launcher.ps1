@@ -131,7 +131,7 @@ function Invoke-BatchSchedule {
     Assert-LauncherTest ($result.Output -notmatch 'REFRESH NOT STARTED|LIVE REFRESH GATED|The runner stopped') 'successful C1 menu has no stale approval block or failure message'
     Assert-LauncherTest ([string]::IsNullOrWhiteSpace($result.ErrorText)) 'C1 menu has no red exception/traceback'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
-    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Unit1/Workers,Unit1/Availability,Unit1/Staff' -and $dispatch.Limit -eq 7) 'exact C1 files and seven-batch limit reach dispatch'
+    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Unit1/Workers,Unit1/Availability,Unit1/Staff' -and $dispatch.Limit -eq 12) 'exact C1 files and twelve-batch limit reach dispatch'
 
     $result = Invoke-LauncherFixture -InputLines @('2', 'C2', 'Unit1') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0') 'successful C2 menu keeps the completion result visible'

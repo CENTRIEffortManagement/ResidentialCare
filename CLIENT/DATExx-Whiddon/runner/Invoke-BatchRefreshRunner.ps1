@@ -9,7 +9,7 @@ param(
     [switch] $RefreshSelected, [switch] $ShowPlan, [switch] $ValidateSelectionOnly,
     [switch] $ShowStatus, [string] $ResumeRun,
     [ValidateSet('AfterCurrent', 'AfterBatch', 'Now')] [string] $StopMode,
-    [ValidateRange(1, 7)] [int] $MaxParallelBatches = 7,
+    [ValidateRange(1, 12)] [int] $MaxParallelBatches = 12,
     [ValidateSet('true', 'false')] [string] $VisibleOverride = 'false',
     [ValidateRange(0.01, 1440)] [double] $TimeoutMinutesOverride = 30
 )
@@ -31,7 +31,7 @@ function Show-ResolvedBatchPlan {
     param($Plan, $Catalogue)
     Write-Host "Selected: $($Plan.Jobs.Count) files in $(@($Plan.Jobs | Group-Object BatchKey).Count) batches."
     Write-Host "Sequence profile: $($Plan.SequenceProfile)"
-    Write-Host "Parallel batches: $MaxParallelBatches (maximum 7); files within each batch are sequential."
+    Write-Host "Parallel batches: $MaxParallelBatches (maximum 12); files within each batch are sequential."
     Write-Host "Catalogue fingerprint: $($Catalogue.Fingerprint)"
     if (@($Plan.Jobs | Where-Object Unit -eq 'Org').Count) {
         Write-Host "Organisation consumer Units: $($Plan.OrgUnits -join ', '). Unit selection does not change workbook filters."
@@ -73,7 +73,7 @@ try {
         exit 0
     }
     if ($interactiveMenu) {
-        Write-Host '1. Run all (up to 7 parallel batches)'
+        Write-Host '1. Run all (up to 12 parallel batches)'
         Write-Host '2. Run selected batches    3. Run selected Units    4. Run selected roles'
         Write-Host '5. Run exact files        6. Run legacy range      7. Preview / validate all'
         Write-Host '8. Status                 9. Resume               10. Stop    0. Exit'

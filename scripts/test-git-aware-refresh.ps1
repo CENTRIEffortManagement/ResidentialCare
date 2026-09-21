@@ -161,11 +161,11 @@ try {
             # Simulate repeated RM sightings of this verified live Git process.
             # Its actual read commands run alongside the synthetic scheduler.
             function Get-RefreshFileUsers { param($Path) $script:liveUser }
-            $jobs = @(1..9 | ForEach-Object {
+            $jobs = @(1..12 | ForEach-Object {
                 $path = Join-Path $fixture "job$_.data"; [IO.File]::WriteAllText($path, 'test content')
                 [pscustomobject]@{Id="job$_";BatchKey="batch$_";Path=$path;Reads=@();Dependencies=@();Exclusive=$false}
             })
-            foreach ($limit in @(1,7)) {
+            foreach ($limit in @(1,12)) {
                 $directory=Join-Path $testRoot "schedule-$limit"; [void] [IO.Directory]::CreateDirectory($directory)
                 $plan=[pscustomobject]@{DateRoot=$fixture;Jobs=$jobs;Fingerprint='fixture'}
                 $state=New-BatchState $plan "git-$limit"
@@ -184,12 +184,12 @@ try {
                     return @{ExitCode=0;NeedsInspection=$false;Message='Synthetic save complete alongside Git reads.'}
                 }
                 $code=Invoke-BatchSchedule $plan $state $directory -MaxParallelBatches $limit -StartWorker $start -PollWorker $poll -ValidateJob {param($job) Assert-NoExternalFileUsers $job.Path} -PollMilliseconds 0
-                Assert-GitTest ($code -eq 0 -and $state.MaxObserved -eq $limit -and @($state.Jobs.Values | Where-Object Status -eq Completed).Count -eq 9) "all nine jobs complete with live Git reads at concurrency $limit"
+                Assert-GitTest ($code -eq 0 -and $state.MaxObserved -eq $limit -and @($state.Jobs.Values | Where-Object Status -eq Completed).Count -eq 12) "all twelve jobs complete with live Git reads at concurrency $limit"
             }
             $script:gitReader.StandardInput.Close()
             Assert-GitTest ($script:gitReader.WaitForExit(10000) -and $script:gitReader.ExitCode -eq 0) 'background Git reader exits normally without being terminated'
             $hashes = @($stdout.GetAwaiter().GetResult().Trim() -split "\r?\n")
-            Assert-GitTest ($hashes.Count -eq 18 -and @($hashes | Where-Object {$_ -notmatch '^[a-f0-9]{40,64}$'}).Count -eq 0) 'real Git completed all eighteen fixture file reads'
+            Assert-GitTest ($hashes.Count -eq 24 -and @($hashes | Where-Object {$_ -notmatch '^[a-f0-9]{40,64}$'}).Count -eq 0) 'real Git completed all twenty-four fixture file reads'
             Assert-GitTest ([string]::IsNullOrWhiteSpace($stderr.GetAwaiter().GetResult())) 'background Git reported no read failure'
         } finally {
             ${function:Get-RefreshFileUsers}=$savedUsers

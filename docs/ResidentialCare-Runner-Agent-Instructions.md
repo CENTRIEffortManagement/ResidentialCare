@@ -14,9 +14,9 @@ For requests explicitly naming the expanded/new/batch runner, use
 `docs/ResidentialCare-Batch-Runner-Plan.md`. The legacy entry-point mapping below
 remains the fallback until rollout is accepted.
 
-The expanded runner's primary action is `-RunAll`. It runs **up to seven ready
+The expanded runner's primary action is `-RunAll`. It runs **up to twelve ready
 batches concurrently across all branches and Units**, not just C2; files within
-each batch remain sequential. `-MaxParallelBatches` accepts 1 through 7, default 7.
+each batch remain sequential. `-MaxParallelBatches` accepts 1 through 12, default 12.
 Batch IDs and the saved role profile are the manual-control interface.
 
 Whenever an option leads to asking the user to pick batches, first display all
@@ -66,7 +66,7 @@ only operational settings: organisation consumer Units, additional inputs and
 exclusive jobs. The configuration fingerprint still protects resume consistency.
 
 Dependency readiness, file access/lock checks, conflicting-run exclusion,
-seven-batch maximum, timeout and verified-save protections remain enforced.
+twelve-batch maximum, timeout and verified-save protections remain enforced.
 Removing the gate does not start a refresh by itself, authorise M synchronization
 or permit automatic scheduled refresh. Preview and validation never start Excel.
 
@@ -149,7 +149,7 @@ For file-access or workbook-identity guards, also run
 For Git classification or refresh-wide metadata checks, run
 `scripts/test-git-aware-refresh.ps1`. Its optional `-LiveProcessChecks` exercises
 real Windows Git process identification and real Git reads of disposable data
-alongside serial/seven-batch simulated runs. File-user sightings are injected in
+alongside serial/twelve-batch simulated runs. File-user sightings are injected in
 that test; it is not a live Excel save or end-to-end Restart Manager trial.
 For menu/launcher changes, also run `scripts/test-batch-runner-launcher.ps1`;
 it verifies explicit C1/C2 Unit1 dispatch, validation-only behaviour, successful and

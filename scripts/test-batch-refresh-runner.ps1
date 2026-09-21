@@ -25,7 +25,7 @@ function New-FakeJob {
     return [pscustomobject]@{ Id = $Id; BatchKey = $Batch; Batch = $Batch; Path = $path; Reads = $Reads; Dependencies = $Depends; Exclusive = $false }
 }
 function Invoke-FakeRun {
-    param([object[]] $Jobs, [int] $Max = 7, [string[]] $Fail = @(), [string] $Stop = '',
+    param([object[]] $Jobs, [int] $Max = 12, [string[]] $Fail = @(), [string] $Stop = '',
         [string[]] $Slow = @(), [switch] $Uncertain, [int] $FailureCode = 1)
     $directory = Join-Path $testRoot ([guid]::NewGuid().ToString('N'))
     [void] [IO.Directory]::CreateDirectory($directory)
@@ -159,10 +159,10 @@ try {
     # Synthetic files are plain text with .data extensions: no workbook is opened.
     $parallel = @(1..12 | ForEach-Object { New-FakeJob "parallel$_" })
     $result = Invoke-FakeRun $parallel
-    Assert-True ($result.Code -eq 0 -and $result.Max -eq 7) 'seven independent batches run concurrently'
+    Assert-True ($result.Code -eq 0 -and $result.Max -eq 12) 'twelve independent batches run concurrently'
     $result = Invoke-FakeRun $parallel -Max 1
     Assert-True ($result.Code -eq 0 -and $result.Max -eq 1) 'serial override'
-    Assert-Throws { Invoke-FakeRun $parallel -Max 8 } 'hard maximum seven'
+    Assert-Throws { Invoke-FakeRun $parallel -Max 13 } 'hard maximum twelve'
     $first = New-FakeJob 'U1/A1' 'U1/A'
     $second = New-FakeJob 'U1/A2' 'U1/A' @($first.Id) @($first.Path)
     $otherUnit = New-FakeJob 'U2/D1' 'U2/D'
@@ -292,7 +292,7 @@ try {
     }
     Assert-True ($errors.Count -eq 0) "PowerShell parse checks: $(($errors | ForEach-Object Message) -join '; ')"
     Assert-True (@(Get-Process EXCEL -ErrorAction SilentlyContinue | Where-Object Id -notin $beforeExcel).Count -eq 0) 'no Excel process was started'
-    Write-Host "PASS: $script:assertions assertions; selection, seven-batch scheduling, stop/resume, locks and syntax. No Excel opened."
+    Write-Host "PASS: $script:assertions assertions; selection, twelve-batch scheduling, stop/resume, locks and syntax. No Excel opened."
 }
 finally {
     $resolved = [IO.Path]::GetFullPath($testRoot)
