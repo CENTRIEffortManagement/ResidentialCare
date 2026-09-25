@@ -29,15 +29,18 @@ for existing workbook paths.
 Run these examples from the repository root, using PowerShell 7:
 
 ```powershell
-# Primary action (explicitly starts the selected refresh):
+# Primary action: configured default Units (currently BD, TE and JH-RY only).
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll
 
 # No Excel: inspect the resolved plan, or validate file access and locks.
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -ShowPlan
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -ValidateSelectionOnly
 
-# Unit-only run; add IncludeOrg explicitly to include organisation processing.
+# Explicit Unit-only run; IncludeOrg applies only to organisation consumer Units.
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -Units Unit1
+
+# Explicit legacy scope, including organisation work.
+./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -Units Unit1,Unit2 -IncludeOrg
 
 # Non-contiguous batches, or named/numbered capacity role batches.
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -Units Unit1,Unit2 -Batches D1,A3 -RefreshSelected
@@ -61,7 +64,10 @@ Run these examples from the repository root, using PowerShell 7:
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -StopMode AfterBatch
 ```
 
-Opening the command without arguments presents a menu; option 1 is Run all.
+Opening the command without arguments presents a menu; option 1 runs the
+configured default Units. The current setting selects BD, TE and JH-RY and
+excludes Unit1, Unit2 and organisation batches. Option 3 allows an explicit
+Unit selection.
 The menu leaves successful, blocked and failed results visible until the operator
 presses a key to close the window. This includes validation and status results.
 Option 0 (Exit) closes immediately. Run exclusion is released before waiting, and

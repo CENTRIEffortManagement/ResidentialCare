@@ -21,6 +21,7 @@
 - Power Query source files should be committed as `.m` or `.pq` files under `Workflows/`.
 - Workbook-linked M-code work must use an approved source-of-truth extraction/sync process before edits are made.
 - Do not silently substitute copied, generated, backup, sidecar, or same-stem files as edit targets.
+- When the user requests a Power Query review and the exact workbook's extracted `.m`/`.pq` source is missing, stop the review, report the missing source, and ask the user to extract it. Do not inspect the workbook or substitute another unit's, copied, generated, backup, sidecar, or same-stem source.
 
 ## Opt-In M-to-Excel Synchronization
 
@@ -41,6 +42,9 @@
 
 - Always use a separate, meaningfully named `IMPORT` query to read an external source, even when only one extraction is required. Downstream queries must reference that import.
 - Use separate `EXTRACT` queries only when more than one distinct extraction is needed from the same imported source.
+- Keep `IMPORT` and `EXTRACT` queries free of business transformations. An `IMPORT` establishes and, when useful, buffers the external source or navigation snapshot; an `EXTRACT` only navigates to and returns one source object unchanged.
+- Do not filter rows, select or rename columns, set business types, join, calculate, or validate inside an `IMPORT` or `EXTRACT`. Put each such operation in a separate, meaningfully named downstream staging query such as a scope, preparation, or validation query.
+- In particular, apply client, unit, facility, role, date, or other business-scope filters after extraction in an explicit scope/preparation query. Preserve the complete configured key value; do not shorten or derive a partial key unless the approved source contract explicitly requires it.
 - For a single extraction, select and validate the required value directly in the meaningfully named destination query. For example, `ShiftDuration` can read the `ShiftDuration` table from `IMPORT Settings Data` and validate the hours value directly, without an intermediate `EXTRACT StandardFTEHours` query. Keep this standard duration in hours.
 - This rule governs query structure and naming; the workbook Power Query extraction and synchronization requirements above still apply.
 

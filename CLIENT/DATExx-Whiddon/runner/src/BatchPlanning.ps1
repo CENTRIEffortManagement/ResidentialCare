@@ -1,4 +1,5 @@
 Set-StrictMode -Version Latest
+. (Join-Path $PSScriptRoot 'RunScope.ps1')
 
 function Resolve-BatchPath {
     param([string] $Root, [string] $RelativePath)
@@ -58,32 +59,100 @@ function Get-BatchCatalogue {
     $unitManifest = Import-PowerShellDataFile -LiteralPath $unitPath
     $orgManifest = Import-PowerShellDataFile -LiteralPath $orgPath
     if ($catalogue.SchemaVersion -ne 1 -or $profile.SchemaVersion -ne 1) { throw 'Unsupported catalogue or role profile version.' }
-    $unitNames = @(Get-ChildItem -LiteralPath (Join-Path $dateRoot 'UNITS') -Directory |
-        Where-Object Name -match '^Unit[0-9]+$' | Sort-Object { [int] ($_.Name -replace '^Unit', '') } | ForEach-Object Name)
-    if ($unitNames.Count -eq 0) { throw 'No Unit folders found.' }
-    $roles = @($profile.Roles | Where-Object Enabled | ForEach-Object Folder)
-    foreach ($entry in $profile.Roles) {
-        if ($entry.Enabled -isnot [bool] -or $entry.Folder -isnot [string] -or [string]::IsNullOrWhiteSpace($entry.Folder)) { throw 'Each role requires a folder name and a boolean Enabled value.' }
-    }
-    if ($roles.Count -eq 0 -or @($roles | Select-Object -Unique).Count -ne $roles.Count) { throw 'Enabled roles must be nonempty and unique.' }
-    foreach ($role in $roles) {
-        if ($role -match '[\\/:]' -or $role -in @('.', '..')) { throw "Invalid role folder: $role" }
-    }
     if (@($profile.RoleWorkbookOrder).Count -ne 3) { throw 'Each role batch requires exactly three ordered workbooks.' }
     foreach ($file in $profile.RoleWorkbookOrder) {
         if ($file -match '[\\/:]' -or [IO.Path]::GetExtension($file) -ne '.xlsx') { throw "Invalid role workbook filename: $file" }
     }
-    $orgUnits = @($settings.OrganisationUnits)
-    if ($orgUnits.Count -eq 0) { throw 'Declare organisation consumer Units in the batch settings file.' }
-    foreach ($unit in $orgUnits) { if ($unit -notin $unitNames) { throw "Organisation consumer Unit not found: $unit" } }
+    # JSON scope is opt-in until the unit and organisation workbooks are migrated.
+    # With the project key absent, the existing production runner remains unchanged.
+    $scopePath = $null
+    $unitRoles = @{}
+    $additionalUnitNames = @()
+    if ($config.PSObject.Properties['runScope']) {
+        $scopePath = Resolve-BatchPath $RepoRoot $config.runScope
+        $scope = Read-ResidentialCareRunScope $scopePath 'DATExx-Whiddon'
+        $unitNames = @($scope.Units)
+        $roles = @($scope.Roles)
+        $orgUnits = @($scope.Units)
+        foreach ($unit in $unitNames) { $unitRoles[$unit] = @($roles) }
+        Assert-ResidentialCareRunScopeFolders $scope (Join-Path $dateRoot 'UNITS') @($profile.RoleWorkbookOrder)
+    } else {
+        $legacyUnitNames = @(Get-ChildItem -LiteralPath (Join-Path $dateRoot 'UNITS') -Directory |
+            Where-Object Name -match '^Unit[0-9]+$' | Sort-Object { [int] ($_.Name -replace '^Unit', '') } | ForEach-Object Name)
+        if ($legacyUnitNames.Count -eq 0) { throw 'No Unit folders found.' }
+        $legacyRoles = @($profile.Roles | Where-Object Enabled | ForEach-Object Folder)
+        foreach ($entry in $profile.Roles) {
+            if ($entry.Enabled -isnot [bool] -or $entry.Folder -isnot [string] -or [string]::IsNullOrWhiteSpace($entry.Folder)) { throw 'Each role requires a folder name and a boolean Enabled value.' }
+        }
+        if ($legacyRoles.Count -eq 0 -or @($legacyRoles | Select-Object -Unique).Count -ne $legacyRoles.Count) { throw 'Enabled roles must be nonempty and unique.' }
+        foreach ($role in $legacyRoles) {
+            if ($role -match '[\\/:]' -or $role -in @('.', '..')) { throw "Invalid role folder: $role" }
+        }
+        foreach ($unit in $legacyUnitNames) { $unitRoles[$unit] = @($legacyRoles) }
+        $configuredAdditionalUnits = if ($settings.ContainsKey('AdditionalUnits')) { @($settings.AdditionalUnits) } else { @() }
+        foreach ($entry in $configuredAdditionalUnits) {
+            if ($entry -isnot [hashtable] -or $entry.Folder -isnot [string] -or
+                $entry.Folder -cnotmatch '^[A-Za-z0-9][A-Za-z0-9_-]*$') {
+                throw 'AdditionalUnits must contain safe folder names and ordered roles.'
+            }
+            $unit = $entry.Folder
+            if ($unit -in $legacyUnitNames -or $unit -in $additionalUnitNames) { throw "Duplicate additional Unit: $unit" }
+            $candidateUnitPath = Join-Path $dateRoot "UNITS/$unit"
+            if (-not (Test-Path -LiteralPath $candidateUnitPath -PathType Container)) { throw "Additional Unit folder is missing: $unit" }
+            if ((Get-Item -LiteralPath $candidateUnitPath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) {
+                throw "Additional Unit folder is a reparse point: $unit"
+            }
+            $unitRoleNames = @($entry.Roles)
+            if ($unitRoleNames.Count -eq 0 -or @($unitRoleNames | Select-Object -Unique).Count -ne $unitRoleNames.Count) {
+                throw "Additional Unit roles must be nonempty and unique: $unit"
+            }
+            foreach ($role in $unitRoleNames) {
+                if ($role -isnot [string] -or $role -cnotmatch '^[A-Za-z0-9][A-Za-z0-9_-]*$') {
+                    throw "Invalid role folder for additional Unit $unit`: $role"
+                }
+            }
+            $additionalUnitNames += $unit
+            $unitRoles[$unit] = $unitRoleNames
+        }
+        $unitNames = @($legacyUnitNames) + @($additionalUnitNames)
+        $roles = @($legacyRoles + @($additionalUnitNames | ForEach-Object { $unitRoles[$_] }) | Select-Object -Unique)
+        $orgUnits = @($settings.OrganisationUnits)
+        if ($orgUnits.Count -eq 0) { throw 'Declare organisation consumer Units in the batch settings file.' }
+        foreach ($unit in $orgUnits) { if ($unit -notin $unitNames) { throw "Organisation consumer Unit not found: $unit" } }
+    }
+    $runAllUnits = if ($settings.ContainsKey('RunAllUnits')) { @($settings.RunAllUnits) } else { @($orgUnits) }
+    if (-not $runAllUnits.Count -or @($runAllUnits | Select-Object -Unique).Count -ne $runAllUnits.Count) {
+        throw 'RunAllUnits must be nonempty and unique.'
+    }
+    foreach ($unit in $runAllUnits) { if ($unit -notin $unitNames) { throw "RunAll Unit not found: $unit" } }
+    $runAllIncludeOrg = if ($settings.ContainsKey('RunAllIncludeOrg')) { $settings.RunAllIncludeOrg } else { $true }
+    if ($runAllIncludeOrg -isnot [bool]) { throw 'RunAllIncludeOrg must be boolean.' }
     $jobs = [Collections.Generic.List[object]]::new()
     $legacy = [Collections.Generic.List[object]]::new()
     $globalSequence = 0
     foreach ($unit in $unitNames) {
-        foreach ($entry in ($unitManifest.Workbooks | Sort-Object Sequence)) {
+        $currentRoles = @($unitRoles[$unit])
+        $legacyUnitEntries = if ($scopePath -or $unit -in $additionalUnitNames) {
+            $entries = [Collections.Generic.List[object]]::new()
+            foreach ($entry in @($unitManifest.Workbooks | Where-Object { $_.Sequence -le 13 } | Sort-Object Sequence)) {
+                $entries.Add([pscustomobject]@{ Folder = $entry.Folder; FileName = $entry.FileName })
+            }
+            foreach ($role in $currentRoles) {
+                foreach ($file in $profile.RoleWorkbookOrder) {
+                    $entries.Add([pscustomobject]@{ Folder = "2. Calculations/$role"; FileName = $file })
+                }
+            }
+            foreach ($entry in @($unitManifest.Workbooks | Where-Object { $_.Sequence -ge 23 } | Sort-Object Sequence)) {
+                $entries.Add([pscustomobject]@{ Folder = $entry.Folder; FileName = $entry.FileName })
+            }
+            @($entries)
+        } else { @($unitManifest.Workbooks | Sort-Object Sequence) }
+        $localSequence = 0
+        foreach ($entry in $legacyUnitEntries) {
             $globalSequence++
+            $localSequence++
             $relative = "UNITS/$unit/$($entry.Folder)/$($entry.FileName)" -replace '\\', '/'
-            $legacy.Add([pscustomobject]@{ Global = $globalSequence; Local = [int] $entry.Sequence; Unit = $unit; Path = $relative })
+            $legacy.Add([pscustomobject]@{ Global = $globalSequence; Local = $localSequence; Unit = $unit; Path = $relative })
         }
         foreach ($spec in $catalogue.UnitJobs) {
             $localPath = if ($spec.ContainsKey('Sequence')) {
@@ -92,7 +161,7 @@ function Get-BatchCatalogue {
                 "$($entry[0].Folder)/$($entry[0].FileName)"
             } else { $spec.Path }
             $dependencies = @($spec.Depends | ForEach-Object {
-                if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$unit/Role:$role/3" } }
+                if ($_ -eq 'RoleOutputs') { foreach ($role in $currentRoles) { "$unit/Role:$role/3" } }
                 else { "$unit/$_" }
             })
             $inputs = if ($spec.ContainsKey('Inputs')) { @($spec.Inputs | ForEach-Object { "UNITS/$unit/$_" }) } else { @() }
@@ -102,8 +171,8 @@ function Get-BatchCatalogue {
                 BatchOrder = [array]::IndexOf($catalogue.BatchOrder, $spec.Batch); RoleOrder = 0; FileOrder = $jobs.Count
             })
         }
-        for ($r = 0; $r -lt $roles.Count; $r++) {
-            $role = $roles[$r]
+        for ($r = 0; $r -lt $currentRoles.Count; $r++) {
+            $role = $currentRoles[$r]
             for ($f = 0; $f -lt 3; $f++) {
                 $deps = @($catalogue.RoleDependencies | ForEach-Object { "$unit/$_" })
                 if ($f -gt 0) { $deps += "$unit/Role:$role/$f" }
@@ -137,6 +206,17 @@ function Get-BatchCatalogue {
         $byId[$job.Id] = $job; $byPath[$job.RelativePath] = $job
         $job | Add-Member Path (Resolve-BatchPath $dateRoot $job.RelativePath)
     }
+    if ($scopePath) {
+        # An old organisation input must never read a disabled Unit merely
+        # because that workbook still exists on disk.
+        foreach ($job in $jobs) {
+            foreach ($inputPath in @($job.InputPaths)) {
+                if ($inputPath -match '^UNITS/([^/]+)/' -and $Matches[1] -notin $unitNames) {
+                    throw "JSON scope cannot activate: $($job.Id) reads disabled Unit $($Matches[1]) ($inputPath)."
+                }
+            }
+        }
+    }
     foreach ($id in @($settings.AdditionalInputs.Keys) + @($settings.ExclusiveJobs)) {
         if (-not $byId.ContainsKey($id)) { throw "Batch settings reference an unknown job: $id" }
     }
@@ -154,7 +234,7 @@ function Get-BatchCatalogue {
             $definition = @($catalogue.UnitJobs | Where-Object { "$($job.Unit)/$($_.Id)" -eq $job.Id })[0]
             if ($definition.ContainsKey('ReadJobs')) {
                 $readJobs = @($definition.ReadJobs | ForEach-Object {
-                    if ($_ -eq 'RoleOutputs') { foreach ($role in $roles) { "$($job.Unit)/Role:$role/3" } }
+                    if ($_ -eq 'RoleOutputs') { foreach ($role in @($unitRoles[$job.Unit])) { "$($job.Unit)/Role:$role/3" } }
                     else { "$($job.Unit)/$_" }
                 })
             }
@@ -194,15 +274,17 @@ function Get-BatchCatalogue {
         foreach ($job in $ready) { $seen[$job.Id] = $true }
     }
     $files = @((Join-Path $RepoRoot 'pq.project.json'), $cataloguePath, $settingsPath, $profilePath, $unitPath, $orgPath)
+    if ($scopePath) { $files += $scopePath }
     $files += @(Get-ChildItem -LiteralPath $PSScriptRoot -Filter 'Batch*.ps1' -File | Sort-Object Name | ForEach-Object FullName)
-    $files += @('BatchScheduling.ps1', 'RefreshJson.ps1', 'RefreshGitAccess.ps1', 'Invoke-BatchWorkbook.ps1', 'RefreshRunGate.ps1', 'ExcelRefreshSafety.ps1', 'Invoke-AllUnitsExcelWorkbookRefresh.ps1' | ForEach-Object { Join-Path $PSScriptRoot $_ })
+    $files += @('RunScope.ps1', 'BatchScheduling.ps1', 'RefreshJson.ps1', 'RefreshGitAccess.ps1', 'Invoke-BatchWorkbook.ps1', 'RefreshRunGate.ps1', 'ExcelRefreshSafety.ps1', 'Invoke-AllUnitsExcelWorkbookRefresh.ps1' | ForEach-Object { Join-Path $PSScriptRoot $_ })
     $fingerprint = Get-BatchFingerprint $files
     return [pscustomobject]@{
         SchemaVersion = 1; DateRoot = $dateRoot; LogRoot = (Resolve-BatchPath $RepoRoot $config.logFolder)
         SequenceProfile = $SequenceProfile
-        Units = $unitNames; Roles = $roles; OrgUnits = $orgUnits; Settings = $settings; Fingerprint = $fingerprint
+        Units = $unitNames; Roles = $roles; OrgUnits = $orgUnits
+        RunAllUnits = $runAllUnits; RunAllIncludeOrg = $runAllIncludeOrg; Settings = $settings; Fingerprint = $fingerprint
         BatchTitles = $(if ($catalogue.ContainsKey('BatchTitles')) { $catalogue.BatchTitles } else { @{} })
-        Jobs = @($jobs | Sort-Object @{Expression={ if ($_.Unit -eq 'Org') { [int]::MaxValue } else { [int] ($_.Unit -replace '^Unit', '') } }}, BatchOrder, RoleOrder, FileOrder)
+        Jobs = @($jobs | Sort-Object @{Expression={ if ($_.Unit -eq 'Org') { [int]::MaxValue } else { [array]::IndexOf($unitNames, $_.Unit) } }}, BatchOrder, RoleOrder, FileOrder)
         Legacy = @($legacy); WorkerScript = (Join-Path $dateRoot 'runner/src/Invoke-AllUnitsExcelWorkbookRefresh.ps1')
     }
 }
@@ -252,7 +334,12 @@ function Get-BatchPickList {
                     "C2 - All enabled role capacity batches [$files]"
                     $shownRoleAlias = $true
                 }
-                $title = if ($title) { "$title - $role" } else { $role }
+                $roleMappings = @($Catalogue.Jobs | Where-Object { $_.Unit -ne 'Org' -and $_.Batch -eq $id } |
+                    Group-Object Role | ForEach-Object {
+                        "$($_.Name) ($(@($_.Group | Select-Object -ExpandProperty Unit -Unique) -join ', '))"
+                    })
+                $roleLabel = if ($roleMappings.Count -eq 1) { $role } else { $roleMappings -join ' / ' }
+                $title = if ($title) { "$title - $roleLabel" } else { $roleLabel }
             }
             $label = if ($title) { "$id - $title" } else { $id }
             "$label [$files]"
@@ -295,7 +382,12 @@ function Select-BatchPlan {
         if ($Units.Count -ne 1) { throw 'Use All alone in the Unit selector.' }
         $Units = @($Catalogue.Units)
     }
-    if (-not $Units.Count) { $Units = @($Catalogue.Units) }
+    # Unqualified run and preview actions follow the configured default scope.
+    $defaultRunScope = -not $explicitUnits -and ($RunAll -or -not ($Batches.Count -or $Roles.Count -or
+        $Workbooks.Count -or $StartAtWorkbook -or $StartAtSequence -or $EndAtSequence))
+    if (-not $Units.Count) {
+        $Units = if ($defaultRunScope) { @($Catalogue.RunAllUnits) } else { @($Catalogue.Units) }
+    }
     foreach ($unit in $Units) { if ($unit -notin $Catalogue.Units) { throw "Unknown Unit: $unit" } }
     foreach ($role in $Roles) { if ($role -notin $Catalogue.Roles) { throw "Unknown or disabled role: $role" } }
     $eligible = @($Catalogue.Jobs | Where-Object { $_.Unit -in $Units -or $_.Unit -eq 'Org' })
@@ -334,7 +426,9 @@ function Select-BatchPlan {
             $selected += $match
         }
     } else {
-        $selected = @($eligible | Where-Object { $_.Unit -ne 'Org' -or (-not $explicitUnits -or $IncludeOrg) })
+        $selected = @($eligible | Where-Object {
+            $_.Unit -ne 'Org' -or ($defaultRunScope -and $Catalogue.RunAllIncludeOrg) -or $IncludeOrg
+        })
     }
     if ($IncludeOrg) { $selected += @($Catalogue.Jobs | Where-Object Unit -eq 'Org') }
     $ids = @{}; foreach ($job in $selected) { $ids[$job.Id] = $true }
@@ -348,6 +442,11 @@ function Select-BatchPlan {
     }
     $selected = @($Catalogue.Jobs | Where-Object { $ids.ContainsKey($_.Id) })
     if (-not $selected.Count) { throw 'The selection is empty.' }
+    $unitOnlyJobs = @($selected | Where-Object { $_.Unit -ne 'Org' -and $_.Unit -notin $Catalogue.OrgUnits })
+    if ($unitOnlyJobs.Count -and @($selected | Where-Object Unit -eq 'Org').Count) {
+        $unitOnlyNames = @($unitOnlyJobs | Select-Object -ExpandProperty Unit -Unique) -join ', '
+        throw "Organisation jobs do not consume $unitOnlyNames yet. Select those Units without organisation batches."
+    }
     return [pscustomobject]@{
         SchemaVersion = 1; Fingerprint = $Catalogue.Fingerprint; DateRoot = $Catalogue.DateRoot
         SequenceProfile = $Catalogue.SequenceProfile

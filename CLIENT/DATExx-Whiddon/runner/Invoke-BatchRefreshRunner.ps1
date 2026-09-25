@@ -73,7 +73,7 @@ try {
         exit 0
     }
     if ($interactiveMenu) {
-        Write-Host '1. Run all (up to 12 parallel batches)'
+        Write-Host '1. Run configured default Units (up to 12 parallel batches)'
         Write-Host '2. Run selected batches    3. Run selected Units    4. Run selected roles'
         Write-Host '5. Run exact files        6. Run legacy range      7. Preview / validate all'
         Write-Host '8. Status                 9. Resume               10. Stop    0. Exit'

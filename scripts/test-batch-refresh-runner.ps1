@@ -59,22 +59,34 @@ function Invoke-FakeRun {
 }
 try {
     $catalogue = Get-BatchCatalogue $repoRoot
-    $all = Select-BatchPlan $catalogue -RunAll
-    Assert-True ($all.Jobs.Count -eq 60) 'two Units plus organisation should resolve 60 files'
-    Assert-True (@($all.Jobs | Group-Object BatchKey).Count -eq 27) 'expected 27 batches'
+    $defaultRun = Select-BatchPlan $catalogue -RunAll
+    Assert-True ($defaultRun.Jobs.Count -eq 78) 'Run all selects BD, TE and JH-RY workbooks'
+    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 78) 'unqualified preview matches Run all scope'
+    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 33) 'default run resolves three Unit batch sets'
+    Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2', 'Org')).Count -eq 0) 'Run all excludes Unit1, Unit2 and organisation jobs'
+    Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and -not $catalogue.RunAllIncludeOrg) 'saved default scope is the three requested Units only'
+    $all = Select-BatchPlan $catalogue -RunAll -Units Unit1,Unit2 -IncludeOrg
+    Assert-True ($all.Jobs.Count -eq 60 -and @($all.Jobs | Group-Object BatchKey).Count -eq 27) 'explicit legacy selection retains Unit1, Unit2 and organisation work'
     Assert-True ($all.Jobs[0].Id -eq 'Unit1/AllocationInput') 'numeric Unit and catalogue order'
     Assert-True (@($all.Jobs | Where-Object RelativePath -match 'TestRole').Count -eq 0) 'test roles excluded'
     Assert-True (-not $catalogue.Settings.ContainsKey('Approved')) 'operational settings do not require approval metadata'
     Assert-True (($catalogue.OrgUnits -join ',') -eq 'Unit1,Unit2') 'organisation consumer scope is retained'
+    Assert-True (($catalogue.Units -join ',') -eq 'Unit1,Unit2,BD,TE,JH-RY') 'BD, TE and JH-RY are added after legacy Units'
+    Assert-Throws { Select-BatchPlan $catalogue -RunAll -Units BD -IncludeOrg } 'additional Unit cannot be combined with organisation jobs'
+    $orgStaffAll = @($all.Jobs | Where-Object Id -eq 'Org/StaffAll')[0]
+    $orgEffortAll = @($all.Jobs | Where-Object Id -eq 'Org/EffortAll')[0]
+    Assert-True (($orgStaffAll.Dependencies -join ',') -eq 'Unit1/Staff,Unit2/Staff') 'organisation staff dependencies remain Unit1 and Unit2 only'
+    Assert-True ('Unit1/Effort' -in $orgEffortAll.Dependencies -and 'Unit2/Effort' -in $orgEffortAll.Dependencies -and
+        @($orgEffortAll.Dependencies | Where-Object { $_ -match '^(BD|TE|JH-RY)/' }).Count -eq 0) 'organisation effort dependencies exclude additional Units'
     $unitPicks = @(Get-UnitPickList $catalogue)
-    Assert-True ('Unit1' -in $unitPicks -and 'Unit2' -in $unitPicks) 'Unit picker lists exact discovered IDs'
+    Assert-True ('Unit1' -in $unitPicks -and 'Unit2' -in $unitPicks -and 'BD' -in $unitPicks -and 'TE' -in $unitPicks -and 'JH-RY' -in $unitPicks) 'Unit picker lists legacy and additional Units'
     Assert-True ('All - all listed Units' -in $unitPicks) 'Unit picker offers All'
     Assert-True ('Blank = cancel this selection; nothing will run.' -in $unitPicks) 'dedicated Unit selection explains empty-input cancellation'
     Assert-True ('Blank = all listed Units.' -in @(Get-UnitPickList $catalogue -BlankMeansAll)) 'batch and role Unit qualifiers explain blank means all'
     $pickList = @(Get-BatchPickList $catalogue)
     Assert-True ('D1 - Demand transformation [Demand-MasterRoster Manual Read.xlsx, 2-DemandExtract.xlsx]' -in $pickList) 'batch choices show ID, title and ordered comma-separated filenames'
     Assert-True (@($pickList | Where-Object { $_ -like 'D1 -*' }).Count -eq 1) 'shared Unit batch choices are not duplicated'
-    Assert-True ('C2.2 - Role capacity - AINC4 [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'role choices show actual role mapping and all files'
+    Assert-True ('C2.2 - Role capacity - AINC4 (Unit1, Unit2) / EN (BD, TE, JH-RY) [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'role choices show each Unit role mapping and all files'
     Assert-True (@($pickList | Where-Object { $_ -like 'C2 - All enabled*' }).Count -eq 1) 'all-role shorthand is offered once'
     Assert-True ('O1 - Cross-unit assembly [StafMasterList-All.xlsx, Effort-All.xlsx]' -in $pickList) 'organisation choices include files'
     $savedTitles = $catalogue.BatchTitles
@@ -88,6 +100,14 @@ try {
     Assert-True ($subset.Jobs.Count -eq 4 -and @($subset.Jobs | Where-Object Batch -notin @('A1','A3')).Count -eq 0) 'disjoint batches do not become ranges'
     $role = Select-BatchPlan $catalogue -Units Unit1 -Batches C2.2
     Assert-True ($role.Jobs.Count -eq 3 -and $role.Jobs[0].Role -eq 'AINC4') 'numbered role mapping'
+    $bdRole = Select-BatchPlan $catalogue -Units BD -Batches C2.2
+    Assert-True ($bdRole.Jobs.Count -eq 3 -and $bdRole.Jobs[0].Role -eq 'EN') 'BD second role is EN, not AINC4'
+    $bdUnit = Select-BatchPlan $catalogue -RunAll -Units BD
+    Assert-True ($bdUnit.Jobs.Count -eq 26 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work'
+    $everyUnit = Select-BatchPlan $catalogue -RunAll -Units All
+    Assert-True ($everyUnit.Jobs.Count -eq 130 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit without organisation jobs'
+    $bdCapacity = @($bdUnit.Jobs | Where-Object Id -eq 'BD/Capacity')[0]
+    Assert-True ('BD/Role:EN/3' -in $bdCapacity.Dependencies -and 'BD/Role:AINC4/3' -notin $bdCapacity.Dependencies) 'BD consolidation waits for EN rather than AINC4'
     $role = Select-BatchPlan $catalogue -Units Unit2 -Roles RN
     Assert-True ($role.Jobs.Count -eq 3 -and $role.Jobs[0].BatchKey -eq 'Unit2/C2:RN') 'named role selection'
     $exact = Select-BatchPlan $catalogue -Workbooks 'Unit1/DemandMaster', 'Unit2/Workers'
@@ -121,6 +141,12 @@ try {
     foreach ($file in @('ResidentialCare-BatchCatalogue.psd1','ResidentialCare-BatchApproval.psd1','ResidentialCare-UnitWorkbookSequence.psd1','ResidentialCare-OrgWorkbookSequence.psd1')) {
         Copy-Item -LiteralPath (Join-Path $repoRoot "CLIENT/DATExx-Whiddon/runner/$file") -Destination (Join-Path $fixtureDate 'runner')
     }
+    $fixtureSettingsPath = Join-Path $fixtureDate 'runner/ResidentialCare-BatchApproval.psd1'
+    $fixtureSettingsText = [IO.File]::ReadAllText($fixtureSettingsPath)
+    $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?ms)^    AdditionalUnits = @\(.*?^    \)', '    AdditionalUnits = @()')
+    $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    RunAllUnits = .*$', "    RunAllUnits = @('Unit1', 'Unit2')")
+    $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    RunAllIncludeOrg = .*$', '    RunAllIncludeOrg = $true')
+    [IO.File]::WriteAllText($fixtureSettingsPath, $fixtureSettingsText)
     $profilePath = Join-Path $fixtureDate 'runner/ResidentialCare-ClientRunProfile.psd1'
     foreach ($count in @(1, 2, 5)) {
         $entries = @(1..$count | ForEach-Object { "@{ Folder = 'Role$_'; Enabled = `$true }" }) -join ','

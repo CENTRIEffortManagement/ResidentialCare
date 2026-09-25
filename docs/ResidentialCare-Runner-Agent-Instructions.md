@@ -14,9 +14,12 @@ For requests explicitly naming the expanded/new/batch runner, use
 `docs/ResidentialCare-Batch-Runner-Plan.md`. The legacy entry-point mapping below
 remains the fallback until rollout is accepted.
 
-The expanded runner's primary action is `-RunAll`. It runs **up to twelve ready
-batches concurrently across all branches and Units**, not just C2; files within
-each batch remain sequential. `-MaxParallelBatches` accepts 1 through 12, default 12.
+The expanded runner's primary action is `-RunAll`. Without a Unit selector, it
+uses `RunAllUnits` and `RunAllIncludeOrg` from the batch settings file. The current
+default runs BD, TE and JH-RY only; Unit1, Unit2 and organisation jobs require an
+explicit selection. The runner executes **up to twelve ready batches concurrently**
+across the selected branches; files within each batch remain sequential.
+`-MaxParallelBatches` accepts 1 through 12, default 12.
 Batch IDs and the saved role profile are the manual-control interface.
 
 Whenever an option leads to asking the user to pick batches, first display all
@@ -62,8 +65,9 @@ selection, `-RunAll`, or a scoped `-RefreshSelected` now proceeds through normal
 validation to refresh; do not require an Approved flag, approval evidence,
 configuration sign-off or OrganisationScopeConfirmed flag. Do not invent review
 evidence. The historical `ResidentialCare-BatchApproval.psd1` filename now holds
-only operational settings: organisation consumer Units, additional inputs and
-exclusive jobs. The configuration fingerprint still protects resume consistency.
+only operational settings: default run scope, organisation consumer Units,
+additional inputs and exclusive jobs. The configuration fingerprint still
+protects resume consistency.
 
 Dependency readiness, file access/lock checks, conflicting-run exclusion,
 twelve-batch maximum, timeout and verified-save protections remain enforced.
