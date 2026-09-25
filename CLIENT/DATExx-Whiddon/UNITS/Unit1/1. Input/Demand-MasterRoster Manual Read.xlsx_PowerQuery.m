@@ -1,5 +1,5 @@
 // Power Query from: Demand-MasterRoster Manual Read.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Demand-MasterRoster Manual Read.xlsx
+// Pathname: CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Demand-MasterRoster Manual Read.xlsx
 // Extracted: 2026-09-16T01:29:23.598Z
 
 section Section1;
@@ -160,14 +160,105 @@ let
 in
     ValidatedHours;
 
-
-shared #"IMPORT Master" = let
-    Source = Excel.Workbook(File.Contents("C:\Users\Alex\Centri\4. Production - Documents\WFEffectiveness\4.1.1 AGED CARE\ResidentialCare\Whiddon\260728\UNITS\Unit1\1. Input\Master Roster.xlsx"), null, true),
-    Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
-    #"Promoted Headers1" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}})
+// Query: IMPORT Whiddon Lists
+// Purpose: Reads the Whiddon SharePoint list catalogue once for role and facility extracts.
+// Output: Buffered SharePoint list navigation table.
+shared #"IMPORT Whiddon Lists" = let
+    ListNavigation = SharePoint.Tables("https://centri001.sharepoint.com/sites/WhiddonCENTRI",
+        [Implementation="2.0", ViewMode="All"]),
+    BufferedLists = Table.Buffer(ListNavigation)
 in
-    #"Changed Type1";
+    BufferedLists;
+
+// Query: LINK Role Lists
+// Purpose: Preserves the existing workbook query interface while external access is owned by IMPORT Whiddon Lists.
+shared #"LINK Role Lists" = #"IMPORT Whiddon Lists";
+
+// Query: EXTRACT Roles
+// Purpose: Selects role definitions required by the MinuteWorker analysis from IMPORT Whiddon Lists.
+shared #"EXTRACT Roles" = let
+    ListNavigation = #"IMPORT Whiddon Lists",
+    RoleDefinitions = ListNavigation{[Id="6b0b0767-44f4-4bb8-b116-f1e99b3476f0"]}[Items],
+    RoleColumns = Table.SelectColumns(RoleDefinitions,
+        {"Roster Roles", "DC Category", "DC Role", "Direct Care %", "Role Group"}),
+    BufferedRoles = Table.Buffer(RoleColumns),
+    #"Changed Type" = Table.TransformColumnTypes(BufferedRoles,{{"Roster Roles", type text}, {"Role Group", type text}}),
+    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"Roster Roles", Order.Ascending}})
+in
+    #"Sorted Rows";
+
+// Query: EXTRACT RoleAnalysis
+// Purpose: Selects role-analysis controls from IMPORT Whiddon Lists.
+shared #"EXTRACT RoleAnalysis" = let
+    ListNavigation = #"IMPORT Whiddon Lists",
+    AnalysisControls = ListNavigation{[Id="bad3beb8-7064-4e11-9edd-d62dac5d702d"]}[Items],
+    AnalysisColumns = Table.SelectColumns(AnalysisControls,
+        {"Leave Balance Analysis", "Effort Management Analysis", "Roles"}),
+    BufferedAnalysis = Table.Buffer(AnalysisColumns)
+in
+    BufferedAnalysis;
+
+// Query: LINK Unit Lists
+// Purpose: Preserves the existing workbook query interface while external access is owned by IMPORT Whiddon Lists.
+shared #"LINK Unit Lists" = #"IMPORT Whiddon Lists";
+
+// Query: EXTRACT Units
+// Purpose: Selects the authoritative raw Location to canonical Facility-Abbrev mapping.
+shared #"EXTRACT Units" = let
+    Source = #"IMPORT Whiddon Lists",
+    #"1987eadb-ad2e-491a-a927-e5585667d4c5" = Source{[Id="1987eadb-ad2e-491a-a927-e5585667d4c5"]}[Items],
+    #"Removed Other Columns" = Table.SelectColumns(#"1987eadb-ad2e-491a-a927-e5585667d4c5",{"Location", "Facility-Abbrev"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Location", type text}, {"Facility-Abbrev", type text}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Facility-Abbrev", "Unit"}})
+in
+    #"Renamed Columns";
+
+// Query: EXTRACT Unit Analysis
+// Purpose: Selects the canonical Facility Analysis controls used after the five-to-three mapping.
+shared #"EXTRACT Unit Analysis" = let
+    AnalysisItems = #"IMPORT Whiddon Lists"{[Id="17ed8e30-5707-4af2-8e21-d68eb8184287"]}[Items],
+    #"Removed Other Columns" = Table.SelectColumns(AnalysisItems,{"Title", "Effort Management Analysis"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Title", type text}})
+in
+    #"Changed Type";
+
+// Query: RolesAnalysed
+// Purpose: Selects role groups enabled for Effort Management Analysis.
+// Inputs: EXTRACT RoleAnalysis.
+// Output: Enabled analytical role groups without the unrelated leave-balance control.
+shared RolesAnalysed = let
+    Source = #"EXTRACT RoleAnalysis",
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Effort Management Analysis] = true)),
+    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Leave Balance Analysis"})
+in
+    #"Removed Columns";
+
+// Query: Units
+// Purpose: Preserves the legacy enabled-unit interface from Facility Analysis.
+// Inputs: EXTRACT Unit Analysis.
+shared Units = let
+    Source = #"EXTRACT Unit Analysis",
+    #"Filtered Rows1" = Table.SelectRows(Source, each ([Effort Management Analysis] = true)),
+    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows1",{{"Title", "Unit"}})
+in
+    #"Renamed Columns";
+
+// Query: IMPORT Master
+// Purpose: Reads the approved Unit1 Master Roster from the explicitly selected local source.
+// Inputs: C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Master Roster.xlsx.
+// Output: Buffered typed rows from the source workbook's Combined sheet.
+shared #"IMPORT Master" = let
+    Source = Excel.Workbook(
+        Binary.Buffer(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Master Roster.xlsx")),
+        null,
+        true
+    ),
+    Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}}),
+    BUFFER = Table.Buffer(#"Changed Type")
+in
+    BUFFER;
 
 shared #"INPUT SHiftEnd" = let
     Source = Excel.CurrentWorkbook(){[Name="Table7"]}[Content],
@@ -276,53 +367,24 @@ in
 
 // Query: MinuteWorkerRoleAssignments_TABLE
 // Purpose: Audits every retained explicit Master Roster role to DC Role assignment.
-// Inputs: IMPORT Master and MW Roster Role Mapping Prepare.
-// Output: One row per retained Roster Roles/DC Role assignment with category, direct-care percentage, row count and facility coverage.
-// Notes: NA mappings are deliberately excluded from the MinuteWorker analysis; unmatched roles fail MW Input Check.
+// Inputs: Master Prepare.
+// Output: One row per retained Roster Roles/DC Role assignment with category, direct-care percentage, row count and canonical-facility coverage.
+// Notes: Master Prepare has already applied the five-to-three Facility mapping, Facility Analysis filter and explicit role mapping.
 shared MinuteWorkerRoleAssignments_TABLE =
 let
-    Source = Table.SelectColumns(#"IMPORT Master", {"Location", "Role"}),
-    #"Normalised Master Role Fields" = Table.TransformColumns(
-        Source,
+    Source = Table.SelectColumns(
+        #"Master Prepare",
         {
-            {
-                "Location",
-                each if _ = null then null else Text.Upper(Text.Start(Text.Trim(_), 2)),
-                type nullable text
-            },
-            {"Role", each if _ = null then null else Text.Trim(_), type nullable text}
+            "Facility", "OriginalRole", "DC Role", "DC Category",
+            "MinuteCategory", "Direct Care %"
         }
     ),
-    #"Renamed Original Role" = Table.RenameColumns(
-        #"Normalised Master Role Fields",
-        {{"Role", "MasterRosterRole"}}
-    ),
-    #"Added Roster Role Key" = Table.AddColumn(
-        #"Renamed Original Role",
-        "RosterRoleKey",
-        each if [MasterRosterRole] = null then null else Text.Upper([MasterRosterRole]),
-        type nullable text
-    ),
-    #"Merged Explicit Role Mapping" = Table.NestedJoin(
-        #"Added Roster Role Key",
-        {"RosterRoleKey"},
-        #"MW Roster Role Mapping Prepare",
-        {"RosterRoleKey"},
-        "RoleMapping",
-        JoinKind.Inner
-    ),
-    #"Expanded Explicit Role Mapping" = Table.ExpandTableColumn(
-        #"Merged Explicit Role Mapping",
-        "RoleMapping",
-        {"DC Role", "DC Category", "MinuteCategory", "Direct Care %"},
-        {"DC Role", "DC Category", "MinuteCategory", "Direct Care %"}
-    ),
-    #"Excluded NA Assignments" = Table.SelectRows(
-        #"Expanded Explicit Role Mapping",
-        each List.Contains({"RN", "OTHER"}, [DC Category])
+    #"Renamed Source Role" = Table.RenameColumns(
+        Source,
+        {{"OriginalRole", "MasterRosterRole"}}
     ),
     #"Summarised Role Assignments" = Table.Group(
-        #"Excluded NA Assignments",
+        #"Renamed Source Role",
         {
             "MasterRosterRole", "DC Role", "DC Category", "MinuteCategory", "Direct Care %"
         },
@@ -330,12 +392,12 @@ let
             {"MasterRosterRowCount", each Table.RowCount(_), Int64.Type},
             {
                 "FacilityCount",
-                each List.Count(List.Distinct(List.RemoveNulls([Location]))),
+                each List.Count(List.Distinct(List.RemoveNulls([Facility]))),
                 Int64.Type
             },
             {
                 "Facilities",
-                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([Location]))), ", "),
+                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([Facility]))), ", "),
                 type text
             }
         }
@@ -350,29 +412,238 @@ let
 in
     #"Sorted Role Assignments";
 
-// Query: Master Prepare
-// Purpose: Uses source net shift hours, applies the explicit roster-role mapping, excludes NA roles, and assigns shifts before historical aggregation.
-// Inputs: IMPORT Master, MW Roster Role Mapping Prepare, ShftEnd Prepare, and shift-boundary scalars.
-// Output: Historical roster rows tagged with original role, DC Role, DC Category, MinuteCategory and Direct Care %.
-// Notes: Roster Hours is the downstream compatibility name for Shift Net Length; no additional meal deduction is applied.
-shared #"Master Prepare" =
+// Query: MW Facility Mapping Prepare
+// Purpose: Defines the authoritative five-source-location to three-canonical-facility mapping.
+// Inputs: EXTRACT Units.
+// Output: Normalised SourceLocationKey, SourceFacilityCode and canonical Facility.
+// Notes: Raw Location remains available on roster rows for lineage; Facility is the redistribution grain.
+shared #"MW Facility Mapping Prepare" =
 let
-    Source = #"IMPORT Master",
-    #"Normalised Location" = Table.TransformColumns(
+    Source = Table.SelectColumns(#"EXTRACT Units", {"Location", "Unit"}),
+    #"Normalised Mapping Values" = Table.TransformColumns(
         Source,
         {
+            {"Location", each if _ = null then null else Text.Trim(Text.From(_)), type nullable text},
             {
-                "Location",
-                each if _ = null then null else Text.Upper(Text.Start(Text.Trim(_), 2)),
+                "Unit",
+                each
+                    if _ = null then
+                        null
+                    else
+                        let CanonicalFacility = Text.Upper(Text.Trim(Text.From(_)))
+                        in if CanonicalFacility = "" then null else CanonicalFacility,
                 type nullable text
             }
         }
     ),
-    #"Selected Historical Columns" = Table.SelectColumns(
-        #"Normalised Location",
-        {"Location", "Role", "Employee Code", "Week No", "Week Day", "Start Time", "End Time", "Shift Net Length"}
+    #"Renamed Canonical Facility" = Table.RenameColumns(
+        #"Normalised Mapping Values",
+        {{"Unit", "Facility"}}
     ),
-    // Select only the authoritative net field, then retain the existing hours interface for all historical calculations and checks.
+    #"Added Source Location Key" = Table.AddColumn(
+        #"Renamed Canonical Facility",
+        "SourceLocationKey",
+        each if [Location] = null then null else Text.Upper([Location]),
+        type nullable text
+    ),
+    // Source codes are the explicit label before the Location delimiter. This
+    // avoids assuming every source key is exactly two characters long.
+    #"Added Source Facility Code" = Table.AddColumn(
+        #"Added Source Location Key",
+        "SourceFacilityCode",
+        each
+            if [Location] = null or [Location] = "" then
+                null
+            else if Text.Contains([Location], ":") then
+                Text.Upper(Text.Trim(Text.BeforeDelimiter([Location], ":")))
+            else
+                Text.Upper(Text.Trim([Location])),
+        type nullable text
+    ),
+    #"Selected Mapping Contract" = Table.SelectColumns(
+        #"Added Source Facility Code",
+        {"SourceLocationKey", "SourceFacilityCode", "Facility"}
+    ),
+    Result = Table.Buffer(Table.Distinct(#"Selected Mapping Contract"))
+in
+    Result;
+
+// Query: MW Target Facility Aliases
+// Purpose: Documents target labels that differ from the Master Roster source code.
+// Output: TargetFacilityKey and the Facilities-list SourceFacilityCode it represents.
+// Notes: RY is the TargetMinutes label for the NR Robert Young roster source; the Facilities list still determines its canonical Facility.
+shared #"MW Target Facility Aliases" =
+    #table(
+        type table [TargetFacilityKey = text, SourceFacilityCode = text],
+        {{"RY", "NR"}}
+    );
+
+// Query: MW Target Facility Mapping Prepare
+// Purpose: Resolves TargetMinutes headings to the same canonical Facility used by roster history.
+// Inputs: MW Facility Mapping Prepare and MW Target Facility Aliases.
+// Output: TargetFacilityKey and canonical Facility pairs.
+// Notes: Accepts an established source code, the canonical Facility, or an explicit documented alias; full Location labels are not target headings.
+shared #"MW Target Facility Mapping Prepare" =
+let
+    Source = #"MW Facility Mapping Prepare",
+    SourceCodeMappings = Table.RenameColumns(
+        Table.SelectColumns(Source, {"SourceFacilityCode", "Facility"}),
+        {{"SourceFacilityCode", "TargetFacilityKey"}}
+    ),
+    CanonicalMappings = Table.RenameColumns(
+        Table.Distinct(Table.SelectColumns(Source, {"Facility"})),
+        {{"Facility", "TargetFacilityKey"}}
+    ),
+    CanonicalMappingsWithFacility = Table.AddColumn(
+        CanonicalMappings,
+        "Facility",
+        each [TargetFacilityKey],
+        type nullable text
+    ),
+    AliasMappings = Table.ExpandTableColumn(
+        Table.NestedJoin(
+            #"MW Target Facility Aliases",
+            {"SourceFacilityCode"},
+            Table.Distinct(Table.SelectColumns(Source, {"SourceFacilityCode", "Facility"})),
+            {"SourceFacilityCode"},
+            "FacilityMapping",
+            JoinKind.LeftOuter
+        ),
+        "FacilityMapping",
+        {"Facility"},
+        {"Facility"}
+    ),
+    CombinedMappings = Table.Combine(
+        {
+            SourceCodeMappings,
+            CanonicalMappingsWithFacility,
+            Table.SelectColumns(AliasMappings, {"TargetFacilityKey", "Facility"})
+        }
+    ),
+    Result = Table.Buffer(
+        Table.Distinct(
+            Table.SelectRows(
+                CombinedMappings,
+                each [TargetFacilityKey] <> null and [TargetFacilityKey] <> "" and
+                    [Facility] <> null and [Facility] <> ""
+            )
+        )
+    )
+in
+    Result;
+
+// Query: MW Facility Analysis Prepare
+// Purpose: Normalises the Facility Analysis control at canonical-facility grain.
+// Inputs: EXTRACT Unit Analysis.
+// Output: Facility and Effort Management Analysis.
+shared #"MW Facility Analysis Prepare" =
+let
+    Source = Table.SelectColumns(
+        #"EXTRACT Unit Analysis",
+        {"Title", "Effort Management Analysis"}
+    ),
+    #"Normalised Facility Analysis" = Table.TransformColumns(
+        Source,
+        {
+            {"Title", each if _ = null then null else Text.Upper(Text.Trim(Text.From(_))), type nullable text},
+            {"Effort Management Analysis", each if Value.Is(_, type logical) then _ else null, type nullable logical}
+        }
+    ),
+    Result = Table.Buffer(
+        Table.RenameColumns(#"Normalised Facility Analysis", {{"Title", "Facility"}})
+    )
+in
+    Result;
+
+// Query: MW Enabled Facilities Prepare
+// Purpose: Applies the Facility Analysis gate after source locations have mapped to canonical facilities.
+// Inputs: MW Facility Analysis Prepare.
+// Output: One row per uniquely configured Facility where Effort Management Analysis is true.
+shared #"MW Enabled Facilities Prepare" =
+let
+    Source = #"MW Facility Analysis Prepare",
+    FacilityControls = Table.Group(
+        Source,
+        {"Facility"},
+        {
+            {"AnalysisRowCount", each Table.RowCount(_), Int64.Type},
+            {
+                "EnabledRowCount",
+                each Table.RowCount(Table.SelectRows(_, each [Effort Management Analysis] = true)),
+                Int64.Type
+            }
+        }
+    ),
+    Enabled = Table.SelectRows(
+        FacilityControls,
+        each [Facility] <> null and [Facility] <> "" and
+            [AnalysisRowCount] = 1 and [EnabledRowCount] = 1
+    ),
+    Result = Table.Buffer(Table.SelectColumns(Enabled, {"Facility"}))
+in
+    Result;
+
+// Query: Master Prepare
+// Purpose: Maps five raw roster locations to canonical facilities, applies Facility Analysis, maps roles, and assigns shifts.
+// Inputs: IMPORT Master, MW Facility Mapping Prepare, MW Enabled Facilities Prepare, MW Roster Role Mapping Prepare, and shift configuration.
+// Output: Enabled historical roster rows retaining raw Location and canonical Facility, with Shift Net Length exposed downstream as Roster Hours.
+// Notes: Raw Location is lineage only; canonical Facility is the redistribution and publication key.
+shared #"Master Prepare" =
+let
+    Source = #"IMPORT Master",
+    #"Added Source Location Key" = Table.AddColumn(
+        Source,
+        "SourceLocationKey",
+        each if [Location] = null then null else Text.Upper(Text.Trim(Text.From([Location]))),
+        type nullable text
+    ),
+    #"Joined Facility Mapping" = Table.NestedJoin(
+        #"Added Source Location Key",
+        {"SourceLocationKey"},
+        #"MW Facility Mapping Prepare",
+        {"SourceLocationKey"},
+        "FacilityMapping",
+        JoinKind.LeftOuter
+    ),
+    #"Added Facility Mapping Count" = Table.AddColumn(
+        #"Joined Facility Mapping",
+        "FacilityMappingCount",
+        each Table.RowCount([FacilityMapping]),
+        Int64.Type
+    ),
+    #"Expanded Canonical Facility" = Table.ExpandTableColumn(
+        #"Added Facility Mapping Count",
+        "FacilityMapping",
+        {"Facility"},
+        {"Facility"}
+    ),
+    // Ambiguous or missing source mappings are excluded from allocation and
+    // reported by MW Input Check; no source row is assigned by guesswork.
+    #"Retained Unique Facility Mapping" = Table.SelectRows(
+        #"Expanded Canonical Facility",
+        each [FacilityMappingCount] = 1
+    ),
+    // Facility Analysis is applied only after the five-to-three mapping.
+    #"Joined Enabled Facilities" = Table.NestedJoin(
+        #"Retained Unique Facility Mapping",
+        {"Facility"},
+        #"MW Enabled Facilities Prepare",
+        {"Facility"},
+        "EnabledFacility",
+        JoinKind.Inner
+    ),
+    #"Removed Enablement Join" = Table.RemoveColumns(
+        #"Joined Enabled Facilities",
+        {"EnabledFacility"}
+    ),
+    #"Selected Historical Columns" = Table.SelectColumns(
+        #"Removed Enablement Join",
+        {
+            "Location", "Facility", "Role", "Employee Code", "Week No",
+            "Week Day", "Start Time", "End Time", "Shift Net Length"
+        }
+    ),
+    // Retain the approved net-hours source while preserving the downstream column contract.
     #"Named Net Roster Hours" = Table.RenameColumns(
         #"Selected Historical Columns",
         {{"Shift Net Length", "Roster Hours"}}
@@ -413,12 +684,8 @@ let
         each [RoleKey],
         type nullable text
     ),
-    #"Filtered Facilities" = Table.SelectRows(
-        #"Added Analytical Role",
-        each [Location] <> "NR"
-    ),
     #"Assigned Shift" = Table.AddColumn(
-        #"Filtered Facilities",
+        #"Added Analytical Role",
         "Shift",
         each
             if [Start Time] <= StartAM then "NS"
@@ -445,15 +712,22 @@ let
 in
     #"Expanded ShftEnd Prepare";
 
+// Query: LocRoleWeekDaysHours
+// Purpose: Preserves the legacy weekday/shift hours interface at canonical Facility grain.
+// Inputs: Master Prepare.
+// Output: Canonical Facility exposed under the legacy Location column, with hours by week, role, weekday and shift.
 shared LocRoleWeekDaysHours = let
     Source = #"Master Prepare",
     #"added DAYOFWEEKS#" = Table.AddColumn(Source, "DayOfWeek", each List.PositionOf(
     {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"},
     [Week Day]
 ) + 1),
-    #"Sorted Rows" = Table.Sort(#"added DAYOFWEEKS#",{{"DayOfWeek", Order.Ascending}, {"Location", Order.Ascending}, {"Role", Order.Ascending}}),
-    #"Grouped Rows" = Table.Group(#"Sorted Rows", {"Location", "Week No", "Role", "DayOfWeek", "Week Day", "Shift", "ShiftIndex"}, {{"Hours", each List.Sum([Roster Hours]), type nullable number}}),
-    #"Sorted Rows1" = Table.Sort(#"Grouped Rows",{{"DayOfWeek", Order.Ascending}, {"Location", Order.Ascending}, {"Role", Order.Ascending}}),
+    // Preserve the legacy Location output name while calculating it at the
+    // canonical three-facility grain used by redistribution.
+    #"Sorted Rows" = Table.Sort(#"added DAYOFWEEKS#",{{"DayOfWeek", Order.Ascending}, {"Facility", Order.Ascending}, {"Role", Order.Ascending}}),
+    #"Grouped Rows" = Table.Group(#"Sorted Rows", {"Facility", "Week No", "Role", "DayOfWeek", "Week Day", "Shift", "ShiftIndex"}, {{"Hours", each List.Sum([Roster Hours]), type nullable number}}),
+    #"Renamed Legacy Location" = Table.RenameColumns(#"Grouped Rows", {{"Facility", "Location"}}),
+    #"Sorted Rows1" = Table.Sort(#"Renamed Legacy Location",{{"DayOfWeek", Order.Ascending}, {"Location", Order.Ascending}, {"Role", Order.Ascending}}),
     #"Inserted Merged Column1" = Table.AddColumn(#"Sorted Rows1", "WeekDayShift", each Text.Combine({Text.From([DayOfWeek], "en-AU"), [Week Day], [Shift]}, ""), type text),
     #"Inserted Merged Column" = Table.AddColumn(#"Inserted Merged Column1", "WeekAndDay", each Text.Combine({Text.From([Week No], "en-AU"), [Week Day]}, ""), type text),
     #"Inserted Merged Column2" = Table.AddColumn(#"Inserted Merged Column", "DayShift", each Text.Combine({[Week Day], [Shift]}, ""), type text)
@@ -602,15 +876,13 @@ let
 in
     Result;
 
-// Query: MW TargetMinutes Prepare
-// Purpose: Converts RN and ALL productive-care hours per fortnight to daily and fortnight minute targets.
-// Inputs: INPUT TargetMinutes.
-// Output: Two rows per facility with original RN/ALL fortnight hours and daily/fortnight minutes for RN and OTHERS.
-shared #"MW TargetMinutes Prepare" =
+// Query: MW TargetMinutes Source Prepare
+// Purpose: Maps every raw TargetMinutes heading to a canonical Facility and its Facility Analysis control.
+// Inputs: INPUT TargetMinutes, MW Target Facility Mapping Prepare, and MW Facility Analysis Prepare.
+// Output: One row per target heading and MinuteType with mapping and analysis row counts retained for validation.
+shared #"MW TargetMinutes Source Prepare" =
 let
     Source = #"INPUT TargetMinutes",
-    TargetPeriodDays = 14,
-    MinutesPerHour = 60,
     FacilityColumns = List.RemoveItems(Table.ColumnNames(Source), {"MinuteType"}),
     // Expand every facility cell explicitly: Table.Unpivot drops null cells,
     // which would hide missing targets and wholly blank facility columns.
@@ -623,7 +895,7 @@ let
                         Table.SelectColumns(Source, {"MinuteType", FacilityName}),
                         {{FacilityName, "TargetFortnightHours"}}
                     ),
-                    "Facility",
+                    "TargetFacilityKey",
                     each FacilityName,
                     type text
                 )
@@ -632,14 +904,86 @@ let
     #"Normalised Target Keys" = Table.TransformColumns(
         #"Unpivoted Facility Targets",
         {
-            {"MinuteType", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text},
-            {"Facility", each Text.Upper(Text.Trim(_)), type text}
+            {"MinuteType", each if _ = null then null else Text.Upper(Text.Trim(Text.From(_))), type nullable text},
+            {"TargetFacilityKey", each if _ = null then null else Text.Upper(Text.Trim(Text.From(_))), type nullable text}
         }
     ),
-    #"Summarised Facility Targets" = Table.Group(
+    #"Joined Target Facility Mapping" = Table.NestedJoin(
         #"Normalised Target Keys",
+        {"TargetFacilityKey"},
+        #"MW Target Facility Mapping Prepare",
+        {"TargetFacilityKey"},
+        "FacilityMapping",
+        JoinKind.LeftOuter
+    ),
+    #"Added Target Mapping Count" = Table.AddColumn(
+        #"Joined Target Facility Mapping",
+        "TargetFacilityMappingCount",
+        each Table.RowCount([FacilityMapping]),
+        Int64.Type
+    ),
+    #"Expanded Canonical Facility" = Table.ExpandTableColumn(
+        #"Added Target Mapping Count",
+        "FacilityMapping",
+        {"Facility"},
+        {"Facility"}
+    ),
+    #"Joined Facility Analysis" = Table.NestedJoin(
+        #"Expanded Canonical Facility",
+        {"Facility"},
+        #"MW Facility Analysis Prepare",
+        {"Facility"},
+        "FacilityAnalysis",
+        JoinKind.LeftOuter
+    ),
+    #"Added Facility Analysis Count" = Table.AddColumn(
+        #"Joined Facility Analysis",
+        "FacilityAnalysisRowCount",
+        each Table.RowCount([FacilityAnalysis]),
+        Int64.Type
+    ),
+    Result = Table.Buffer(
+        Table.ExpandTableColumn(
+            #"Added Facility Analysis Count",
+            "FacilityAnalysis",
+            {"Effort Management Analysis"},
+            {"Effort Management Analysis"}
+        )
+    )
+in
+    Result;
+
+// Query: MW TargetMinutes Prepare
+// Purpose: Aggregates enabled source targets to three canonical facilities before deriving allocation targets.
+// Inputs: MW TargetMinutes Source Prepare.
+// Output: Two rows per canonical facility with grouped RN/ALL hours and daily/fortnight minutes for RN and OTHERS.
+// Notes: Facility Analysis is applied before grouping; every contributing source key remains visible in TargetFacilityKeys.
+shared #"MW TargetMinutes Prepare" =
+let
+    Source = Table.SelectRows(
+        #"MW TargetMinutes Source Prepare",
+        each [TargetFacilityMappingCount] = 1 and
+            [FacilityAnalysisRowCount] = 1 and
+            [Effort Management Analysis] = true
+    ),
+    TargetPeriodDays = 14,
+    MinutesPerHour = 60,
+    // Group source targets before any profiles or FTE are calculated. For a
+    // combined facility, JE and RY/NR therefore contribute to one target pool.
+    #"Summarised Facility Targets" = Table.Group(
+        Source,
         {"Facility"},
         {
+            {
+                "TargetFacilityKeys",
+                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([TargetFacilityKey]))), ", "),
+                type text
+            },
+            {
+                "SourceTargetKeyCount",
+                each List.Count(List.Distinct(List.RemoveNulls([TargetFacilityKey]))),
+                Int64.Type
+            },
             {"RNCount", each Table.RowCount(Table.SelectRows(_, each [MinuteType] = "RN")), Int64.Type},
             {"ALLCount", each Table.RowCount(Table.SelectRows(_, each [MinuteType] = "ALL")), Int64.Type},
             {"RNNullCount", each Table.RowCount(Table.SelectRows(_, each [MinuteType] = "RN" and [TargetFortnightHours] = null)), Int64.Type},
@@ -650,7 +994,10 @@ let
                     let
                         Values = Table.SelectRows(_, each [MinuteType] = "RN")[TargetFortnightHours]
                     in
-                        if List.IsEmpty(Values) then null else List.Sum(Values),
+                        if List.IsEmpty(Values) or List.NonNullCount(Values) <> List.Count(Values) then
+                            null
+                        else
+                            List.Sum(Values),
                 type nullable number
             },
             {
@@ -659,7 +1006,10 @@ let
                     let
                         Values = Table.SelectRows(_, each [MinuteType] = "ALL")[TargetFortnightHours]
                     in
-                        if List.IsEmpty(Values) then null else List.Sum(Values),
+                        if List.IsEmpty(Values) or List.NonNullCount(Values) <> List.Count(Values) then
+                            null
+                        else
+                            List.Sum(Values),
                 type nullable number
             },
             {
@@ -776,7 +1126,9 @@ in
 // Notes: Sorted numeric source Week No defines order. A non-two-week period fails MW Distribution Check; no weeks are silently discarded.
 shared #"MW Historical Weeks" =
 let
-    Source = Table.RenameColumns(Table.SelectColumns(#"Master Prepare", {"Location", "Week No"}), {{"Location", "Facility"}}),
+    // Source locations have already mapped to canonical Facility. Distinct weeks
+    // are therefore evaluated at the same three-facility grain as targets.
+    Source = Table.SelectColumns(#"Master Prepare", {"Facility", "Week No"}),
     ValidWeeks = Table.Distinct(Table.SelectRows(Source, each [Week No] <> null)),
     FacilityWeeks = Table.Group(ValidWeeks, {"Facility"}, {
         {"Weeks", each Table.AddIndexColumn(Table.Sort(Table.SelectColumns(_, {"Week No"}), {{"Week No", Order.Ascending}}),
@@ -788,14 +1140,14 @@ in
     Result;
 
 // Query: MW Historical WeekDayShift
-// Purpose: Preserves each historical week's net roster hours and FTE with separate fortnight-day display keys.
+// Purpose: Preserves each historical week's roster hours and FTE with separate fortnight-day display keys.
 // Inputs: Master Prepare, MW MinuteWorkers Prepare, and ShftEnd Prepare.
 // Output: One row per observed facility/role, original Week No, weekday and AM/PM/NS shift.
 // Notes: Complete weeks have explicit zero cells; missing cells in incomplete weeks remain null. No target scaling is applied.
 shared #"MW Historical WeekDayShift" =
 let
     History = Table.Buffer(Table.AddColumn(
-        Table.RenameColumns(#"Master Prepare", {{"Location", "Facility"}}),
+        #"Master Prepare",
         "DayOfWeek",
         each List.PositionOf({"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}, [#"Week Day"]) + 1,
         Int64.Type
@@ -863,7 +1215,7 @@ let
     AddedRosterHours = Table.AddColumn(AddedCellStatus, "HistoricalRosterHours",
         each if [HistoricalCellStatus] = "ERROR" or [HistoricalCellStatus] = "MISSING" then null
         else if [SourceRowCount] = 0 then 0 else [ObservedRosterHours], type nullable number),
-    // Historical FTE uses source Shift Net Length through Master Prepare's Roster Hours alias, without Direct Care % or target adjustment.
+    // Historical FTE measures actual roster hours, without Direct Care % or target adjustment.
     AddedRosterFTE = Table.AddColumn(AddedRosterHours, "HistoricalRosterFTE",
         each [HistoricalRosterHours] / ShiftDuration, type nullable number),
     AddedProductiveHours = Table.AddColumn(AddedRosterFTE, "HistoricalProductiveHours",
@@ -1001,7 +1353,7 @@ in
 // Query: MW DayShift Allocation
 // Purpose: Converts the complete fortnight productive-care budget to required roster FTE for each distinct week/day/shift.
 // Inputs: MW Historical DayShift and MW Role Targets.
-// Output: Facility/role/original Week No/FortnightDay/shift with unrounded configured standard-FTE equivalents.
+// Output: Facility/role/original Week No/FortnightDay/shift with unrounded configured standard-FTE shift equivalents.
 // Notes: No corresponding-weekday averaging and no divide-by-two. WeekdayShift is now a unique fortnight-day/shift key.
 shared #"MW DayShift Allocation" =
 let
@@ -1018,15 +1370,15 @@ let
     RosterMinutes = Table.AddColumn(TwoStageCheck, "WeekdayShiftRosterMinutes",
         each if [#"Direct Care %"] = null or [#"Direct Care %"] <= 0 then null
         else [WeekdayShiftTargetMinutes] / [#"Direct Care %"], type nullable number),
-    // Convert allocated roster minutes to hours before dividing by the standard-FTE hours.
     RequiredFTE = Table.AddColumn(RosterMinutes, "FTE", each ([WeekdayShiftRosterMinutes] / 60) / ShiftDuration, type nullable number),
     AddedShiftKey = Table.AddColumn(RequiredFTE, "WeekdayShift", each [FortnightDay] & "-" & [Shift], type text),
     Result = Table.Sort(AddedShiftKey, {
         {"Facility", Order.Ascending}, {"MinuteCategory", Order.Ascending}, {"Role", Order.Ascending},
         {"FortnightDayIndex", Order.Ascending}, {"ShiftIndex", Order.Ascending}
-    })
+    }),
+    BUFFER = Table.Buffer(Result)
 in
-    Result;
+    BUFFER;
 
 // Query: MW FTE Profile Comparison
 // Purpose: Pairs actual redistributed FTE with master-roster FTE and independently checks constant-factor profile alignment.
@@ -1237,13 +1589,14 @@ let
         {"HistoricalCoverageStatus", each if List.AllTrue(List.Transform([HistoricalCoverageStatus], each _ = "PASS")) then "PASS" else "INCOMPLETE", type text},
         {"InvalidRosterRowCount", each List.Sum([InvalidRosterRowCount]), Int64.Type}
     }),
-    RawHeadcounts = Table.Group(#"Master Prepare", {"Location", "Role", "Week No", "Week Day"}, {
+    // Headcounts use the same canonical Facility grain as redistribution.
+    RawHeadcounts = Table.Group(#"Master Prepare", {"Facility", "Role", "Week No", "Week Day"}, {
         {"HistoricalDailyDistinctWorkers", each List.Count(List.Distinct(List.RemoveNulls(Table.SelectRows(_, each [Roster Hours] > 0)[Employee Code]))), Int64.Type},
         {"HistoricalRowsMissingEmployeeCode", each Table.RowCount(Table.SelectRows(_, each [Employee Code] = null)), Int64.Type}
     }),
     WithHeadcount = Table.ExpandTableColumn(
         Table.NestedJoin(History, {"Facility", "Role", "Week No", "Week Day"}, RawHeadcounts,
-            {"Location", "Role", "Week No", "Week Day"}, "Workers", JoinKind.LeftOuter),
+            {"Facility", "Role", "Week No", "Week Day"}, "Workers", JoinKind.LeftOuter),
         "Workers", {"HistoricalDailyDistinctWorkers", "HistoricalRowsMissingEmployeeCode"}),
     WithCounts = Table.ReplaceValue(WithHeadcount, null, 0, Replacer.ReplaceValue,
         {"HistoricalDailyDistinctWorkers", "HistoricalRowsMissingEmployeeCode"}),
@@ -1263,8 +1616,8 @@ in
     Result;
 
 // Query: MW Input Check
-// Purpose: Validates the explicit roster-role mapping, retained DC-role attributes, and RN/ALL target inputs.
-// Inputs: INPUT MinuteWorkers, MW Roster Role Mapping Prepare, MW MinuteWorkers Prepare, and MW TargetMinutes Prepare.
+// Purpose: Validates facility mappings and enablement, role mappings, and source/canonical RN and ALL targets.
+// Inputs: Facility mapping/analysis staging, roster-role mapping staging, and target staging queries.
 // Output: Error records for invalid required inputs.
 shared #"MW Input Check" =
 let
@@ -1282,7 +1635,420 @@ let
         else
             {}
     ),
+    FacilityMapping = Table.Buffer(#"MW Facility Mapping Prepare"),
+    FacilityMappingsByLocation = Table.Group(
+        FacilityMapping,
+        {"SourceLocationKey"},
+        {
+            {
+                "MappedFacilityCount",
+                each List.Count(List.Distinct(List.RemoveNulls([Facility]))),
+                Int64.Type
+            }
+        }
+    ),
+    InvalidLocationMappings = Table.SelectRows(
+        FacilityMappingsByLocation,
+        each [SourceLocationKey] = null or [SourceLocationKey] = "" or [MappedFacilityCount] <> 1
+    ),
+    LocationMappingChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidLocationMappings), each [
+            Check = "Facilities source Location mapping is unique",
+            Severity = "Error",
+            Facility = null,
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([MappedFacilityCount]),
+            Expected = 1,
+            Message = "Facilities source Location key '" &
+                (if [SourceLocationKey] = null then "<blank>" else [SourceLocationKey]) &
+                "' must map to exactly one canonical Facility."
+        ])
+    ),
+    FacilityMappingsBySourceCode = Table.Group(
+        Table.SelectRows(FacilityMapping, each [SourceFacilityCode] <> null and [SourceFacilityCode] <> ""),
+        {"SourceFacilityCode"},
+        {
+            {
+                "MappedFacilityCount",
+                each List.Count(List.Distinct(List.RemoveNulls([Facility]))),
+                Int64.Type
+            }
+        }
+    ),
+    InvalidSourceCodeMappings = Table.SelectRows(
+        FacilityMappingsBySourceCode,
+        each [MappedFacilityCount] <> 1
+    ),
+    SourceCodeMappingChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidSourceCodeMappings), each [
+            Check = "Facilities source code mapping is unique",
+            Severity = "Error",
+            Facility = null,
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([MappedFacilityCount]),
+            Expected = 1,
+            Message = "Facilities source code '" & [SourceFacilityCode] &
+                "' must map to exactly one canonical Facility."
+        ])
+    ),
+    RosterLocations = Table.Distinct(
+        Table.AddColumn(
+            Table.SelectColumns(#"IMPORT Master", {"Location"}),
+            "SourceLocationKey",
+            each if [Location] = null then null else Text.Upper(Text.Trim(Text.From([Location]))),
+            type nullable text
+        )
+    ),
+    RosterLocationMapping = Table.NestedJoin(
+        RosterLocations,
+        {"SourceLocationKey"},
+        FacilityMapping,
+        {"SourceLocationKey"},
+        "FacilityMapping",
+        JoinKind.LeftOuter
+    ),
+    RosterLocationMappingCounts = Table.AddColumn(
+        RosterLocationMapping,
+        "MappingCount",
+        each Table.RowCount([FacilityMapping]),
+        Int64.Type
+    ),
+    InvalidRosterLocationMappings = Table.SelectRows(
+        RosterLocationMappingCounts,
+        each [MappingCount] <> 1
+    ),
+    RosterLocationMappingChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidRosterLocationMappings), each [
+            Check = "Master Roster Location has one Facilities mapping",
+            Severity = "Error",
+            Facility = null,
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([MappingCount]),
+            Expected = 1,
+            Message = "Master Roster Location '" &
+                (if [Location] = null then "<blank>" else Text.From([Location])) &
+                "' must map exactly once before Facility Analysis is applied."
+        ])
+    ),
+    FacilityAnalysis = Table.Buffer(#"MW Facility Analysis Prepare"),
+    FacilityAnalysisCounts = Table.Group(
+        FacilityAnalysis,
+        {"Facility"},
+        {
+            {"AnalysisRowCount", each Table.RowCount(_), Int64.Type},
+            {
+                "ValidFlagCount",
+                each List.NonNullCount([Effort Management Analysis]),
+                Int64.Type
+            }
+        }
+    ),
+    InvalidFacilityAnalysisKeys = Table.SelectRows(
+        FacilityAnalysisCounts,
+        each [Facility] = null or [Facility] = "" or
+            [AnalysisRowCount] <> 1 or [ValidFlagCount] <> 1
+    ),
+    FacilityAnalysisKeyChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidFacilityAnalysisKeys), each [
+            Check = "Facility Analysis control is present and unique",
+            Severity = "Error",
+            Facility = [Facility],
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([AnalysisRowCount]),
+            Expected = 1,
+            Message = "Each canonical Facility needs exactly one logical Effort Management Analysis control."
+        ])
+    ),
+    MappedFacilities = Table.Group(
+        Table.SelectRows(
+            FacilityMapping,
+            each [Facility] <> null and [Facility] <> ""
+        ),
+        {"Facility"},
+        {
+            {
+                "SourceFacilityCodes",
+                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([SourceFacilityCode]))), ", "),
+                type text
+            },
+            {
+                "SourceLocations",
+                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([SourceLocationKey]))), ", "),
+                type text
+            }
+        }
+    ),
+    MappedFacilityAnalysis = Table.ExpandTableColumn(
+        Table.NestedJoin(
+            MappedFacilities,
+            {"Facility"},
+            FacilityAnalysisCounts,
+            {"Facility"},
+            "Analysis",
+            JoinKind.LeftOuter
+        ),
+        "Analysis",
+        {"AnalysisRowCount", "ValidFlagCount"},
+        {"AnalysisRowCount", "ValidFlagCount"}
+    ),
+    MissingMappedFacilityAnalysis = Table.SelectRows(
+        MappedFacilityAnalysis,
+        each [AnalysisRowCount] = null or [AnalysisRowCount] <> 1 or [ValidFlagCount] <> 1
+    ),
+    MappedFacilityAnalysisChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(MissingMappedFacilityAnalysis), each [
+            Check = "Mapped Facility has a Facility Analysis control",
+            Severity = "Error",
+            Facility = [Facility],
+            MinuteCategory = null,
+            Role = null,
+            Actual = if [AnalysisRowCount] = null then 0 else Number.From([AnalysisRowCount]),
+            Expected = 1,
+            Message = "Canonical Facility '" & [Facility] & "' from source codes [" &
+                [SourceFacilityCodes] & "] and source Locations [" & [SourceLocations] &
+                "] must have exactly one Facility Analysis row."
+        ])
+    ),
+    TargetSource = Table.Buffer(#"MW TargetMinutes Source Prepare"),
+    TargetFacilityMappingSummary = Table.Group(
+        TargetSource,
+        {"TargetFacilityKey"},
+        {
+            {
+                "MappingCount",
+                each
+                    let Counts = List.RemoveNulls([TargetFacilityMappingCount])
+                    in if List.IsEmpty(Counts) then 0 else List.Max(Counts),
+                Int64.Type
+            }
+        }
+    ),
+    InvalidTargetFacilityMappings = Table.SelectRows(
+        TargetFacilityMappingSummary,
+        each [TargetFacilityKey] = null or [TargetFacilityKey] = "" or [MappingCount] <> 1
+    ),
+    TargetFacilityMappingChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidTargetFacilityMappings), each [
+            Check = "TargetMinutes facility key has one Facilities mapping",
+            Severity = "Error",
+            Facility = [TargetFacilityKey],
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([MappingCount]),
+            Expected = 1,
+            Message = "TargetMinutes heading '" &
+                (if [TargetFacilityKey] = null then "<blank>" else [TargetFacilityKey]) &
+                "' must resolve to exactly one canonical Facility."
+        ])
+    ),
+    MappedTargetKeys = Table.Distinct(
+        Table.SelectColumns(
+            Table.SelectRows(
+                TargetSource,
+                each [TargetFacilityMappingCount] = 1 and [Facility] <> null and [Facility] <> ""
+            ),
+            {"Facility", "TargetFacilityKey"}
+        )
+    ),
+    TargetKeySets = Table.Group(
+        MappedTargetKeys,
+        {"Facility"},
+        {
+            {
+                "TargetKeys",
+                each List.Sort(List.Distinct(List.RemoveNulls([TargetFacilityKey]))),
+                type list
+            }
+        }
+    ),
+    TargetKeySetsWithCounts = Table.AddColumn(
+        Table.AddColumn(
+            TargetKeySets,
+            "TargetKeyCount",
+            each List.Count([TargetKeys]),
+            Int64.Type
+        ),
+        "CanonicalKeyPresent",
+        each List.Contains([TargetKeys], [Facility]),
+        type logical
+    ),
+    InvalidCanonicalTargetMixes = Table.SelectRows(
+        TargetKeySetsWithCounts,
+        each [CanonicalKeyPresent] and [TargetKeyCount] > 1
+    ),
+    CanonicalTargetMixChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidCanonicalTargetMixes), each [
+            Check = "TargetMinutes uses one facility-key representation",
+            Severity = "Error",
+            Facility = [Facility],
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([TargetKeyCount]),
+            Expected = 1,
+            Message = "Canonical TargetMinutes heading '" & [Facility] &
+                "' cannot coexist with component headings " & Text.Combine([TargetKeys], ", ") & "."
+        ])
+    ),
+    AliasFacilities = Table.ExpandTableColumn(
+        Table.NestedJoin(
+            #"MW Target Facility Aliases",
+            {"TargetFacilityKey"},
+            #"MW Target Facility Mapping Prepare",
+            {"TargetFacilityKey"},
+            "FacilityMapping",
+            JoinKind.LeftOuter
+        ),
+        "FacilityMapping",
+        {"Facility"},
+        {"Facility"}
+    ),
+    AliasTargetKeySets = Table.ExpandTableColumn(
+        Table.NestedJoin(
+            AliasFacilities,
+            {"Facility"},
+            TargetKeySets,
+            {"Facility"},
+            "TargetKeySet",
+            JoinKind.LeftOuter
+        ),
+        "TargetKeySet",
+        {"TargetKeys"},
+        {"TargetKeys"}
+    ),
+    InvalidAliasTargetMixes = Table.SelectRows(
+        AliasTargetKeySets,
+        each
+            if [TargetKeys] = null then
+                false
+            else
+                List.Contains([TargetKeys], [TargetFacilityKey]) and
+                    List.Contains([TargetKeys], [SourceFacilityCode])
+    ),
+    AliasTargetMixChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidAliasTargetMixes), each [
+            Check = "TargetMinutes alias is not duplicated by its source code",
+            Severity = "Error",
+            Facility = [Facility],
+            MinuteCategory = null,
+            Role = null,
+            Actual = 2,
+            Expected = 1,
+            Message = "TargetMinutes headings '" & [TargetFacilityKey] & "' and '" &
+                [SourceFacilityCode] & "' identify the same source and cannot both be supplied."
+        ])
+    ),
+    EnabledTargetPresenceChecks = #"MW Check Table"(
+        if Table.IsEmpty(#"MW TargetMinutes Prepare") then
+            {[
+                Check = "Enabled canonical facilities have targets",
+                Severity = "Error",
+                Actual = 0,
+                Expected = 1,
+                Message = "No TargetMinutes facility remains after Facilities mapping and the Facility Analysis true filter."
+            ]}
+        else
+            {}
+    ),
     Mapping = Table.Buffer(#"MW Roster Role Mapping Prepare"),
+    // Validate roles only for roster rows that survive the canonical Facility
+    // mapping and Facility Analysis gate used by Master Prepare.
+    RosterRoleSource = Table.AddColumn(
+        Table.SelectColumns(#"IMPORT Master", {"Location", "Role"}),
+        "SourceLocationKey",
+        each if [Location] = null then null else Text.Upper(Text.Trim(Text.From([Location]))),
+        type nullable text
+    ),
+    RosterRoleFacilityJoin = Table.NestedJoin(
+        RosterRoleSource,
+        {"SourceLocationKey"},
+        FacilityMapping,
+        {"SourceLocationKey"},
+        "FacilityMapping",
+        JoinKind.LeftOuter
+    ),
+    RosterRoleFacilityCounts = Table.AddColumn(
+        RosterRoleFacilityJoin,
+        "FacilityMappingCount",
+        each Table.RowCount([FacilityMapping]),
+        Int64.Type
+    ),
+    RosterRoleUniqueFacilities = Table.ExpandTableColumn(
+        Table.SelectRows(RosterRoleFacilityCounts, each [FacilityMappingCount] = 1),
+        "FacilityMapping",
+        {"Facility"},
+        {"Facility"}
+    ),
+    RosterRolesInScope = Table.RemoveColumns(
+        Table.NestedJoin(
+            RosterRoleUniqueFacilities,
+            {"Facility"},
+            #"MW Enabled Facilities Prepare",
+            {"Facility"},
+            "EnabledFacility",
+            JoinKind.Inner
+        ),
+        {"EnabledFacility"}
+    ),
+    RosterRoleKeys = Table.AddColumn(
+        RosterRolesInScope,
+        "RosterRoleKey",
+        each if [Role] = null then null else Text.Upper(Text.Trim(Text.From([Role]))),
+        type nullable text
+    ),
+    RosterRoleMappingJoin = Table.NestedJoin(
+        RosterRoleKeys,
+        {"RosterRoleKey"},
+        Mapping,
+        {"RosterRoleKey"},
+        "RoleMapping",
+        JoinKind.LeftOuter
+    ),
+    RosterRoleMappingCounts = Table.AddColumn(
+        RosterRoleMappingJoin,
+        "RoleMappingCount",
+        each Table.RowCount([RoleMapping]),
+        Int64.Type
+    ),
+    InvalidRosterRoleMappings = Table.Distinct(
+        Table.SelectColumns(
+            Table.SelectRows(
+                RosterRoleMappingCounts,
+                each [RosterRoleKey] = null or [RosterRoleKey] = "" or [RoleMappingCount] <> 1
+            ),
+            {"Facility", "Role", "RoleMappingCount"}
+        )
+    ),
+    RosterRoleMappingChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(InvalidRosterRoleMappings), each [
+            Check = "Retained Master Roster role has one explicit mapping",
+            Severity = "Error",
+            Facility = [Facility],
+            MinuteCategory = null,
+            Role = if [Role] = null then null else Text.From([Role]),
+            Actual = Number.From([RoleMappingCount]),
+            Expected = 1,
+            Message =
+                let RoleLabel =
+                    if [Role] = null then
+                        "<blank>"
+                    else if Text.Trim(Text.From([Role])) = "" then
+                        "<blank>"
+                    else
+                        Text.From([Role])
+                in
+                    if [RoleMappingCount] = 0 then
+                        "Enabled roster role '" & RoleLabel &
+                            "' was not found in MatchingRosterRoleswithANACCRoles."
+                    else
+                        "Enabled roster role '" & RoleLabel & "' occurs " &
+                            Text.From([RoleMappingCount], "en-AU") &
+                            " times in MatchingRosterRoleswithANACCRoles; exactly one row is required."
+        ])
+    ),
     MappingKeyCounts = Table.Group(
         Mapping,
         {"RosterRoleKey"},
@@ -1349,7 +2115,8 @@ let
         Table.SelectColumns(
             #"MW TargetMinutes Prepare",
             {
-                "Facility", "RNCount", "ALLCount", "RNNullCount", "ALLNullCount",
+                "Facility", "TargetFacilityKeys", "SourceTargetKeyCount",
+                "RNCount", "ALLCount", "RNNullCount", "ALLNullCount",
                 "RNFortnightTargetHours", "ALLFortnightTargetHours", "UnexpectedTypeCount"
             }
         )
@@ -1359,25 +2126,27 @@ let
             List.Transform(
                 Table.ToRecords(TargetSummary),
                 each List.RemoveNulls({
-                    if [RNCount] <> 1 then [
+                    if [RNCount] <> [SourceTargetKeyCount] then [
                         Check = "RN target row count",
                         Severity = "Error",
                         Facility = [Facility],
                         MinuteCategory = "RN",
                         Role = null,
                         Actual = Number.From([RNCount]),
-                        Expected = 1,
-                        Message = "Each facility must have exactly one RN target row."
+                        Expected = Number.From([SourceTargetKeyCount]),
+                        Message = "Mapped target keys " & [TargetFacilityKeys] &
+                            " must each have exactly one RN target row before canonical aggregation."
                     ] else null,
-                    if [ALLCount] <> 1 then [
+                    if [ALLCount] <> [SourceTargetKeyCount] then [
                         Check = "ALL target row count",
                         Severity = "Error",
                         Facility = [Facility],
                         MinuteCategory = null,
                         Role = null,
                         Actual = Number.From([ALLCount]),
-                        Expected = 1,
-                        Message = "Each facility must have exactly one ALL target row."
+                        Expected = Number.From([SourceTargetKeyCount]),
+                        Message = "Mapped target keys " & [TargetFacilityKeys] &
+                            " must each have exactly one ALL target row before canonical aggregation."
                     ] else null,
                     if [UnexpectedTypeCount] <> 0 then [
                         Check = "Target minute types",
@@ -1428,15 +2197,30 @@ let
         )
     ),
     Result = Table.Combine({
-        TargetPresenceChecks, MappingKeyChecks, CategoryChecks, RetainedRoleChecks,
-        DirectCareChecks, DCRoleConsistencyChecks, TargetChecks
+        TargetPresenceChecks,
+        LocationMappingChecks,
+        SourceCodeMappingChecks,
+        RosterLocationMappingChecks,
+        FacilityAnalysisKeyChecks,
+        MappedFacilityAnalysisChecks,
+        TargetFacilityMappingChecks,
+        CanonicalTargetMixChecks,
+        AliasTargetMixChecks,
+        EnabledTargetPresenceChecks,
+        RosterRoleMappingChecks,
+        MappingKeyChecks,
+        CategoryChecks,
+        RetainedRoleChecks,
+        DirectCareChecks,
+        DCRoleConsistencyChecks,
+        TargetChecks
     })
 in
     Result;
 
 // Query: MW Distribution Check
 // Purpose: Validates historical source rows, complete periods, and conditional and whole-period distribution denominators.
-// Inputs: Master Prepare, LocRoleWeekDaysHours, MW Historical DayShift, and MW TargetMinutes Prepare.
+// Inputs: Master Prepare, MW Historical WeekDayShift, MW Historical DayShift, and MW TargetMinutes Prepare.
 // Output: Pass, warning, and error records for historical allocation readiness.
 shared #"MW Distribution Check" =
 let
@@ -1458,13 +2242,26 @@ let
         )
     ),
     TargetCategories = Table.Buffer(#"MW TargetMinutes Prepare"),
+    // Build the validation input directly from Master Prepare at the same
+    // canonical Facility grain as targets and historical profiles.
     HistoricalInput = Table.Buffer(
-        Table.SelectColumns(
-            LocRoleWeekDaysHours,
-            {
-                "Location", "Week No", "Role", "DayOfWeek", "Week Day",
-                "Shift", "ShiftIndex", "Hours"
-            }
+        Table.RenameColumns(
+            Table.SelectColumns(
+                Table.AddColumn(
+                    #"Master Prepare",
+                    "DayOfWeek",
+                    each List.PositionOf(
+                        {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
+                        [#"Week Day"]
+                    ) + 1,
+                    Int64.Type
+                ),
+                {
+                    "Facility", "Week No", "Role", "DayOfWeek", "Week Day",
+                    "Shift", "ShiftIndex", "Roster Hours"
+                }
+            ),
+            {{"Roster Hours", "Hours"}}
         )
     ),
     Weekdays = #table(
@@ -1487,10 +2284,38 @@ let
     InvalidRawRosterRows = Table.SelectRows(#"Master Prepare", each [Roster Hours] = null or [Roster Hours] < 0),
     RawRosterHoursChecks = #"MW Check Table"(List.Transform(Table.ToRecords(InvalidRawRosterRows), each [
         Check = "Historical raw roster hours are valid", Severity = "Error",
-        Facility = [Location], MinuteCategory = null, Role = [Role],
+        Facility = [Facility], MinuteCategory = null, Role = [Role],
         Actual = [Roster Hours], Expected = 0,
-        Message = "Each eligible original roster row must have non-null, non-negative hours before grouping."
+        Message = "Each eligible original roster row must have non-null, non-negative hours before grouping. Source Location=" &
+            (if [Location] = null then "<null>" else [Location]) & "."
     ])),
+    // Canonical coverage can otherwise hide a missing week at one contributing
+    // source Location when another Location supplies both weeks.
+    SourceLocationPeriods = Table.Distinct(
+        Table.SelectColumns(
+            Table.SelectRows(#"Master Prepare", each [Week No] <> null),
+            {"Facility", "Location", "Week No"}
+        )
+    ),
+    SourceLocationWeekCounts = Table.Group(
+        SourceLocationPeriods,
+        {"Facility", "Location"},
+        {{"ObservedWeeks", each Table.RowCount(_), Int64.Type}}
+    ),
+    SourceLocationPeriodChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(SourceLocationWeekCounts), each [
+            Check = "Contributing source Location contains exactly two source weeks",
+            Severity = if [ObservedWeeks] = 2 then "Pass" else "Error",
+            Facility = [Facility],
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([ObservedWeeks]),
+            Expected = 2,
+            Message = "Source Location '" &
+                (if [Location] = null then "<blank>" else [Location]) &
+                "' must contribute exactly two weeks before canonical aggregation."
+        ])
+    ),
     // Verify that the completed graph table preserves source totals and row
     // counts. Zero-fill must not duplicate observed cells or lose source rows.
     HistoricalGrid = Table.Buffer(#"MW Historical WeekDayShift"),
@@ -1503,7 +2328,7 @@ let
             Facility = [Facility], MinuteCategory = null, Role = [Role], Actual = [CellCount], Expected = 1,
             Message = "Expected exactly one historical row per facility/role/original week/weekday/shift."
         ])),
-    RawPeriodTotals = Table.Group(#"Master Prepare", {"Location", "Week No"}, {
+    RawPeriodTotals = Table.Group(#"Master Prepare", {"Facility", "Week No"}, {
         {"SourceHours", each List.Sum([Roster Hours]), type nullable number},
         {"SourceRows", each Table.RowCount(_), Int64.Type}
     }),
@@ -1512,7 +2337,7 @@ let
         {"GridSourceRows", each List.Sum([SourceRowCount]), Int64.Type}
     }),
     ComparedPeriodTotals = Table.ExpandTableColumn(
-        Table.NestedJoin(RawPeriodTotals, {"Location", "Week No"}, GridPeriodTotals,
+        Table.NestedJoin(RawPeriodTotals, {"Facility", "Week No"}, GridPeriodTotals,
             {"Facility", "Week No"}, "Grid", JoinKind.LeftOuter),
         "Grid", {"GridHours", "GridSourceRows"}, {"GridHours", "GridSourceRows"}),
     HistoricalGridTotalChecks = #"MW Check Table"(List.Transform(Table.ToRecords(ComparedPeriodTotals), each [
@@ -1520,7 +2345,7 @@ let
         Severity = if [GridHours] <> null and [SourceHours] <> null and
             Number.Abs([GridHours] - [SourceHours]) <= Tolerance and [GridSourceRows] = [SourceRows]
             then "Pass" else "Error",
-        Facility = [Location], MinuteCategory = null, Role = null,
+        Facility = [Facility], MinuteCategory = null, Role = null,
         Actual = [GridHours], Expected = [SourceHours],
         Message = "Historical graph hours and contributing row counts must match the unaveraged source for week " &
             (if [Week No] = null then "<null>" else Text.From([Week No], "en-AU")) & "."
@@ -1545,7 +2370,7 @@ let
             each [
                 Check = "Historical allocation source row is valid",
                 Severity = "Error",
-                Facility = [Location],
+                Facility = [Facility],
                 MinuteCategory = null,
                 Role = [Role],
                 Actual = [Hours],
@@ -1567,16 +2392,16 @@ let
     HistoricalFacilityPeriods = Table.Distinct(
         Table.SelectColumns(
             Table.SelectRows(HistoricalInput, each [Week No] <> null),
-            {"Location", "Week No"}
+            {"Facility", "Week No"}
         )
     ),
     // A single fortnight requires exactly two source weeks. Never average, pick
     // a pair from a longer extract, or invent an absent week.
-    WeekCounts = Table.Group(HistoricalFacilityPeriods, {"Location"}, {
+    WeekCounts = Table.Group(HistoricalFacilityPeriods, {"Facility"}, {
         {"ObservedWeeks", each Table.RowCount(_), Int64.Type}
     }),
     TargetWeekCounts = Table.ExpandTableColumn(
-        Table.NestedJoin(TargetFacilityList, {"Facility"}, WeekCounts, {"Location"}, "WeekCount", JoinKind.LeftOuter),
+        Table.NestedJoin(TargetFacilityList, {"Facility"}, WeekCounts, {"Facility"}, "WeekCount", JoinKind.LeftOuter),
         "WeekCount", {"ObservedWeeks"}),
     FortnightPeriodChecks = #"MW Check Table"(List.Transform(Table.ToRecords(TargetWeekCounts), each [
         Check = "Historical target facility contains exactly two source weeks",
@@ -1588,7 +2413,7 @@ let
     TargetHistoricalPeriods = Table.RemoveColumns(
         Table.NestedJoin(
             HistoricalFacilityPeriods,
-            {"Location"},
+            {"Facility"},
             TargetFacilityList,
             {"Facility"},
             "TargetFacility",
@@ -1617,14 +2442,14 @@ let
                     [DayOfWeek] <> null and
                     [DayOfWeek] >= 1 and [DayOfWeek] <= 7
             ),
-            {"Location", "Week No", "DayOfWeek"}
+            {"Facility", "Week No", "DayOfWeek"}
         )
     ),
     MissingHistoricalWeekdays = Table.NestedJoin(
         #"Expanded Expected Historical Weekdays",
-        {"Location", "Week No", "DayOfWeek"},
+        {"Facility", "Week No", "DayOfWeek"},
         ObservedHistoricalWeekdays,
-        {"Location", "Week No", "DayOfWeek"},
+        {"Facility", "Week No", "DayOfWeek"},
         "ObservedDay",
         JoinKind.LeftAnti
     ),
@@ -1634,7 +2459,7 @@ let
             each [
                 Check = "Historical facility period has every weekday",
                 Severity = "Error",
-                Facility = [Location],
+                Facility = [Facility],
                 MinuteCategory = null,
                 Role = null,
                 Actual = 0,
@@ -1978,6 +2803,7 @@ let
         {
             HistoricalInputChecks,
             RawRosterHoursChecks,
+            SourceLocationPeriodChecks,
             HistoricalGridKeyChecks,
             HistoricalGridTotalChecks,
             HistoricalCoverageChecks,
@@ -1995,9 +2821,10 @@ let
             TargetFacilityChecks,
             HistoricalFacilityChecks
         }
-    )
+    ),
+    #"Filtered Rows" = Table.SelectRows(Result, each ([Severity] <> "Pass"))
 in
-    Result;
+    #"Filtered Rows";
 
 // Query: MW Daily Allocation Check
 // Purpose: Gates publication on distinct-day, actual-week and complete-fortnight reconciliation.
@@ -2029,24 +2856,50 @@ in
 // Output: Validation rows; Severity Error prevents the allocation checks from being evaluated.
 shared #"MW PreAllocation Check" =
 let
-    Result = Table.Combine({#"MW Input Check", #"MW Distribution Check"})
+    Result = Table.Combine({#"MW Input Check", #"MW Distribution Check"}),
+    #"Filtered Rows" = Table.SelectRows(Result, each ([Severity] <> "Pass"))
 in
-    Result;
+    #"Filtered Rows";
 
 // Query: MW Fortnight Hours Check
-// Purpose: Independently reconciles allocated FTE to the original RN and ALL hours-per-fortnight inputs.
-// Inputs: INPUT TargetMinutes and MW DayShift Allocation; evaluate after MW PreAllocation Check passes.
-// Output: RN and ALL checks per facility with Actual and Expected in productive-care hours per fortnight.
-// Notes: Reads raw input hours directly, avoiding the minute conversion used to produce allocation targets.
+// Purpose: Independently reconciles allocated FTE to grouped canonical RN and ALL source-target hours.
+// Inputs: MW TargetMinutes Source Prepare and MW DayShift Allocation; evaluate after MW PreAllocation Check passes.
+// Output: RN and ALL checks per canonical facility with Actual and Expected productive-care hours per fortnight.
+// Notes: Groups the original source hours directly, avoiding the minute conversion used by allocation targets.
 shared #"MW Fortnight Hours Check" =
 let
     // Match the existing 0.000001-minute tolerance, expressed in hours.
     ToleranceHours = 0.000001 / 60,
-    RawTargets = Table.Buffer(#"INPUT TargetMinutes"),
-    FacilityColumns = List.RemoveItems(Table.ColumnNames(RawTargets), {"MinuteType"}),
-    NormalisedTargets = Table.TransformColumns(
-        RawTargets,
-        {{"MinuteType", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text}}
+    EnabledMappedTargets = Table.SelectRows(
+        #"MW TargetMinutes Source Prepare",
+        each [TargetFacilityMappingCount] = 1 and
+            [FacilityAnalysisRowCount] = 1 and
+            [Effort Management Analysis] = true and
+            List.Contains({"RN", "ALL"}, [MinuteType])
+    ),
+    CanonicalTargetHours = Table.Buffer(
+        Table.Group(
+            EnabledMappedTargets,
+            {"Facility", "MinuteType"},
+            {
+                {
+                    "ExpectedHours",
+                    each
+                        let Values = [TargetFortnightHours]
+                        in
+                            if List.IsEmpty(Values) or List.NonNullCount(Values) <> List.Count(Values) then
+                                null
+                            else
+                                List.Sum(Values),
+                    type nullable number
+                },
+                {
+                    "TargetFacilityKeys",
+                    each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([TargetFacilityKey]))), ", "),
+                    type text
+                }
+            }
+        )
     ),
     Allocation = Table.Buffer(
         Table.SelectColumns(
@@ -2054,53 +2907,44 @@ let
             {"Facility", "MinuteCategory", "Direct Care %", "FTE"}
         )
     ),
-    CheckRecords = List.Combine(
+    CheckRecords =
         List.Transform(
-            FacilityColumns,
-            (FacilityColumn as text) as list =>
-                List.Transform(
-                    {"RN", "ALL"},
-                    (TargetType as text) as record =>
-                        let
-                            FacilityKey = Text.Upper(Text.Trim(FacilityColumn)),
-                            InputValues = Table.Column(
-                                Table.SelectRows(NormalisedTargets, each [MinuteType] = TargetType),
-                                FacilityColumn
-                            ),
-                            ExpectedHours =
-                                if List.Count(InputValues) = 1 then InputValues{0} else null,
-                            EligibleAllocation = Table.SelectRows(
-                                Allocation,
-                                each [Facility] = FacilityKey and
-                                    (TargetType = "ALL" or [MinuteCategory] = "RN")
-                            ),
-                            // All 14 days are present once. Convert roster FTE back to
-                            // productive hours without repeating or doubling any day.
-                            ReconstructedHours = List.Transform(
-                                Table.ToRecords(EligibleAllocation),
-                                each [FTE] * ShiftDuration * [#"Direct Care %"]
-                            ),
-                            HasInvalidAllocation = List.NonNullCount(ReconstructedHours) <> List.Count(ReconstructedHours),
-                            ActualHours =
-                                if List.IsEmpty(ReconstructedHours) then 0 else List.Sum(ReconstructedHours),
-                            Passed =
-                                if ExpectedHours = null or HasInvalidAllocation then false
-                                else Number.Abs(ActualHours - ExpectedHours) <= ToleranceHours
-                        in
-                            [
-                                Check = "Allocated FTE reconciles to original fortnight hours",
-                                Severity = if Passed then "Pass" else "Error",
-                                Facility = FacilityKey,
-                                MinuteCategory = if TargetType = "RN" then "RN" else null,
-                                Role = null,
-                                Actual = ActualHours,
-                                Expected = ExpectedHours,
-                                Message = TargetType &
-                                    ": sum of all 14 days of FTE x configured standard-FTE hours x Direct Care % must equal original TargetMinutes hours per fortnight."
-                            ]
-                )
-        )
-    ),
+            Table.ToRecords(CanonicalTargetHours),
+            (TargetRow as record) as record =>
+                let
+                    FacilityKey = TargetRow[Facility],
+                    TargetType = TargetRow[MinuteType],
+                    ExpectedHours = TargetRow[ExpectedHours],
+                    EligibleAllocation = Table.SelectRows(
+                        Allocation,
+                        each [Facility] = FacilityKey and
+                            (TargetType = "ALL" or [MinuteCategory] = "RN")
+                    ),
+                    // All 14 days are present once. Convert roster FTE back to
+                    // productive hours without repeating or doubling any day.
+                    ReconstructedHours = List.Transform(
+                        Table.ToRecords(EligibleAllocation),
+                        each [FTE] * ShiftDuration * [#"Direct Care %"]
+                    ),
+                    HasInvalidAllocation = List.NonNullCount(ReconstructedHours) <> List.Count(ReconstructedHours),
+                    ActualHours =
+                        if List.IsEmpty(ReconstructedHours) then 0 else List.Sum(ReconstructedHours),
+                    Passed =
+                        if ExpectedHours = null or HasInvalidAllocation then false
+                        else Number.Abs(ActualHours - ExpectedHours) <= ToleranceHours
+                in
+                    [
+                        Check = "Allocated FTE reconciles to grouped fortnight hours",
+                        Severity = if Passed then "Pass" else "Error",
+                        Facility = FacilityKey,
+                        MinuteCategory = if TargetType = "RN" then "RN" else null,
+                        Role = null,
+                        Actual = ActualHours,
+                        Expected = ExpectedHours,
+                        Message = TargetType & " targets from " & TargetRow[TargetFacilityKeys] &
+                            ": all 14 days of FTE x configured standard-FTE hours x Direct Care % must equal the grouped canonical TargetMinutes hours."
+                    ]
+        ),
     Result = #"MW Check Table"(CheckRecords)
 in
     Result;
@@ -2191,6 +3035,291 @@ let
             )
         else
             #"MW DayShift Allocation"
+in
+    Result;
+
+// Query: MinuteWorkersFTE_Demand
+// Purpose: Publishes enabled role-group FTE demand without multiplying rows when roster labels share a DC Role.
+// Inputs: MinuteWorkersFTE_TABLE, EXTRACT Roles and EXTRACT RoleAnalysis.
+// Output: Facility, fortnight day, FTE, WeekdayShift and Role Group.
+// Notes: Uses exact normalised keys and requires one enabled definition per published DC Role.
+shared MinuteWorkersFTE_Demand =
+let
+    NormalizeKey = (InputValue as any) as nullable text =>
+        if InputValue = null then
+            null
+        else
+            let
+                Trimmed = Text.Trim(Text.From(InputValue))
+            in
+                if Trimmed = "" then null else Text.Upper(Trimmed),
+
+    IsValidPercentage = (InputValue as any) as logical =>
+        if not Value.Is(InputValue, type number) then
+            false
+        else
+            let
+                NumberValue = Number.From(InputValue)
+            in
+                not Number.IsNaN(NumberValue) and
+                Number.Abs(NumberValue) <> #infinity and
+                NumberValue > 0 and NumberValue <= 1,
+
+    AnalysisSelected = Table.SelectColumns(
+        #"EXTRACT RoleAnalysis",
+        {"Roles", "Effort Management Analysis"}
+    ),
+    AnalysisNamed = Table.TransformColumns(
+        AnalysisSelected,
+        {{"Roles", each if _ = null then null else Text.Trim(Text.From(_)), type nullable text}}
+    ),
+    AnalysisPrepared = Table.AddColumn(
+        AnalysisNamed,
+        "RoleGroupKey",
+        each NormalizeKey([Roles]),
+        type nullable text
+    ),
+    InvalidAnalysisRows = Table.SelectRows(
+        AnalysisPrepared,
+        each
+            [RoleGroupKey] = null or
+            (
+                [Effort Management Analysis] <> null and
+                not Value.Is([Effort Management Analysis], type logical)
+            )
+    ),
+    ValidatedAnalysisRows =
+        if not Table.IsEmpty(InvalidAnalysisRows) then
+            error Error.Record(
+                "Invalid role analysis",
+                "Roles must be non-blank and effort-analysis flags must be logical or null.",
+                InvalidAnalysisRows
+            )
+        else
+            AnalysisPrepared,
+    AnalysisCounts = Table.Group(
+        ValidatedAnalysisRows,
+        {"RoleGroupKey"},
+        {{"AnalysisRowCount", each Table.RowCount(_), Int64.Type}}
+    ),
+    DuplicateAnalysisKeys = Table.SelectRows(
+        AnalysisCounts,
+        each [AnalysisRowCount] <> 1
+    ),
+    ValidatedAnalysis =
+        if not Table.IsEmpty(DuplicateAnalysisKeys) then
+            error Error.Record(
+                "Duplicate role analysis",
+                "Each normalised Role Group must have exactly one analysis row.",
+                DuplicateAnalysisKeys
+            )
+        else
+            Table.Buffer(
+                Table.SelectColumns(
+                    ValidatedAnalysisRows,
+                    {"RoleGroupKey", "Effort Management Analysis"}
+                )
+            ),
+
+    RoleDefinitionsSelected = Table.SelectColumns(
+        #"EXTRACT Roles",
+        {"DC Role", "DC Category", "Direct Care %", "Role Group"}
+    ),
+    RoleDefinitionsNamed = Table.TransformColumns(
+        RoleDefinitionsSelected,
+        {
+            {"DC Role", each if _ = null then null else Text.Trim(Text.From(_)), type nullable text},
+            {"DC Category", each NormalizeKey(_), type nullable text},
+            {"Role Group", each if _ = null then null else Text.Trim(Text.From(_)), type nullable text}
+        }
+    ),
+    CareRoleDefinitions = Table.SelectRows(
+        RoleDefinitionsNamed,
+        each List.Contains({"RN", "OTHER"}, [DC Category])
+    ),
+    WithDCRoleKey = Table.AddColumn(
+        CareRoleDefinitions,
+        "DCRoleKey",
+        each NormalizeKey([DC Role]),
+        type nullable text
+    ),
+    WithRoleGroupKey = Table.AddColumn(
+        WithDCRoleKey,
+        "RoleGroupKey",
+        each NormalizeKey([Role Group]),
+        type nullable text
+    ),
+    InvalidRoleDefinitions = Table.SelectRows(
+        WithRoleGroupKey,
+        each
+            [DCRoleKey] = null or
+            [RoleGroupKey] = null or
+            not IsValidPercentage([#"Direct Care %"])
+    ),
+    ValidatedRoleDefinitions =
+        if not Table.IsEmpty(InvalidRoleDefinitions) then
+            error Error.Record(
+                "Invalid demand role mapping",
+                "Every direct-care definition needs a DC Role, Role Group and valid Direct Care percentage.",
+                InvalidRoleDefinitions
+            )
+        else
+            WithRoleGroupKey,
+
+    DefinitionsWithAnalysis = Table.NestedJoin(
+        ValidatedRoleDefinitions,
+        {"RoleGroupKey"},
+        ValidatedAnalysis,
+        {"RoleGroupKey"},
+        "RoleAnalysis",
+        JoinKind.LeftOuter
+    ),
+    WithAnalysisCount = Table.AddColumn(
+        DefinitionsWithAnalysis,
+        "AnalysisRowCount",
+        each Table.RowCount([RoleAnalysis]),
+        Int64.Type
+    ),
+    MissingDefinitionAnalysis = Table.SelectRows(
+        WithAnalysisCount,
+        each [AnalysisRowCount] <> 1
+    ),
+    ValidatedDefinitionAnalysis =
+        if not Table.IsEmpty(MissingDefinitionAnalysis) then
+            error Error.Record(
+                "Missing role analysis",
+                "Every direct-care Role Group must have exactly one role-analysis row.",
+                Table.RemoveColumns(MissingDefinitionAnalysis, {"RoleAnalysis"})
+            )
+        else
+            WithAnalysisCount,
+    ExpandedAnalysis = Table.ExpandTableColumn(
+        ValidatedDefinitionAnalysis,
+        "RoleAnalysis",
+        {"Effort Management Analysis"},
+        {"Effort Management Analysis"}
+    ),
+
+    // Multiple roster labels may repeat one identical DC-role definition.
+    // Collapse those repeats before validating the fact-table join.
+    DistinctDefinitions = Table.Distinct(
+        Table.SelectColumns(
+            ExpandedAnalysis,
+            {
+                "DCRoleKey", "Role Group", "RoleGroupKey", "DC Category",
+                "Direct Care %", "Effort Management Analysis"
+            }
+        )
+    ),
+    DefinitionCounts = Table.Group(
+        DistinctDefinitions,
+        {"DCRoleKey"},
+        {
+            {"DefinitionCount", each Table.RowCount(_), Int64.Type},
+            {
+                "EnabledDefinitionCount",
+                each Table.RowCount(
+                    Table.SelectRows(_, each [Effort Management Analysis] = true)
+                ),
+                Int64.Type
+            }
+        }
+    ),
+    ConflictingEnabledRoles = Table.SelectRows(
+        DefinitionCounts,
+        each [EnabledDefinitionCount] > 0 and [DefinitionCount] <> 1
+    ),
+    ValidatedDefinitions =
+        if not Table.IsEmpty(ConflictingEnabledRoles) then
+            error Error.Record(
+                "Ambiguous DC role mapping",
+                "A DC Role with an enabled group must resolve to one Role Group, category, percentage and analysis setting.",
+                ConflictingEnabledRoles
+            )
+        else
+            Table.Buffer(DistinctDefinitions),
+    EnabledMappings = Table.Buffer(
+        Table.SelectColumns(
+            Table.SelectRows(
+                ValidatedDefinitions,
+                each [Effort Management Analysis] = true
+            ),
+            {"DCRoleKey", "Role Group"}
+        )
+    ),
+    ValidatedEnabledMappings =
+        if Table.IsEmpty(EnabledMappings) then
+            error "No direct-care Role Groups are enabled for Effort Management Analysis."
+        else
+            EnabledMappings,
+
+    Source = MinuteWorkersFTE_TABLE,
+    SourceWithKey = Table.AddColumn(
+        Source,
+        "DCRoleKey",
+        each NormalizeKey([DC Role]),
+        type nullable text
+    ),
+    InvalidSourceKeys = Table.Distinct(
+        Table.SelectColumns(
+            Table.SelectRows(SourceWithKey, each [DCRoleKey] = null),
+            {"DC Role", "DCRoleKey"}
+        )
+    ),
+    KnownRoleKeys = Table.Distinct(
+        Table.SelectColumns(ValidatedDefinitions, {"DCRoleKey"})
+    ),
+    SourceRoleKeys = Table.Distinct(
+        Table.SelectColumns(SourceWithKey, {"DC Role", "DCRoleKey"})
+    ),
+    UnknownSourceRoles = Table.RemoveColumns(
+        Table.NestedJoin(
+            SourceRoleKeys,
+            {"DCRoleKey"},
+            KnownRoleKeys,
+            {"DCRoleKey"},
+            "KnownRole",
+            JoinKind.LeftAnti
+        ),
+        {"KnownRole"}
+    ),
+    ValidatedSource =
+        if not Table.IsEmpty(InvalidSourceKeys) then
+            error Error.Record(
+                "Invalid published DC role",
+                "Every published FTE row must contain a non-blank DC Role.",
+                InvalidSourceKeys
+            )
+        else if not Table.IsEmpty(UnknownSourceRoles) then
+            error Error.Record(
+                "Unmapped published DC role",
+                "Every published DC Role must exist in the linked role definitions.",
+                UnknownSourceRoles
+            )
+        else
+            SourceWithKey,
+
+    JoinedEnabledMappings = Table.NestedJoin(
+        ValidatedSource,
+        {"DCRoleKey"},
+        ValidatedEnabledMappings,
+        {"DCRoleKey"},
+        "EnabledRoleMapping",
+        JoinKind.Inner
+    ),
+    ExpandedRoleGroup = Table.ExpandTableColumn(
+        JoinedEnabledMappings,
+        "EnabledRoleMapping",
+        {"Role Group"},
+        {"Role Group"}
+    ),
+    Result = Table.SelectColumns(
+        ExpandedRoleGroup,
+        {
+            "Facility", "DayOfWeek", "Week Day", "FortnightDayIndex",
+            "FortnightDay", "FTE", "WeekdayShift", "Role Group"
+        }
+    )
 in
     Result;
 

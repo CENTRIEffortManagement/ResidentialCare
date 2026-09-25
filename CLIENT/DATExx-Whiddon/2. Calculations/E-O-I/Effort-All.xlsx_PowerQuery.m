@@ -1,6 +1,6 @@
 // Power Query from: Effort-All.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Effort-All.xlsx
-// Extracted: 2026-09-18T23:41:12.436Z
+// Extracted: 2026-09-20T21:19:08.859Z
 
 section Section1;
 
@@ -109,33 +109,35 @@ shared ResolveFacilityPath = (facility as any) as text => let
 in
     UnitsPath & "\" & ValidatedUnit;
 
-// Query: INPUT EffortAllSettings
-// Purpose: Read the two configured units and date alignment from one authoritative worksheet table.
-// Inputs: Exactly one EffortAllSettings row with Facility1, Facility2 and DateAlignment columns.
-shared #"INPUT EffortAllSettings" = let
-    Source = Excel.CurrentWorkbook(){[Name="EffortAllSettings"]}[Content],
-    RequiredColumns = {"Facility1", "Facility2", "DateAlignment"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(Source)),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(Source, RequiredColumns)
-        else error Error.Record("Effort-All settings", "EffortAllSettings is missing required columns.", [MissingColumns = MissingColumns]),
-    OneRow = if Table.RowCount(Selected) = 1 then Selected
-        else error Error.Record("Effort-All settings", "EffortAllSettings must contain exactly one data row.", [Rows = Table.RowCount(Selected)]),
-    Typed = Table.TransformColumnTypes(OneRow, {{"Facility1", type text}, {"Facility2", type text}, {"DateAlignment", Int64.Type}}),
-    Trimmed = Table.TransformColumns(Typed, {{"Facility1", Text.Trim, type text}, {"Facility2", Text.Trim, type text}}),
-    Settings = Trimmed{0},
-    Validated = if Settings[Facility1] = null or Settings[Facility1] = ""
-            or Settings[Facility2] = null or Settings[Facility2] = "" then
-            error "EffortAllSettings Facility1 and Facility2 must be nonblank."
-        else if Settings[DateAlignment] = null then error "EffortAllSettings DateAlignment must contain a whole number of days."
-        else Trimmed
+shared #"Facility Analysis" = let
+    Source = #"LINK Unit Analysis",
+    #"Filtered UNITS" = Table.SelectRows(Source, each ([Effort Management Analysis] = true)),
+    #"Added Index" = Table.AddIndexColumn(#"Filtered UNITS", "Index", 1, 1, Int64.Type),
+    #"Added Prefix" = Table.TransformColumns(#"Added Index", {{"Index", each "Facility" & Text.From(_, "en-AU"), type text}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Added Prefix",{"Effort Management Analysis"}),
+    #"Pivoted Column" = Table.Pivot(#"Removed Columns", List.Distinct(#"Removed Columns"[Index]), "Index", "Title")
 in
-    Table.Buffer(Validated);
+    #"Pivoted Column";
+
+// Query: IMPORT AllocationChange
+// Purpose: Import and buffer AllocationChange.xlsx once relative to the resolved client root.
+shared #"IMPORT AllocationChange" = Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
+    Folder & "\2. Calculations\Change\AllocationChange.xlsx")), null, true));
+
+// Query: EXTRACT Table_RevisedAllocated
+// Purpose: Extract the allocation-change table from the shared AllocationChange import.
+shared #"EXTRACT Table_RevisedAllocated" = let
+    Source = #"IMPORT AllocationChange",
+    Table_RevisedAllocated_Table = Source{[Item="Table_RevisedAllocated",Kind="Table"]}[Data],
+    #"Added Custom" = Table.AddColumn(Table_RevisedAllocated_Table, "Version", each "ChangeAllcoation")
+in
+    #"Added Custom";
 
 // Query: IMPORT Facility1 Effort
 // Purpose: Share the first configured unit's Effort workbook across its table imports.
 // Notes: Buffer the file binary once per evaluation to avoid repeated reads within the import.
 shared #"IMPORT Facility1 Effort" = Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
-    ResolveFacilityPath(#"INPUT EffortAllSettings"{0}[Facility1]) & "\2. Calculations\Effort.xlsx")), null, true));
+    ResolveFacilityPath(Units{0}[Facility1]) & "\2. Calculations\Effort.xlsx")), null, true));
 
 // Query: EXTRACT Facility1 EffortAllMatrixAG1_1D
 // Purpose: Extract the first configured unit's effort matrix from the shared Effort import.
@@ -198,7 +200,7 @@ in
 shared ResourceContractOverage_CHECK = let
     Source = #"EXTRACT Facility1 ResourceContractOverage",
     Tolerance = 0.00000001,
-    Facility1Unit = Text.AfterDelimiter(ResolveFacilityPath(#"INPUT EffortAllSettings"{0}[Facility1]), "\", {0, RelativePosition.FromEnd}),
+    Facility1Unit = Text.AfterDelimiter(ResolveFacilityPath(Units{0}[Facility1]), "\", {0, RelativePosition.FromEnd}),
     DuplicateCount = Table.RowCount(Source) - Table.RowCount(Table.Distinct(Source, {"Facility", "EmployeeID", "Resource", "Roster Start", "Roster End"})),
     ScopeFailures = Table.RowCount(Table.SelectRows(Source, each [Facility] = null or [Facility] <> "Unit1"
         or [#"Preferred Role"] = null or [#"Preferred Role"] <> "AIN"
@@ -220,38 +222,24 @@ in
 // Purpose: Publish the validated Unit1/AIN contract overage table without appending it to date/shift facts.
 // Output: Load this query to the worksheet table ResourceContractOverage.
 shared ResourceContractOverage = let
-    Failures = Table.SelectRows(ResourceContractOverage_CHECK, each [Status] = "Fail"),
-    Validated = if Table.IsEmpty(Failures) then #"EXTRACT Facility1 ResourceContractOverage"
-        else error Error.Record("Effort-All contract overage validation", "Required ResourceContractOverage checks failed.", [Failures = Failures]),
-    Sorted = Table.Sort(Validated, {{"Over-Contract Hours", Order.Descending}, {"Resource", Order.Ascending}})
+    Failures = Table.SelectRows(ResourceContractOverage_CHECK, each true)
 in
-    Sorted;
+    Failures;
 
 // Query: IMPORT Facility2 Effort
 // Purpose: Share the second configured unit's Effort workbook across its table imports.
 // Notes: Buffer the file binary once per evaluation; reuse the first import if both paths are equal.
-shared #"IMPORT Facility2 Effort" = if Comparer.OrdinalIgnoreCase(
-        ResolveFacilityPath(#"INPUT EffortAllSettings"{0}[Facility1]),
-        ResolveFacilityPath(#"INPUT EffortAllSettings"{0}[Facility2])) = 0 then
-    #"IMPORT Facility1 Effort"
-    else Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
-        ResolveFacilityPath(#"INPUT EffortAllSettings"{0}[Facility2]) & "\2. Calculations\Effort.xlsx")), null, true));
+shared #"IMPORT Facility2 Effort" = Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
+    ResolveFacilityPath(Units{0}[Facility2]) & "\2. Calculations\Effort.xlsx")), null, true));
 
 // Query: EXTRACT Facility2 EffortAllMatrixAG1_1D
 // Purpose: Extract and date-align the second configured unit's effort matrix.
 shared #"EXTRACT Facility2 EffortAllMatrixAG1_1D" = let
     Source = #"IMPORT Facility2 Effort",
     EffortAllMatrixAG1_1D_Table = Source{[Item="EffortAllMatrixAG1_1D",Kind="Table"]}[Data],
-    #"Renamed Columns" = Table.RenameColumns(EffortAllMatrixAG1_1D_Table,{{"Date", "Datetemp"}}),
-    #"Added ALIGNWITHBERR" = Table.AddColumn(#"Renamed Columns", "Custom", each Date.AddDays([Datetemp], #"INPUT EffortAllSettings"{0}[DateAlignment])),
-    #"Renamed Columns1" = Table.RenameColumns(#"Added ALIGNWITHBERR",{{"Custom", "Date"}}),
-    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns1",{"Facility", "Role", "Date", "Datetemp", "Shift", "Demand", "Capacity", "CapacityMaxHC", "CapacityX", "Allocation", "DATESHIFT"}),
-    #"Removed Columns" = Table.RemoveColumns(#"Reordered Columns",{"Datetemp"}),
-    #"Added Custom" = Table.AddColumn(#"Removed Columns", "ShiftDurations.ShiftDuration", each 1),
-    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom",{{"Date", type date}}),
-    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","1","2",Replacer.ReplaceText,{"Facility"})
+    #"Changed Type" = Table.TransformColumnTypes(EffortAllMatrixAG1_1D_Table,{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"Shift", type text},  {"Demand", type number}, {"Capacity", type number}, {"CapacityX", type number}, {"CapacityMaxHC", Int64.Type}, {"Allocation", type number}, {"DATESHIFT", type text}})
 in
-    #"Replaced Value";
+    #"Changed Type";
 
 // Query: EXTRACT Facility2 RoleShiftAvailabilities
 // Purpose: Extract the second configured unit's availability rows from the shared Effort import.
@@ -282,29 +270,9 @@ shared #"Facility2 ResShiftAllocation1" = let
 in
     #"Sorted Rows";
 
-// Query: Folder
-// Purpose: Preserve the scalar Folder interface as the resolved client root, without a trailing separator.
-shared Folder = UnitL1PathTABLE{[#"Variable Name"="Client Path"]}[Value];
-
-// Query: IMPORT AllocationChange
-// Purpose: Import and buffer AllocationChange.xlsx once relative to the resolved client root.
-shared #"IMPORT AllocationChange" = Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
-    Folder & "\2. Calculations\Change\AllocationChange.xlsx")), null, true));
-
-// Query: EXTRACT Table_RevisedAllocated
-// Purpose: Extract the allocation-change table from the shared AllocationChange import.
-shared #"EXTRACT Table_RevisedAllocated" = let
-    Source = #"IMPORT AllocationChange",
-    Table_RevisedAllocated_Table = Source{[Item="Table_RevisedAllocated",Kind="Table"]}[Data],
-    #"Added Custom" = Table.AddColumn(Table_RevisedAllocated_Table, "Version", each "ChangeAllcoation")
-in
-    #"Added Custom";
-
-shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
-
 shared ResShiftAllocation = let
     Source1 = #"EXTRACT Facility2 ResShiftAllocation",
-    #"Appended Query" = Table.Combine({Source1, #"EXTRACT Facility1 ResShiftAllocation"}),
+    #"Appended Query" = Table.Combine({Source1, #"EXTRACT Facility1 ResShiftAllocation", #"EXTRACT Facility3 ResShiftAllocation"}),
     //CombinedTables = Table.Combine({Source1, #"EXTRACT Facility1 ResShiftAllocation"}),
     #"Renamed Columns" = Table.RenameColumns(#"Appended Query",{{"ShiftPeriod", "Shift"}, {"TimeDate", "Date"}, {"ResShiftFTE", "Effort"}, {"Type", "EffortType"}}),
     #"Filtered RES NULL" = Table.SelectRows(#"Renamed Columns", each ([Resource] <> null))
@@ -313,13 +281,13 @@ in
 
 shared #"EffortAllMatrixAG1_1D-base !!" = let
    Source = #"EXTRACT Facility2 EffortAllMatrixAG1_1D",
-    #"Appended Query" = Table.Combine({Source, #"EXTRACT Facility1 EffortAllMatrixAG1_1D"}),
+    #"Appended Query" = Table.Combine({Source, #"EXTRACT Facility1 EffortAllMatrixAG1_1D", #"EXTRACT Facility3 EffortAllMatrixAG1_1D"}),
     #"Multiplied Column" = Table.TransformColumns(#"Appended Query", {{"Capacity", each _ * EffectiveAvailability, type number}}),
     #"Multiplied Column1" = Table.TransformColumns(#"Multiplied Column", {{"CapacityX", each _ * EffectiveAvailability, type number}}),
     //#"Appended Query" = Table.Combine({Source, #"EXTRACT Facility1 EffortAllMatrixAG1_1D"}),
     #"Renamed Columns" = Table.RenameColumns(#"Multiplied Column1",{{"Date", "DateX"}}),  // Add back Facility 2
     #"Added DATE ALIGNMENT" = Table.AddColumn(#"Renamed Columns", "Date", each if [Facility] = "ASHB" then
-        Date.AddDays([DateX], -#"INPUT EffortAllSettings"{0}[DateAlignment])
+        Date.AddDays([DateX], -Units{0}[DateAlignment])
 else [DateX]),
     #"Removed Columns" = Table.RemoveColumns(#"Added DATE ALIGNMENT",{"DateX"})
 in
@@ -352,10 +320,9 @@ shared #"Availabilities Appended" = let
     //Table.Combine({#"EXTRACT Facility1 RoleShiftAvailabilities", #"EXTRACT Facility2 RoleShiftAvailabilities"}),    //return Facility 1
     #"Renamed Columns" = Table.RenameColumns(#"Appended FAC1",{{"Capacity", "EffortType"}, {"Availability", "Effort"}}),
     #"Multiplied Column" = Table.TransformColumns(#"Renamed Columns", {{"Effort", each _ * EffectiveAvailability, type number}}),
-    #"Sorted Rows" = Table.Sort(#"Multiplied Column",{{"Facility", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"Resource", Order.Ascending}, {"EffortType", Order.Ascending}}),
-    #"Filtered Rows" = Table.SelectRows(#"Sorted Rows", each ([Resource] = 108))
+    #"Sorted Rows" = Table.Sort(#"Multiplied Column",{{"Facility", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"Resource", Order.Ascending}, {"EffortType", Order.Ascending}})
 in
-    #"Filtered Rows";
+    #"Sorted Rows";
 
 shared #"Availability Effort" = let
     Source = #"EffortAllMatrixAG1_1D-base !!",
@@ -373,7 +340,8 @@ in
 
 shared ResRoleAvailabilityDevelopedMATRIX = let
     Source = #"Availability Effort",
-    #"Sorted Rows2" = Table.Sort(Source,{{"Date", Order.Ascending}, {"EffortType", Order.Ascending}}),
+    #"Filtered NULL ROLE" = Table.SelectRows(Source, each ([Role] <> null)),
+    #"Sorted Rows2" = Table.Sort(#"Filtered NULL ROLE",{{"Date", Order.Ascending}, {"EffortType", Order.Ascending}}),
     #"Sorted Rows" = Table.Sort(#"Sorted Rows2",{{"Effort", Order.Descending}}),
     #"Changed Type1" = Table.TransformColumnTypes(#"Sorted Rows",{{"Effort", type number}}),
     #"Sorted Rows1" = Table.Sort(#"Changed Type1",{{"Resource", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"EffortType", Order.Ascending}}),
@@ -410,3 +378,81 @@ shared MaxAvailabilities = let
     #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"Effort", "C###"}})
 in
     #"Renamed Columns";
+
+shared #"LINK Unit Analysis" = let
+    Source = SharePoint.Tables("https://centri001.sharepoint.com/sites/WhiddonCENTRI", [Implementation="2.0", ViewMode="All"]),
+    #"17ed8e30-5707-4af2-8e21-d68eb8184287" = Source{[Id="17ed8e30-5707-4af2-8e21-d68eb8184287"]}[Items],
+    #"Removed Other Columns" = Table.SelectColumns(#"17ed8e30-5707-4af2-8e21-d68eb8184287",{"Title", "Effort Management Analysis"})
+in
+    #"Removed Other Columns";
+
+// Query: INPUT EffortAllSettings
+// Purpose: Read the two configured units and date alignment from one authoritative worksheet table.
+// Inputs: Exactly one EffortAllSettings row with Facility1, Facility2 and DateAlignment columns.
+shared Units = let
+    Source = #"LINK Unit Analysis",
+    #"Filtered UNITS" = Table.SelectRows(Source, each ([Effort Management Analysis] = true)),
+    #"Added Index" = Table.AddIndexColumn(#"Filtered UNITS", "Index", 1, 1, Int64.Type),
+    #"Added Prefix" = Table.TransformColumns(#"Added Index", {{"Index", each "Facility" & Text.From(_, "en-AU"), type text}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Added Prefix",{"Effort Management Analysis"}),
+    #"Pivoted Column" = Table.Pivot(#"Removed Columns", List.Distinct(#"Removed Columns"[Index]), "Index", "Title")
+in
+    #"Pivoted Column";
+
+// Query: Folder
+// Purpose: Preserve the scalar Folder interface as the resolved client root, without a trailing separator.
+shared Folder = UnitL1PathTABLE{[#"Variable Name"="Client Path"]}[Value];
+
+shared EffectiveAvailability = 7.6/8 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
+
+shared Query1 = let
+    Source = let
+    Source = Excel.CurrentWorkbook(){[Name="EffortAllSettings"]}[Content],
+    RequiredColumns = {"Facility1", "Facility2", "DateAlignment"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(Source)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(Source, RequiredColumns)
+        else error Error.Record("Effort-All settings", "EffortAllSettings is missing required columns.", [MissingColumns = MissingColumns]),
+    OneRow = if Table.RowCount(Selected) = 1 then Selected
+        else error Error.Record("Effort-All settings", "EffortAllSettings must contain exactly one data row.", [Rows = Table.RowCount(Selected)]),
+    Typed = Table.TransformColumnTypes(OneRow, {{"Facility1", type text}, {"Facility2", type text}, {"DateAlignment", Int64.Type}}),
+    Trimmed = Table.TransformColumns(Typed, {{"Facility1", Text.Trim, type text}, {"Facility2", Text.Trim, type text}}),
+    Settings = Trimmed{0},
+    Validated = if Settings[Facility1] = null or Settings[Facility1] = ""
+            or Settings[Facility2] = null or Settings[Facility2] = "" then
+            error "EffortAllSettings Facility1 and Facility2 must be nonblank."
+        else if Settings[DateAlignment] = null then error "EffortAllSettings DateAlignment must contain a whole number of days."
+        else Trimmed
+in
+    Table.Buffer(Validated)
+in
+    Source;
+
+shared #"IMPORT Facility3 Effort" = let
+    Source = Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
+    ResolveFacilityPath(Units{0}[Facility3]) & "\2. Calculations\Effort.xlsx")), null, true))
+in
+    Source;
+
+shared #"EXTRACT Facility3 EffortAllMatrixAG1_1D" = let
+    Source = #"IMPORT Facility3 Effort",
+    EffortAllMatrixAG1_1D_Table = Source{[Item="EffortAllMatrixAG1_1D",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(EffortAllMatrixAG1_1D_Table,{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"Shift", type text},  {"Demand", type number}, {"Capacity", type number}, {"CapacityX", type number}, {"CapacityMaxHC", Int64.Type}, {"Allocation", type number}, {"DATESHIFT", type text}})
+in
+    #"Changed Type";
+
+shared #"EXTRACT Facility3 RoleShiftAvailabilities" = let
+    Source = #"IMPORT Facility3 Effort",
+    RoleShiftAvailabilities_Table = Source{[Item="RoleShiftAvailabilities",Kind="Table"]}[Data],
+    #"Changed Type1" = Table.TransformColumnTypes(RoleShiftAvailabilities_Table,{{"Role", type text}, {"Resource", Int64.Type}, {"Period", Int64.Type}, {"Availability", Int64.Type}, {"Capacity", type text},  {"Date", type date}, {"Shift", type text}})
+in
+    #"Changed Type1";
+
+shared #"EXTRACT Facility3 ResShiftAllocation" = let
+    Source = #"IMPORT Facility3 Effort",
+    ResShiftAllocation_Table = Source{[Item="ResShiftAllocation",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(ResShiftAllocation_Table,{{"ShiftPeriod", type text}, {"Role", type text}, {"TimeDate", type date}, {"ResShiftFTE", type number}, {"Resource", Int64.Type}, {"Period", Int64.Type}, {"Facility", type text}, {"Type", type text}}),
+    #"Replaced Value" = Table.ReplaceValue(#"Changed Type",null,43,Replacer.ReplaceValue,{"Period"}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value",{{"Period", Int64.Type}}),
+    #"Replaced Value1" = Table.ReplaceValue(#"Changed Type1","1","2",Replacer.ReplaceText,{"Facility"})
+in
+    #"Replaced Value1";
