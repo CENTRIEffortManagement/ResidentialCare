@@ -1,7 +1,6 @@
 // Power Query from: Inefficiencies.xlsx
-// Pathname: CLIENT/DATExx-Whiddon/2. Calculations/E-O-I/Inefficiencies.xlsx
-// Extracted: 2026-05-21T00:47:31.450Z
-// Source: Existing M version approved for this filepath amendment; no workbook extraction or sync performed.
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Inefficiencies.xlsx
+// Extracted: 2026-09-25T01:12:42.752Z
 
 section Section1;
 
@@ -91,10 +90,9 @@ shared #"EffortOutcomesAG1_1DayShiftIMPORT !!" = let
     EffortOutcomesAG1_1DayShift_Table = Source{[Item="EffortOutcomesAG1_1DayShift",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(EffortOutcomesAG1_1DayShift_Table,{{"Date", type date}, {"Role", type text}, {"Shift", type text}, {"Demand", type number}, {"Capacity", type number}, {"CapacityX", type number}, {"Allocation", type number}, {"Apn", type number}, {"Apx", type number}, {"Ai", type number}, {"Epn", type number}, {"EpX", type number}, {"Ein", type number}, {"Ipn", type number}, {"Ipx", type number}, {"Iin", type number}}),
     #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Role", "L1.1"}, {"Shift", "L1.2"}}),
-    #"Added Version X !!" = Table.AddColumn(#"Renamed Columns", "Version", each "X"),
-    #"Filtered DATE !!" = Table.SelectRows(#"Added Version X !!", each ([Date] <> #date(2023, 6, 18)))
+    #"Added Version X !!" = Table.AddColumn(#"Renamed Columns", "Version", each "X")
 in
-    #"Filtered DATE !!";
+    #"Added Version X !!";
 
 shared EffortOutcomesAG1_1DayShiftAB = let
     Source = #"EffortOutcomesAG1_1DayShiftIMPORT !!",
@@ -194,7 +192,9 @@ shared InefficienciesAG1_1L2DayRole = let
     #"Grouped Rows" = Table.Group(#"Reordered Columns", {"Date", "L1.1", "Facility", "Version"}, {{"L2.1sw EXCESS OVER-ALLOCATION", each List.Sum([#"wAB EXCESS OVER-ALLOCATION"]), type number}, {"L2.1sw SPARE STRETCH", each List.Sum([wAB SPARE STRETCH]), type number}, {"L2.1sw SPARE SLACK", each List.Sum([wAB SPARE SLACK]), type number}, {"L2.1sw SPARE STRETCH ALLOCATED", each List.Sum([wAB SPARE STRETCH ALLOCATED]), type number}, {"L2.1sw SPARE SLACK ALLOCATED", each List.Sum([wAB SPARE SLACK ALLOCATED]), type number}, {"L2.1sw EXCESS STRETCH (ALLOCATED)", each List.Sum([#"wAB EXCESS STRETCH (ALLOCATED)"]), type number}, {"L2.1sw EXCESS ALLOCATED SLACK", each List.Sum([wAB EXCESS ALLOCATED SLACK]), type number}, {"L2.1sw EXCESS STRETCH", each List.Sum([wAB EXCESS STRETCH]), type number}, {"L2.1sw EXCESS SLACK", each List.Sum([wAB EXCESS SLACK]), type number}, {"L2.1sw POTENTIAL SHORTFALL (OVER-ALLOCATED)", each List.Sum([#"wAB POTENTIAL SHORTFALL (OVER-ALLOCATED)"]), type number}, {"L2.1sw POTENTIAL SHORTFALL", each List.Sum([wAB POTENTIAL SHORTFALL]), type number}, {"L2.1sw WASTED STRETCH", each List.Sum([wAB WASTED STRETCH]), type number}, {"L2.1sw WASTED SLACK", each List.Sum([wAB WASTED SLACK]), type number}, {"L2.1sw ALLOCATED SLACK", each List.Sum([wAB ALLOCATED SLACK]), type number}, {"L2.1sw ALLOCATED STRETCH", each List.Sum([wAB ALLOCATED STRETCH]), type number}, {"L2.1sw UNALLOCATED SLACK", each List.Sum([wAB UNALLOCATED SLACK]), type number}, {"L2.1sw LATENT", each List.Sum([wAB LATENT]), type number}, {"L2.1sw LATENT.ALLOCATED", each List.Sum([wAB LATENT.ALLOCATED]), type number}, {"L2.1sw  LATENT.OVERALLOCATED", each List.Sum([wAB LATENT.OVERALLOCATED]), type number}, {"L2.1sw Potential", each List.Sum([wPotential]), type number}, {"D", each List.Sum([D]), type number}, {"Cs", each List.Sum([Cs]), type number}, {"CX", each List.Sum([CX]), type number}, {"A", each List.Sum([A]), type number}}),
     #"Reordered Columns1" = Table.ReorderColumns(#"Grouped Rows",{"Date", "L1.1", "D", "Cs", "CX", "A", "L2.1sw EXCESS OVER-ALLOCATION", "L2.1sw SPARE STRETCH",  "L2.1sw SPARE STRETCH ALLOCATED", "L2.1sw SPARE SLACK ALLOCATED", "L2.1sw EXCESS STRETCH (ALLOCATED)", "L2.1sw POTENTIAL SHORTFALL (OVER-ALLOCATED)", "L2.1sw POTENTIAL SHORTFALL", "L2.1sw WASTED STRETCH", "L2.1sw WASTED SLACK", "L2.1sw ALLOCATED STRETCH", "L2.1sw ALLOCATED SLACK", "L2.1sw UNALLOCATED SLACK", "L2.1sw LATENT", "L2.1sw LATENT.ALLOCATED", "L2.1sw  LATENT.OVERALLOCATED"}),
     #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Reordered Columns1", {"Date", "L1.1",  "D", "Cs",  "CX", "A","Facility","Version"}, "Attribute", "Value"),
-    NORMALISE = Table.AddColumn(#"Unpivoted Other Columns", "L2.1Value", each [Value]/[D]),
+    NORMALISE = Table.AddColumn(#"Unpivoted Other Columns", "L2.1Value", each if [D] = 0 then 0
+else 
+[Value]/[D]),
     #"Replaced Value" = Table.ReplaceValue(NORMALISE,"L2.1sw ","AB ",Replacer.ReplaceText,{"Attribute"}),
     #"Renamed Columns1" = Table.RenameColumns(#"Replaced Value",{{"Attribute", "Inefficiencies"}}),
     #"Removed Columns3" = Table.RemoveColumns(#"Renamed Columns1",{"Value"}),

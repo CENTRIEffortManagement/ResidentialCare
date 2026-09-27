@@ -1,0 +1,35 @@
+{
+  "Durations": {
+    "TE/Capacity": {
+      "Seconds": 46.0164594,
+      "Observed": "2026-09-25T04:27:50.8672944+00:00",
+      "SourceRun": "20260925-141616-0ec473cd"
+    },
+    "TE/Effort": {
+      "Seconds": 43.7656405,
+      "Observed": "2026-09-25T04:28:34.6587616+00:00",
+      "SourceRun": "20260925-141616-0ec473cd"
+    }
+  },
+  "Rows": [
+    {
+      "Id": "TE/Capacity",
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Finish": 46.0164594,
+      "Start": 0.0
+    },
+    {
+      "Id": "TE/Effort",
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Finish": 89.7820999,
+      "Start": 46.0164594
+    }
+  ],
+  "TotalSeconds": 89.7820999,
+  "Peak": 1,
+  "Complete": true,
+  "UnknownAdmission": "",
+  "Untimed": []
+}

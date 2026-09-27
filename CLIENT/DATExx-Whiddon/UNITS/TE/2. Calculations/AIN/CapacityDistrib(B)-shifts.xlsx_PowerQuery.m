@@ -1,5 +1,5 @@
 // Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Workbook: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
+// Workbook: CLIENT\DATExx-Whiddon\UNITS\Y\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
 // Source status: authoritative .m; availability lineage gate added 2026-09-19.
 
 section Section1;

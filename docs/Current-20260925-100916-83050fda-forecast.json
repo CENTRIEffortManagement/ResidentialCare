@@ -1,0 +1,323 @@
+{
+  "Peak": 4,
+  "UnknownAdmission": "",
+  "Complete": true,
+  "Rows": [
+    {
+      "Finish": 46.3530174,
+      "Status": "Forecast",
+      "Id": "BD/AllocationInput",
+      "Attempt": 1,
+      "Start": 0.0
+    },
+    {
+      "Finish": 90.8494627,
+      "Status": "Forecast",
+      "Id": "BD/Settings",
+      "Attempt": 1,
+      "Start": 46.3530174
+    },
+    {
+      "Finish": 219.3755822,
+      "Status": "Forecast",
+      "Id": "BD/DemandMaster",
+      "Attempt": 1,
+      "Start": 90.8494627
+    },
+    {
+      "Finish": 133.8424,
+      "Status": "Forecast",
+      "Id": "BD/Workers",
+      "Attempt": 1,
+      "Start": 90.8494627
+    },
+    {
+      "Finish": 263.8652691,
+      "Status": "Forecast",
+      "Id": "BD/Availability",
+      "Attempt": 1,
+      "Start": 133.8424
+    },
+    {
+      "Finish": 263.06915549999997,
+      "Status": "Forecast",
+      "Id": "BD/DemandInput",
+      "Attempt": 1,
+      "Start": 219.3755822
+    },
+    {
+      "Finish": 305.71555149999995,
+      "Status": "Forecast",
+      "Id": "BD/Intervals",
+      "Attempt": 1,
+      "Start": 263.06915549999997
+    },
+    {
+      "Finish": 307.7366906,
+      "Status": "Forecast",
+      "Id": "BD/Staff",
+      "Attempt": 1,
+      "Start": 263.8652691
+    },
+    {
+      "Finish": 349.1262737999999,
+      "Status": "Forecast",
+      "Id": "BD/DemandIntervals",
+      "Attempt": 1,
+      "Start": 305.71555149999995
+    },
+    {
+      "Finish": 426.72004079999994,
+      "Status": "Forecast",
+      "Id": "BD/Shifts",
+      "Attempt": 1,
+      "Start": 305.71555149999995
+    },
+    {
+      "Finish": 391.65066219999994,
+      "Status": "Forecast",
+      "Id": "BD/Demand",
+      "Attempt": 1,
+      "Start": 349.1262737999999
+    },
+    {
+      "Finish": 492.40838499999995,
+      "Status": "Forecast",
+      "Id": "BD/ShiftAverage",
+      "Attempt": 1,
+      "Start": 426.72004079999994
+    },
+    {
+      "Finish": 538.3357638,
+      "Status": "Forecast",
+      "Id": "BD/Allocation",
+      "Attempt": 1,
+      "Start": 492.40838499999995
+    },
+    {
+      "Finish": 558.5564199999999,
+      "Status": "Forecast",
+      "Id": "BD/Role:AIN/1",
+      "Attempt": 1,
+      "Start": 492.40838499999995
+    },
+    {
+      "Finish": 564.8252027999999,
+      "Status": "Forecast",
+      "Id": "BD/Role:EN/1",
+      "Attempt": 1,
+      "Start": 492.40838499999995
+    },
+    {
+      "Finish": 564.4905197999999,
+      "Status": "Forecast",
+      "Id": "BD/Role:RN/1",
+      "Attempt": 1,
+      "Start": 492.40838499999995
+    },
+    {
+      "Finish": 586.3991977,
+      "Status": "Forecast",
+      "Id": "BD/Distribution",
+      "Attempt": 1,
+      "Start": 538.3357638
+    },
+    {
+      "Finish": 611.7931734999999,
+      "Status": "Forecast",
+      "Id": "BD/Role:AIN/2",
+      "Attempt": 1,
+      "Start": 558.5564199999999
+    },
+    {
+      "Finish": 607.9372803999998,
+      "Status": "Forecast",
+      "Id": "BD/Role:RN/2",
+      "Attempt": 1,
+      "Start": 564.4905197999999
+    },
+    {
+      "Finish": 611.8288137,
+      "Status": "Forecast",
+      "Id": "BD/Role:EN/2",
+      "Attempt": 1,
+      "Start": 564.8252027999999
+    },
+    {
+      "Finish": 628.6380522999999,
+      "Status": "Forecast",
+      "Id": "BD/MultiRole",
+      "Attempt": 1,
+      "Start": 586.3991977
+    },
+    {
+      "Finish": 652.3897009999998,
+      "Status": "Forecast",
+      "Id": "BD/Role:RN/3",
+      "Attempt": 1,
+      "Start": 607.9372803999998
+    },
+    {
+      "Finish": 669.0117848999998,
+      "Status": "Forecast",
+      "Id": "BD/Role:AIN/3",
+      "Attempt": 1,
+      "Start": 611.7931734999999
+    },
+    {
+      "Finish": 662.6301123,
+      "Status": "Forecast",
+      "Id": "BD/Role:EN/3",
+      "Attempt": 1,
+      "Start": 611.8288137
+    },
+    {
+      "Finish": 712.5322871999998,
+      "Status": "Forecast",
+      "Id": "BD/Capacity",
+      "Attempt": 1,
+      "Start": 669.0117848999998
+    },
+    {
+      "Finish": 757.0868316999998,
+      "Status": "Forecast",
+      "Id": "BD/Effort",
+      "Attempt": 1,
+      "Start": 712.5322871999998
+    }
+  ],
+  "TotalSeconds": 757.0868316999998,
+  "Durations": {
+    "BD/Workers": {
+      "SourceRun": "20260925-095953-c4b82324",
+      "Observed": "2026-09-25T00:02:08.6185696+00:00",
+      "Seconds": 42.9929373
+    },
+    "BD/Staff": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:04:39.5440119+00:00",
+      "Seconds": 43.8714215
+    },
+    "BD/Effort": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:12:43.6202486+00:00",
+      "Seconds": 44.5545445
+    },
+    "BD/Settings": {
+      "SourceRun": "20260925-095953-c4b82324",
+      "Observed": "2026-09-25T00:01:25.5597149+00:00",
+      "Seconds": 44.4964453
+    },
+    "BD/DemandInput": {
+      "SourceRun": "20260925-095953-c4b82324",
+      "Observed": "2026-09-25T00:04:17.8169037+00:00",
+      "Seconds": 43.6935733
+    },
+    "BD/Distribution": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:09:52.7414739+00:00",
+      "Seconds": 48.0634339
+    },
+    "BD/Role:EN/3": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:11:09.2539210+00:00",
+      "Seconds": 50.8012986
+    },
+    "BD/AllocationInput": {
+      "SourceRun": "20260925-095953-c4b82324",
+      "Observed": "2026-09-25T00:00:41.0413397+00:00",
+      "Seconds": 46.3530174
+    },
+    "BD/Capacity": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:11:59.0370430+00:00",
+      "Seconds": 43.5205023
+    },
+    "BD/Availability": {
+      "SourceRun": "20260925-095953-c4b82324",
+      "Observed": "2026-09-25T00:04:18.6629177+00:00",
+      "Seconds": 130.0228691
+    },
+    "BD/Role:AIN/1": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:09:24.9619316+00:00",
+      "Seconds": 66.148035
+    },
+    "BD/DemandMaster": {
+      "SourceRun": "20260925-095953-c4b82324",
+      "Observed": "2026-09-25T00:03:34.1024417+00:00",
+      "Seconds": 128.5261195
+    },
+    "BD/MultiRole": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:10:35.0089506+00:00",
+      "Seconds": 42.2388546
+    },
+    "BD/Role:EN/1": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:09:31.3706357+00:00",
+      "Seconds": 72.4168178
+    },
+    "BD/Allocation": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:09:04.6442350+00:00",
+      "Seconds": 45.9273788
+    },
+    "BD/Shifts": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:07:12.9778492+00:00",
+      "Seconds": 121.0044893
+    },
+    "BD/Role:RN/3": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:10:59.1305720+00:00",
+      "Seconds": 44.4524206
+    },
+    "BD/Role:EN/2": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:10:18.4238793+00:00",
+      "Seconds": 47.0036109
+    },
+    "BD/DemandIntervals": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:05:55.3156838+00:00",
+      "Seconds": 43.4107223
+    },
+    "BD/Demand": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:06:37.8651124+00:00",
+      "Seconds": 42.5243884
+    },
+    "BD/Role:RN/1": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:09:31.1657113+00:00",
+      "Seconds": 72.0821348
+    },
+    "BD/ShiftAverage": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:08:18.6915972+00:00",
+      "Seconds": 65.6883442
+    },
+    "BD/Role:AIN/3": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:11:15.4873095+00:00",
+      "Seconds": 57.2186114
+    },
+    "BD/Role:AIN/2": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:10:18.2385350+00:00",
+      "Seconds": 53.2367535
+    },
+    "BD/Role:RN/2": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:10:14.6491140+00:00",
+      "Seconds": 43.4467606
+    },
+    "BD/Intervals": {
+      "SourceRun": "20260924-105937-f303d7b6",
+      "Observed": "2026-09-24T01:05:11.8780726+00:00",
+      "Seconds": 42.646396
+    }
+  },
+  "Untimed": []
+}

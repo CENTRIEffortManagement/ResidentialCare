@@ -1,0 +1,47 @@
+{
+  "UnknownAdmission": "",
+  "Untimed": [],
+  "TotalSeconds": 126.1517954,
+  "Durations": {
+    "Org/Reporting": {
+      "Observed": "2026-09-21T04:03:58.0710504+00:00",
+      "Seconds": 39.2721227,
+      "SourceRun": "20260921-135918-58cfe004"
+    },
+    "Org/Inefficiencies": {
+      "Observed": "2026-09-21T04:03:18.7768036+00:00",
+      "Seconds": 47.3785509,
+      "SourceRun": "20260921-135918-58cfe004"
+    },
+    "Org/Outcomes": {
+      "Observed": "2026-09-21T04:02:31.3729514+00:00",
+      "Seconds": 39.5011218,
+      "SourceRun": "20260921-135918-58cfe004"
+    }
+  },
+  "Complete": true,
+  "Peak": 1,
+  "Rows": [
+    {
+      "Start": 0.0,
+      "Attempt": 1,
+      "Id": "Org/Outcomes",
+      "Status": "Forecast",
+      "Finish": 39.5011218
+    },
+    {
+      "Start": 39.5011218,
+      "Attempt": 1,
+      "Id": "Org/Inefficiencies",
+      "Status": "Forecast",
+      "Finish": 86.8796727
+    },
+    {
+      "Start": 86.8796727,
+      "Attempt": 1,
+      "Id": "Org/Reporting",
+      "Status": "Forecast",
+      "Finish": 126.1517954
+    }
+  ]
+}

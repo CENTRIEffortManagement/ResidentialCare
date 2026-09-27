@@ -1,0 +1,119 @@
+{
+  "TotalSeconds": 381.1864965,
+  "Peak": 3,
+  "Rows": [
+    {
+      "Start": 0.0,
+      "Finish": 60.4290193,
+      "Attempt": 1,
+      "Id": "TE/Role:AIN/1",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 0.0,
+      "Finish": 60.9542733,
+      "Attempt": 1,
+      "Id": "TE/Role:RN/1",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 0.0,
+      "Finish": 59.8745383,
+      "Attempt": 1,
+      "Id": "TE/Role:EN/1",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 59.8745383,
+      "Finish": 109.2124252,
+      "Attempt": 1,
+      "Id": "TE/Role:EN/2",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 60.4290193,
+      "Finish": 148.0597301,
+      "Attempt": 1,
+      "Id": "TE/Role:AIN/2",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 60.9542733,
+      "Finish": 104.8151273,
+      "Attempt": 1,
+      "Id": "TE/Role:RN/2",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 104.8151273,
+      "Finish": 228.07394779999998,
+      "Attempt": 1,
+      "Id": "TE/Role:RN/3",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 109.2124252,
+      "Finish": 154.5546752,
+      "Attempt": 1,
+      "Id": "TE/Role:EN/3",
+      "Status": "Forecast"
+    },
+    {
+      "Start": 148.0597301,
+      "Finish": 381.1864965,
+      "Attempt": 1,
+      "Id": "TE/Role:AIN/3",
+      "Status": "Forecast"
+    }
+  ],
+  "Durations": {
+    "TE/Role:EN/3": {
+      "Observed": "2026-09-25T04:26:53.1129615+00:00",
+      "SourceRun": "20260925-141616-0ec473cd",
+      "Seconds": 45.34225
+    },
+    "TE/Role:AIN/1": {
+      "Observed": "2026-09-27T04:51:10.7913066+00:00",
+      "SourceRun": "20260927-145009-ae34da24",
+      "Seconds": 60.4290193
+    },
+    "TE/Role:RN/2": {
+      "Observed": "2026-09-27T04:51:55.3278709+00:00",
+      "SourceRun": "20260927-145009-ae34da24",
+      "Seconds": 43.860854
+    },
+    "TE/Role:EN/2": {
+      "Observed": "2026-09-25T04:26:07.7339874+00:00",
+      "SourceRun": "20260925-141616-0ec473cd",
+      "Seconds": 49.3378869
+    },
+    "TE/Role:RN/1": {
+      "Observed": "2026-09-27T04:51:11.4190895+00:00",
+      "SourceRun": "20260927-145009-ae34da24",
+      "Seconds": 60.9542733
+    },
+    "TE/Role:EN/1": {
+      "Observed": "2026-09-25T04:25:18.3302276+00:00",
+      "SourceRun": "20260925-141616-0ec473cd",
+      "Seconds": 59.8745383
+    },
+    "TE/Role:RN/3": {
+      "Observed": "2026-09-27T04:53:58.6220339+00:00",
+      "SourceRun": "20260927-145009-ae34da24",
+      "Seconds": 123.2588205
+    },
+    "TE/Role:AIN/2": {
+      "Observed": "2026-09-27T04:52:38.4568951+00:00",
+      "SourceRun": "20260927-145009-ae34da24",
+      "Seconds": 87.6307108
+    },
+    "TE/Role:AIN/3": {
+      "Observed": "2026-09-27T04:56:31.6169592+00:00",
+      "SourceRun": "20260927-145009-ae34da24",
+      "Seconds": 233.1267664
+    }
+  },
+  "Complete": true,
+  "Untimed": [],
+  "UnknownAdmission": ""
+}

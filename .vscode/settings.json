@@ -1,5 +1,14 @@
 {
     "powerquery.client.additionalSymbolsDirectories": [
         "c:/Users/Alex/CentriNOTSYNC/ResidentialCare/.vscode/excel-pq-symbols"
-    ]
+    ],
+    "[powerquery]": {
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000
+    },
+    "[powerquery-m]": {
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000
+    },
+    "excel-power-query-editor.watchAlways": false
 }

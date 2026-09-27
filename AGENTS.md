@@ -50,6 +50,7 @@
 
 ## Power Query Presentation And Commentary
 
+- Write Power Query transformations as readable, meaningfully named `let` steps. Give each distinct function or transformation its own step whenever Power Query permits; do not nest a chain of operations when the intermediate results can be named and inspected.
 - Every new query, and every materially edited query without a useful header, must have Power Query-compatible `// Query:` and `// Purpose:` lines immediately above its `shared` definition. Add `// Inputs:`, `// Output:`, and `// Notes:` when they clarify dependencies, row grain, required columns, or an approved constraint.
 - Present substantial pipelines as separate, meaningfully named staging queries in dependency order: inputs, preparation and validation, historical or analytical staging, allocation or calculation, outputs, then checks. Keep staging queries connection-only in the workbook when supported.
 - Do not hide a multi-stage analysis inside one large record-returning model query merely to expose several outputs. Keep a transformation inside one query only when its steps share one responsibility and one stable row grain.

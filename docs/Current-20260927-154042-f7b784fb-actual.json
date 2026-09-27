@@ -1,0 +1,77 @@
+{
+  "PeakConcurrency": 3,
+  "RunId": "20260927-154042-f7b784fb",
+  "Status": "Completed",
+  "GapSeconds": 1,
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Finish": 64.7064476,
+      "Start": 0.6346571,
+      "Id": "TE/Role:AIN/1",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 153.9549703,
+      "Start": 64.7580462,
+      "Id": "TE/Role:AIN/2",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 211.2285572,
+      "Start": 153.9865918,
+      "Id": "TE/Role:AIN/3",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 61.7947763,
+      "Start": 0.7374567,
+      "Id": "TE/Role:RN/1",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 106.9881409,
+      "Start": 61.8360084,
+      "Id": "TE/Role:RN/2",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 155.3332399,
+      "Start": 107.0231495,
+      "Id": "TE/Role:RN/3",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 63.3354465,
+      "Start": 0.8364957,
+      "Id": "TE/Role:EN/1",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 105.725068,
+      "Start": 63.3698326,
+      "Id": "TE/Role:EN/2",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 153.0121899,
+      "Start": 105.7560465,
+      "Id": "TE/Role:EN/3",
+      "Status": "Completed"
+    }
+  ],
+  "Untimed": [],
+  "ActiveIntervalSeconds": 210.5939001,
+  "IncompleteAttempts": [],
+  "ElapsedSeconds": 211.2408375,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement."
+}

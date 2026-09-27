@@ -1,0 +1,50 @@
+gantt
+    title Current 20260925-100916-83050fda PartialOrFailed - elapsed 00 34 26 - peak 2
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/A1
+    %% Predecessors:
+    BD/AllocationInput attempt 1 Completed :done, task1, 2000-01-01 00:00:00.503, 2000-01-01 00:00:44.728
+    section BD/S1
+    %% Predecessors: BD/AllocationInput
+    BD/Settings attempt 1 Completed :done, task2, 2000-01-01 00:00:44.750, 2000-01-01 00:01:29.054
+    section BD/D1
+    %% Predecessors: BD/Settings
+    BD/DemandMaster attempt 1 Completed :done, task3, 2000-01-01 00:01:29.069, 2000-01-01 00:03:37.927
+    %% Predecessors: BD/DemandMaster, BD/Settings
+    BD/DemandInput attempt 1 Completed :done, task4, 2000-01-01 00:03:37.947, 2000-01-01 00:04:21.363
+    section BD/C1
+    %% Predecessors: BD/AllocationInput, BD/Settings
+    BD/Workers attempt 1 Completed :done, task5, 2000-01-01 00:01:29.120, 2000-01-01 00:02:12.271
+    %% Predecessors: BD/Workers, BD/AllocationInput, BD/Settings
+    BD/Availability attempt 1 Completed :done, task6, 2000-01-01 00:02:12.294, 2000-01-01 00:04:22.644
+    %% Predecessors: BD/Availability, BD/Workers, BD/AllocationInput, BD/Settings
+    BD/Staff attempt 1 Failed :crit, task7, 2000-01-01 00:04:22.667, 2000-01-01 00:34:26.380
+    section BD/D2
+    %% Predecessors: BD/AllocationInput, BD/DemandInput, BD/Settings
+    BD/Intervals attempt 1 Failed :crit, task8, 2000-01-01 00:04:21.385, 2000-01-01 00:34:25.345
+    %% Untimed BD/DemandIntervals; predecessors: BD/Intervals, BD/DemandInput, BD/Settings
+    %% Untimed BD/Demand; predecessors: BD/DemandIntervals, BD/Settings
+    section BD/A2
+    %% Untimed BD/Shifts; predecessors: BD/Intervals, BD/AllocationInput, BD/Settings
+    %% Untimed BD/ShiftAverage; predecessors: BD/Shifts, BD/Settings
+    section BD/A3
+    %% Untimed BD/Allocation; predecessors: BD/ShiftAverage, BD/AllocationInput, BD/Settings
+    %% Untimed BD/Distribution; predecessors: BD/Allocation, BD/Settings
+    %% Untimed BD/MultiRole; predecessors: BD/Distribution, BD/Settings
+    section BD/C2 AIN
+    %% Untimed BD/Role:AIN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:AIN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    %% Untimed BD/Role:AIN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    section BD/C2 EN
+    %% Untimed BD/Role:EN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:EN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    %% Untimed BD/Role:EN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    section BD/C2 RN
+    %% Untimed BD/Role:RN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:RN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    %% Untimed BD/Role:RN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    section BD/U4
+    %% Untimed BD/Capacity; predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    %% Untimed BD/Effort; predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings

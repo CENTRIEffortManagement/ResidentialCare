@@ -1,0 +1,47 @@
+{
+  "TotalSeconds": 151.2163203,
+  "Rows": [
+    {
+      "Start": 0.0,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Finish": 57.703114,
+      "Id": "TE/Role:RN/1"
+    },
+    {
+      "Start": 57.703114,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Finish": 105.4945198,
+      "Id": "TE/Role:RN/2"
+    },
+    {
+      "Start": 105.4945198,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Finish": 151.2163203,
+      "Id": "TE/Role:RN/3"
+    }
+  ],
+  "Peak": 1,
+  "UnknownAdmission": "",
+  "Complete": true,
+  "Durations": {
+    "TE/Role:RN/1": {
+      "SourceRun": "20260925-141616-0ec473cd",
+      "Observed": "2026-09-25T04:25:16.2543324+00:00",
+      "Seconds": 57.703114
+    },
+    "TE/Role:RN/2": {
+      "SourceRun": "20260925-141616-0ec473cd",
+      "Observed": "2026-09-25T04:26:04.1149248+00:00",
+      "Seconds": 47.7914058
+    },
+    "TE/Role:RN/3": {
+      "SourceRun": "20260925-141616-0ec473cd",
+      "Observed": "2026-09-25T04:26:49.8921215+00:00",
+      "Seconds": 45.7218005
+    }
+  },
+  "Untimed": []
+}

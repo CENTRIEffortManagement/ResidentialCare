@@ -1,0 +1,416 @@
+{
+  "workbook": "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+  "workbookSHA256": "06BEC62D8EB5540A005AB9C81BA9A18D2D3CE4FB5A30A64DE801DF4C1820173F",
+  "openedReadOnly": true,
+  "sheets": [
+    {
+      "Worksheet": "WorkerIdentityFailures_DIAGNOST",
+      "Found": true,
+      "Table": "WorkerIdentityFailures_DIAGNOSTICS",
+      "RowCount": 0,
+      "Headers": [
+        "Check",
+        "EmployeeID",
+        "Facility-Abbrev",
+        "Role",
+        "Name",
+        "Details"
+      ],
+      "Groups": null
+    },
+    {
+      "Worksheet": "ReconciledWorkers_CHECK",
+      "Found": true,
+      "Table": "ReconciledWorkers_CHECK",
+      "RowCount": 6,
+      "Headers": [
+        "Check",
+        "Status",
+        "Failures",
+        "Details"
+      ],
+      "Groups": [
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Current worker role mappings are unambiguous",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "One preferred role per employee and facility",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Unambiguous published names",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Unique worker keys",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Valid LINK Roles definitions",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Valid relevant worker contracts",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        }
+      ]
+    },
+    {
+      "Worksheet": "ReconciledWorkers_Prepare",
+      "Found": true,
+      "Table": "ReconciledWorkers_Prepare",
+      "RowCount": 293,
+      "Headers": [
+        "EmployeeID",
+        "Facility-Abbrev",
+        "SourceRoleKey",
+        "EmploymentType",
+        "SourceRole",
+        "MappedRosterRole",
+        "RoleMappingDefinitionRows",
+        "DistinctRoleGroupCount",
+        "MappedRoleGroup",
+        "RoleMappingMatches",
+        "RoleMappingIssue",
+        "RoleMappingStatus",
+        "Role",
+        "Contracted FN Hours",
+        "ContractIssue",
+        "BaseName",
+        "Issue"
+      ],
+      "Groups": [
+        {
+          "Count": 86,
+          "Values": {
+            "SourceRole": "Assistant in Nursing",
+            "MappedRoleGroup": "AIN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "AIN",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 39,
+          "Values": {
+            "SourceRole": "Care Services Employee",
+            "MappedRoleGroup": "CS",
+            "RoleMappingStatus": "Mapped Role Group outside availability scope",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 35,
+          "Values": {
+            "SourceRole": "Assistant in Nursing",
+            "MappedRoleGroup": "AIN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "AIN",
+            "RoleMappingIssue": null,
+            "Issue": null
+          }
+        },
+        {
+          "Count": 26,
+          "Values": {
+            "SourceRole": "Enrolled Nurse",
+            "MappedRoleGroup": "EN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "EN",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 25,
+          "Values": {
+            "SourceRole": "REGN",
+            "MappedRoleGroup": "RN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "RN",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 16,
+          "Values": {
+            "SourceRole": "Assistant in NursingMed Comp",
+            "MappedRoleGroup": "AIN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "AIN",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 16,
+          "Values": {
+            "SourceRole": "Care Services Employee",
+            "MappedRoleGroup": "CS",
+            "RoleMappingStatus": "Mapped Role Group outside availability scope",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Mapped Role Group outside availability scope"
+          }
+        },
+        {
+          "Count": 11,
+          "Values": {
+            "SourceRole": "Assistant in NursingMed Comp",
+            "MappedRoleGroup": "AIN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "AIN",
+            "RoleMappingIssue": null,
+            "Issue": null
+          }
+        },
+        {
+          "Count": 9,
+          "Values": {
+            "SourceRole": "REGN",
+            "MappedRoleGroup": "RN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "RN",
+            "RoleMappingIssue": null,
+            "Issue": null
+          }
+        },
+        {
+          "Count": 4,
+          "Values": {
+            "SourceRole": "Enrolled Nurse",
+            "MappedRoleGroup": "EN",
+            "RoleMappingStatus": "Mapped to availability Role Group",
+            "Role": "EN",
+            "RoleMappingIssue": null,
+            "Issue": null
+          }
+        },
+        {
+          "Count": 4,
+          "Values": {
+            "SourceRole": "Wellbeing & Lifestyle Officer",
+            "MappedRoleGroup": "WLO",
+            "RoleMappingStatus": "Mapped Role Group outside availability scope",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 3,
+          "Values": {
+            "SourceRole": "Wellbeing & L'styleCoordinator",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 3,
+          "Values": {
+            "SourceRole": "Clerk",
+            "MappedRoleGroup": "CL",
+            "RoleMappingStatus": "Mapped Role Group outside availability scope",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 3,
+          "Values": {
+            "SourceRole": "Clinical Care Coordina",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Clerk",
+            "MappedRoleGroup": "CL",
+            "RoleMappingStatus": "Mapped Role Group outside availability scope",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Mapped Role Group outside availability scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Registered Nurse",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Care Service Manage",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Residential Services Mana",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "IPC- Lead-Infection Prevention Control offic",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "LINK Roles role excluded: no matching Roster Roles"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Kitchen Team Leader",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Care Service Manage",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "LINK Roles role excluded: no matching Roster Roles"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Residential Services Mana",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "LINK Roles role excluded: no matching Roster Roles"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Clinical Care Coordina",
+            "MappedRoleGroup": null,
+            "RoleMappingStatus": "LINK Roles role excluded: no matching Roster Roles",
+            "Role": null,
+            "RoleMappingIssue": null,
+            "Issue": "LINK Roles role excluded: no matching Roster Roles"
+          }
+        }
+      ]
+    },
+    {
+      "Worksheet": "WorkerRolePipeline_DIAGNOST",
+      "Found": false,
+      "RowCount": null,
+      "Headers": [],
+      "Groups": []
+    },
+    {
+      "Worksheet": "ResDayShift",
+      "Found": true,
+      "Table": "ResDayShift",
+      "RowCount": 4641,
+      "Headers": [
+        "Role",
+        "Week",
+        "Day",
+        "Shift",
+        "EffectiveShiftHrs",
+        "Date",
+        "Name",
+        "ID",
+        "Facility-Abbrev"
+      ],
+      "Groups": [
+        {
+          "Count": 3608,
+          "Values": {
+            "Role": "AIN"
+          }
+        },
+        {
+          "Count": 746,
+          "Values": {
+            "Role": "RN"
+          }
+        },
+        {
+          "Count": 287,
+          "Values": {
+            "Role": "EN"
+          }
+        }
+      ]
+    }
+  ],
+  "inspectedAt": "2026-09-27T06:17:44.0837692+10:00",
+  "workbookUnchanged": true
+}

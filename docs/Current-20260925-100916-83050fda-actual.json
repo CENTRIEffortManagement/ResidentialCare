@@ -1,0 +1,279 @@
+{
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ElapsedSeconds": 2066.3916537,
+  "ActiveIntervalSeconds": 2065.8391024999996,
+  "Rows": [
+    {
+      "Finish": 44.728035,
+      "Start": 0.5039524,
+      "Status": "Completed",
+      "Id": "BD/AllocationInput",
+      "Attempt": 1
+    },
+    {
+      "Finish": 89.0546376,
+      "Start": 44.7500068,
+      "Status": "Completed",
+      "Id": "BD/Settings",
+      "Attempt": 1
+    },
+    {
+      "Finish": 217.9273049,
+      "Start": 89.0698568,
+      "Status": "Completed",
+      "Id": "BD/DemandMaster",
+      "Attempt": 1
+    },
+    {
+      "Finish": 261.3631162,
+      "Start": 217.9475231,
+      "Status": "Completed",
+      "Id": "BD/DemandInput",
+      "Attempt": 1
+    },
+    {
+      "Finish": 132.2714931,
+      "Start": 89.1208255,
+      "Status": "Completed",
+      "Id": "BD/Workers",
+      "Attempt": 1
+    },
+    {
+      "Finish": 262.6445048,
+      "Start": 132.2946113,
+      "Status": "Completed",
+      "Id": "BD/Availability",
+      "Attempt": 1
+    },
+    {
+      "Finish": 2066.3802459,
+      "Start": 262.6677634,
+      "Status": "Failed",
+      "Id": "BD/Staff",
+      "Attempt": 1
+    },
+    {
+      "Finish": 2065.3451916,
+      "Start": 261.3853068,
+      "Status": "Failed",
+      "Id": "BD/Intervals",
+      "Attempt": 1
+    }
+  ],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "PeakConcurrency": 2,
+  "Status": "PartialOrFailed",
+  "GapSeconds": 1,
+  "Untimed": [
+    {
+      "Status": "Blocked",
+      "Id": "BD/DemandIntervals",
+      "Predecessors": [
+        "BD/Intervals",
+        "BD/DemandInput",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Intervals did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Demand",
+      "Predecessors": [
+        "BD/DemandIntervals",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/DemandIntervals did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Shifts",
+      "Predecessors": [
+        "BD/Intervals",
+        "BD/AllocationInput",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Intervals did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/ShiftAverage",
+      "Predecessors": [
+        "BD/Shifts",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Shifts did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Allocation",
+      "Predecessors": [
+        "BD/ShiftAverage",
+        "BD/AllocationInput",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/ShiftAverage did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Distribution",
+      "Predecessors": [
+        "BD/Allocation",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Allocation did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/MultiRole",
+      "Predecessors": [
+        "BD/Distribution",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Distribution did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:AIN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:AIN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/1"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:AIN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/2"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:EN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:EN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/1"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:EN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/2"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:RN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:RN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/1"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:RN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/2"
+      ],
+      "Reason": "Prerequisite BD/Demand did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Capacity",
+      "Predecessors": [
+        "BD/Role:AIN/3",
+        "BD/Role:EN/3",
+        "BD/Role:RN/3",
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Role:AIN/3 did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Effort",
+      "Predecessors": [
+        "BD/Capacity",
+        "BD/Demand",
+        "BD/Allocation",
+        "BD/Distribution",
+        "BD/MultiRole",
+        "BD/Staff",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Capacity did not complete."
+    }
+  ],
+  "RunId": "20260925-100916-83050fda",
+  "IncompleteAttempts": []
+}

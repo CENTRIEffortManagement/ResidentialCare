@@ -10,6 +10,9 @@ classDiagram
         class avraw["whiddon_availability_leave_extraction.xlsx"] {
             +Combined Output
         }
+        class currentworkers["LBStats.xlsx"] {
+            +Current_Workers
+        }
     }
 
     namespace unit1_input["UNITS / Unit1 / 1. Input"] {
@@ -161,6 +164,9 @@ classDiagram
 
     workers ..> roster : manual roster source
     roster --> allex : Beaudesert sheet
+    roster --> recon : Combined sheet allocation membership
+    avraw --> recon : Combined Output records membership
+    currentworkers --> recon : employment and termination
     master --> demex : MinuteWorkersFTE tables
     allex --> settings : AllocationExtracted
     allex --> intervals : AllocationExtracted
@@ -176,10 +182,12 @@ classDiagram
     master --> demand : manual demand inputs
     avraw --> capshift : Combined Output sheet
     recon --> capshift : Employees_TABLE
+    workers --> capshift : Table1 contract hours
     allex --> capshift : ResRolesProportion
     settings --> capshift : PermutationDimensions and ShiftPeriod
-    allex --> staff : Table_AllocatedStaffList
-    capshift --> staff : Availability_StaffList
+    allex ..> staff : allocation comparison diagnostics only
+    capshift --> staff : authoritative Availability_StaffList
+    settings --> staff : roster dates, ShiftDuration and MaxAvailability
     allex --> shifts : AllocationExtracted
     intervals --> shifts : Table_Intervals and Table_IntervalsList
     settings --> shifts : Meals and Roles and ShiftGap and ShiftLent and ShiftPeriod

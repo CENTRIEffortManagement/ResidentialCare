@@ -1,42 +1,141 @@
 // Power Query from: CapacityDistrib(A.1)-shifts.xlsx
-// Pathname: c:\Users\Cliff's Computer\Centri\3. Product - Documents\mcode Dev\ResidentialCare\CLIENT\DATExx\UNITS\Unit1\2. Calculations\RoleA\CapacityDistrib(A.1)-shifts.xlsx
-// Extracted: 2026-05-21T00:53:59.335Z
+// Source path: CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\RN\CapacityDistrib(A.1)-shifts.xlsx
+// Extracted: 2026-09-25T08:24:19.887Z
 
 section Section1;
 
-shared #"IMPORT ShiftUnitDemandHRS !!" = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Demand.xlsx"), null, true),
-    ShiftDemandHCAverageANACC_Table = Source{[Item="ShiftDemandHCAverageANACC",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(ShiftDemandHCAverageANACC_Table, each ([Role] = Role)),
-    #"Renamed Columns" = Table.RenameColumns(#"Filtered ROLE",{{"ShiftDurations.Duration", "ShiftDurations.ShiftDuration"}}),
-    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"ShiftPeriod", type text}, {"UnitShiftEffort", type number}, {"ShiftDurations.ShiftDuration", type number}, {"ShiftDemandHCAverage", type number}})
+// Query: IMPORT Demand
+// Purpose: Open Demand.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT Demand" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Demand.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
 in
-    #"Changed Type";
+    BufferedNavigation;
 
-shared #"IMPORT Masterlist !!" = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\StaffListMaster.xlsx"), null, true),
-    Table_Masterlist_Table = Source{[Item="Table_Masterlist",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(Table_Masterlist_Table, each ([Role] = Role)),
-    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"Role", type text}})
+// Query: Demand Source Prepare
+// Purpose: Select and type the role-specific shift-demand table used by A.1.
+shared #"Demand Source Prepare" = let
+    Navigation = #"IMPORT Demand",
+    Matches = Table.SelectRows(Navigation, each [Item] = "ShiftDemandHCAverageANACC" and [Kind] = "Table"),
+    DemandTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 demand import", "Expected exactly one ShiftDemandHCAverageANACC table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Facility", "Role", "Date", "ShiftPeriod", "UnitShiftEffort", "ShiftDurations.Duration", "ShiftDemandHCAverage"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(DemandTable)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then DemandTable
+        else error Error.Record("A.1 demand import", "ShiftDemandHCAverageANACC is missing required columns.", [MissingColumns = MissingColumns]),
+    FilteredRole = Table.SelectRows(ValidatedTable, each [Role] = Role),
+    RenamedShiftDuration = Table.RenameColumns(FilteredRole, {{"ShiftDurations.Duration", "ShiftDurations.ShiftDuration"}}),
+    Typed = Table.TransformColumnTypes(RenamedShiftDuration, {{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"ShiftPeriod", type text}, {"UnitShiftEffort", type number}, {"ShiftDurations.ShiftDuration", type number}, {"ShiftDemandHCAverage", type number}})
 in
-    #"Changed Type";
+    Typed;
 
-shared #"IMPORT ResDayShift !!" = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\Capacity-ShiftAvailability.xlsx"), null, true),
-    Table_ResDayShift_Table = Source{[Item="Table_ResDayShift",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(Table_ResDayShift_Table, each ([Role] = Role)),
-    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"Role", type text}, {"Name", type text},  {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", Int64.Type}}),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Date", type date}})
-in
-    #"Changed Type1";
+// Query: IMPORT ShiftUnitDemandHRS !!
+// Purpose: Preserve the existing prepared-demand interface for downstream queries.
+shared #"IMPORT ShiftUnitDemandHRS !!" = #"Demand Source Prepare";
 
-shared #"IMPORT ResourceShiftAllocation - Role!!" = let
-    Source = Excel.Workbook(File.Contents(FilePath&"\2. Calculations\AllocationByShiftAverage.xlsx"), null, true),
-    ResourceShiftAllocation_Table = Source{[Item="ResourceShiftAllocation",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(ResourceShiftAllocation_Table, each ([Role] = Role)),
-    #"Changed Type" = Table.TransformColumnTypes(#"Filtered ROLE",{{"ShiftDate", type date}, {"ShiftPeriod", type text}, {"Name", type text}, {"Role", type text}, {"ResShiftEffort", type number}, {"ResShiftEffectiveRatio", type number}, {"ResShiftFTE", type number}})
+// Query: IMPORT StaffListMaster
+// Purpose: Open StaffListMaster.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT StaffListMaster" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\StaffListMaster.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
 in
-    #"Changed Type";
+    BufferedNavigation;
+
+// Query: Masterlist Prepare
+// Purpose: Validate and prepare the role-specific employee contract used by A.1.
+// Output: One row per source master-list record before Resource-grain validation.
+shared #"Masterlist Prepare" = let
+    Navigation = #"IMPORT StaffListMaster",
+    Matches = Table.SelectRows(Navigation, each [Item] = "Table_Masterlist" and [Kind] = "Table"),
+    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 master-list import", "Expected exactly one Table_Masterlist table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Name", "Role", "Resource", "EmployeeID", "Facility-Abbrev", "PreferredRole", "Contracted FN Hours",
+        "Contracted Shifts", "Settings Max Availability", "Effective Shift Cap", "Limit Basis"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
+        else error Error.Record("A.1 master-list import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(Selected,
+        {{"Name", type text}, {"Role", type text}, {"Resource", Int64.Type}, {"EmployeeID", type text},
+         {"Facility-Abbrev", type text}, {"PreferredRole", type text}, {"Contracted FN Hours", type nullable number},
+         {"Contracted Shifts", type nullable number}, {"Settings Max Availability", type nullable number},
+         {"Effective Shift Cap", type nullable number}, {"Limit Basis", type text}}),
+    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
+in
+    FilteredRole;
+
+// Query: IMPORT Masterlist !!
+// Purpose: Preserve the existing prepared-master-list interface for downstream queries.
+shared #"IMPORT Masterlist !!" = #"Masterlist Prepare";
+
+// Query: A1CheckResult
+// Purpose: Convert a validation count or evaluation error into a consistent check row.
+shared A1CheckResult = (name as text, evaluate as function) as record =>
+    let
+        Result = try evaluate()
+    in
+        [Check = name, Status = if Result[HasError] then "Fail" else if Result[Value] = 0 then "Pass" else "Fail",
+         Failures = if Result[HasError] then null else Result[Value],
+         Details = if Result[HasError] then (try Result[Error][Message] otherwise "Evaluation failed") else null];
+
+// Query: IMPORT Capacity ShiftAvailability
+// Purpose: Open Capacity-ShiftAvailability.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT Capacity ShiftAvailability" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Capacity-ShiftAvailability.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
+in
+    BufferedNavigation;
+
+// Query: ResDayShift Prepare
+// Purpose: Validate and type only the availability fields consumed by A.1, then apply the dynamic role scope.
+shared #"ResDayShift Prepare" = let
+    Navigation = #"IMPORT Capacity ShiftAvailability",
+    Matches = Table.SelectRows(Navigation, each [Item] = "ResDayShift" and [Kind] = "Table"),
+    ResDayShiftTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 availability import", "Expected exactly one ResDayShift table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Name", "Role", "Week", "Day", "Shift", "EffectiveShiftHrs", "Date"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ResDayShiftTable)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then ResDayShiftTable
+        else error Error.Record("A.1 availability import", "ResDayShift is missing required columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(ValidatedTable, {{"Name", type text}, {"Role", type text}, {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", type date}}),
+    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
+in
+    FilteredRole;
+
+// Query: IMPORT ResDayShift !!
+// Purpose: Preserve the existing prepared-availability interface for downstream queries.
+shared #"IMPORT ResDayShift !!" = #"ResDayShift Prepare";
+
+// Query: IMPORT AllocationByShiftAverage
+// Purpose: Open AllocationByShiftAverage.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT AllocationByShiftAverage" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\AllocationByShiftAverage.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
+in
+    BufferedNavigation;
+
+// Query: ResourceShiftAllocation Prepare
+// Purpose: Validate and prepare the role-specific resource-shift allocations used by A.1.
+shared #"ResourceShiftAllocation Prepare" = let
+    Navigation = #"IMPORT AllocationByShiftAverage",
+    Matches = Table.SelectRows(Navigation, each [Item] = "ResourceShiftAllocation" and [Kind] = "Table"),
+    AllocationTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 allocation import", "Expected exactly one ResourceShiftAllocation table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"ShiftDate", "ShiftPeriod", "IntervalAssociatedShift", "Name", "Role", "ResShiftEffort", "ResShiftEffectiveRatio", "ResShiftFTE"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(AllocationTable)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then AllocationTable
+        else error Error.Record("A.1 allocation import", "ResourceShiftAllocation is missing required columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(ValidatedTable, {{"ShiftDate", type date}, {"ShiftPeriod", type text}, {"IntervalAssociatedShift", type text}, {"Name", type text}, {"Role", type text}, {"ResShiftEffort", type number}, {"ResShiftEffectiveRatio", type number}, {"ResShiftFTE", type number}}),
+    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
+in
+    FilteredRole;
+
+// Query: IMPORT ResourceShiftAllocation - Role!!
+// Purpose: Preserve the existing prepared-allocation interface for downstream queries.
+shared #"IMPORT ResourceShiftAllocation - Role!!" = #"ResourceShiftAllocation Prepare";
 
 shared MaxShiftCluster = 5 meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true];
 
@@ -49,30 +148,75 @@ in
     Source;
 
 [ Description = "BUFFER" ]
+// Query: PeriodShiftDay B
+// Purpose: Buffer the role-scoped Settings permutation dimensions used throughout A.1.
 shared #"PeriodShiftDay B" = let
-    Source = #"EXTRACT PermutationDimensions",
+    Source = #"PermutationDimensions Prepare",
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Date", "Day", "Shifts", "Period", "RolesList"}),
     BUFFER = Table.Buffer(#"Removed Other Columns")
 in
     BUFFER;
 
+// Query: Resources
+// Purpose: Retain only the stable fields required to map role data to Resource grain.
 shared Resources = let
-    Source = #"IMPORT Masterlist !!"
+    Source = #"IMPORT Masterlist !!",
+    Selected = Table.SelectColumns(Source, {"Name", "Role", "Resource"}),
+    Buffered = Table.Buffer(Selected)
 in
-    Source;
+    Buffered;
 
+// Query: A1ResourceIdentity_CHECK
+// Purpose: Prevent name-based availability or allocation joins from multiplying or crossing Resources.
+shared A1ResourceIdentity_CHECK = let
+    ResourceMap = Resources,
+    AvailabilityNames = Table.Distinct(Table.SelectColumns(#"IMPORT ResDayShift !!", {"Name", "Role"})),
+    AllocationNames = Table.Distinct(Table.SelectColumns(#"IMPORT ResourceShiftAllocation - Role!!", {"Name", "Role"})),
+    AvailabilityCoverage = Table.NestedJoin(AvailabilityNames, {"Name", "Role"}, ResourceMap, {"Name", "Role"}, "ResourceMatches", JoinKind.LeftOuter),
+    AvailabilityMatchCounts = Table.AddColumn(AvailabilityCoverage, "MatchCount", each Table.RowCount([ResourceMatches]), Int64.Type),
+    AllocationCoverage = Table.NestedJoin(AllocationNames, {"Name", "Role"}, ResourceMap, {"Name", "Role"}, "ResourceMatches", JoinKind.LeftOuter),
+    AllocationMatchCounts = Table.AddColumn(AllocationCoverage, "MatchCount", each Table.RowCount([ResourceMatches]), Int64.Type),
+    Checks = {
+        A1CheckResult("Resource identifiers are populated", () => Table.RowCount(Table.SelectRows(ResourceMap, each [Resource] = null))),
+        A1CheckResult("Resource identifiers are unique", () => Table.RowCount(ResourceMap) - Table.RowCount(Table.Distinct(ResourceMap, {"Resource"}))),
+        A1CheckResult("Resource names are populated", () => Table.RowCount(Table.SelectRows(ResourceMap, each [Name] = null or Text.Trim([Name]) = ""))),
+        A1CheckResult("Resource names are unique within role", () => Table.RowCount(ResourceMap) - Table.RowCount(Table.Distinct(ResourceMap, {"Name", "Role"}))),
+        A1CheckResult("Availability names map to exactly one Resource", () => Table.RowCount(Table.SelectRows(AvailabilityMatchCounts, each [MatchCount] <> 1))),
+        A1CheckResult("Allocation names map to exactly one Resource", () => Table.RowCount(Table.SelectRows(AllocationMatchCounts, each [MatchCount] <> 1)))
+    },
+    CheckTable = Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text]),
+    Buffered = Table.Buffer(CheckTable)
+in
+    Buffered;
+
+// Query: A1ResourceContract
+// Purpose: Expose the role-filtered master-list contract at one row per Resource for the A.1 cap join.
+shared A1ResourceContract = let
+    Source = #"IMPORT Masterlist !!",
+    Selected = Table.SelectColumns(Source,
+        {"Resource", "Role", "EmployeeID", "Facility-Abbrev", "PreferredRole", "Contracted FN Hours",
+         "Contracted Shifts", "Settings Max Availability", "Effective Shift Cap", "Limit Basis"})
+in Table.Buffer(Selected);
+
+// Query: ResourcePeriodTABLE-empty
+// Purpose: Build the Resource-period skeleton while standardising Settings input Shifts to downstream Shift.
 shared #"ResourcePeriodTABLE-empty" = let
     Source = Resources,
     #"Added Custom" = Table.AddColumn(Source, "Periods", each #"PeriodShiftDay B"),
-    #"Expanded Periods" = Table.ExpandTableColumn(#"Added Custom", "Periods", {"Period", "Shift", "Day"}, {"Period", "Shift", "Day"}),
+    // Settings exposes Shifts; downstream A.1 calculations use the singular Shift interface.
+    #"Expanded Periods" = Table.ExpandTableColumn(#"Added Custom", "Periods", {"Period", "Shifts", "Day"}, {"Period", "Shift", "Day"}),
     #"Filtered Rows" = Table.SelectRows(#"Expanded Periods", each ([Period] <> "W")),
     #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows",{{"Resource", Int64.Type}, {"Period", Int64.Type}})
 in
     #"Changed Type";
 
 [ Description = "BUFFER" ]
+// Query: ResPeriodAvailabilityTABLE !!
+// Purpose: Map role availability to Resource periods after the identity checks pass.
 shared #"ResPeriodAvailabilityTABLE !!" = let
-    Source = #"IMPORT ResDayShift !!",
+    IdentityFailures = Table.SelectRows(A1ResourceIdentity_CHECK, each [Status] <> "Pass"),
+    Source = if Table.IsEmpty(IdentityFailures) then #"IMPORT ResDayShift !!"
+        else error Error.Record("A.1 resource identity validation", "Availability mapping requires unique Resource identities.", IdentityFailures),
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Name", "Role", "Week", "Shift", "Date"}),
     #"Changed Type2" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Date", type date}}),
     #"Merged Queries" = Table.NestedJoin(#"Changed Type2", {"Name"}, Resources, {"Name"}, "Resources", JoinKind.LeftOuter),
@@ -106,8 +250,12 @@ shared ResPeriodAvailabilitySUM = let
 in
     Source;
 
+// Query: ResPeriodAllocationCHECK
+// Purpose: Map role allocations to Resources after the identity checks pass.
 shared ResPeriodAllocationCHECK = let
-    Source = #"IMPORT ResourceShiftAllocation - Role!!",
+    IdentityFailures = Table.SelectRows(A1ResourceIdentity_CHECK, each [Status] <> "Pass"),
+    Source = if Table.IsEmpty(IdentityFailures) then #"IMPORT ResourceShiftAllocation - Role!!"
+        else error Error.Record("A.1 resource identity validation", "Allocation mapping requires unique Resource identities.", IdentityFailures),
     #"Filtered DATEFROM" = Table.SelectRows(Source, each ([ShiftDate] >= #"EXTRACT Date_From")),
     #"Removed Columns" = Table.RemoveColumns(#"Filtered DATEFROM",{"ResShiftEffort", "ResShiftEffectiveRatio"}),
     #"Merged Queries" = Table.NestedJoin(#"Removed Columns", {"Name", "Role"}, Resources, {"Name", "Role"}, "Resources", JoinKind.LeftOuter),
@@ -184,15 +332,24 @@ shared #"PeriodC'" = let
 in
     #"Grouped C'";
 
+// Query: PeriodC'-D
+// Purpose: Compare potential capacity with demand and expose a nullable diagnostic capacity-to-demand ratio.
 shared #"PeriodC'-D" = let
     Source = #"PeriodC'",
     Custom1 = Table.Buffer(Source),
     #"Merged Queries" = Table.NestedJoin(Custom1, {"Period"}, #"PeriodDemandTABLE !!", {"Period"}, "PeriodDemandTABLE", JoinKind.LeftOuter),
     #"Expanded PeriodDemandTABLE" = Table.ExpandTableColumn(#"Merged Queries", "PeriodDemandTABLE", {"D"}, {"D"}),
     #"Inserted Subtraction" = Table.AddColumn(#"Expanded PeriodDemandTABLE", "C'-D", each [#"PeriodC'"] - [D], type number),
-    #"Inserted Division" = Table.AddColumn(#"Inserted Subtraction", "C'/D", each [#"PeriodC'"] / [D], type number)
+    // The ratio is diagnostic only; null preserves undefined or invalid demand without propagating an error to A.2.
+    #"Inserted Safe Division" = Table.AddColumn(#"Inserted Subtraction", "C'/D", each
+        let
+            Demand = try Number.From([D]) otherwise null
+        in
+            if Demand = null or Demand = 0 then null else [#"PeriodC'"] / Demand,
+        type nullable number
+    )
 in
-    #"Inserted Division";
+    #"Inserted Safe Division";
 
 shared #"PeriodC'-DPos (ExcessPot)" = let
     Source = #"PeriodC'-D",
@@ -206,11 +363,55 @@ shared #"ResC'" = let
 in
     #"Grouped Rows";
 
+// Query: A1ResourceContract_CHECK
+// Purpose: Require one valid preferred-role contract for every Resource contributing role availability.
+shared A1ResourceContract_CHECK = let
+    Contracts = A1ResourceContract,
+    AvailabilityResources = Table.Distinct(Table.SelectColumns(#"ResC'", {"Resource"})),
+    Coverage = Table.NestedJoin(AvailabilityResources, {"Resource"}, Contracts, {"Resource"}, "Contract", JoinKind.LeftOuter),
+    WithMatchCount = Table.AddColumn(Coverage, "ContractMatchCount", each Table.RowCount([Contract]), Int64.Type),
+    SingleMatches = Table.SelectRows(WithMatchCount, each [ContractMatchCount] = 1),
+    ExpandedMatches = Table.ExpandTableColumn(SingleMatches, "Contract",
+        {"Role", "EmployeeID", "PreferredRole", "Effective Shift Cap", "Limit Basis"},
+        {"Contract Role", "EmployeeID", "PreferredRole", "Effective Shift Cap", "Limit Basis"}),
+    Checks = {
+        A1CheckResult("Contract Resources are populated", () => Table.RowCount(Table.SelectRows(Contracts, each [Resource] = null))),
+        A1CheckResult("Unique Resource contracts", () => Table.RowCount(Contracts) -
+            Table.RowCount(Table.Distinct(Contracts, {"Resource"}))),
+        A1CheckResult("Complete availability contract coverage", () =>
+            Table.RowCount(Table.SelectRows(WithMatchCount, each [ContractMatchCount] <> 1))),
+        A1CheckResult("Valid effective shift caps", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
+            [Effective Shift Cap] = null or [Effective Shift Cap] <= 0
+            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])))),
+        A1CheckResult("Preferred role matches contract", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
+            [Contract Role] <> Role or [PreferredRole] <> Role))),
+        A1CheckResult("Employee identifiers are populated", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
+            [EmployeeID] = null or (try Text.Trim([EmployeeID]) otherwise "") = ""))),
+        A1CheckResult("Limit basis is populated", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
+            [Limit Basis] = null or (try Text.Trim([Limit Basis]) otherwise "") = "")))
+    },
+    CheckTable = Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text]),
+    Buffered = Table.Buffer(CheckTable)
+in
+    Buffered;
+
+// Query: ResAv-C'
+// Purpose: Apply the employee contract cap to redistributable roster availability at Resource grain.
 shared #"ResAv-C'" = let
-    Source = #"ResC'",
-    #"Added AVAILCAP" = Table.AddColumn(Source, "RosterAvailabilityCAPPED", each if [RosterAvailability] > #"EXTRACT MaxAvailability"
-then #"EXTRACT MaxAvailability"
-else [RosterAvailability]),
+    IdentityFailures = Table.SelectRows(A1ResourceIdentity_CHECK, each [Status] <> "Pass"),
+    ContractFailures = if Table.IsEmpty(IdentityFailures) then Table.SelectRows(A1ResourceContract_CHECK, each [Status] <> "Pass")
+        else #table(type table [Check = text, Status = text, Failures = nullable number, Details = nullable text], {}),
+    Source = if not Table.IsEmpty(IdentityFailures) then
+            error Error.Record("A.1 resource identity validation", "Required Resource identity checks failed.", IdentityFailures)
+        else if not Table.IsEmpty(ContractFailures) then
+            error Error.Record("A.1 resource contract validation", "Required Resource contract checks failed.", ContractFailures)
+        else #"ResC'",
+    // Join once at Resource grain; never repeat roster contract totals across Resource-period rows.
+    JoinedContract = Table.NestedJoin(Source, {"Resource"}, A1ResourceContract, {"Resource"}, "ResourceContract", JoinKind.LeftOuter),
+    ExpandedContract = Table.ExpandTableColumn(JoinedContract, "ResourceContract",
+        {"Effective Shift Cap", "Limit Basis"}, {"Effective Shift Cap", "Limit Basis"}),
+    #"Added AVAILCAP" = Table.AddColumn(ExpandedContract, "RosterAvailabilityCAPPED", each
+        if [RosterAvailability] > [Effective Shift Cap] then [Effective Shift Cap] else [RosterAvailability], type number),
     #"Inserted REDUCTION" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
     #"Renamed Columns" = Table.RenameColumns(#"Inserted REDUCTION",{{"AvailabilityReduction", "ResAv-C'"}})
 in
@@ -278,6 +479,8 @@ else null),
 in
     #"Renamed Columns";
 
+// Query: ResDaysAllocated
+// Purpose: Collapse shift-level allocations to daily flags and calculate deterministic five-day allocation codes per Resource.
 shared ResDaysAllocated = let
     // 1) Start from your per‑shift allocations
     Raw = #"AppliedAllocation+ActiveDays",
@@ -294,15 +497,19 @@ shared ResDaysAllocated = let
     // 4) Collapse to one row per Resource/Day (1 if any shift had allocation)
     Daily = Table.Group(ShiftFlagged, {"Resource", "Day"}, {{"AllocFlag", each List.Max([Allocation]), type number}}),
 
-    // 5) Buffer that small daily table once
-    LeanDailyBUFFER = Table.Buffer(Daily),
+    // 5) Enforce numeric chronological order before buffering and sequence calculations.
+    TypedDay = Table.TransformColumnTypes(Daily, {{"Day", Int64.Type}}),
+    LeanDailyBUFFER = Table.Buffer(TypedDay),
 
-    // 6) Sort & group so we can index within each Resource
+    // 6) Sort each nested Resource table explicitly; Table.Group does not guarantee preservation of its input row order.
     Sorted = Table.Sort(LeanDailyBUFFER, {{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
     Grouped = Table.Group(
         Sorted,
         {"Resource"},
-        {{"AllData", each Table.AddIndexColumn(_, "Idx", 0, 1, Int64.Type), type table}}
+        {{"AllData", each Table.AddIndexColumn(
+            Table.Sort(_, {{"Day", Order.Ascending}}),
+            "Idx", 0, 1, Int64.Type
+        ), type table}}
     ),
 
     // 7) **Note the double‐braces** here—this makes your transformOperations a list of one operation
@@ -340,9 +547,13 @@ in
 ;
 
 [ Description = "BUFFER" ]
+// Query: AllocationCode
+// Purpose: Identify cluster boundaries from deterministic Resource/day allocation sequences.
 shared AllocationCode = let
     // 1) Base daily codes
-    SourceDaily = ResDaysAllocated,  // must exist already
+    Source = ResDaysAllocated,
+    // Cluster neighbour offsets must use numeric day order, never lexical text order.
+    SourceDaily = Table.TransformColumnTypes(Source, {{"Day", Int64.Type}}),
 
     // 2) Group by Resource → sort by Day → add a zero‑based index
     Grouped = Table.Group(
@@ -350,7 +561,7 @@ shared AllocationCode = let
       {"Resource"},
       {{"Group",
         each Table.AddIndexColumn(
-               Table.Sort(_, {"Day", Order.Ascending}),
+               Table.Sort(_, {{"Day", Order.Ascending}}),
                "Idx", 0, 1, Int64.Type
              ),
         type table
@@ -376,10 +587,11 @@ shared AllocationCode = let
 
     // 4) Flatten back to one table (bringing in the new neighbor columns)
     Expanded = Table.ExpandTableColumn(WithNeighbors, "Group", {"Day", "AllocFlag", "ResIndex", "Code", "Yesterday.Resource2", "Yesterday.Resource1", "Tomorrow.Resource1", "Tomorrow.Resource2"}, {"Day", "AllocFlag", "ResIndex", "Code", "Yesterday.Resource2", "Yesterday.Resource1", "Tomorrow.Resource1", "Tomorrow.Resource2"}),
+    SortedExpanded = Table.Sort(Expanded, {{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
 
     // 5) Original “Added RESOURCEEND” logic, unchanged
     AddedResourceEnd = Table.AddColumn(
-      Expanded,
+      SortedExpanded,
       "ResourceStartEnd",
       each 
         if      [Resource] <> [Tomorrow.Resource1]   then "ResourceEnd1"
@@ -395,7 +607,9 @@ shared AllocationCode = let
 
 
  //#"Removed Other Columns1" = Table.SelectColumns(#"Added RESOURCEEND",{"Resource", "Day", "Allocation", "ResIndex", "ResDayAllocated", "Tomorrow.Resource1", "Code", "ResourceStartEnd"}),
-    #"Added CLUSTERPOINTS" = Table.AddColumn(AddedResourceEnd, "ClusterPoints", each if (                    
+    // A one-day allocation is both a start and an end, including when it occurs on a Resource boundary.
+    #"Added CLUSTERPOINTS" = Table.AddColumn(AddedResourceEnd, "ClusterPoints", each if [Code] = "00100" then "Allocated-SingleStart/End"
+        else if (
             //general start
             (  [Code] = "00111" 
                 or [Code] ="00101" 
@@ -432,28 +646,27 @@ shared AllocationCode = let
            
         then "Allocated-ClusterEnd" 
 
-        else 
-            if 
-            //General end
-            [Code] = "00100" 
-            then "Allocated-SingleStart/End"        
         else null),
     BUFFER = Table.Buffer(#"Added CLUSTERPOINTS")
 in
     BUFFER;
 
+// Query: ClusterIDStart
+// Purpose: Assign stable sequence numbers to every cluster start, including single-day clusters.
 shared ClusterIDStart = let
-    Source = #"AllocationCode",
+    Source = Table.Sort(#"AllocationCode", {{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Resource", "Day", "ClusterPoints"}),
     #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each [ClusterPoints] = "Allocated-ClusterStart" or [ClusterPoints] = "Allocated-ClusterSINGLE" or [ClusterPoints] = "Allocated-SingleStart/End"),
     #"Added Index1" = Table.AddIndexColumn(#"Filtered Rows", "ClusterIndex", 1, 1, Int64.Type)
 in
     #"Added Index1";
 
+// Query: ClusterIDEnd
+// Purpose: Assign matching sequence numbers to every cluster end, including single-day clusters.
 shared ClusterIDEnd = let
-    Source = #"AllocationCode",
+    Source = Table.Sort(#"AllocationCode", {{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Resource", "Day", "ClusterPoints"}),
-    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each [ClusterPoints] = "Allocated-ClusterEnd" or [ClusterPoints] = "Allocated-ClusterSINGLE"),
+    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each [ClusterPoints] = "Allocated-ClusterEnd" or [ClusterPoints] = "Allocated-ClusterSINGLE" or [ClusterPoints] = "Allocated-SingleStart/End"),
     #"Added Index1" = Table.AddIndexColumn(#"Filtered Rows", "ClusterIndex", 1, 1, Int64.Type)
 in
     #"Added Index1";
@@ -464,39 +677,73 @@ shared #"ClusterIDStart+End" = let
 in
     #"Removed Duplicates";
 
+// Query: A1ClusterLookup_CHECK
+// Purpose: Validate the Resource-scoped lookup grain and the paired cluster-boundary sequence.
+shared A1ClusterLookup_CHECK = let
+    LookupKeys = Table.SelectColumns(#"AllocationCode", {"Resource", "ResIndex"}),
+    StartCounts = Table.Group(ClusterIDStart, {"Resource"}, {{"StartCount", each Table.RowCount(_), Int64.Type}}),
+    EndCounts = Table.Group(ClusterIDEnd, {"Resource"}, {{"EndCount", each Table.RowCount(_), Int64.Type}}),
+    BoundaryCounts = Table.NestedJoin(StartCounts, {"Resource"}, EndCounts, {"Resource"}, "EndCounts", JoinKind.FullOuter),
+    ExpandedBoundaryCounts = Table.ExpandTableColumn(BoundaryCounts, "EndCounts", {"EndCount"}, {"EndCount"}),
+    NormalizedBoundaryCounts = Table.ReplaceValue(ExpandedBoundaryCounts, null, 0, Replacer.ReplaceValue, {"StartCount", "EndCount"}),
+    Checks = {
+        A1CheckResult("Cluster lookup Resources are populated", () => Table.RowCount(Table.SelectRows(LookupKeys, each [Resource] = null or [ResIndex] = null))),
+        A1CheckResult("Cluster lookup keys are unique", () => Table.RowCount(LookupKeys) - Table.RowCount(Table.Distinct(LookupKeys, {"Resource", "ResIndex"}))),
+        A1CheckResult("Cluster boundaries are balanced within each Resource", () => Table.RowCount(Table.SelectRows(NormalizedBoundaryCounts, each [StartCount] <> [EndCount])))
+    },
+    CheckTable = Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text]),
+    Buffered = Table.Buffer(CheckTable)
+in
+    Buffered;
+
 [ Description = "BUFFER" ]
+// Query: Clusters
+// Purpose: Assign cluster numbers through a deterministic Resource-scoped index lookup.
 shared Clusters = let
-    Source = #"AllocationCode",
+    ValidationFailures = Table.SelectRows(A1ClusterLookup_CHECK, each [Status] <> "Pass"),
+    Source = if Table.IsEmpty(ValidationFailures) then Table.Sort(#"AllocationCode", {{"Resource", Order.Ascending}, {"Day", Order.Ascending}})
+        else error Error.Record("A.1 cluster validation", "Cluster lookup checks failed.", ValidationFailures),
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Day", "ClusterPoints"}, #"ClusterIDStart+End", {"Resource", "Day", "ClusterPoints"}, "ClusterIDStart+End", JoinKind.LeftOuter),
     #"Expanded ClusterIDStart+End" = Table.ExpandTableColumn(#"Merged Queries", "ClusterIDStart+End", {"ClusterIndex"}, {"ClusterIndex"}),
-    #"Filled Down" = Table.FillDown(#"Expanded ClusterIDStart+End",{"ClusterIndex"}),
+    #"Grouped for Resource Fill Down" = Table.Group(#"Expanded ClusterIDStart+End", {"Resource"}, {{"Rows", each Table.FillDown(_, {"ClusterIndex"})}}),
+    #"Filled Down" = if Table.IsEmpty(#"Expanded ClusterIDStart+End") then #"Expanded ClusterIDStart+End" else Table.Combine(#"Grouped for Resource Fill Down"[Rows]),
     #"Renamed Columns" = Table.RenameColumns(#"Filled Down",{{"ClusterIndex", "ClusterIndexX"}, {"AllocFlag", "Allocation"}}),
     #"Added NO ALLOCATION NULL" = Table.AddColumn(#"Renamed Columns", "ClusterIndex", each if [Allocation] = 0 then null else [ClusterIndexX]),
-    #"Filled Up" = Table.FillUp(#"Added NO ALLOCATION NULL",{"ClusterIndex"}),
-    #"Removed Columns" = Table.RemoveColumns(#"Filled Up",{"ClusterIndexX", "ClusterPoints"}),
+    #"Grouped for Resource Fill Up" = Table.Group(#"Added NO ALLOCATION NULL", {"Resource"}, {{"Rows", each Table.FillUp(_, {"ClusterIndex"})}}),
+    #"Filled Up" = if Table.IsEmpty(#"Added NO ALLOCATION NULL") then #"Added NO ALLOCATION NULL" else Table.Combine(#"Grouped for Resource Fill Up"[Rows]),
+    #"Sorted Filled Rows" = Table.Sort(#"Filled Up", {{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Sorted Filled Rows",{"ClusterIndexX", "ClusterPoints"}),
 
-// Now we add the "ClusterNumber" column based on the previous row's value
-AddPreviousClusterIndex = Table.AddColumn(#"Removed Columns", "ClusterNumber", each 
-    let
-        // Determine the steps needed based on the Code value
-        RowSteps = if [Code] = "00000" then "X" else
-                   if List.Contains({"11000", "11011", "01010", "01001", "01000", "11001","11010"}, [Code]) then -1 else
-                   if List.Contains({"10000", "10001", "10010"}, [Code]) then -2 else
-                   if List.Contains({"00011", "00010"}, [Code]) then 1 else
-                   if List.Contains({"00001", "10011"}, [Code]) then 2 else
-                   0,
-
-        // Calculate the previous index
-        PrevIndex = if RowSteps = "X" then null else [ResIndex] + RowSteps,
-
-        // Retrieve the previous row based on the calculated index
-        PrevRowT = if PrevIndex = null then null else Table.SelectRows(#"Removed Columns", each [ResIndex] = PrevIndex),
-
-        // Extract the ClusterIndex from the previous row
-        PrevRow = if PrevRowT = null or Table.IsEmpty(PrevRowT) then "X"  else PrevRowT{0}[ClusterIndex]
-    in
-        PrevRow),
-    BUFFER = Table.Buffer(AddPreviousClusterIndex)
+    // Preserve the established Code offsets while representing "00000" as no lookup.
+    #"Added Lookup Offset" = Table.AddColumn(#"Removed Columns", "LookupOffset", each
+        if [Code] = "00000" then null else
+        if List.Contains({"11000", "11011", "01010", "01001", "01000", "11001", "11010"}, [Code]) then -1 else
+        if List.Contains({"10000", "10001", "10010"}, [Code]) then -2 else
+        if List.Contains({"00011", "00010"}, [Code]) then 1 else
+        if List.Contains({"00001", "10011"}, [Code]) then 2 else
+        0,
+        Int64.Type
+    ),
+    #"Added Lookup ResIndex" = Table.AddColumn(#"Added Lookup Offset", "LookupResIndex", each
+        if [LookupOffset] = null then null else [ResIndex] + [LookupOffset],
+        Int64.Type
+    ),
+    #"Selected Cluster Lookup Columns" = Table.Buffer(Table.SelectColumns(#"Removed Columns", {"Resource", "ResIndex", "ClusterIndex"})),
+    #"Joined Resource Cluster" = Table.NestedJoin(
+        #"Added Lookup ResIndex",
+        {"Resource", "LookupResIndex"},
+        #"Selected Cluster Lookup Columns",
+        {"Resource", "ResIndex"},
+        "ClusterMatch",
+        JoinKind.LeftOuter
+    ),
+    #"Added ClusterNumber" = Table.AddColumn(#"Joined Resource Cluster", "ClusterNumber", each
+        if [LookupOffset] = null or Table.IsEmpty([ClusterMatch]) then "X"
+        else if Table.RowCount([ClusterMatch]) = 1 then [ClusterMatch]{0}[ClusterIndex]
+        else error Error.Record("A.1 cluster lookup", "A Resource and ResIndex matched more than one cluster row.", [Resource = [Resource], ResIndex = [LookupResIndex]])
+    ),
+    #"Removed Lookup Helpers" = Table.RemoveColumns(#"Added ClusterNumber", {"LookupOffset", "LookupResIndex", "ClusterMatch"}),
+    BUFFER = Table.Buffer(#"Removed Lookup Helpers")
 in
     BUFFER;
 
@@ -752,6 +999,8 @@ shared MultiShiftAvilabilityDay = let
 in
     #"Filtered UNMACTHED PERIODS REMOVED";
 
+// Query: MultishiftAvailDayPeriod-Index
+// Purpose: Rank available periods by capacity-to-demand ratio with explicit zero-demand protection.
 shared #"MultishiftAvailDayPeriod-Index" = let
     Source = MultiShiftAvilabilityDay,
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "AvailablePeriod"}, ResDayPeriodAvailabilityTABLE, {"Resource", "Period"}, "ResDayPeriodAvailabilityTABLE", JoinKind.LeftOuter),
@@ -760,7 +1009,8 @@ shared #"MultishiftAvailDayPeriod-Index" = let
     #"Expanded PeriodCapacityTABLE" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodCapacityTABLE", {"Capacity"}, {"Capacity"}),
     #"Merged Queries2" = Table.NestedJoin(#"Expanded PeriodCapacityTABLE", {"AvailablePeriod"}, #"PeriodDemandTABLE !!", {"Period"}, "PeriodDemandTABLE", JoinKind.LeftOuter),
     #"Expanded PeriodDemandTABLE" = Table.ExpandTableColumn(#"Merged Queries2", "PeriodDemandTABLE", {"D"}, {"D"}),
-    #"Inserted C/D" = Table.AddColumn(#"Expanded PeriodDemandTABLE", "C/D", each [Capacity] / [D], type number),
+    // Preserve the established zero fallback; the priority semantics of excluding zero-demand periods remain a separate business decision.
+    #"Inserted C/D" = Table.AddColumn(#"Expanded PeriodDemandTABLE", "C/D", each if [D] = null or [D] = 0 then 0 else [Capacity] / [D], type number),
     #"Merged Queries3" = Table.NestedJoin(#"Inserted C/D", {"Resource"}, #"ResPeriodAllocation-ShiftBias", {"Resource"}, "ResPeriodAllocation-ShiftBias", JoinKind.LeftOuter),
     #"Expanded ResPeriodAllocation-ShiftBias" = Table.ExpandTableColumn(#"Merged Queries3", "ResPeriodAllocation-ShiftBias", {"ShiftBias"}, {"ShiftBias"}),
     #"Sorted RES, PERIOD C/D" = Table.Sort(#"Expanded ResPeriodAllocation-ShiftBias",{{"Resource", Order.Ascending}, {"C/D", Order.Ascending}}),
@@ -1108,43 +1358,62 @@ shared Role = let
 in
     Value;
 
-shared #"IMPORTSource Settings Data" = let
-  Source = Excel.Workbook(
-    File.Contents(FilePath & "\2. Calculations\Settings Data.xlsx"),
-    null,
-    true
-  )
+// Query: IMPORT Settings Data
+// Purpose: Open Settings Data.xlsx once for all Settings table extractions.
+shared #"IMPORT Settings Data" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Settings Data.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
 in
-  Source
-;
+    BufferedNavigation;
 
+// Query: IMPORTSource Settings Data
+// Purpose: Preserve the existing Settings import interface.
+shared #"IMPORTSource Settings Data" = #"IMPORT Settings Data";
+
+// Query: EXTRACT PermutationDimensions
+// Purpose: Navigate to the Settings permutation table without applying business transformations.
 shared #"EXTRACT PermutationDimensions" = let
-  // refer to the other query by name—since it has spaces, wrap in #"..."
-  Source = #"IMPORTSource Settings Data"{[Item="PermutationDimensions",Kind="Table"]}[Data],
-    #"Filtered ROLE" = Table.SelectRows(Source, each ([RolesList] = Role)),
-  ChangedType = Table.TransformColumnTypes(
-    #"Filtered ROLE",
-    {
-      {"Date", type date},
-      {"Shifts", type text},
-      {"Period", Int64.Type},
-      {"RolesList", type text}
-    }
-  )
+    Source = #"IMPORT Settings Data"{[Item="PermutationDimensions", Kind="Table"]}[Data]
 in
-    ChangedType;
+    Source;
 
+// Query: PermutationDimensions Prepare
+// Purpose: Apply the dynamic role scope and required Settings types after extraction.
+shared #"PermutationDimensions Prepare" = let
+    Source = #"EXTRACT PermutationDimensions",
+    RequiredColumns = {"Date", "Day", "Shifts", "Period", "RolesList"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(Source)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then Source
+        else error Error.Record("A.1 Settings import", "PermutationDimensions is missing required columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(ValidatedTable, {{"Date", type date}, {"Day", Int64.Type}, {"Shifts", type text}, {"Period", Int64.Type}, {"RolesList", type text}}),
+    FilteredRole = Table.SelectRows(Typed, each [RolesList] = Role)
+in
+    FilteredRole;
+
+// Query: EXTRACT Date_From
+// Purpose: Validate and return the single DateFrom setting used to scope allocations.
 shared #"EXTRACT Date_From" = let
-    Source = #"IMPORTSource Settings Data"{[Item="DateFrom",Kind="Table"]}[Data],
-    #"Changed Type1" = Table.TransformColumnTypes(Source,{{"DateFrom", type date}}),
-    DateFrom = #"Changed Type1"{0}[DateFrom]
+    Source = #"IMPORT Settings Data"{[Item="DateFrom", Kind="Table"]}[Data],
+    RequiredColumn = if Table.HasColumns(Source, {"DateFrom"}) then Source
+        else error "DateFrom must contain a DateFrom column.",
+    SingleRow = if Table.RowCount(RequiredColumn) = 1 then RequiredColumn
+        else error "DateFrom must contain exactly one data row.",
+    Typed = Table.TransformColumnTypes(SingleRow, {{"DateFrom", type date}}),
+    Value = Typed{0}[DateFrom]
 in
-    DateFrom;
+    Value;
 
+// Query: EXTRACT MaxAvailability
+// Purpose: Preserve the legacy Settings maximum interface; employee Effective Shift Cap is canonical for A.1.
+// Notes: Retained for compatibility and no longer used by the cap calculation.
 shared #"EXTRACT MaxAvailability" = let
-    Source = #"IMPORTSource Settings Data"{[Item="MaxAvailability",Kind="Table"]}[Data],
-    
-    #"Changed Type" = Table.TransformColumnTypes(Source,{{"MaxAvailability", Int64.Type}}),
-    MaxAvailability1 = #"Changed Type"{0}[MaxAvailability]
+    Source = #"IMPORT Settings Data"{[Item="MaxAvailability", Kind="Table"]}[Data],
+    RequiredColumn = if Table.HasColumns(Source, {"MaxAvailability"}) then Source
+        else error "MaxAvailability must contain a MaxAvailability column.",
+    SingleRow = if Table.RowCount(RequiredColumn) = 1 then RequiredColumn
+        else error "MaxAvailability must contain exactly one data row.",
+    Typed = Table.TransformColumnTypes(SingleRow, {{"MaxAvailability", Int64.Type}}),
+    Value = Typed{0}[MaxAvailability]
 in
-    MaxAvailability1;
+    Value;

@@ -1,0 +1,451 @@
+{
+  "workbook": "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+  "workbookSHA256": "DD2D27333E74DB4C38A0676F95D23A694AE24790120ADBE363ED4E76D2A5C5A4",
+  "openedReadOnly": true,
+  "sheets": [
+    {
+      "Worksheet": "WorkerIdentityFailures_DIAGNOST",
+      "Found": true,
+      "Table": "WorkerIdentityFailures_DIAGNOSTICS",
+      "RowCount": 63,
+      "Headers": [
+        "Check",
+        "EmployeeID",
+        "Facility-Abbrev",
+        "Role",
+        "Name",
+        "Details"
+      ],
+      "Groups": [
+        {
+          "Count": 35,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'Assistant in Nursing' (key 'ASSISTANT IN NURSING')."
+          }
+        },
+        {
+          "Count": 11,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'Assistant in NursingMed Comp' (key 'ASSISTANT IN NURSINGMED COMP')."
+          }
+        },
+        {
+          "Count": 9,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'REGN' (key 'REGN')."
+          }
+        },
+        {
+          "Count": 4,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'Enrolled Nurse' (key 'ENROLLED NURSE')."
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'Care Service Manage' (key 'CARE SERVICE MANAGE')."
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'Clinical Care Coordina' (key 'CLINICAL CARE COORDINA')."
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'IPC- Lead-Infection Prevention Control offic' (key 'IPC- LEAD-INFECTION PREVENTION CONTROL OFFIC')."
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Role": null,
+            "Details": "Roster role absent from LINK Roles: source role 'Residential Services Mana' (key 'RESIDENTIAL SERVICES MANA')."
+          }
+        }
+      ]
+    },
+    {
+      "Worksheet": "ReconciledWorkers_CHECK",
+      "Found": true,
+      "Table": "ReconciledWorkers_CHECK",
+      "RowCount": 6,
+      "Headers": [
+        "Check",
+        "Status",
+        "Failures",
+        "Details"
+      ],
+      "Groups": [
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Current worker roles map through LINK Roles",
+            "Status": "Fail",
+            "Failures": "63",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "One preferred role per employee and facility",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Unambiguous published names",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Unique worker keys",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Valid LINK Roles definitions",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "Check": "Valid relevant worker contracts",
+            "Status": "Pass",
+            "Failures": "0",
+            "Details": null
+          }
+        }
+      ]
+    },
+    {
+      "Worksheet": "ReconciledWorkers_Prepare",
+      "Found": true,
+      "Table": "ReconciledWorkers_Prepare",
+      "RowCount": 293,
+      "Headers": [
+        "EmployeeID",
+        "Facility-Abbrev",
+        "SourceRoleKey",
+        "EmploymentType",
+        "SourceRole",
+        "MappedRosterRole",
+        "RoleMappingDefinitionRows",
+        "DistinctRoleGroupCount",
+        "MappedRoleGroup",
+        "RoleMappingMatches",
+        "RoleMappingIssue",
+        "Role",
+        "Contracted FN Hours",
+        "ContractIssue",
+        "BaseName",
+        "Issue"
+      ],
+      "Groups": [
+        {
+          "Count": 86,
+          "Values": {
+            "SourceRole": "Assistant in Nursing",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 39,
+          "Values": {
+            "SourceRole": "Care Services Employee",
+            "MappedRoleGroup": "CS",
+            "Role": "CS",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 35,
+          "Values": {
+            "SourceRole": "Assistant in Nursing",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 26,
+          "Values": {
+            "SourceRole": "Enrolled Nurse",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 25,
+          "Values": {
+            "SourceRole": "REGN",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 16,
+          "Values": {
+            "SourceRole": "Assistant in NursingMed Comp",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 16,
+          "Values": {
+            "SourceRole": "Care Services Employee",
+            "MappedRoleGroup": "CS",
+            "Role": "CS",
+            "RoleMappingIssue": null,
+            "Issue": null
+          }
+        },
+        {
+          "Count": 11,
+          "Values": {
+            "SourceRole": "Assistant in NursingMed Comp",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 9,
+          "Values": {
+            "SourceRole": "REGN",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 4,
+          "Values": {
+            "SourceRole": "Enrolled Nurse",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 4,
+          "Values": {
+            "SourceRole": "Wellbeing & Lifestyle Officer",
+            "MappedRoleGroup": "WLO",
+            "Role": "WLO",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 3,
+          "Values": {
+            "SourceRole": "Wellbeing & L'styleCoordinator",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 3,
+          "Values": {
+            "SourceRole": "Clerk",
+            "MappedRoleGroup": "CL",
+            "Role": "CL",
+            "RoleMappingIssue": null,
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 3,
+          "Values": {
+            "SourceRole": "Clinical Care Coordina",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Clerk",
+            "MappedRoleGroup": "CL",
+            "Role": "CL",
+            "RoleMappingIssue": null,
+            "Issue": null
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Registered Nurse",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Care Service Manage",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 2,
+          "Values": {
+            "SourceRole": "Residential Services Mana",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "IPC- Lead-Infection Prevention Control offic",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Kitchen Team Leader",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Outside unit analysis scope"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Care Service Manage",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Residential Services Mana",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        },
+        {
+          "Count": 1,
+          "Values": {
+            "SourceRole": "Clinical Care Coordina",
+            "MappedRoleGroup": null,
+            "Role": null,
+            "RoleMappingIssue": "Roster role absent from LINK Roles",
+            "Issue": "Roster role absent from LINK Roles"
+          }
+        }
+      ]
+    },
+    {
+      "Worksheet": "WorkerRolePipeline_DIAGNOST",
+      "Found": false,
+      "RowCount": null,
+      "Headers": [],
+      "Groups": []
+    },
+    {
+      "Worksheet": "ResDayShift",
+      "Found": true,
+      "Table": "ResDayShift",
+      "RowCount": 3016,
+      "Headers": [
+        "Role",
+        "Week",
+        "Day",
+        "Shift",
+        "EffectiveShiftHrs",
+        "Date",
+        "Name",
+        "ID",
+        "Facility-Abbrev"
+      ],
+      "Groups": [
+        {
+          "Count": 2729,
+          "Values": {
+            "Role": "AIN"
+          }
+        },
+        {
+          "Count": 287,
+          "Values": {
+            "Role": "EN"
+          }
+        }
+      ]
+    }
+  ],
+  "inspectedAt": "2026-09-27T05:51:38.6446615+10:00",
+  "workbookUnchanged": true
+}

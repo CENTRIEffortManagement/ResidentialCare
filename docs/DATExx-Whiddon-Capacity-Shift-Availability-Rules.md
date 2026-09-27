@@ -2,6 +2,8 @@
 
 This document explains how the authoritative Power Query `.m` source determines which workers are available for each roster shift and how many effective hours they contribute. It describes the source implementation as of 19 September 2026. The four-worker refresh matched all 336 independently calculated day/shift rows. The sample filters were then removed from the source; full BD and downstream Capacity results are under review after a user-run Unit1 refresh.
 
+For the TE worker-membership, termination and StaffListMaster contract flow implemented on 27 September 2026, see [DATExx-Whiddon TE Worker Reconciliation Data Flow](DATExx-Whiddon-TE-Worker-Reconciliation-Data-Flow.md). That TE flow makes `Employees_TABLE` authoritative, carries Allocation/Records membership, and prevents StaffListMaster from independently adding workers.
+
 Source: [Capacity-ShiftAvailability.xlsx_PowerQuery.m](../CLIENT/DATExx-Whiddon/UNITS/Unit1/2.%20Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m).
 
 ## 1. Sources and scope
