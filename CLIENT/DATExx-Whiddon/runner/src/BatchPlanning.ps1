@@ -173,13 +173,17 @@ function Get-BatchCatalogue {
         }
         for ($r = 0; $r -lt $currentRoles.Count; $r++) {
             $role = $currentRoles[$r]
+            # Keep each C2 selector tied to one role across all Units, even when
+            # individual Units enable different subsets or role orders.
+            $roleOrder = [array]::IndexOf($roles, $role)
+            if ($roleOrder -lt 0) { throw "Role is missing from the catalogue role order: $role" }
             for ($f = 0; $f -lt 3; $f++) {
                 $deps = @($catalogue.RoleDependencies | ForEach-Object { "$unit/$_" })
                 if ($f -gt 0) { $deps += "$unit/Role:$role/$f" }
                 $jobs.Add([pscustomobject]@{
-                    Id = "$unit/Role:$role/$($f + 1)"; Unit = $unit; Batch = "C2.$($r + 1)"; BatchKey = "$unit/C2:$role"; Role = $role
+                    Id = "$unit/Role:$role/$($f + 1)"; Unit = $unit; Batch = "C2.$($roleOrder + 1)"; BatchKey = "$unit/C2:$role"; Role = $role
                     RelativePath = "UNITS/$unit/2. Calculations/$role/$($profile.RoleWorkbookOrder[$f])"
-                    Dependencies = $deps; InputPaths = @(); BatchOrder = [array]::IndexOf($catalogue.BatchOrder, 'C2'); RoleOrder = $r; FileOrder = $f
+                    Dependencies = $deps; InputPaths = @(); BatchOrder = [array]::IndexOf($catalogue.BatchOrder, 'C2'); RoleOrder = $roleOrder; FileOrder = $f
                 })
             }
         }
@@ -312,9 +316,16 @@ function Read-UnitSelection {
 
 function Get-BatchPickList {
     param($Catalogue)
-    # Batch IDs apply across Units: show each choice once, using its actual
-    # manifest filenames in execution order rather than repeating Unit folders.
-    $unitJobs = @($Catalogue.Jobs | Where-Object Unit -eq $Catalogue.Units[0])
+    # Batch IDs apply across Units: show each choice once, using one Unit that
+    # actually enables the batch. A first-Unit-only sample would hide roles
+    # enabled solely for later Units (for example EN / C2.4).
+    $allUnitJobs = @($Catalogue.Jobs | Where-Object Unit -ne 'Org')
+    $orderedUnitJobs = @($allUnitJobs | Sort-Object BatchOrder, RoleOrder, FileOrder)
+    $unitJobs = @(foreach ($id in @($orderedUnitJobs | ForEach-Object Batch | Select-Object -Unique)) {
+        $batchJobs = @($allUnitJobs | Where-Object Batch -eq $id)
+        $representativeUnit = $batchJobs[0].Unit
+        $batchJobs | Where-Object Unit -eq $representativeUnit
+    })
     $orgJobs = @($Catalogue.Jobs | Where-Object Unit -eq 'Org')
     foreach ($section in @(
         @{ Heading = 'Unit batches (applied to the Units you select next):'; Jobs = $unitJobs },

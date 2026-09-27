@@ -86,7 +86,9 @@ try {
     $pickList = @(Get-BatchPickList $catalogue)
     Assert-True ('D1 - Demand transformation [Demand-MasterRoster Manual Read.xlsx, 2-DemandExtract.xlsx]' -in $pickList) 'batch choices show ID, title and ordered comma-separated filenames'
     Assert-True (@($pickList | Where-Object { $_ -like 'D1 -*' }).Count -eq 1) 'shared Unit batch choices are not duplicated'
-    Assert-True ('C2.2 - Role capacity - AINC4 (Unit1, Unit2) / EN (BD, TE, JH-RY) [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'role choices show each Unit role mapping and all files'
+    Assert-True ('C2.2 - Role capacity - AINC4 [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'legacy AINC4 role has a dedicated batch choice'
+    Assert-True ('C2.4 - Role capacity - EN [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'EN has a dedicated batch choice'
+    Assert-True ([array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'C2.4 -*' })) -lt [array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'U4 -*' }))) 'all C2 role choices are listed before U4'
     Assert-True (@($pickList | Where-Object { $_ -like 'C2 - All enabled*' }).Count -eq 1) 'all-role shorthand is offered once'
     Assert-True ('O1 - Cross-unit assembly [StafMasterList-All.xlsx, Effort-All.xlsx]' -in $pickList) 'organisation choices include files'
     $savedTitles = $catalogue.BatchTitles
@@ -100,8 +102,9 @@ try {
     Assert-True ($subset.Jobs.Count -eq 4 -and @($subset.Jobs | Where-Object Batch -notin @('A1','A3')).Count -eq 0) 'disjoint batches do not become ranges'
     $role = Select-BatchPlan $catalogue -Units Unit1 -Batches C2.2
     Assert-True ($role.Jobs.Count -eq 3 -and $role.Jobs[0].Role -eq 'AINC4') 'numbered role mapping'
-    $bdRole = Select-BatchPlan $catalogue -Units BD -Batches C2.2
-    Assert-True ($bdRole.Jobs.Count -eq 3 -and $bdRole.Jobs[0].Role -eq 'EN') 'BD second role is EN, not AINC4'
+    Assert-Throws { Select-BatchPlan $catalogue -Units BD -Batches C2.2 } 'AINC4 batch is empty for BD'
+    $bdRole = Select-BatchPlan $catalogue -Units BD -Batches C2.4
+    Assert-True ($bdRole.Jobs.Count -eq 3 -and $bdRole.Jobs[0].Role -eq 'EN') 'BD EN role uses the dedicated C2.4 batch'
     $bdUnit = Select-BatchPlan $catalogue -RunAll -Units BD
     Assert-True ($bdUnit.Jobs.Count -eq 26 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work'
     $everyUnit = Select-BatchPlan $catalogue -RunAll -Units All
