@@ -1,191 +1,46 @@
 // Power Query from: Demand-MasterRoster Manual Read.xlsx
-// Pathname: CLIENT\DATExx-Whiddon\1. Input\Demand-MasterRoster Manual Read.xlsx
-// Extracted: 2026-09-22T09:20:14.640Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\1. Input\Demand-MasterRoster Manual Read.xlsx
+// Extracted: 2026-10-01T04:24:33.820Z
 
 section Section1;
 
-// Query: IMPORT CentriSyncPaths
-// Purpose: Reads the machine's shared path mapping for portable workbook imports.
-// Output: The buffered CentriSyncPaths table from the fixed public-machine bootstrap file.
-shared #"IMPORT CentriSyncPaths" =
-let
-    Navigation = Excel.Workbook(
-        Binary.Buffer(File.Contents("C:\Users\Public\Public Scripts\CentriSyncPaths.xlsx")),
-        null,
-        true
-    ),
-    Mapping = Navigation{[Item = "CentriSyncPaths", Kind = "Table"]}[Data],
-    RequiredColumns = Table.SelectColumns(Mapping, {"SharepointRootUrl", "SyncedFolderRootPath"}),
-    TypedMapping = Table.TransformColumnTypes(
-        RequiredColumns,
-        {{"SharepointRootUrl", type text}, {"SyncedFolderRootPath", type text}}
-    )
-in
-    Table.Buffer(TypedMapping);
-
-// Query: DemandMasterRosterPathTABLE
-// Purpose: Resolves this workbook's saved path through the standard CentriSyncPaths mapping.
-// Inputs: Current-workbook FilePathUrl[FilePath] and IMPORT CentriSyncPaths.
-// Output: Resolved workbook folder, normalised source path, and workbook filename.
-// Notes: Uses a case-insensitive, boundary-safe longest-prefix match and rejects ambiguous mappings.
-shared DemandMasterRosterPathTABLE =
-let
-    PathInput = Excel.CurrentWorkbook(){[Name = "FilePathUrl"]}[Content],
-    RequiredPathColumn =
-        if Table.HasColumns(PathInput, {"FilePath"}) then
-            Table.SelectColumns(PathInput, {"FilePath"})
-        else
-            error "FilePathUrl must contain a FilePath column.",
-    TypedPath = Table.TransformColumnTypes(RequiredPathColumn, {{"FilePath", type text}}),
-    ValidatedPathTable =
-        if Table.RowCount(TypedPath) = 1 then
-            Table.Buffer(TypedPath)
-        else
-            error "FilePathUrl must contain exactly one data row.",
-    RawFilePathValue = ValidatedPathTable{0}[FilePath],
-    RawFilePath =
-        if RawFilePathValue = null or Text.Trim(RawFilePathValue) = "" then
-            error "FilePathUrl is blank. Save this workbook and recalculate its CELL filename formula."
-        else
-            Text.Trim(RawFilePathValue),
-    NormalizePath = (Value as nullable text) as nullable text =>
-        let
-            TextValue = if Value = null then null else Text.From(Value),
-            SlashNormalized = if TextValue = null then null else Text.Replace(TextValue, "/", "\"),
-            Trimmed = if SlashNormalized = null then null else Text.TrimEnd(SlashNormalized, "\")
-        in
-            Trimmed,
-    NormalizedRawPath = NormalizePath(RawFilePath),
-    // CELL("filename", reference) returns folder\[workbook.xlsx]sheet.
-    // Remove only the workbook brackets and sheet suffix before resolving the folder.
-    WorkbookPath =
-        if Text.Contains(NormalizedRawPath, "[") then
-            Text.BeforeDelimiter(NormalizedRawPath, "[") &
-                Text.BetweenDelimiters(NormalizedRawPath, "[", "]")
-        else
-            NormalizedRawPath,
-    InputFileName = Text.AfterDelimiter(WorkbookPath, "\", {0, RelativePosition.FromEnd}),
-    ValidatedWorkbookPath =
-        if Comparer.OrdinalIgnoreCase(InputFileName, "Demand-MasterRoster Manual Read.xlsx") = 0 then
-            WorkbookPath
-        else
-            error "FilePathUrl identifies another workbook. Use =CELL(""filename"",A1), then save and recalculate Demand-MasterRoster Manual Read.xlsx.",
-    NormalizedMappings = Table.TransformColumns(
-        #"IMPORT CentriSyncPaths",
-        {
-            {"SharepointRootUrl", each NormalizePath(_), type text},
-            {"SyncedFolderRootPath", each NormalizePath(_), type text}
-        }
-    ),
-    SharePointCandidates = Table.AddColumn(
-        NormalizedMappings,
-        "MatchRoot",
-        each [SharepointRootUrl],
-        type nullable text
-    ),
-    SharePointDocumentsCandidates = Table.AddColumn(
-        NormalizedMappings,
-        "MatchRoot",
-        each if [SharepointRootUrl] = null then null else [SharepointRootUrl] & "\Shared Documents",
-        type nullable text
-    ),
-    LocalCandidates = Table.AddColumn(
-        NormalizedMappings,
-        "MatchRoot",
-        each [SyncedFolderRootPath],
-        type nullable text
-    ),
-    MatchCandidates = Table.Combine(
-        {SharePointCandidates, SharePointDocumentsCandidates, LocalCandidates}
-    ),
-    CandidatesWithLength = Table.AddColumn(
-        MatchCandidates,
-        "MatchRootLength",
-        each if [MatchRoot] = null then 0 else Text.Length([MatchRoot]),
-        Int64.Type
-    ),
-    MatchingRows = Table.SelectRows(
-        CandidatesWithLength,
-        each
-            [MatchRoot] <> null and Text.Trim([MatchRoot]) <> "" and
-            [SyncedFolderRootPath] <> null and Text.Trim([SyncedFolderRootPath]) <> "" and
-            Text.StartsWith(ValidatedWorkbookPath, [MatchRoot], Comparer.OrdinalIgnoreCase) and
-            (
-                Text.Length(ValidatedWorkbookPath) = [MatchRootLength] or
-                Text.Range(ValidatedWorkbookPath, [MatchRootLength], 1) = "\"
-            )
-    ),
-    SortedMatches = Table.Sort(MatchingRows, {{"MatchRootLength", Order.Descending}}),
-    BestMatchLength =
-        if Table.RowCount(SortedMatches) = 0 then
-            error "FilePathUrl did not match any CentriSyncPaths root: " & ValidatedWorkbookPath
-        else
-            SortedMatches{0}[MatchRootLength],
-    LongestMatches = Table.SelectRows(SortedMatches, each [MatchRootLength] = BestMatchLength),
-    LongestLocalRoots = List.Distinct(LongestMatches[SyncedFolderRootPath], Comparer.OrdinalIgnoreCase),
-    BestMatch =
-        if List.Count(LongestLocalRoots) = 1 then
-            LongestMatches{0}
-        else
-            error "FilePathUrl matched conflicting CentriSyncPaths mappings of equal length.",
-    RelativePath = Text.TrimStart(
-        Text.Range(ValidatedWorkbookPath, BestMatch[MatchRootLength]),
-        "\"
-    ),
-    LocalFullPath =
-        if RelativePath = "" then
-            BestMatch[SyncedFolderRootPath]
-        else
-            BestMatch[SyncedFolderRootPath] & "\" & RelativePath,
-    WorkbookFolder = Text.BeforeDelimiter(LocalFullPath, "\", {0, RelativePosition.FromEnd}),
-    Result = #table(
-        {"Variable Name", "Value"},
-        {
-            {"Root Path", WorkbookFolder},
-            {"FilePathUrl", ValidatedWorkbookPath},
-            {"FileName", InputFileName}
-        }
-    )
-in
-    Result;
-
-// Query: ClientPath
-// Purpose: Derives the Whiddon organisation root from the resolved workbook folder.
-// Inputs: DemandMasterRosterPathTABLE.
-// Output: Local DATExx-Whiddon client root used by all external file imports.
-shared ClientPath =
-let
-    WorkbookFolder = DemandMasterRosterPathTABLE{[#"Variable Name" = "Root Path"]}[Value],
-    WorkbookFolderSuffix = "\1. Input",
-    ClientFolder =
-        if Text.EndsWith(WorkbookFolder, WorkbookFolderSuffix, Comparer.OrdinalIgnoreCase) then
-            Text.Start(WorkbookFolder, Text.Length(WorkbookFolder) - Text.Length(WorkbookFolderSuffix))
-        else
-            error "Demand-MasterRoster Manual Read workbook folder must end in \1. Input.",
-    Result =
-        if Text.EndsWith(ClientFolder, "\DATExx-Whiddon", Comparer.OrdinalIgnoreCase) then
-            ClientFolder
-        else
-            error "Demand-MasterRoster Manual Read FilePathUrl must identify the DATExx-Whiddon client."
-in
-    Result;
-
 // Query: IMPORT Master
-// Purpose: Reads the approved Unit1 Master Roster through the resolved organisation root.
-// Inputs: ClientPath.
-// Output: Buffered typed rows from the source workbook's Combined sheet.
-shared #"IMPORT Master" = let
-    Source = Excel.Workbook(
-        Binary.Buffer(File.Contents(ClientPath & "\UNITS\Unit1\1. Input\Master Roster.xlsx")),
+// Purpose: Reads the approved, deliberately fixed Unit1 Master Roster source.
+// Output: Buffered workbook navigation snapshot; no business transformation is applied.
+// Notes: The fixed source is temporary while one workbook analyses all facilities.
+shared #"IMPORT Master" =
+let
+    SourcePath = "C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Master Roster.xlsx",
+    Workbook = Excel.Workbook(
+        Binary.Buffer(File.Contents(SourcePath)),
         null,
         true
-    ),
-    Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
-    #"Promoted Headers" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
-    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}}),
-    BUFFER = Table.Buffer(#"Changed Type")
+    )
 in
-    BUFFER;
+    Table.Buffer(Workbook);
+
+// Query: EXTRACT Master Combined
+// Purpose: Navigates to the Combined sheet in the imported Unit1 Master Roster without transforming it.
+// Inputs: IMPORT Master.
+// Output: Raw Combined-sheet rows.
+shared #"EXTRACT Master Combined" =
+let
+    Source = #"IMPORT Master",
+    CombinedSheet = Source{[Item = "Combined", Kind = "Sheet"]}[Data]
+in
+    CombinedSheet;
+
+// Query: Master Source Prepare
+// Purpose: Promotes and types the approved Unit1 Master Roster fields used by the analysis.
+// Inputs: EXTRACT Master Combined.
+// Output: Buffered typed Master Roster rows.
+shared #"Master Source Prepare" =
+let
+    Source = #"EXTRACT Master Combined",
+    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+    #"Typed Master Rows" = Table.TransformColumnTypes(#"Promoted Headers",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}})
+in
+    Table.Buffer(#"Typed Master Rows");
 
 shared #"INPUT SHiftEnd" = let
     Source = Excel.CurrentWorkbook(){[Name="Table7"]}[Content],
@@ -495,6 +350,7 @@ in
 // Purpose: Normalises the Facility Analysis control at canonical-facility grain.
 // Inputs: EXTRACT Unit Analysis.
 // Output: Facility and Effort Management Analysis.
+// Notes: Retained for later per-unit scoping; the active all-facility allocation does not reference this query.
 shared #"MW Facility Analysis Prepare" =
 let
     Source = Table.SelectColumns(
@@ -518,6 +374,7 @@ in
 // Purpose: Applies the Facility Analysis gate after source locations have mapped to canonical facilities.
 // Inputs: MW Facility Analysis Prepare.
 // Output: One row per uniquely configured Facility where Effort Management Analysis is true.
+// Notes: Retained for later per-unit scoping; the active all-facility allocation does not reference this query.
 shared #"MW Enabled Facilities Prepare" =
 let
     Source = #"MW Facility Analysis Prepare",
@@ -543,13 +400,13 @@ in
     Result;
 
 // Query: Master Prepare
-// Purpose: Maps five raw roster locations to canonical facilities, applies Facility Analysis, maps roles, and assigns shifts.
-// Inputs: IMPORT Master, MW Facility Mapping Prepare, MW Enabled Facilities Prepare, MW Roster Role Mapping Prepare, and shift configuration.
-// Output: Enabled historical roster rows retaining raw Location and canonical Facility, tagged with mapped role attributes and shift.
-// Notes: Raw Location is lineage only; canonical Facility is the redistribution and publication key.
+// Purpose: Maps all raw roster locations to canonical facilities, maps roles, and assigns shifts.
+// Inputs: Master Source Prepare, MW Facility Mapping Prepare, MW Roster Role Mapping Prepare, and shift configuration.
+// Output: All uniquely mapped historical roster rows retaining raw Location and canonical Facility, tagged with mapped role attributes and shift.
+// Notes: Raw Location remains lineage; Shift Net Length supplies hours under the existing Roster Hours column contract.
 shared #"Master Prepare" =
 let
-    Source = #"IMPORT Master",
+    Source = #"Master Source Prepare",
     #"Added Source Location Key" = Table.AddColumn(
         Source,
         "SourceLocationKey",
@@ -582,25 +439,17 @@ let
         #"Expanded Canonical Facility",
         each [FacilityMappingCount] = 1
     ),
-    // Facility Analysis is applied only after the five-to-three mapping.
-    #"Joined Enabled Facilities" = Table.NestedJoin(
-        #"Retained Unique Facility Mapping",
-        {"Facility"},
-        #"MW Enabled Facilities Prepare",
-        {"Facility"},
-        "EnabledFacility",
-        JoinKind.Inner
-    ),
-    #"Removed Enablement Join" = Table.RemoveColumns(
-        #"Joined Enabled Facilities",
-        {"EnabledFacility"}
-    ),
     #"Selected Historical Columns" = Table.SelectColumns(
-        #"Removed Enablement Join",
-        {"Location", "Facility", "Role", "Employee Code", "Week No", "Week Day", "Start Time", "End Time", "Roster Hours"}
+        #"Retained Unique Facility Mapping",
+        {"Location", "Facility", "Role", "Employee Code", "Week No", "Week Day", "Start Time", "End Time", "Shift Net Length"}
+    ),
+    // Keep the established downstream column name while taking hours from the net shift field.
+    #"Named Net Roster Hours" = Table.RenameColumns(
+        #"Selected Historical Columns",
+        {{"Shift Net Length", "Roster Hours"}}
     ),
     #"Renamed Original Role" = Table.RenameColumns(
-        #"Selected Historical Columns",
+        #"Named Net Roster Hours",
         {{"Role", "OriginalRole"}}
     ),
     #"Added Roster Role Key" = Table.AddColumn(
@@ -703,6 +552,16 @@ shared StartAM = let
 in
     End;
 
+// Query: IMPORT Whiddon Lists
+// Purpose: Reads the Whiddon SharePoint list catalogue once for role and facility extracts.
+// Output: Buffered SharePoint list navigation table.
+shared #"IMPORT Whiddon Lists" = let
+    ListNavigation = SharePoint.Tables("https://centri001.sharepoint.com/sites/WhiddonCENTRI",
+        [Implementation="2.0", ViewMode="All"]),
+    BufferedLists = Table.Buffer(ListNavigation)
+in
+    BufferedLists;
+
 shared LocRoleWeekDaysHoursMATRIX = let
     Source = LocRoleWeekDaysHours,
     #"Sorted Rows" = Table.Sort(Source,{{"Week No", Order.Ascending}, {"DayOfWeek", Order.Ascending}}),
@@ -803,9 +662,9 @@ in
     Result;
 
 // Query: MW TargetMinutes Source Prepare
-// Purpose: Maps every raw TargetMinutes heading to a canonical Facility and its Facility Analysis control.
-// Inputs: INPUT TargetMinutes, MW Target Facility Mapping Prepare, and MW Facility Analysis Prepare.
-// Output: One row per target heading and MinuteType with mapping and analysis row counts retained for validation.
+// Purpose: Maps every raw TargetMinutes heading to a canonical Facility.
+// Inputs: INPUT TargetMinutes and MW Target Facility Mapping Prepare.
+// Output: One row per target heading and MinuteType with its mapping count retained for validation.
 shared #"MW TargetMinutes Source Prepare" =
 let
     Source = #"INPUT TargetMinutes",
@@ -853,44 +712,20 @@ let
         "FacilityMapping",
         {"Facility"},
         {"Facility"}
-    ),
-    #"Joined Facility Analysis" = Table.NestedJoin(
-        #"Expanded Canonical Facility",
-        {"Facility"},
-        #"MW Facility Analysis Prepare",
-        {"Facility"},
-        "FacilityAnalysis",
-        JoinKind.LeftOuter
-    ),
-    #"Added Facility Analysis Count" = Table.AddColumn(
-        #"Joined Facility Analysis",
-        "FacilityAnalysisRowCount",
-        each Table.RowCount([FacilityAnalysis]),
-        Int64.Type
-    ),
-    Result = Table.Buffer(
-        Table.ExpandTableColumn(
-            #"Added Facility Analysis Count",
-            "FacilityAnalysis",
-            {"Effort Management Analysis"},
-            {"Effort Management Analysis"}
-        )
     )
 in
-    Result;
+    Table.Buffer(#"Expanded Canonical Facility");
 
 // Query: MW TargetMinutes Prepare
-// Purpose: Aggregates enabled source targets to three canonical facilities before deriving allocation targets.
+// Purpose: Aggregates all uniquely mapped source targets to canonical facilities before deriving allocation targets.
 // Inputs: MW TargetMinutes Source Prepare.
 // Output: Two rows per canonical facility with grouped RN/ALL hours and daily/fortnight minutes for RN and OTHERS.
-// Notes: Facility Analysis is applied before grouping; every contributing source key remains visible in TargetFacilityKeys.
+// Notes: Every contributing source key remains visible in TargetFacilityKeys; Facility Analysis is deliberately not applied.
 shared #"MW TargetMinutes Prepare" =
 let
     Source = Table.SelectRows(
         #"MW TargetMinutes Source Prepare",
-        each [TargetFacilityMappingCount] = 1 and
-            [FacilityAnalysisRowCount] = 1 and
-            [Effort Management Analysis] = true
+        each [TargetFacilityMappingCount] = 1
     ),
     TargetPeriodDays = 14,
     MinutesPerHour = 60,
@@ -1542,8 +1377,8 @@ in
     Result;
 
 // Query: MW Input Check
-// Purpose: Validates facility mappings and enablement, supplied role mappings, and source/canonical RN and ALL targets.
-// Inputs: Facility mapping/analysis staging, roster-role mapping staging, and target staging queries.
+// Purpose: Validates facility mappings, supplied role mappings, and source/canonical RN and ALL targets.
+// Inputs: Facility mapping staging, roster-role mapping staging, and target staging queries.
 // Output: Error records for invalid required inputs.
 shared #"MW Input Check" =
 let
@@ -1621,7 +1456,7 @@ let
     ),
     RosterLocations = Table.Distinct(
         Table.AddColumn(
-            Table.SelectColumns(#"IMPORT Master", {"Location"}),
+            Table.SelectColumns(#"Master Source Prepare", {"Location"}),
             "SourceLocationKey",
             each if [Location] = null then null else Text.Upper(Text.Trim(Text.From([Location]))),
             type nullable text
@@ -1656,87 +1491,7 @@ let
             Expected = 1,
             Message = "Master Roster Location '" &
                 (if [Location] = null then "<blank>" else Text.From([Location])) &
-                "' must map exactly once before Facility Analysis is applied."
-        ])
-    ),
-    FacilityAnalysis = Table.Buffer(#"MW Facility Analysis Prepare"),
-    FacilityAnalysisCounts = Table.Group(
-        FacilityAnalysis,
-        {"Facility"},
-        {
-            {"AnalysisRowCount", each Table.RowCount(_), Int64.Type},
-            {
-                "ValidFlagCount",
-                each List.NonNullCount([Effort Management Analysis]),
-                Int64.Type
-            }
-        }
-    ),
-    InvalidFacilityAnalysisKeys = Table.SelectRows(
-        FacilityAnalysisCounts,
-        each [Facility] = null or [Facility] = "" or
-            [AnalysisRowCount] <> 1 or [ValidFlagCount] <> 1
-    ),
-    FacilityAnalysisKeyChecks = #"MW Check Table"(
-        List.Transform(Table.ToRecords(InvalidFacilityAnalysisKeys), each [
-            Check = "Facility Analysis control is present and unique",
-            Severity = "Error",
-            Facility = [Facility],
-            MinuteCategory = null,
-            Role = null,
-            Actual = Number.From([AnalysisRowCount]),
-            Expected = 1,
-            Message = "Each canonical Facility needs exactly one logical Effort Management Analysis control."
-        ])
-    ),
-    MappedFacilities = Table.Group(
-        Table.SelectRows(
-            FacilityMapping,
-            each [Facility] <> null and [Facility] <> ""
-        ),
-        {"Facility"},
-        {
-            {
-                "SourceFacilityCodes",
-                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([SourceFacilityCode]))), ", "),
-                type text
-            },
-            {
-                "SourceLocations",
-                each Text.Combine(List.Sort(List.Distinct(List.RemoveNulls([SourceLocationKey]))), ", "),
-                type text
-            }
-        }
-    ),
-    MappedFacilityAnalysis = Table.ExpandTableColumn(
-        Table.NestedJoin(
-            MappedFacilities,
-            {"Facility"},
-            FacilityAnalysisCounts,
-            {"Facility"},
-            "Analysis",
-            JoinKind.LeftOuter
-        ),
-        "Analysis",
-        {"AnalysisRowCount", "ValidFlagCount"},
-        {"AnalysisRowCount", "ValidFlagCount"}
-    ),
-    MissingMappedFacilityAnalysis = Table.SelectRows(
-        MappedFacilityAnalysis,
-        each [AnalysisRowCount] = null or [AnalysisRowCount] <> 1 or [ValidFlagCount] <> 1
-    ),
-    MappedFacilityAnalysisChecks = #"MW Check Table"(
-        List.Transform(Table.ToRecords(MissingMappedFacilityAnalysis), each [
-            Check = "Mapped Facility has a Facility Analysis control",
-            Severity = "Error",
-            Facility = [Facility],
-            MinuteCategory = null,
-            Role = null,
-            Actual = if [AnalysisRowCount] = null then 0 else Number.From([AnalysisRowCount]),
-            Expected = 1,
-            Message = "Canonical Facility '" & [Facility] & "' from source codes [" &
-                [SourceFacilityCodes] & "] and source Locations [" & [SourceLocations] &
-                "] must have exactly one Facility Analysis row."
+                "' must map exactly once before allocation."
         ])
     ),
     TargetSource = Table.Buffer(#"MW TargetMinutes Source Prepare"),
@@ -1867,14 +1622,14 @@ let
                 [SourceFacilityCode] & "' identify the same source and cannot both be supplied."
         ])
     ),
-    EnabledTargetPresenceChecks = #"MW Check Table"(
+    MappedTargetPresenceChecks = #"MW Check Table"(
         if Table.IsEmpty(#"MW TargetMinutes Prepare") then
             {[
-                Check = "Enabled canonical facilities have targets",
+                Check = "Mapped canonical facilities have targets",
                 Severity = "Error",
                 Actual = 0,
                 Expected = 1,
-                Message = "No TargetMinutes facility remains after Facilities mapping and the Facility Analysis true filter."
+                Message = "No TargetMinutes facility remains after Facilities mapping."
             ]}
         else
             {}
@@ -2035,12 +1790,10 @@ let
         LocationMappingChecks,
         SourceCodeMappingChecks,
         RosterLocationMappingChecks,
-        FacilityAnalysisKeyChecks,
-        MappedFacilityAnalysisChecks,
         TargetFacilityMappingChecks,
         CanonicalTargetMixChecks,
         AliasTargetMixChecks,
-        EnabledTargetPresenceChecks,
+        MappedTargetPresenceChecks,
         MappingKeyChecks,
         CategoryChecks,
         RetainedRoleChecks,
@@ -2703,16 +2456,14 @@ shared #"MW Fortnight Hours Check" =
 let
     // Match the existing 0.000001-minute tolerance, expressed in hours.
     ToleranceHours = 0.000001 / 60,
-    EnabledMappedTargets = Table.SelectRows(
+    MappedTargets = Table.SelectRows(
         #"MW TargetMinutes Source Prepare",
         each [TargetFacilityMappingCount] = 1 and
-            [FacilityAnalysisRowCount] = 1 and
-            [Effort Management Analysis] = true and
             List.Contains({"RN", "ALL"}, [MinuteType])
     ),
     CanonicalTargetHours = Table.Buffer(
         Table.Group(
-            EnabledMappedTargets,
+            MappedTargets,
             {"Facility", "MinuteType"},
             {
                 {
@@ -3062,16 +2813,6 @@ let
 in
     Result;
 
-// Query: IMPORT Whiddon Lists
-// Purpose: Reads the Whiddon SharePoint list catalogue once for role and facility extracts.
-// Output: Buffered SharePoint list navigation table.
-shared #"IMPORT Whiddon Lists" = let
-    ListNavigation = SharePoint.Tables("https://centri001.sharepoint.com/sites/WhiddonCENTRI",
-        [Implementation="2.0", ViewMode="All"]),
-    BufferedLists = Table.Buffer(ListNavigation)
-in
-    BufferedLists;
-
 // Query: LINK Role Lists
 // Purpose: Preserves the existing workbook query interface while external access is owned by IMPORT Whiddon Lists.
 shared #"LINK Role Lists" = #"IMPORT Whiddon Lists";
@@ -3130,6 +2871,7 @@ in
 
 // Query: EXTRACT Unit Analysis
 // Purpose: Selects the canonical Facility Analysis controls used after the five-to-three mapping.
+// Notes: Retained for later per-unit scoping; this extraction currently dead-ends in the preserved Facility Analysis queries.
 shared #"EXTRACT Unit Analysis" = let
     AnalysisItems = #"IMPORT Whiddon Lists"{[Id="17ed8e30-5707-4af2-8e21-d68eb8184287"]}[Items],
     #"Removed Other Columns" = Table.SelectColumns(AnalysisItems,{"Title", "Effort Management Analysis"}),
@@ -3140,6 +2882,7 @@ in
 // Query: Units
 // Purpose: Preserves the legacy enabled-unit interface from Facility Analysis.
 // Inputs: EXTRACT Unit Analysis.
+// Notes: Retained for later per-unit scoping; the active all-facility allocation does not reference this query.
 shared Units = let
     Source = #"EXTRACT Unit Analysis",
     #"Filtered Rows1" = Table.SelectRows(Source, each ([Effort Management Analysis] = true)),

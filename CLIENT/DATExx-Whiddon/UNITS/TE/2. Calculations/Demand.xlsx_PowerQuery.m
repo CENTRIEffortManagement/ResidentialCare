@@ -1,6 +1,6 @@
 // Power Query from: Demand.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Demand.xlsx
-// Extracted: 2026-09-20T21:32:16.399Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\Demand.xlsx
+// Extracted: 2026-10-01T23:08:00.927Z
 
 section Section1;
 
@@ -186,6 +186,21 @@ shared #"IMPORT Table_RosterStart" = let
 in
     #"Changed Type";
 
+shared #"IMPORT RoleShiftDayDemandANACC" = let
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\1. Input\Demand-MasterRoster Manual Read.xlsx"), null, true),
+    RoleShiftDemandANACC_Table = Source{[Item="RoleShiftDemandANACC",Kind="Table"]}[Data],
+    #"Changed Type1" = Table.TransformColumnTypes(RoleShiftDemandANACC_Table,{{"Role", type text}, {"AM", type number}, {"PM", type number}, {"NIGHT", type number}, {"Total", type number}})
+in
+    #"Changed Type1";
+
+shared RoleShiftDayDemandANACCTABLE = let
+    Source = #"IMPORT RoleShiftDayDemandANACC",
+    #"Removed Columns" = Table.RemoveColumns(Source,{"Total"}),
+    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Removed Columns", {"Role"}, "Attribute", "Value"),
+    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Other Columns",{{"Attribute", "Shift"}, {"Value", "Demand"}})
+in
+    #"Renamed Columns";
+
 shared #"ShiftDurations!!" = let
     Source = #"IMPORT ShiftDemandUnitINTERVAL",
     #"Removed Duplicates1" = Table.Distinct(Source, {"Role", "IntervalListx"}),
@@ -241,7 +256,7 @@ in
 
 shared ShiftDemandHCAverageCheck = let
     Source = ShiftDemandHCAverageM,
-    #"Inserted Multiplication" = Table.AddColumn(Source, "DemandHrs", each [ShiftDemandHCAverage] * [ShiftDurations.ShiftDuration]*24, type number),
+    #"Inserted Multiplication" = Table.AddColumn(Source, "DemandHrs", each [ShiftDemandHCAverage] * [ShiftDurations.Duration]*24),
     #"Grouped Rows" = Table.Group(#"Inserted Multiplication", {"Facility", "Role"}, {{"CareDemandRosterHRS", each List.Sum([DemandHrs]), type number}}),
     #"Added Custom" = Table.AddColumn(#"Grouped Rows", "CareDemandWkHRS", each [CareDemandRosterHRS]/2)
 in
@@ -256,21 +271,6 @@ shared CareDemandHRSWeeklyCheck = let
     #"Added Custom1" = Table.AddColumn(#"Grouped Rows", "CareDemandHRSWeekly", each [CareDemandHRSRoster]/2)
 in
     #"Added Custom1";
-
-shared #"IMPORT RoleShiftDayDemandANACC" = let
-    Source = Excel.Workbook(File.Contents(#"Folder-1Input"&"\Demand-MasterRoster Manual Read.xlsx"), null, true),
-    RoleShiftDemandANACC_Table = Source{[Item="RoleShiftDemandANACC",Kind="Table"]}[Data],
-    #"Changed Type1" = Table.TransformColumnTypes(RoleShiftDemandANACC_Table,{{"Role", type text}, {"AM", type number}, {"PM", type number}, {"NIGHT", type number}, {"Total", type number}})
-in
-    #"Changed Type1";
-
-shared RoleShiftDayDemandANACCTABLE = let
-    Source = #"IMPORT RoleShiftDayDemandANACC",
-    #"Removed Columns" = Table.RemoveColumns(Source,{"Total"}),
-    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Removed Columns", {"Role"}, "Attribute", "Value"),
-    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Other Columns",{{"Attribute", "Shift"}, {"Value", "Demand"}})
-in
-    #"Renamed Columns";
 
 shared ShiftDemandHCAverageANACC = let
     Source = Table.NestedJoin(#"ShiftEffort !!", {"Role", "Date", "ShiftPeriod"}, #"ShiftDurations!!", {"Role", "Date", "Shift"}, "ShiftDurations", JoinKind.LeftOuter),
@@ -295,9 +295,3 @@ shared DaysToRosterStart = let
     Custom = #"Added Custom"{0}[Custom]
 in
     Custom;
-
-shared #"RoleShiftDayDemandANACCTABLE (2)" = let
-    Source = #"IMPORT RoleShiftDayDemandANACC",
-    #"Removed Columns" = Table.RemoveColumns(Source,{"Total"})
-in
-    #"Removed Columns";
