@@ -1,0 +1,71 @@
+{
+  "Rows": [
+    {
+      "Start": 0.0,
+      "Status": "Forecast",
+      "Finish": 44.9828063,
+      "Id": "Org/StaffAll",
+      "Attempt": 1
+    },
+    {
+      "Start": 44.9828063,
+      "Status": "Forecast",
+      "Finish": 117.8629335,
+      "Id": "Org/EffortAll",
+      "Attempt": 1
+    },
+    {
+      "Start": 117.8629335,
+      "Status": "Forecast",
+      "Finish": 157.6757839,
+      "Id": "Org/Outcomes",
+      "Attempt": 1
+    },
+    {
+      "Start": 157.6757839,
+      "Status": "Forecast",
+      "Finish": 204.7430948,
+      "Id": "Org/Inefficiencies",
+      "Attempt": 1
+    },
+    {
+      "Start": 204.7430948,
+      "Status": "Forecast",
+      "Finish": 244.75004239999998,
+      "Id": "Org/Reporting",
+      "Attempt": 1
+    }
+  ],
+  "UnknownAdmission": "",
+  "Peak": 1,
+  "TotalSeconds": 244.75004239999998,
+  "Complete": true,
+  "Durations": {
+    "Org/Outcomes": {
+      "Observed": "2026-09-27T10:52:50.4434485+00:00",
+      "Seconds": 39.8128504,
+      "SourceRun": "20260927-203523-977a863e"
+    },
+    "Org/EffortAll": {
+      "Observed": "2026-09-27T10:52:10.6104992+00:00",
+      "Seconds": 72.8801272,
+      "SourceRun": "20260927-203523-977a863e"
+    },
+    "Org/Reporting": {
+      "Observed": "2026-09-27T10:55:00.4212281+00:00",
+      "Seconds": 40.0069476,
+      "SourceRun": "20260927-203523-977a863e"
+    },
+    "Org/StaffAll": {
+      "Observed": "2026-09-27T21:00:43.9137319+00:00",
+      "Seconds": 44.9828063,
+      "SourceRun": "20260928-065316-5a404270"
+    },
+    "Org/Inefficiencies": {
+      "Observed": "2026-09-27T10:53:37.5303076+00:00",
+      "Seconds": 47.0673109,
+      "SourceRun": "20260927-203523-977a863e"
+    }
+  },
+  "Untimed": []
+}

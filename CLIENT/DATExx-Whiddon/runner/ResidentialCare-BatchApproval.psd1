@@ -1,13 +1,13 @@
 @{
     # Operational settings only. The historical filename and project configuration
     # key are retained for compatibility; there is no separate live-approval gate.
-    OrganisationUnits = @('Unit1', 'Unit2')
-    # Default menu option 1 and unqualified -RunAll scope. Organisation work is
-    # excluded until its workbook inputs are configured for these Units.
+    OrganisationUnits = @('BD', 'TE', 'JH-RY')
+    # Default menu option 1 and unqualified -RunAll scope. Run the configured
+    # Units and then the organisation release chain through Tableau Connection.
     RunAllUnits = @('BD', 'TE', 'JH-RY')
-    RunAllIncludeOrg = $false
-    # Temporary unit-only onboarding. Existing Unit1/Unit2 roles are unchanged;
-    # these Units use EN and are not organisation consumers yet.
+    RunAllIncludeOrg = $true
+    # Current facility Units use EN. Existing Unit1/Unit2 roles are unchanged
+    # and remain available for explicit selections.
     AdditionalUnits = @(
         @{ Folder = 'BD'; Roles = @('AIN', 'EN', 'RN') }
         @{ Folder = 'TE'; Roles = @('AIN', 'EN', 'RN') }

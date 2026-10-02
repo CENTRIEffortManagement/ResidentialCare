@@ -60,24 +60,25 @@ function Invoke-FakeRun {
 try {
     $catalogue = Get-BatchCatalogue $repoRoot
     $defaultRun = Select-BatchPlan $catalogue -RunAll
-    Assert-True ($defaultRun.Jobs.Count -eq 78) 'Run all selects BD, TE and JH-RY workbooks'
-    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 78) 'unqualified preview matches Run all scope'
-    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 33) 'default run resolves three Unit batch sets'
-    Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2', 'Org')).Count -eq 0) 'Run all excludes Unit1, Unit2 and organisation jobs'
-    Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and -not $catalogue.RunAllIncludeOrg) 'saved default scope is the three requested Units only'
-    $all = Select-BatchPlan $catalogue -RunAll -Units Unit1,Unit2 -IncludeOrg
-    Assert-True ($all.Jobs.Count -eq 60 -and @($all.Jobs | Group-Object BatchKey).Count -eq 27) 'explicit legacy selection retains Unit1, Unit2 and organisation work'
+    Assert-True ($defaultRun.Jobs.Count -eq 86) 'Run all selects BD, TE, JH-RY and eight organisation workbooks'
+    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 86) 'unqualified preview matches Run all scope'
+    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 38) 'default run resolves three Unit batch sets and five organisation batches'
+    Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2')).Count -eq 0 -and @($defaultRun.Jobs | Where-Object Unit -eq 'Org').Count -eq 8) 'Run all excludes legacy Units and includes the complete organisation release chain'
+    Assert-True ($defaultRun.Jobs[-1].Id -eq 'Org/Reporting' -and $defaultRun.Jobs[-1].RelativePath -eq '2. Calculations/Tableau Connection.xlsx') 'Run all ends at Tableau Connection'
+    Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and $catalogue.RunAllIncludeOrg) 'saved default scope includes organisation work'
+    $all = Select-BatchPlan $catalogue -RunAll -Units Unit1,Unit2
+    Assert-True ($all.Jobs.Count -eq 52 -and @($all.Jobs | Group-Object BatchKey).Count -eq 22) 'explicit legacy Unit selection remains available without organisation work'
     Assert-True ($all.Jobs[0].Id -eq 'Unit1/AllocationInput') 'numeric Unit and catalogue order'
     Assert-True (@($all.Jobs | Where-Object RelativePath -match 'TestRole').Count -eq 0) 'test roles excluded'
     Assert-True (-not $catalogue.Settings.ContainsKey('Approved')) 'operational settings do not require approval metadata'
-    Assert-True (($catalogue.OrgUnits -join ',') -eq 'Unit1,Unit2') 'organisation consumer scope is retained'
+    Assert-True (($catalogue.OrgUnits -join ',') -eq 'BD,TE,JH-RY') 'organisation consumer scope matches the default facility Units'
     Assert-True (($catalogue.Units -join ',') -eq 'Unit1,Unit2,BD,TE,JH-RY') 'BD, TE and JH-RY are added after legacy Units'
-    Assert-Throws { Select-BatchPlan $catalogue -RunAll -Units BD -IncludeOrg } 'additional Unit cannot be combined with organisation jobs'
-    $orgStaffAll = @($all.Jobs | Where-Object Id -eq 'Org/StaffAll')[0]
-    $orgEffortAll = @($all.Jobs | Where-Object Id -eq 'Org/EffortAll')[0]
-    Assert-True (($orgStaffAll.Dependencies -join ',') -eq 'Unit1/Staff,Unit2/Staff') 'organisation staff dependencies remain Unit1 and Unit2 only'
-    Assert-True ('Unit1/Effort' -in $orgEffortAll.Dependencies -and 'Unit2/Effort' -in $orgEffortAll.Dependencies -and
-        @($orgEffortAll.Dependencies | Where-Object { $_ -match '^(BD|TE|JH-RY)/' }).Count -eq 0) 'organisation effort dependencies exclude additional Units'
+    Assert-Throws { Select-BatchPlan $catalogue -RunAll -Units Unit1 -IncludeOrg } 'legacy Unit cannot be combined with current organisation jobs'
+    $orgStaffAll = @($defaultRun.Jobs | Where-Object Id -eq 'Org/StaffAll')[0]
+    $orgEffortAll = @($defaultRun.Jobs | Where-Object Id -eq 'Org/EffortAll')[0]
+    Assert-True (($orgStaffAll.Dependencies -join ',') -eq 'BD/Staff,TE/Staff,JH-RY/Staff') 'organisation staff waits for all default facility staff outputs'
+    Assert-True ('BD/Effort' -in $orgEffortAll.Dependencies -and 'TE/Effort' -in $orgEffortAll.Dependencies -and
+        'JH-RY/Effort' -in $orgEffortAll.Dependencies) 'organisation effort waits for all default facility Effort outputs'
     $unitPicks = @(Get-UnitPickList $catalogue)
     Assert-True ('Unit1' -in $unitPicks -and 'Unit2' -in $unitPicks -and 'BD' -in $unitPicks -and 'TE' -in $unitPicks -and 'JH-RY' -in $unitPicks) 'Unit picker lists legacy and additional Units'
     Assert-True ('All - all listed Units' -in $unitPicks) 'Unit picker offers All'
@@ -147,6 +148,7 @@ try {
     $fixtureSettingsPath = Join-Path $fixtureDate 'runner/ResidentialCare-BatchApproval.psd1'
     $fixtureSettingsText = [IO.File]::ReadAllText($fixtureSettingsPath)
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?ms)^    AdditionalUnits = @\(.*?^    \)', '    AdditionalUnits = @()')
+    $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    OrganisationUnits = .*$', "    OrganisationUnits = @('Unit1', 'Unit2')")
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    RunAllUnits = .*$', "    RunAllUnits = @('Unit1', 'Unit2')")
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    RunAllIncludeOrg = .*$', '    RunAllIncludeOrg = $true')
     [IO.File]::WriteAllText($fixtureSettingsPath, $fixtureSettingsText)

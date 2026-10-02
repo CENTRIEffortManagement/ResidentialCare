@@ -1,0 +1,60 @@
+{
+  "Rows": [
+    {
+      "Id": "Org/StaffAll",
+      "Attempt": 1,
+      "Start": 0.5823366,
+      "Status": "Completed",
+      "Finish": 41.3162331
+    }
+  ],
+  "GapSeconds": 1,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ActiveIntervalSeconds": 40.7338965,
+  "ElapsedSeconds": 41.3342223,
+  "RunId": "20260928-082431-8106f6c4",
+  "Status": "PartialOrFailed",
+  "IncompleteAttempts": [],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Untimed": [
+    {
+      "Id": "Org/EffortAll",
+      "Reason": "Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\~$Effort-All.xlsx",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/StaffAll",
+        "BD/Effort",
+        "TE/Effort",
+        "JH-RY/Effort"
+      ]
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Reason": "Waiting for Org/EffortAll",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ]
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Reason": "Waiting for Org/Outcomes",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Outcomes"
+      ]
+    },
+    {
+      "Id": "Org/Reporting",
+      "Reason": "Waiting for Org/Inefficiencies",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ]
+    }
+  ],
+  "PeakConcurrency": 1
+}

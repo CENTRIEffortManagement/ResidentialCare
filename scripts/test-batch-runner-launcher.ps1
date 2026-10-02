@@ -150,7 +150,9 @@ function Invoke-BatchSchedule {
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest (@($dispatch.Jobs | Where-Object { $_ -like 'Unit2/*' }).Count -eq 0 -and @($dispatch.Jobs | Where-Object { $_ -like 'Org/*' }).Count -eq 2) 'mixed selection scopes Unit work and retains organisation work'
     $result = Invoke-LauncherFixture -InputLines @('1') -ExpectPause -CheckGateReleased
-    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0') 'Run all keeps the completion result visible'
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0' -and $result.Output -match 'Run all .*Tableau Connection') 'Run all is labelled with its final release target and keeps the completion result visible'
+    $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
+    Assert-LauncherTest ($dispatch.Jobs[-1] -eq 'Org/Reporting' -and @($dispatch.Jobs | Where-Object { $_ -like 'Org/*' }).Count -eq 8) 'menu option 1 dispatches the complete organisation chain through Tableau Connection'
     $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)
     $result = Invoke-LauncherFixture -InputLines @('7') -ExpectPause
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'File access and selection validation passed') 'successful menu validation stays visible'

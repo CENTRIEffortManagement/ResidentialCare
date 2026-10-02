@@ -1,0 +1,49 @@
+{
+  "GapSeconds": 1,
+  "PeakConcurrency": 1,
+  "ElapsedSeconds": 240.2227799,
+  "Rows": [
+    {
+      "Start": 0.6340579,
+      "Attempt": 1,
+      "Finish": 40.6252949,
+      "Id": "Org/StaffAll",
+      "Status": "Completed"
+    },
+    {
+      "Start": 40.6505557,
+      "Attempt": 1,
+      "Finish": 115.3573128,
+      "Id": "Org/EffortAll",
+      "Status": "Completed"
+    },
+    {
+      "Start": 115.3811727,
+      "Attempt": 1,
+      "Finish": 154.9810154,
+      "Id": "Org/Outcomes",
+      "Status": "Completed"
+    },
+    {
+      "Start": 155.0048774,
+      "Attempt": 1,
+      "Finish": 200.0368155,
+      "Id": "Org/Inefficiencies",
+      "Status": "Completed"
+    },
+    {
+      "Start": 200.0608955,
+      "Attempt": 1,
+      "Finish": 240.2127646,
+      "Id": "Org/Reporting",
+      "Status": "Completed"
+    }
+  ],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ActiveIntervalSeconds": 239.48164400000002,
+  "Untimed": [],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Status": "Completed",
+  "RunId": "20260928-081444-b910086d",
+  "IncompleteAttempts": []
+}

@@ -1,0 +1,83 @@
+{
+  "Durations": {
+    "BD/Capacity": {
+      "SourceRun": "20260928-065316-5a404270",
+      "Observed": "2026-09-27T21:08:05.9677685+00:00",
+      "Seconds": 44.3921024
+    },
+    "TE/Capacity": {
+      "SourceRun": "20260928-065316-5a404270",
+      "Observed": "2026-09-27T21:06:49.2608972+00:00",
+      "Seconds": 49.0003875
+    },
+    "TE/Effort": {
+      "SourceRun": "20260928-065316-5a404270",
+      "Observed": "2026-09-27T21:07:33.6634570+00:00",
+      "Seconds": 44.3721618
+    },
+    "JH-RY/Capacity": {
+      "SourceRun": "20260928-065316-5a404270",
+      "Observed": "2026-09-27T21:07:38.0244904+00:00",
+      "Seconds": 44.9269839
+    },
+    "BD/Effort": {
+      "SourceRun": "20260928-065316-5a404270",
+      "Observed": "2026-09-27T21:08:50.7773726+00:00",
+      "Seconds": 44.7810693
+    },
+    "JH-RY/Effort": {
+      "SourceRun": "20260928-065316-5a404270",
+      "Observed": "2026-09-27T21:08:22.6151247+00:00",
+      "Seconds": 44.5626173
+    }
+  },
+  "Rows": [
+    {
+      "Status": "Forecast",
+      "Id": "BD/Capacity",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Finish": 44.3921024
+    },
+    {
+      "Status": "Forecast",
+      "Id": "TE/Capacity",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Finish": 49.0003875
+    },
+    {
+      "Status": "Forecast",
+      "Id": "JH-RY/Capacity",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Finish": 44.9269839
+    },
+    {
+      "Status": "Forecast",
+      "Id": "BD/Effort",
+      "Attempt": 1,
+      "Start": 44.3921024,
+      "Finish": 89.1731717
+    },
+    {
+      "Status": "Forecast",
+      "Id": "JH-RY/Effort",
+      "Attempt": 1,
+      "Start": 44.9269839,
+      "Finish": 89.48960120000001
+    },
+    {
+      "Status": "Forecast",
+      "Id": "TE/Effort",
+      "Attempt": 1,
+      "Start": 49.0003875,
+      "Finish": 93.3725493
+    }
+  ],
+  "Peak": 3,
+  "UnknownAdmission": "",
+  "Untimed": [],
+  "TotalSeconds": 93.3725493,
+  "Complete": true
+}

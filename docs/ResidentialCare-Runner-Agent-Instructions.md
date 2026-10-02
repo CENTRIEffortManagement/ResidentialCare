@@ -16,9 +16,10 @@ remains the fallback until rollout is accepted.
 
 The expanded runner's primary action is `-RunAll`. Without a Unit selector, it
 uses `RunAllUnits` and `RunAllIncludeOrg` from the batch settings file. The current
-default runs BD, TE and JH-RY only; Unit1, Unit2 and organisation jobs require an
-explicit selection. The runner executes **up to twelve ready batches concurrently**
-across the selected branches; files within each batch remain sequential.
+default runs BD, TE and JH-RY, followed by the organisation release chain ending
+at `Tableau Connection.xlsx`; Unit1 and Unit2 require an explicit selection. The
+runner executes **up to twelve ready batches concurrently** across the selected
+branches; files within each batch remain sequential.
 `-MaxParallelBatches` accepts 1 through 12, default 12.
 Batch IDs and the saved role profile are the manual-control interface.
 

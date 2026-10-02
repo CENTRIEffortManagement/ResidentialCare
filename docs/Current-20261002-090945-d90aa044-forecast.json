@@ -1,0 +1,83 @@
+{
+  "Complete": true,
+  "Peak": 3,
+  "Untimed": [],
+  "Rows": [
+    {
+      "Id": "BD/Capacity",
+      "Finish": 48.0805869,
+      "Start": 0.0,
+      "Attempt": 1,
+      "Status": "Forecast"
+    },
+    {
+      "Id": "TE/Capacity",
+      "Finish": 45.7343546,
+      "Start": 0.0,
+      "Attempt": 1,
+      "Status": "Forecast"
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "Finish": 46.7682697,
+      "Start": 0.0,
+      "Attempt": 1,
+      "Status": "Forecast"
+    },
+    {
+      "Id": "TE/Effort",
+      "Finish": 91.06598650000001,
+      "Start": 45.7343546,
+      "Attempt": 1,
+      "Status": "Forecast"
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "Finish": 92.6403402,
+      "Start": 46.7682697,
+      "Attempt": 1,
+      "Status": "Forecast"
+    },
+    {
+      "Id": "BD/Effort",
+      "Finish": 91.84197549999999,
+      "Start": 48.0805869,
+      "Attempt": 1,
+      "Status": "Forecast"
+    }
+  ],
+  "UnknownAdmission": "",
+  "TotalSeconds": 92.6403402,
+  "Durations": {
+    "JH-RY/Effort": {
+      "Observed": "2026-10-01T06:49:53.8144863+00:00",
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Seconds": 45.8720705
+    },
+    "BD/Capacity": {
+      "Observed": "2026-10-01T06:50:11.5428177+00:00",
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Seconds": 48.0805869
+    },
+    "TE/Capacity": {
+      "Observed": "2026-10-01T06:49:11.7977913+00:00",
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Seconds": 45.7343546
+    },
+    "BD/Effort": {
+      "Observed": "2026-10-01T06:50:55.3375724+00:00",
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Seconds": 43.7613886
+    },
+    "JH-RY/Capacity": {
+      "Observed": "2026-10-01T06:49:07.8924287+00:00",
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Seconds": 46.7682697
+    },
+    "TE/Effort": {
+      "Observed": "2026-10-01T06:49:57.2290959+00:00",
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Seconds": 45.3316319
+    }
+  }
+}

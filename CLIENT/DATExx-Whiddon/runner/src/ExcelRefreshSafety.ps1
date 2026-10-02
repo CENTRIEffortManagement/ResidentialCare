@@ -220,7 +220,7 @@ function Disable-WorkbookBackgroundRefresh {
     try {
         for ($sheetIndex = 1; $sheetIndex -le [int] $worksheets.Count; $sheetIndex++) {
             $sheet = if ([Runtime.InteropServices.Marshal]::IsComObject($worksheets)) { $worksheets.Item($sheetIndex) } else { $worksheets[$sheetIndex - 1] }
-            $queryTables = $null
+            $queryTables = $null; $listObjects = $null
             try {
                 if ($null -eq $sheet) { throw 'Excel returned a null worksheet while preparing synchronous refresh.' }
                 $sheetName = [string] $sheet.Name
@@ -242,8 +242,35 @@ function Disable-WorkbookBackgroundRefresh {
                     catch { Write-Log "Background refresh setting unavailable for query table '$sheetName/$queryTableName': $($_.Exception.Message)" 'WARN' }
                     finally { Release-ExcelComReference $queryTable }
                 }
+                $listObjects = @()
+                if ([Runtime.InteropServices.Marshal]::IsComObject($sheet) -or
+                    $sheet.PSObject.Properties['ListObjects']) { $listObjects = $sheet.ListObjects }
+                for ($listIndex = 1; $listIndex -le [int] $listObjects.Count; $listIndex++) {
+                    $listObject = if ([Runtime.InteropServices.Marshal]::IsComObject($listObjects)) { $listObjects.Item($listIndex) } else { $listObjects[$listIndex - 1] }
+                    $queryTable = $null
+                    try {
+                        if ($null -eq $listObject) { throw 'Excel returned a null table while preparing synchronous refresh.' }
+                        if ([int] $listObject.SourceType -notin @(0, 3)) { continue }
+                        $queryTable = $listObject.QueryTable
+                        if ($null -eq $queryTable) { throw "External table '$sheetName/$($listObject.Name)' has no query table." }
+                        $settings.Add([pscustomobject] @{
+                            Target = $queryTable
+                            Label = "table '$sheetName/$($listObject.Name)'"
+                            Original = [bool] $queryTable.BackgroundQuery
+                            Changed = $false
+                        })
+                        $queryTableSettingCount++
+                        $queryTable = $null # The settings list owns this COM reference until restore.
+                    }
+                    catch { Write-Log "Background refresh setting unavailable for table '$sheetName/$($listObject.Name)': $($_.Exception.Message)" 'WARN' }
+                    finally {
+                        Release-ExcelComReference $queryTable
+                        Release-ExcelComReference $listObject
+                    }
+                }
             }
             finally {
+                Release-ExcelComReference $listObjects
                 Release-ExcelComReference $queryTables
                 Release-ExcelComReference $sheet
             }
@@ -261,7 +288,7 @@ function Disable-WorkbookBackgroundRefresh {
         }
         catch { Write-Log "Could not force synchronous refresh for $($setting.Label): $($_.Exception.Message)" 'WARN' }
     }
-    Write-Log "Temporarily disabled background refresh for $changedCount of $($settings.Count) supported refresh object(s): $connectionSettingCount connection(s), $queryTableSettingCount worksheet query table(s)."
+    Write-Log "Temporarily disabled background refresh for $changedCount of $($settings.Count) supported refresh object(s): $connectionSettingCount connection(s), $queryTableSettingCount loaded query table(s)."
     return @($settings)
 }
 
@@ -285,6 +312,103 @@ function Restore-WorkbookBackgroundRefresh {
     }
     if ($null -ne $restoreError) { throw $restoreError }
     Write-Log 'Restored workbook background-refresh settings.'
+}
+
+function Add-WorksheetQueryRefreshEvidence {
+    param($QueryTable, [string] $Label, [hashtable] $Evidence)
+    $connection = $null; $target = $null
+    try {
+        if ($null -eq $QueryTable) { throw "Excel returned a null query table for '$Label'." }
+        if (-not [bool] $QueryTable.EnableRefresh) { throw "Required worksheet query '$Label' has refresh disabled." }
+        $connection = $QueryTable.WorkbookConnection
+        if ($null -eq $connection) { throw "Required worksheet query '$Label' has no workbook connection." }
+        if (-not [bool] $connection.RefreshWithRefreshAll) {
+            throw "Required worksheet query '$Label' is excluded from Refresh All."
+        }
+        $target = switch ([int] $connection.Type) {
+            1 { $connection.OLEDBConnection; break }
+            2 { $connection.ODBCConnection; break }
+            default { throw "Required worksheet query '$Label' has no supported refresh-date connection." }
+        }
+        if ($null -eq $target) { throw "Required worksheet query '$Label' has no refresh-date connection." }
+        $Evidence[$Label] = [pscustomobject] @{
+            Connection = [string] $connection.Name
+            RefreshDate = [datetime] $target.RefreshDate
+        }
+    }
+    finally {
+        Release-ExcelComReference $target
+        Release-ExcelComReference $connection
+    }
+}
+
+function Get-WorksheetQueryRefreshEvidence {
+    param($Workbook)
+    $evidence = @{}
+    $worksheets = $Workbook.Worksheets
+    try {
+        for ($sheetIndex = 1; $sheetIndex -le [int] $worksheets.Count; $sheetIndex++) {
+            $sheet = if ([Runtime.InteropServices.Marshal]::IsComObject($worksheets)) { $worksheets.Item($sheetIndex) } else { $worksheets[$sheetIndex - 1] }
+            $queryTables = $null; $listObjects = $null
+            try {
+                if ($null -eq $sheet) { throw 'Excel returned a null worksheet while checking query refresh evidence.' }
+                $sheetName = [string] $sheet.Name
+                $queryTables = $sheet.QueryTables
+                for ($queryIndex = 1; $queryIndex -le [int] $queryTables.Count; $queryIndex++) {
+                    $queryTable = if ([Runtime.InteropServices.Marshal]::IsComObject($queryTables)) { $queryTables.Item($queryIndex) } else { $queryTables[$queryIndex - 1] }
+                    try {
+                        if ($null -eq $queryTable) { throw "Excel returned a null query table on '$sheetName'." }
+                        $label = "$sheetName/$($queryTable.Name)"
+                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence
+                    }
+                    finally { Release-ExcelComReference $queryTable }
+                }
+                # Excel can expose Power Query output as a ListObject rather than Worksheet.QueryTables.
+                $listObjects = @()
+                if ([Runtime.InteropServices.Marshal]::IsComObject($sheet) -or
+                    $sheet.PSObject.Properties['ListObjects']) { $listObjects = $sheet.ListObjects }
+                for ($listIndex = 1; $listIndex -le [int] $listObjects.Count; $listIndex++) {
+                    $listObject = if ([Runtime.InteropServices.Marshal]::IsComObject($listObjects)) { $listObjects.Item($listIndex) } else { $listObjects[$listIndex - 1] }
+                    $queryTable = $null
+                    try {
+                        if ($null -eq $listObject) { throw "Excel returned a null table on '$sheetName'." }
+                        if ([int] $listObject.SourceType -notin @(0, 3)) { continue }
+                        $label = "$sheetName/$($listObject.Name)"
+                        if ($evidence.ContainsKey($label)) { continue }
+                        $queryTable = $listObject.QueryTable
+                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence
+                    }
+                    finally {
+                        Release-ExcelComReference $queryTable
+                        Release-ExcelComReference $listObject
+                    }
+                }
+            }
+            finally {
+                Release-ExcelComReference $listObjects
+                Release-ExcelComReference $queryTables
+                Release-ExcelComReference $sheet
+            }
+        }
+    }
+    finally { Release-ExcelComReference $worksheets }
+    if ($evidence.Count -eq 0) { throw 'No loaded worksheet queries were available to verify refresh.' }
+    return $evidence
+}
+
+function Assert-WorksheetQueryRefreshEvidence {
+    param($Workbook, [hashtable] $Before)
+    $after = Get-WorksheetQueryRefreshEvidence $Workbook
+    foreach ($label in $Before.Keys) {
+        if (-not $after.ContainsKey($label)) { throw "Required worksheet query '$label' disappeared during refresh." }
+        if ($after[$label].Connection -ne $Before[$label].Connection) {
+            throw "Required worksheet query '$label' changed workbook connection during refresh."
+        }
+        if ($after[$label].RefreshDate -le $Before[$label].RefreshDate) {
+            throw "Required worksheet query '$label' did not report a new connection refresh date. Refusing to save stale results."
+        }
+        Write-Log "Verified worksheet query '$label' refreshed through '$($after[$label].Connection)' at $($after[$label].RefreshDate.ToString('o'))."
+    }
 }
 
 function Write-RefreshWorkerState {
@@ -551,7 +675,7 @@ function Get-ExcelActivity {
     try {
         for ($sheetIndex = 1; $sheetIndex -le [int] $worksheets.Count; $sheetIndex++) {
             $sheet = if ([Runtime.InteropServices.Marshal]::IsComObject($worksheets)) { $worksheets.Item($sheetIndex) } else { $worksheets[$sheetIndex - 1] }
-            $queryTables = $null
+            $queryTables = $null; $listObjects = $null
             try {
                 if ($null -eq $sheet) { throw 'Excel returned a null worksheet while checking readiness.' }
                 $sheetName = [string] $sheet.Name
@@ -565,8 +689,27 @@ function Get-ExcelActivity {
                     }
                     finally { Release-ExcelComReference $queryTable }
                 }
+                $listObjects = @()
+                if ([Runtime.InteropServices.Marshal]::IsComObject($sheet) -or
+                    $sheet.PSObject.Properties['ListObjects']) { $listObjects = $sheet.ListObjects }
+                for ($listIndex = 1; $listIndex -le [int] $listObjects.Count; $listIndex++) {
+                    $listObject = if ([Runtime.InteropServices.Marshal]::IsComObject($listObjects)) { $listObjects.Item($listIndex) } else { $listObjects[$listIndex - 1] }
+                    $queryTable = $null
+                    try {
+                        if ($null -eq $listObject) { throw "Excel returned a null table on '$sheetName' while checking readiness." }
+                        if ([int] $listObject.SourceType -notin @(0, 3)) { continue }
+                        $queryTable = $listObject.QueryTable
+                        if ($null -eq $queryTable) { throw "External table '$sheetName/$($listObject.Name)' has no query table." }
+                        if ($queryTable.Refreshing) { $active += "$sheetName/$($listObject.Name)" }
+                    }
+                    finally {
+                        Release-ExcelComReference $queryTable
+                        Release-ExcelComReference $listObject
+                    }
+                }
             }
             finally {
+                Release-ExcelComReference $listObjects
                 Release-ExcelComReference $queryTables
                 Release-ExcelComReference $sheet
             }

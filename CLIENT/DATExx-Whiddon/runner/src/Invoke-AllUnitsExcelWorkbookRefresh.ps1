@@ -354,6 +354,8 @@ try {
     $refreshStart = Get-Date
     Set-RefreshPhase 'PreparingSynchronousRefresh'
     $backgroundRefreshSettings = @(Disable-WorkbookBackgroundRefresh -Workbook $workbook)
+    $verifyDemandOutputs = $WorkbookName -match '(^|/)(DemandIntervals|Demand)$'
+    $queryRefreshBefore = if ($verifyDemandOutputs) { Get-WorksheetQueryRefreshEvidence $workbook } else { $null }
     Set-RefreshPhase 'Refreshing'
     Write-Log "Starting workbook refresh."
     $workbook.RefreshAll()
@@ -361,6 +363,10 @@ try {
 
     # SkipAsyncWait is retained for CLI compatibility; it cannot bypass the readiness gate.
     Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
+    if ($verifyDemandOutputs) {
+        Set-RefreshPhase 'VerifyingQueryRefresh'
+        Assert-WorksheetQueryRefreshEvidence $workbook $queryRefreshBefore
+    }
 
     Assert-NotStopNowRequested
 

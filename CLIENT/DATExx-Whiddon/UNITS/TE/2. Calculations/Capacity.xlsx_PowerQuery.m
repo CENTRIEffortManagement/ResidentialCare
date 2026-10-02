@@ -1,6 +1,6 @@
 // Power Query from: Capacity.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\Capacity.xlsx
-// Extracted: 2026-09-24T08:43:20.599Z
+// Extracted: 2026-09-27T08:04:12.515Z
 
 section Section1;
 
@@ -197,8 +197,6 @@ shared #"IMPORT OriginalResPeriodAvailabilityTABLE3" = let
 in
     #"Added Custom";
 
-// Query: UnitL1PathTABLE
-// Purpose: Resolve this workbook's calculation folder through canonical FilePathUrl and CentriSyncPaths.
 shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
 let
     FilePathUrl =

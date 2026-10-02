@@ -29,7 +29,8 @@ for existing workbook paths.
 Run these examples from the repository root, using PowerShell 7:
 
 ```powershell
-# Primary action: configured default Units (currently BD, TE and JH-RY only).
+# Primary action: BD, TE and JH-RY, then the organisation release chain
+# through Tableau Connection.xlsx.
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll
 
 # No Excel: inspect the resolved plan, or validate file access and locks.
@@ -37,10 +38,10 @@ Run these examples from the repository root, using PowerShell 7:
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -ValidateSelectionOnly
 
 # Explicit Unit-only run; IncludeOrg applies only to organisation consumer Units.
-./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -Units Unit1
+./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -Units BD
 
-# Explicit legacy scope, including organisation work.
-./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -Units Unit1,Unit2 -IncludeOrg
+# Explicit current scope, including organisation work.
+./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll -Units BD,TE,JH-RY -IncludeOrg
 
 # Non-contiguous batches, or named/numbered capacity role batches.
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -Units Unit1,Unit2 -Batches D1,A3 -RefreshSelected
@@ -64,10 +65,10 @@ Run these examples from the repository root, using PowerShell 7:
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -StopMode AfterBatch
 ```
 
-Opening the command without arguments presents a menu; option 1 runs the
-configured default Units. The current setting selects BD, TE and JH-RY and
-excludes Unit1, Unit2 and organisation batches. Option 3 allows an explicit
-Unit selection.
+Opening the command without arguments presents a menu; option 1 is Run all. The
+current setting refreshes BD, TE and JH-RY, then runs all eight organisation
+workbooks through `Tableau Connection.xlsx`. Unit1 and Unit2 remain available
+through option 3 as explicit Unit selections.
 The menu leaves successful, blocked and failed results visible until the operator
 presses a key to close the window. This includes validation and status results.
 Option 0 (Exit) closes immediately. Run exclusion is released before waiting, and
@@ -169,6 +170,9 @@ The historical `runner/ResidentialCare-BatchApproval.psd1` filename and
 `pq.project.json` key are retained for compatibility. That file now contains
 operational settings only:
 
+- `RunAllUnits`: the Units selected by menu option 1 and unqualified `-RunAll`.
+- `RunAllIncludeOrg`: whether that default selection includes the organisation
+  release chain.
 - `OrganisationUnits`: the configured Units consumed by organisation workbooks.
 - `AdditionalInputs`: extra read paths by stable job ID. Repository-relative paths
   and environment roots are supported, for example

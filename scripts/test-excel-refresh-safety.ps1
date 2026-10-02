@@ -28,10 +28,75 @@ $backgroundSettings = @(Disable-WorkbookBackgroundRefresh $backgroundWorkbook)
 Assert-Test (-not $backgroundTarget.BackgroundQuery -and $backgroundSettings.Count -eq 1) 'Supported background refresh was not disabled.'
 Restore-WorkbookBackgroundRefresh $backgroundSettings
 Assert-Test $backgroundTarget.BackgroundQuery 'Original background-refresh setting was not restored.'
+$listBackgroundQuery = [pscustomobject] @{ BackgroundQuery = $true; Refreshing = $false }
+$listBackgroundWorkbook = [pscustomobject] @{
+    Connections = @()
+    Worksheets = @([pscustomobject] @{
+        Name = 'Demand'; QueryTables = @()
+        ListObjects = @([pscustomobject] @{ Name = 'LoadedDemand'; SourceType = 3; QueryTable = $listBackgroundQuery })
+    })
+}
+$listBackgroundSettings = @(Disable-WorkbookBackgroundRefresh $listBackgroundWorkbook)
+Assert-Test (-not $listBackgroundQuery.BackgroundQuery -and $listBackgroundSettings.Count -eq 1) 'ListObject background refresh was not disabled.'
+Restore-WorkbookBackgroundRefresh $listBackgroundSettings
+Assert-Test $listBackgroundQuery.BackgroundQuery 'ListObject background-refresh setting was not restored.'
+
+$refreshTarget = [pscustomobject] @{ RefreshDate = [datetime] '2026-09-30T10:00:00' }
+$refreshConnection = [pscustomobject] @{
+    Name = 'Query - DemandIntervals'; Type = 1; RefreshWithRefreshAll = $true; OLEDBConnection = $refreshTarget
+}
+$refreshQuery = [pscustomobject] @{
+    Name = 'DemandIntervals'; EnableRefresh = $true; WorkbookConnection = $refreshConnection
+}
+$refreshWorkbook = [pscustomobject] @{
+    Worksheets = @([pscustomobject] @{ Name = 'Demand'; QueryTables = @($refreshQuery) })
+}
+$refreshBefore = Get-WorksheetQueryRefreshEvidence $refreshWorkbook
+$refreshTarget.RefreshDate = [datetime] '2026-10-01T10:00:00'
+Assert-WorksheetQueryRefreshEvidence $refreshWorkbook $refreshBefore
+$staleRejected = $false
+try { Assert-WorksheetQueryRefreshEvidence $refreshWorkbook (Get-WorksheetQueryRefreshEvidence $refreshWorkbook) }
+catch { $staleRejected = $_.Exception.Message -like '*did not report a new connection refresh date*' }
+Assert-Test $staleRejected 'An unchanged query refresh date was accepted.'
+$refreshConnection.RefreshWithRefreshAll = $false
+$excludedRejected = $false
+try { Get-WorksheetQueryRefreshEvidence $refreshWorkbook | Out-Null }
+catch { $excludedRejected = $_.Exception.Message -like '*excluded from Refresh All*' }
+Assert-Test $excludedRejected 'A loaded query excluded from Refresh All was accepted.'
+$refreshConnection.RefreshWithRefreshAll = $true
+$listWorkbook = [pscustomobject] @{
+    Worksheets = @([pscustomobject] @{
+        Name = 'Demand'; QueryTables = @();
+        ListObjects = @([pscustomobject] @{ Name = 'Table_ShiftDemandUnitINTERVAL'; SourceType = 3; QueryTable = $refreshQuery })
+    })
+}
+$listBefore = Get-WorksheetQueryRefreshEvidence $listWorkbook
+$refreshTarget.RefreshDate = [datetime] '2026-10-02T10:00:00'
+Assert-WorksheetQueryRefreshEvidence $listWorkbook $listBefore
+$listStaleRejected = $false
+try { Assert-WorksheetQueryRefreshEvidence $listWorkbook (Get-WorksheetQueryRefreshEvidence $listWorkbook) }
+catch { $listStaleRejected = $_.Exception.Message -like '*did not report a new connection refresh date*' }
+Assert-Test $listStaleRejected 'An unchanged ListObject query refresh date was accepted.'
+
+$emptyRejected = $false
+try { Get-WorksheetQueryRefreshEvidence ([pscustomobject] @{ Worksheets = @([pscustomobject] @{ Name = 'Empty'; QueryTables = @() }) }) | Out-Null }
+catch { $emptyRejected = $_.Exception.Message -like '*No loaded worksheet queries*' }
+Assert-Test $emptyRejected 'A DemandIntervals workbook with no verifiable query table was accepted.'
+Write-Host 'PASS: loaded query participation and refresh-date evidence.'
+
 $testConnection = [pscustomobject] @{ Name = 'Connection'; Type = 1; OLEDBConnection = [pscustomobject] @{ Refreshing = $false } }
 $testQuery = [pscustomobject] @{ Name = 'Table'; Refreshing = $true }
 $testWorkbook = [pscustomobject] @{ Connections = @($testConnection); Worksheets = @([pscustomobject] @{ Name = 'Sheet'; QueryTables = @($testQuery) }) }
 $testExcel = [pscustomobject] @{ CalculationState = 1 }
+$listActivityQuery = [pscustomobject] @{ Refreshing = $true }
+$listActivityWorkbook = [pscustomobject] @{
+    Connections = @()
+    Worksheets = @([pscustomobject] @{
+        Name = 'Demand'; QueryTables = @()
+        ListObjects = @([pscustomobject] @{ Name = 'LoadedDemand'; SourceType = 3; QueryTable = $listActivityQuery })
+    })
+}
+Assert-Test ('Demand/LoadedDemand' -in (Get-ExcelActivity $testExcel $listActivityWorkbook).Active) 'Active ListObject query was not detected.'
 $testExcel | Add-Member ScriptMethod CalculateUntilAsyncQueriesDone { $script:asyncCalls++ }
 $testExcel | Add-Member ScriptMethod Calculate { $script:calculateCalls++; $this.CalculationState = 1 }
 function Start-ResponsiveSleep {
