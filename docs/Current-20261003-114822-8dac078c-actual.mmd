@@ -1,0 +1,18 @@
+gantt
+    title Current 20261003-114822-8dac078c Completed - elapsed 00 04 09 - peak 1
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section Org/O1
+    %% Predecessors: BD/Staff, TE/Staff, JH-RY/Staff
+    Org/StaffAll attempt 1 Completed :done, task1, 2000-01-01 00:00:00.937, 2000-01-01 00:00:42.448
+    %% Predecessors: Org/StaffAll, BD/Effort, TE/Effort, JH-RY/Effort
+    Org/EffortAll attempt 1 Completed :done, task2, 2000-01-01 00:00:42.478, 2000-01-01 00:01:58.609
+    section Org/O2
+    %% Predecessors: Org/EffortAll, Org/StaffAll
+    Org/Outcomes attempt 1 Completed :done, task3, 2000-01-01 00:01:58.643, 2000-01-01 00:02:39.123
+    %% Predecessors: Org/Outcomes
+    Org/Inefficiencies attempt 1 Completed :done, task4, 2000-01-01 00:02:39.146, 2000-01-01 00:03:28.811
+    section Org/O5
+    %% Predecessors: Org/Cost, Org/HistoryRead, Org/Inefficiencies
+    Org/Reporting attempt 1 Completed :done, task5, 2000-01-01 00:03:28.839, 2000-01-01 00:04:09.944

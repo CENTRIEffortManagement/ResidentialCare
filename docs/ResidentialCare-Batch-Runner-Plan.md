@@ -119,6 +119,12 @@ Unit selection; the complete resolved plan is printed before execution.
 Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
 
 - D1 includes Demand-MasterRoster Manual Read.xlsx before 2-DemandExtract.xlsx.
+  BD, TE and JH-RY share the master at the Date-level
+  `1. Input/Demand-MasterRoster Manual Read.xlsx`. The runner schedules it once
+  as `Date/DemandMaster`, then releases each selected Unit's demand extract.
+  `SharedUnitJobs` in the batch settings declares these consumers; Unit1 and
+  Unit2 retain their Unit-level masters. Existing declared prerequisites and
+  file-access checks still apply. The default full run now contains 84 files.
 - C1 starts with Worker Reconciliation.xlsx, then Capacity-ShiftAvailability.xlsx
   and StaffListMaster.xlsx.
 - C2.1 through C2.N expand from enabled roles in the saved client profile.
@@ -188,6 +194,34 @@ Read/write exclusion, selected-producer failure blocking, file-user checks,
 timeouts, verified saves and the twelve-batch maximum remain enforced. Configuration,
 profile, manifest and relevant engine changes still invalidate the identity used
 for resume; this fingerprint is no longer a live-approval signature.
+
+For `DemandIntervals` and `Demand`, the worker verifies loaded-query refresh
+evidence before saving. A legacy worksheet QueryTable with no live connection
+is omitted only when that exact sheet/query maps to a saved connection explicitly
+marked deleted. The worker reads this metadata from the original target before
+opening Excel, within the existing file-snapshot checks, and logs each omission.
+Loaded ListObject tables, unknown missing connections and reconnected queries
+remain subject to the normal checks; at least one active loaded query is required.
+When Excel supplies no connection refresh timestamp after Refresh All, the worker
+confirms that active output with `QueryTable.Refresh(false)`. Background refresh
+must be disabled, the call must return Boolean true, and the query must report
+neither ongoing refresh nor row overflow. A cancelled, failed or unknown result
+still blocks saving. The worker then repeats connection settling and calculation
+before the existing file-access and save checks. Known stale timestamps still
+fail; they do not trigger this fallback. Each extra refresh is logged and can add
+time to the run. This uses Excel's documented
+[foreground refresh result](https://learn.microsoft.com/en-us/office/vba/api/excel.querytable.refresh)
+and does not modify or reconnect workbook definitions. Start a fresh run after
+this engine change; older run fingerprints cannot be resumed.
+
+Controlled live verification on 3 October 2026: run
+`20261003-060745-739914d3` refreshed only the original BD, TE and JH-RY
+`2. Calculations/DemandIntervals.xlsx` files, using their existing saved inputs.
+All three completed with verified save, close and owned-process exit; batch exit
+code 0, duration 00:02:48. The missing-timestamp confirmation succeeded on the
+active outputs. This verifies these three workbooks, not the downstream Demand,
+role or organisation chain. Evidence is under
+`CLIENT/DATExx-Whiddon/RunLogs/BatchRefresh/20261003-060745-739914d3/`.
 
 The existing coloured staging Mermaid and dynamic C2 layout remain untouched.
 They explain batches, not the runtime dependency authority.

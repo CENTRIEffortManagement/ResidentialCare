@@ -130,8 +130,56 @@ shared IntervalIDs = let
 in
     Source;
 
-shared ShiftINTERVALS = let
+// Query: ShiftDemandHours_INPUT_CHECK
+// Purpose: Verify unique demand rows, valid hours and duration, and unique shift endpoint mappings before interval expansion.
+// Inputs: IMPORT Table_ShiftDemandHRS; IntervalIDs.
+// Output: One validation row per existing facility, role and shift-endpoint join key.
+shared ShiftDemandHours_INPUT_CHECK = let
     Source = #"IMPORT Table_ShiftDemandHRS",
+    RequiredColumns = {"Facility", "Role", "StartTime", "EndTime", "Shift", "Date", "DemandHRS", "ShiftDuration"},
+    ValidatedSchema = if Table.HasColumns(Source, RequiredColumns) then Source
+        else error "Demand interval input is missing required demand-hour or shift columns.",
+    IsFiniteNumber = (value as any) as logical =>
+        Value.Is(value, type number) and not Number.IsNaN(value) and Number.Abs(value) <> #infinity,
+    ValidDemandRow = (row as record) as logical =>
+        try (
+            IsFiniteNumber(row[DemandHRS]) and row[DemandHRS] >= 0
+            and IsFiniteNumber(row[ShiftDuration]) and row[ShiftDuration] > 0
+            and Value.Is(row[StartTime], type datetime) and Value.Is(row[EndTime], type datetime)
+            and row[EndTime] > row[StartTime]
+            and Number.Abs(Duration.TotalHours(row[EndTime] - row[StartTime]) - row[ShiftDuration]) <= 0.0000001
+        ) otherwise false,
+    // Use the existing demand join key so duplicate rows cannot multiply interval demand.
+    DemandKeys = Table.Group(ValidatedSchema, {"Facility", "Role", "StartTime", "EndTime"}, {
+        {"DemandRowCount", each Table.RowCount(_), Int64.Type},
+        {"DemandValuesValid", each List.AllTrue(List.Transform(Table.ToRecords(_), ValidDemandRow)), type logical}
+    }),
+    MatchedStartEndpoints = Table.NestedJoin(DemandKeys, {"StartTime"}, IntervalIDs, {"DateTime"}, "StartMatches", JoinKind.LeftOuter),
+    MatchedEndEndpoints = Table.NestedJoin(MatchedStartEndpoints, {"EndTime"}, IntervalIDs, {"DateTime"}, "EndMatches", JoinKind.LeftOuter),
+    CountedStartMatches = Table.AddColumn(MatchedEndEndpoints, "StartMatchCount", each Table.RowCount([StartMatches]), Int64.Type),
+    CountedEndMatches = Table.AddColumn(CountedStartMatches, "EndMatchCount", each Table.RowCount([EndMatches]), Int64.Type),
+    CheckedEndpointRanges = Table.AddColumn(CountedEndMatches, "EndpointRangeValid", each
+        if [StartMatchCount] <> 1 or [EndMatchCount] <> 1 then false
+        else try (
+            IsFiniteNumber([StartMatches]{0}[IntervalID]) and IsFiniteNumber([EndMatches]{0}[IntervalID])
+            and Number.RoundDown([StartMatches]{0}[IntervalID]) = [StartMatches]{0}[IntervalID]
+            and Number.RoundDown([EndMatches]{0}[IntervalID]) = [EndMatches]{0}[IntervalID]
+            and [EndMatches]{0}[IntervalID] > [StartMatches]{0}[IntervalID]
+        ) otherwise false,
+        type logical),
+    CheckedInputs = Table.AddColumn(CheckedEndpointRanges, "Passed", each
+        [DemandRowCount] = 1 and [DemandValuesValid] and [EndpointRangeValid], type logical),
+    CheckResults = Table.RemoveColumns(CheckedInputs, {"StartMatches", "EndMatches"})
+in
+    CheckResults;
+
+// Query: ShiftINTERVALS
+// Purpose: Expand validated shift boundaries using the existing interval-ID generation rules.
+// Inputs: IMPORT Table_ShiftDemandHRS; ShiftDemandHours_INPUT_CHECK; IntervalIDs.
+shared ShiftINTERVALS = let
+    InputFailures = Table.SelectRows(ShiftDemandHours_INPUT_CHECK, each [Passed] <> true),
+    Source = if Table.IsEmpty(InputFailures) then #"IMPORT Table_ShiftDemandHRS"
+        else error Error.Record("DemandIntervalInputValidation", "Demand hours, duration, uniqueness or shift endpoint validation failed.", InputFailures),
     #"Grouped Rows" = Table.Group(Source, {"Shift", "Role", "Facility", "StartTime", "EndTime", "Date"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
     #"Sorted Rows" = Table.Sort(#"Grouped Rows",{{"Role", Order.Ascending}, {"StartTime", Order.Ascending}}),
     #"Removed Columns1" = Table.RemoveColumns(#"Sorted Rows",{"Count"}),
@@ -157,27 +205,106 @@ List.Numbers([IntervalID],[Range]+1)),
 in
     #"Sorted Rows1";
 
-[ Description = "Modified for ANACC demand#(lf)Not master roster demand" ]
-shared ShiftDemandUnitINTERVAL = let
+// Query: ShiftDemandIntervalHours_CALCULATED
+// Purpose: Distribute authoritative shift hours across the existing intervals without using reporting FTE.
+// Inputs: ShiftINTERVALS; Table_Intervals; IMPORT Table_ShiftDemandHRS; MealBreakStart.
+// Output: Existing interval output columns plus internal IntervalHours and EndPrecise validation helpers.
+shared ShiftDemandIntervalHours_CALCULATED = let
     Source = ShiftINTERVALS,
-    #"Merged INTERVALS" = Table.NestedJoin(Source, {"IntervalListx", "Role"}, Table_Intervals, {"IntervalID", "Role"}, "Table_Intervals", JoinKind.LeftOuter),
-    #"Expanded Table_Intervals" = Table.ExpandTableColumn(#"Merged INTERVALS", "Table_Intervals", {"StartInterval", "EndInterval", "Duration", "ShiftPeriod"}, {"StartInterval", "EndInterval", "Duration", "ShiftPeriod"}),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded Table_Intervals",{{"StartInterval", type datetime}}),
-    #"Sorted Rows1" = Table.Sort(#"Changed Type1",{{"Role", Order.Ascending}, {"IntervalListx", Order.Ascending}}),
-    #"Changed Type2" = Table.TransformColumnTypes(#"Sorted Rows1",{{"EndInterval", type datetime}}),
-    #"Merged SHIFTUNITDEMAND" = Table.NestedJoin(#"Changed Type2", {"Facility", "Role", "StartTime", "EndTime"}, #"IMPORT Table_ShiftDemandHRS", {"Facility", "Role", "StartTime", "EndTime"}, "Table_ShiftDemandHRS", JoinKind.LeftOuter),
-    #"Expanded Table_ShiftDemandHRS" = Table.ExpandTableColumn(#"Merged SHIFTUNITDEMAND", "Table_ShiftDemandHRS", {"Unit", "DemandFTE", "DemandHRS", "ShiftDuration"}, {"Unit", "DemandFTE", "DemandHRS", "ShiftDuration"}),
-    EFFECTIVEDURATION = Table.AddColumn(#"Expanded Table_ShiftDemandHRS", "EffectiveDuration", each if [ShiftDuration] < MealBreakStart
-then [ShiftDuration]
-else [ShiftDuration] - 0.5),
-    INTEFFECTIVERATIO = Table.AddColumn(EFFECTIVEDURATION, "IntervalEffectiveRatio", each [EffectiveDuration]/[ShiftDuration]),
-    //not applicable for ANACC demand - only master roster 
-    //#"Added EFFECTIVEDEMAND !!" = Table.AddColumn(INTEFFECTIVERATIO, "EffectiveIntervalAttendance", each [DemandFTE]*[IntervalEffectiveRatio]),
-    #"Added EFFECTIVEDEMAND !!" = Table.AddColumn(INTEFFECTIVERATIO, "EffectiveIntervalAttendance", each [DemandFTE]),
-    //*[IntervalEffectiveRatio])"
-    #"Added DEMAND EFFORT" = Table.AddColumn(#"Added EFFECTIVEDEMAND !!", "DemandEffort", each [Duration] * [EffectiveIntervalAttendance]*24)
+    MatchedIntervals = Table.NestedJoin(Source, {"IntervalListx", "Role"}, Table_Intervals, {"IntervalID", "Role"}, "Table_Intervals", JoinKind.LeftOuter),
+    IntervalMatchFailures = Table.SelectRows(MatchedIntervals, each Table.RowCount([Table_Intervals]) <> 1),
+    ValidatedIntervalMatches = if Table.IsEmpty(IntervalMatchFailures) then MatchedIntervals
+        else error Error.Record("DemandIntervalMatchValidation", "Every role and interval ID must match exactly one interval.", IntervalMatchFailures),
+    ExpandedIntervals = Table.ExpandTableColumn(ValidatedIntervalMatches, "Table_Intervals", {"StartInterval", "EndInterval", "Duration", "ShiftPeriod", "EndPrecise"}, {"StartInterval", "EndInterval", "Duration", "ShiftPeriod", "EndPrecise"}),
+    TypedIntervalEndpoints = Table.TransformColumnTypes(ExpandedIntervals, {{"StartInterval", type datetime}, {"EndInterval", type datetime}, {"EndPrecise", type datetime}}),
+    SortedIntervals = Table.Sort(TypedIntervalEndpoints, {{"Role", Order.Ascending}, {"IntervalListx", Order.Ascending}}),
+    MatchedDemand = Table.NestedJoin(SortedIntervals, {"Facility", "Role", "StartTime", "EndTime"}, #"IMPORT Table_ShiftDemandHRS", {"Facility", "Role", "StartTime", "EndTime"}, "Table_ShiftDemandHRS", JoinKind.LeftOuter),
+    DemandMatchFailures = Table.SelectRows(MatchedDemand, each Table.RowCount([Table_ShiftDemandHRS]) <> 1),
+    ValidatedDemandMatches = if Table.IsEmpty(DemandMatchFailures) then MatchedDemand
+        else error Error.Record("DemandIntervalMatchValidation", "Every demand interval must match exactly one source demand row.", DemandMatchFailures),
+    ExpandedDemand = Table.ExpandTableColumn(ValidatedDemandMatches, "Table_ShiftDemandHRS", {"Unit", "DemandFTE", "DemandHRS", "ShiftDuration"}, {"Unit", "DemandFTE", "DemandHRS", "ShiftDuration"}),
+    // Preserve legacy diagnostic columns; the demand-hour calculation applies no further meal deduction.
+    AddedEffectiveDuration = Table.AddColumn(ExpandedDemand, "EffectiveDuration", each
+        if [ShiftDuration] < MealBreakStart then [ShiftDuration] else [ShiftDuration] - 0.5),
+    AddedIntervalEffectiveRatio = Table.AddColumn(AddedEffectiveDuration, "IntervalEffectiveRatio", each [EffectiveDuration] / [ShiftDuration]),
+    // Duration is stored in days; ShiftDuration is the actual elapsed shift duration in hours.
+    AddedIntervalHours = Table.AddColumn(AddedIntervalEffectiveRatio, "IntervalHours", each [Duration] * 24, type number),
+    AddedDemandEffort = Table.AddColumn(AddedIntervalHours, "DemandEffort", each [DemandHRS] * ([IntervalHours] / [ShiftDuration]), type number),
+    AddedAverageAttendance = Table.AddColumn(AddedDemandEffort, "EffectiveIntervalAttendance", each [DemandEffort] / [IntervalHours], type number)
 in
-    #"Added DEMAND EFFORT";
+    AddedAverageAttendance;
+
+// Query: ShiftDemandIntervalHours_CHECK
+// Purpose: Reconcile interval coverage and demand hours for every source shift before publication.
+// Inputs: ShiftDemandIntervalHours_CALCULATED.
+// Output: One check row per facility, role, date, shift and pair of shift endpoints; Passed must be true.
+shared ShiftDemandIntervalHours_CHECK = let
+    Source = ShiftDemandIntervalHours_CALCULATED,
+    HourTolerance = 0.0000001,
+    IsFiniteNumber = (value as any) as logical =>
+        Value.Is(value, type number) and not Number.IsNaN(value) and Number.Abs(value) <> #infinity,
+    CheckShiftCoverage = (rows as table) as record =>
+        let
+            SortedRows = Table.Sort(rows, {{"StartInterval", Order.Ascending}, {"EndPrecise", Order.Ascending}}),
+            IntervalCount = Table.RowCount(SortedRows),
+            UniqueIntervals = Table.Distinct(SortedRows, {"IntervalListx"}),
+            IntervalRowsValid = List.AllTrue(List.Transform(Table.ToRecords(SortedRows), (row as record) =>
+                try (
+                    IsFiniteNumber(row[IntervalHours]) and row[IntervalHours] > 0
+                    and Value.Is(row[StartInterval], type datetime) and Value.Is(row[EndInterval], type datetime)
+                    and Value.Is(row[EndPrecise], type datetime) and row[EndPrecise] > row[StartInterval]
+                    // EndInterval is the existing inclusive minute marker; EndPrecise is the elapsed-time boundary.
+                    and row[EndInterval] = row[EndPrecise] - #duration(0, 0, 1, 0)
+                    and Number.Abs(Duration.TotalHours(row[EndPrecise] - row[StartInterval]) - row[IntervalHours]) <= HourTolerance
+                    and IsFiniteNumber(row[DemandEffort]) and row[DemandEffort] >= 0
+                ) otherwise false)),
+            // Equal total widths alone would miss a gap offset by an overlap; compare each adjacent pair as well.
+            AdjacentEndpoints = List.Zip({List.RemoveLastN(SortedRows[EndPrecise], 1), List.Skip(SortedRows[StartInterval], 1)}),
+            AdjacentIntervalsMeet = List.AllTrue(List.Transform(AdjacentEndpoints, each _{0} = _{1})),
+            IntervalCoverageValid = try (
+                IntervalCount > 0 and Table.RowCount(UniqueIntervals) = IntervalCount
+                and SortedRows{0}[StartInterval] = SortedRows{0}[StartTime]
+                and SortedRows{IntervalCount - 1}[EndPrecise] = SortedRows{0}[EndTime]
+                and AdjacentIntervalsMeet
+            ) otherwise false,
+            IntervalHours = List.Sum(SortedRows[IntervalHours]),
+            ShiftDuration = SortedRows{0}[ShiftDuration],
+            DemandEffort = List.Sum(SortedRows[DemandEffort]),
+            DemandHRS = SortedRows{0}[DemandHRS],
+            HoursDifference = IntervalHours - ShiftDuration,
+            DemandHoursDifference = DemandEffort - DemandHRS,
+            Passed = IntervalRowsValid and IntervalCoverageValid
+                and Number.Abs(HoursDifference) <= HourTolerance
+                and Number.Abs(DemandHoursDifference) <= HourTolerance
+        in
+            [IntervalCount = IntervalCount, IntervalRowsValid = IntervalRowsValid, IntervalCoverageValid = IntervalCoverageValid,
+             IntervalHours = IntervalHours, ShiftDuration = ShiftDuration, HoursDifference = HoursDifference,
+             DemandEffort = DemandEffort, DemandHRS = DemandHRS, DemandHoursDifference = DemandHoursDifference, Passed = Passed],
+    GroupedShiftChecks = Table.Group(Source, {"Shift", "Role", "Facility", "StartTime", "EndTime", "Date"}, {{"CoverageCheck", each CheckShiftCoverage(_), type record}}),
+    CheckResults = Table.ExpandRecordColumn(GroupedShiftChecks, "CoverageCheck", {
+        "IntervalCount", "IntervalRowsValid", "IntervalCoverageValid", "IntervalHours", "ShiftDuration", "HoursDifference",
+        "DemandEffort", "DemandHRS", "DemandHoursDifference", "Passed"
+    })
+in
+    CheckResults;
+
+[ Description = "Modified for ANACC demand#(lf)Not master roster demand" ]
+// Query: ShiftDemandUnitINTERVAL
+// Purpose: Publish the existing interval demand interface only after coverage and hour conservation pass.
+// Inputs: ShiftDemandIntervalHours_CALCULATED; ShiftDemandIntervalHours_CHECK.
+shared ShiftDemandUnitINTERVAL = let
+    CheckFailures = Table.SelectRows(ShiftDemandIntervalHours_CHECK, each [Passed] <> true),
+    ValidatedDemand = if Table.IsEmpty(CheckFailures) then ShiftDemandIntervalHours_CALCULATED
+        else error Error.Record("DemandIntervalHoursValidation", "Interval coverage or demand-hour reconciliation failed.", CheckFailures),
+    RemovedValidationHelper = Table.RemoveColumns(ValidatedDemand, {"IntervalHours", "EndPrecise"}),
+    // Keep the workbook-facing column order and names, including its reporting FTE and legacy meal diagnostics.
+    PublishedColumns = Table.ReorderColumns(RemovedValidationHelper, {
+        "Shift", "Role", "Facility", "StartTime", "EndTime", "Date", "DateTime", "DayDate", "DateTime.1", "IntervalListx",
+        "StartInterval", "EndInterval", "Duration", "ShiftPeriod", "Unit", "DemandFTE", "DemandHRS", "ShiftDuration",
+        "EffectiveDuration", "IntervalEffectiveRatio", "EffectiveIntervalAttendance", "DemandEffort"
+    })
+in
+    PublishedColumns;
 
 shared ShiftDemandINTERVALLIST = let
     Source = ShiftDemandUnitINTERVAL,

@@ -182,7 +182,7 @@ in
     BufferedNavigation;
 
 // Query: EXTRACT Distributed Demand FTE
-// Purpose: Extract the complete published demand FTE table without transformation.
+// Purpose: Extract the complete published demand-hours table and its display FTE without transformation.
 shared #"EXTRACT Distributed Demand FTE" =
 let
     WorkbookNavigation = #"IMPORT Distributed Demand",
@@ -209,7 +209,7 @@ in
     SourceChecks;
 
 // Query: Distributed Demand FTE Scope
-// Purpose: Retain demand FTE rows for the complete folder-derived Facility value only.
+// Purpose: Retain distributed demand rows for the complete folder-derived Facility value only.
 // Inputs: EXTRACT Distributed Demand FTE and Demand Facility.
 shared #"Distributed Demand FTE Scope" =
 let
@@ -443,7 +443,8 @@ in
 // Query: ShiftDuration
 // Purpose: Read and validate the standard-FTE duration in hours from Settings Data.
 // Inputs: IMPORT Settings Data, named table ShiftDuration, column ShiftDuration.
-// Output: One positive finite duration in hours; missing or invalid settings stop publication.
+// Output: One positive finite duration in hours for callers of this retained settings helper.
+// Notes: Authoritative demand hours and shift-average attendance no longer depend on this standard-FTE setting.
 shared ShiftDuration =
 let
     Matches = Table.SelectRows(#"IMPORT Settings Data",
@@ -477,7 +478,7 @@ in
     #"Changed Type";
 
 // Query: Distributed FTE Source Validate
-// Purpose: Validate the paired publication schema and upstream checks before preparing demand.
+// Purpose: Validate authoritative hours in the paired publication schema and upstream checks before preparing demand.
 // Notes: Supports the known QFR publication and the revised explicit DC-role publication;
 // both paired tables must use the same schema. This does not assert their refresh currency.
 shared #"Distributed FTE Source Validate" =
@@ -489,13 +490,13 @@ let
     Schema = (T as table) as text =>
         if Table.HasColumns(T, {"DC Role", "DC Category"}) then "DC"
         else if Table.HasColumns(T, {"QFR Category"}) then "QFR"
-        else error "Unrecognised distributed FTE publication schema.",
-    RequiredColumnsPresent = Table.HasColumns(Demand, Common & {"FTE"})
-        and Table.HasColumns(Profile, Common & {"HistoricalRosterFTE", "RedistributedRosterFTE",
+        else error "Unrecognised distributed demand publication schema.",
+    RequiredColumnsPresent = Table.HasColumns(Demand, Common & {"RedistributedDemandHours"})
+        and Table.HasColumns(Profile, Common & {"HistoricalRosterHours", "RedistributedDemandHours",
             "RedistributionMatchCount", "HistoricalCoverageStatus", "ProfileAlignmentStatus"}),
     Checks = #"Distributed Demand FTE Checks Scope",
     InvalidChecks = Table.SelectRows(Checks, each not List.Contains({"Pass", "Warning"}, [Severity])),
-    Result = if not RequiredColumnsPresent then error "Required demand/profile columns are missing."
+    Result = if not RequiredColumnsPresent then error "Required demand/profile hours or coverage columns are missing; FTE is not an hours fallback."
         else if Schema(Demand) <> Schema(Profile) then error "Demand and profile publication schemas differ."
         else if Table.IsEmpty(Checks) or not Table.IsEmpty(InvalidChecks) then
             error Error.Record("Upstream validation failed", "Inspect MinuteWorkersFTE_CHECK.", InvalidChecks)
@@ -531,12 +532,12 @@ in
 
 // Query: Distributed FTE Rows Prepare
 // Purpose: Preserve source DC-role keys and attach linked output groups and effort-analysis controls.
-// Notes: Strictly validate the saved numeric fields, avoiding text-to-number or integer rounding.
+// Notes: Strictly validate saved hours without text-to-number conversion, integer rounding or display-FTE inputs.
 shared #"Distributed FTE Rows Prepare" = (Source as table, IsProfile as logical) as table =>
 let
     Schema = #"Distributed FTE Source Validate",
-    Measures = if IsProfile then {"HistoricalRosterFTE", "RedistributedRosterFTE",
-        "RedistributionMatchCount", "HistoricalCoverageStatus", "ProfileAlignmentStatus"} else {"FTE"},
+    Measures = if IsProfile then {"HistoricalRosterHours", "RedistributedDemandHours",
+        "RedistributionMatchCount", "HistoricalCoverageStatus", "ProfileAlignmentStatus"} else {"RedistributedDemandHours"},
     Common = {"Facility", "Role", "MinuteCategory", "Direct Care %", "Week No",
         "FortnightWeek", "DayOfWeek", "FortnightDayIndex", "Shift"},
     Selected = Table.SelectColumns(Source, Common & Measures &
@@ -571,14 +572,15 @@ let
             or (Schema = "DC" and #"Demand Role Key"([DC Category]) <> [MappedDC Category]))),
     Keys = {"Facility", "SourceRoleKey", "FortnightDayIndex", "Shift"},
     DuplicateKeys = Table.RowCount(WithShift) <> Table.RowCount(Table.Distinct(Table.SelectColumns(WithShift, Keys))),
-    InvalidDemand = if IsProfile then #table({}, {}) else
-        Table.SelectRows(WithShift, each not #"Demand Finite Number"([FTE]) or [FTE] < 0),
+    InvalidHours = Table.SelectRows(WithShift, each
+        not #"Demand Finite Number"([RedistributedDemandHours]) or [RedistributedDemandHours] < 0
+        or (if IsProfile then not #"Demand Finite Number"([HistoricalRosterHours]) or [HistoricalRosterHours] < 0 else false)),
     Result = if not Table.IsEmpty(InvalidKeys) then
             error Error.Record("Invalid source keys", "Invalid role, fortnight, shift or direct-care attributes.", InvalidKeys)
         else if DuplicateKeys then error "Duplicate facility/role/fortnight-day/shift keys in source publication."
         else if not Table.IsEmpty(InvalidRoleAttributes) then
             error Error.Record("Published role attributes differ", "The retained source category and Direct Care % must agree with LINK Roles.", InvalidRoleAttributes)
-        else if not Table.IsEmpty(InvalidDemand) then error "Demand FTE must be finite and non-negative."
+        else if not Table.IsEmpty(InvalidHours) then error "Published demand and historical hours must be finite and non-negative."
         else Table.Buffer(WithShift)
 in
     Result;
@@ -611,15 +613,15 @@ let
         else null, type nullable text),
     Excluded = Table.SelectRows(WithReason, each [ExclusionReason] <> null),
     Result = Table.Group(Excluded, {"Facility", "SourceRole", "ExclusionReason"}, {
-        {"FortnightRosterHours", each List.Sum([FTE]) * ShiftDuration, type number},
+        {"FortnightRosterHours", each List.Sum([RedistributedDemandHours]), type number},
         {"FortnightProductiveHours", each List.Sum(List.Transform(Table.ToRecords(_),
-            (R) => R[FTE] * ShiftDuration * R[#"Direct Care %"])), type number}
+            (R) => R[RedistributedDemandHours] * R[#"Direct Care %"])), type number}
     })
 in
     Result;
 
 // Query: Distributed FTE Source Cells
-// Purpose: Validate every retained DC-role/day/shift cell before combining output role groups.
+// Purpose: Validate authoritative demand hours for every retained DC-role/day/shift cell before combining output role groups.
 // Output: Forty-two cells per retained source DC role, including proven zeros.
 // Notes: Join on original source role and week as well as fortnight day. A missing sparse row
 // is zero only when the paired profile explicitly proves PASS ZERO with no redistribution match.
@@ -639,19 +641,19 @@ let
     InvalidCells = Table.SelectRows(WithCount, each
         [HistoricalCoverageStatus] <> "PASS"
         or not List.Contains({"PASS", "PASS ZERO"}, [ProfileAlignmentStatus])
-        or not #"Demand Finite Number"([RedistributedRosterFTE]) or [RedistributedRosterFTE] < 0
-        or not #"Demand Finite Number"([HistoricalRosterFTE]) or [HistoricalRosterFTE] < 0
+        or not #"Demand Finite Number"([RedistributedDemandHours]) or [RedistributedDemandHours] < 0
+        or not #"Demand Finite Number"([HistoricalRosterHours]) or [HistoricalRosterHours] < 0
         or [RedistributionMatchCount] <> [DemandRowCount]
         or [MinuteCategory] <> [MappedMinuteCategory]
         or (if [DemandRowCount] = 1 then
-            Number.Abs([RedistributedRosterFTE] - [DemandRows]{0}[FTE]) > 0.0000001
+            Number.Abs([RedistributedDemandHours] - [DemandRows]{0}[RedistributedDemandHours]) > 0.0000001
             or [#"Direct Care %"] <> [DemandRows]{0}[#"Direct Care %"]
             or [MinuteCategory] <> [DemandRows]{0}[MinuteCategory]
             else [DemandRowCount] <> 0 or [ProfileAlignmentStatus] <> "PASS ZERO"
-                or [HistoricalRosterFTE] <> 0 or [RedistributedRosterFTE] <> 0)
+                or [HistoricalRosterHours] <> 0 or [RedistributedDemandHours] <> 0)
         or ([ProfileAlignmentStatus] = "PASS ZERO" and
-            ([HistoricalRosterFTE] <> 0 or [RedistributedRosterFTE] <> 0))
-        or ([ProfileAlignmentStatus] = "PASS" and [HistoricalRosterFTE] <= 0)),
+            ([HistoricalRosterHours] <> 0 or [RedistributedDemandHours] <> 0))
+        or ([ProfileAlignmentStatus] = "PASS" and [HistoricalRosterHours] <= 0)),
     // Validate each contributing source role separately: a complete group must not hide
     // a missing day/shift for one of its contributing DC roles.
     Coverage = Table.Group(IncludedProfile, {"Facility", "SourceRoleKey"}, {{"CellCount", each Table.RowCount(_), Int64.Type}}),
@@ -667,11 +669,11 @@ let
             error Error.Record("Incomplete DC-role coverage", "Every retained source DC role requires 42 unique fortnight day/shift cells.", InvalidCoverage)
         else if not ValidWeeks then error "The pattern must contain two distinct ordered historical weeks."
         else if not Table.IsEmpty(InvalidCells) then
-            error Error.Record("Distributed FTE cells failed", "Demand/profile mismatch or unproven zero.", Table.RemoveColumns(InvalidCells, {"DemandRows"}))
+            error Error.Record("Distributed demand hours failed", "Demand/profile hours mismatch or unproven zero.", Table.RemoveColumns(InvalidCells, {"DemandRows"}))
         else Table.RemoveColumns(WithCount, {"DemandRows", "DemandRowCount"}),
-    WithFTE = Table.AddColumn(Validated, "SourceFTE", each [RedistributedRosterFTE], type number),
-    // Source FTE already represents roster time. Do not apply Direct Care % again.
-    WithHours = Table.AddColumn(WithFTE, "DemandHRS", each [SourceFTE] * ShiftDuration, type number),
+    // Master publishes required net roster hours directly. Neither display FTE nor the
+    // standard-FTE duration participates in this amount; do not apply Direct Care % again.
+    WithHours = Table.AddColumn(Validated, "DemandHRS", each [RedistributedDemandHours], type number),
     // Productive hours are an audit measure. Apply the percentage per source role before
     // grouping; percentages from different roles must never be added or averaged.
     WithProductiveHours = Table.AddColumn(WithHours, "ProductiveHRS", each [DemandHRS] * [#"Direct Care %"], type number),
@@ -687,7 +689,6 @@ let
     Source = #"Distributed FTE Source Cells",
     GroupedByUnit = Table.Group(Source, {"Facility-Abbrev", "Role", "FortnightDayIndex", "Shift", "Week No"}, {
         {"SourceRoles", each Text.Combine(List.Sort(List.Distinct([SourceRole])), ", "), type text},
-        {"SourceFTE", each List.Sum([SourceFTE]), type number},
         {"DemandHRS", each List.Sum([DemandHRS]), type number},
         {"ProductiveHRS", each List.Sum([ProductiveHRS]), type number}
     }),
@@ -841,15 +842,14 @@ let
     Validated = if not Table.IsEmpty(InvalidMatches) then
         error "Every calendar cell must match exactly one validated fortnight demand cell." else Joined,
     Expanded = Table.ExpandTableColumn(Validated, "Pattern",
-        {"Facility", "SourceRoles", "SourceFTE", "DemandHRS", "ProductiveHRS", "Week No"},
-        {"Facility", "SourceRoles", "SourceFTE", "DemandHRS", "ProductiveHRS", "Week No"}),
+        {"Facility", "SourceRoles", "DemandHRS", "ProductiveHRS", "Week No"},
+        {"Facility", "SourceRoles", "DemandHRS", "ProductiveHRS", "Week No"}),
     WithUnit = Table.AddColumn(Expanded, "Unit", each [Facility], type text),
-    // A source standard-FTE equivalent is converted to attendance across the actual shift span.
-    // Leave fractional attendance unrounded so interval integration recovers the roster hours.
+    // Preserve the legacy DemandFTE reporting field as average attendance across the actual
+    // shift span. It is distinct from Master's 7.6-hour FTE and is not an input to demand hours.
     WithAttendance = Table.AddColumn(WithUnit, "DemandFTE", each [DemandHRS] / [DurationOfShifts], type number),
     InvalidValues = Table.SelectRows(WithAttendance, each not #"Demand Finite Number"([DemandFTE])
-        or [DemandFTE] < 0 or not #"Demand Finite Number"([DemandHRS])
-        or Number.Abs([DemandFTE] * [DurationOfShifts] - [DemandHRS]) > 0.0000001),
+        or [DemandFTE] < 0 or not #"Demand Finite Number"([DemandHRS]) or [DemandHRS] < 0),
     ValidatedAttendance = if not Table.IsEmpty(InvalidValues) then error "Demand hours/attendance conversion failed."
         else WithAttendance,
     BufferedDemand = Table.Buffer(ValidatedAttendance)
@@ -889,8 +889,9 @@ let
     Actual = Table.Group(#"Demand Extraction Prepare", {"Facility", "Role", "PlanningFortnight"}, {
         {"CellCount", each Table.RowCount(_), Int64.Type},
         {"RosterHours", each List.Sum([DemandHRS]), type number},
+        // Integrate authoritative hours over the verified timestamp span without reading display FTE.
         {"IntegratedHours", each List.Sum(List.Transform(Table.ToRecords(_),
-            (R) => R[DemandFTE] * R[DurationOfShifts])), type number},
+            (R) => R[DemandHRS] * (Duration.TotalHours(R[EndTime] - R[StartTime]) / R[DurationOfShifts]))), type number},
         {"ProductiveHours", each List.Sum([ProductiveHRS]), type number}
     }),
     // Start from the expected groups so a missing output group cannot disappear from the check.

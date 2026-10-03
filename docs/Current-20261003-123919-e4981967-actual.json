@@ -1,0 +1,53 @@
+{
+  "Untimed": [
+    {
+      "Reason": "Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\~$Tableau Connection.xlsx",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ],
+      "Status": "Blocked",
+      "Id": "Org/Reporting"
+    }
+  ],
+  "GapSeconds": 1,
+  "RunId": "20261003-123919-e4981967",
+  "IncompleteAttempts": [],
+  "PeakConcurrency": 1,
+  "ElapsedSeconds": 209.4653685,
+  "ActiveIntervalSeconds": 208.39448779999995,
+  "Rows": [
+    {
+      "Start": 0.9671887,
+      "Attempt": 1,
+      "Finish": 42.3105816,
+      "Status": "Completed",
+      "Id": "Org/StaffAll"
+    },
+    {
+      "Start": 42.3383447,
+      "Attempt": 1,
+      "Finish": 118.7716526,
+      "Status": "Completed",
+      "Id": "Org/EffortAll"
+    },
+    {
+      "Start": 118.8036106,
+      "Attempt": 1,
+      "Finish": 160.7869701,
+      "Status": "Completed",
+      "Id": "Org/Outcomes"
+    },
+    {
+      "Start": 160.8130668,
+      "Attempt": 1,
+      "Finish": 209.4474943,
+      "Status": "Completed",
+      "Id": "Org/Inefficiencies"
+    }
+  ],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Status": "PartialOrFailed",
+  "OriginalIllustrativeBaselineSeconds": 1043
+}

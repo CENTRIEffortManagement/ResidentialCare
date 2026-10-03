@@ -314,14 +314,155 @@ function Restore-WorkbookBackgroundRefresh {
     Write-Log 'Restored workbook background-refresh settings.'
 }
 
+function Get-DeletedWorksheetQueryMetadata {
+    param([string] $Path)
+    # Read only the saved connection/relationship metadata, before Excel opens
+    # the snapshot-guarded target. Never infer deletion just from a null COM link.
+    $archive = [IO.Compression.ZipFile]::OpenRead($Path)
+    try {
+        function Read-RefreshMetadataPart {
+            param([string] $Part, [switch] $Optional)
+            $entry = $archive.GetEntry($Part)
+            if ($null -eq $entry) {
+                if ($Optional) { return $null }
+                throw "Missing refresh metadata part '$Part'."
+            }
+            $stream = $entry.Open()
+            $reader = $null
+            try {
+                $settings = [Xml.XmlReaderSettings]::new()
+                $settings.DtdProcessing = [Xml.DtdProcessing]::Prohibit
+                $settings.XmlResolver = $null
+                $reader = [Xml.XmlReader]::Create($stream, $settings)
+                $document = [Xml.XmlDocument]::new()
+                $document.XmlResolver = $null
+                $document.Load($reader)
+                return ,$document
+            }
+            finally {
+                if ($null -ne $reader) { $reader.Dispose() }
+                $stream.Dispose()
+            }
+        }
+        function Resolve-RefreshMetadataPart {
+            param([string] $SourcePart, [string] $Target)
+            $baseUri = [uri] ('http://refresh-package/' + $SourcePart)
+            $targetUri = [uri]::new($baseUri, $Target)
+            if ($targetUri.Scheme -ne $baseUri.Scheme -or $targetUri.Host -ne $baseUri.Host -or
+                $targetUri.Query -or $targetUri.Fragment -or [string]::IsNullOrWhiteSpace($Target)) {
+                throw "Invalid internal refresh metadata relationship in '$SourcePart'."
+            }
+            return [uri]::UnescapeDataString($targetUri.AbsolutePath.TrimStart('/'))
+        }
+        $deletedQueries = @{}
+        $connections = Read-RefreshMetadataPart 'xl/connections.xml' -Optional
+        if ($null -eq $connections) { return $deletedQueries }
+        $namespaces = [Xml.XmlNamespaceManager]::new($connections.NameTable)
+        $namespaces.AddNamespace('s', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main')
+        $namespaces.AddNamespace('p', 'http://schemas.openxmlformats.org/package/2006/relationships')
+        $officeRelationships = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+        $deletedConnections = @{}
+        $connectionIds = @{}
+        foreach ($connection in $connections.SelectNodes('/s:connections/s:connection', $namespaces)) {
+            $id = $connection.GetAttribute('id')
+            if (-not $id -or $connectionIds.ContainsKey($id)) { throw 'Missing or duplicate refresh connection ID.' }
+            $connectionIds[$id] = $true
+            if ($connection.GetAttribute('deleted') -cin @('1', 'true')) {
+                $deletedConnections[$id] = $connection.GetAttribute('name')
+            }
+        }
+        if ($deletedConnections.Count -eq 0) { return $deletedQueries }
+        $workbook = Read-RefreshMetadataPart 'xl/workbook.xml'
+        $workbookRels = Read-RefreshMetadataPart 'xl/_rels/workbook.xml.rels'
+        $worksheetParts = @{}
+        foreach ($relationship in $workbookRels.SelectNodes('/p:Relationships/p:Relationship', $namespaces)) {
+            if ($relationship.GetAttribute('Type') -ne "$officeRelationships/worksheet" -or
+                $relationship.GetAttribute('TargetMode') -eq 'External') { continue }
+            $id = $relationship.GetAttribute('Id')
+            if ($worksheetParts.ContainsKey($id)) { throw 'Duplicate worksheet relationship ID.' }
+            $worksheetParts[$id] = Resolve-RefreshMetadataPart 'xl/workbook.xml' $relationship.GetAttribute('Target')
+        }
+        foreach ($sheet in $workbook.SelectNodes('/s:workbook/s:sheets/s:sheet', $namespaces)) {
+            $sheetName = $sheet.GetAttribute('name')
+            $id = $sheet.GetAttribute('id', $officeRelationships)
+            if (-not $sheetName -or -not $worksheetParts.ContainsKey($id)) { continue }
+            $sheetPart = $worksheetParts[$id]
+            $slash = $sheetPart.LastIndexOf('/')
+            $relsPart = $sheetPart.Substring(0, $slash + 1) + '_rels/' + $sheetPart.Substring($slash + 1) + '.rels'
+            $sheetRels = Read-RefreshMetadataPart $relsPart -Optional
+            if ($null -eq $sheetRels) { continue }
+            # Only legacy worksheet-attached query objects qualify. Loaded
+            # ListObject tables remain required, even with a broken connection.
+            foreach ($relationship in $sheetRels.SelectNodes('/p:Relationships/p:Relationship', $namespaces)) {
+                if ($relationship.GetAttribute('Type') -ne "$officeRelationships/queryTable" -or
+                    $relationship.GetAttribute('TargetMode') -eq 'External') { continue }
+                $queryPart = Resolve-RefreshMetadataPart $sheetPart $relationship.GetAttribute('Target')
+                $queryDocument = Read-RefreshMetadataPart $queryPart
+                $query = $queryDocument.SelectSingleNode('/s:queryTable', $namespaces)
+                if ($null -eq $query) { throw "Invalid query-table metadata in '$queryPart'." }
+                $connectionId = $query.GetAttribute('connectionId')
+                $queryName = $query.GetAttribute('name')
+                if (-not $queryName -or -not $deletedConnections.ContainsKey($connectionId)) { continue }
+                $label = "$sheetName/$queryName"
+                if ($deletedQueries.ContainsKey($label)) { throw "Duplicate deleted query metadata for '$label'." }
+                $deletedQueries[$label] = [pscustomobject] @{
+                    ConnectionId = $connectionId; Connection = $deletedConnections[$connectionId]
+                }
+            }
+        }
+        return $deletedQueries
+    }
+    finally { $archive.Dispose() }
+}
+
+function Confirm-WorksheetQueryForegroundRefresh {
+    param($QueryTable, [string] $Label, [string] $ExpectedConnection)
+    Assert-NotStopNowRequested
+    $background = $QueryTable.BackgroundQuery
+    if ($background -isnot [bool] -or $background) {
+        throw "Required worksheet query '$Label' cannot confirm foreground refresh while background mode is enabled or unknown."
+    }
+    # Refresh(false) waits for data to reach the worksheet. A true return in
+    # background mode would only prove that the query started, not that it loaded.
+    # https://learn.microsoft.com/en-us/office/vba/api/excel.querytable.refresh
+    Write-Log "Worksheet query '$Label' supplied no refresh date; confirming with foreground refresh."
+    try { $success = $QueryTable.Refresh($false) }
+    catch { throw "Required worksheet query '$Label' failed foreground refresh: $($_.Exception.Message)" }
+    Assert-NotStopNowRequested
+    if ($success -isnot [bool] -or -not $success) {
+        throw "Required worksheet query '$Label' did not confirm successful foreground refresh. Refusing to save unverified results."
+    }
+    $refreshing = $QueryTable.Refreshing
+    $overflow = $QueryTable.FetchedRowOverflow
+    if ($refreshing -isnot [bool] -or $refreshing -or $overflow -isnot [bool] -or $overflow) {
+        throw "Required worksheet query '$Label' has incomplete or unknown foreground refresh state, or row overflow. Refusing to save unverified results."
+    }
+    $connection = $null
+    try {
+        $connection = $QueryTable.WorkbookConnection
+        if ($null -eq $connection -or [string] $connection.Name -ne $ExpectedConnection) {
+            throw "Required worksheet query '$Label' changed workbook connection during foreground refresh."
+        }
+    }
+    finally { Release-ExcelComReference $connection }
+    Write-Log "Verified worksheet query '$Label' through successful foreground refresh; timestamp unavailable."
+}
+
 function Add-WorksheetQueryRefreshEvidence {
-    param($QueryTable, [string] $Label, [hashtable] $Evidence)
+    param($QueryTable, [string] $Label, [hashtable] $Evidence, [hashtable] $DeletedQueries = @{},
+        [switch] $ConfirmMissingDates)
     $connection = $null; $target = $null
     try {
         if ($null -eq $QueryTable) { throw "Excel returned a null query table for '$Label'." }
-        if (-not [bool] $QueryTable.EnableRefresh) { throw "Required worksheet query '$Label' has refresh disabled." }
         $connection = $QueryTable.WorkbookConnection
-        if ($null -eq $connection) { throw "Required worksheet query '$Label' has no workbook connection." }
+        if ($null -eq $connection) {
+            if ($DeletedQueries.ContainsKey($Label)) {
+                Write-Log "Skipping deleted worksheet query '$Label': saved connection '$($DeletedQueries[$Label].Connection)' (ID $($DeletedQueries[$Label].ConnectionId)) is explicitly marked deleted."
+                return
+            }
+            throw "Required worksheet query '$Label' has no workbook connection."
+        }
+        if (-not [bool] $QueryTable.EnableRefresh) { throw "Required worksheet query '$Label' has refresh disabled." }
         if (-not [bool] $connection.RefreshWithRefreshAll) {
             throw "Required worksheet query '$Label' is excluded from Refresh All."
         }
@@ -331,9 +472,26 @@ function Add-WorksheetQueryRefreshEvidence {
             default { throw "Required worksheet query '$Label' has no supported refresh-date connection." }
         }
         if ($null -eq $target) { throw "Required worksheet query '$Label' has no refresh-date connection." }
+        $capturedAt = Get-Date
+        $rawRefreshDate = $target.RefreshDate
+        # Excel may have no previous timestamp. Preserve that unknown baseline
+        # instead of casting it to a date or inventing evidence of success.
+        $refreshDate = $null
+        if ($null -ne $rawRefreshDate -and $rawRefreshDate -isnot [DBNull] -and
+            -not ($rawRefreshDate -is [string] -and [string]::IsNullOrWhiteSpace($rawRefreshDate))) {
+            try { $refreshDate = [datetime] $rawRefreshDate }
+            catch { throw "Required worksheet query '$Label' returned an invalid connection refresh date: $($_.Exception.Message)" }
+        }
+        $confirmedSynchronously = $false
+        if ($ConfirmMissingDates -and $null -eq $refreshDate) {
+            Confirm-WorksheetQueryForegroundRefresh $QueryTable $Label ([string] $connection.Name)
+            $confirmedSynchronously = $true
+        }
         $Evidence[$Label] = [pscustomobject] @{
             Connection = [string] $connection.Name
-            RefreshDate = [datetime] $target.RefreshDate
+            RefreshDate = $refreshDate
+            CapturedAt = $capturedAt
+            ConfirmedSynchronously = $confirmedSynchronously
         }
     }
     finally {
@@ -343,7 +501,7 @@ function Add-WorksheetQueryRefreshEvidence {
 }
 
 function Get-WorksheetQueryRefreshEvidence {
-    param($Workbook)
+    param($Workbook, [hashtable] $DeletedQueries = @{}, [switch] $ConfirmMissingDates)
     $evidence = @{}
     $worksheets = $Workbook.Worksheets
     try {
@@ -359,7 +517,7 @@ function Get-WorksheetQueryRefreshEvidence {
                     try {
                         if ($null -eq $queryTable) { throw "Excel returned a null query table on '$sheetName'." }
                         $label = "$sheetName/$($queryTable.Name)"
-                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence
+                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence -DeletedQueries $DeletedQueries -ConfirmMissingDates:$ConfirmMissingDates
                     }
                     finally { Release-ExcelComReference $queryTable }
                 }
@@ -376,7 +534,7 @@ function Get-WorksheetQueryRefreshEvidence {
                         $label = "$sheetName/$($listObject.Name)"
                         if ($evidence.ContainsKey($label)) { continue }
                         $queryTable = $listObject.QueryTable
-                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence
+                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence -ConfirmMissingDates:$ConfirmMissingDates
                     }
                     finally {
                         Release-ExcelComReference $queryTable
@@ -397,18 +555,34 @@ function Get-WorksheetQueryRefreshEvidence {
 }
 
 function Assert-WorksheetQueryRefreshEvidence {
-    param($Workbook, [hashtable] $Before)
-    $after = Get-WorksheetQueryRefreshEvidence $Workbook
+    param($Workbook, [hashtable] $Before, [hashtable] $DeletedQueries = @{}, [switch] $ConfirmMissingDates)
+    $after = Get-WorksheetQueryRefreshEvidence $Workbook -DeletedQueries $DeletedQueries -ConfirmMissingDates:$ConfirmMissingDates
     foreach ($label in $Before.Keys) {
         if (-not $after.ContainsKey($label)) { throw "Required worksheet query '$label' disappeared during refresh." }
         if ($after[$label].Connection -ne $Before[$label].Connection) {
             throw "Required worksheet query '$label' changed workbook connection during refresh."
         }
-        if ($after[$label].RefreshDate -le $Before[$label].RefreshDate) {
+        if ($after[$label].ConfirmedSynchronously) { continue }
+        if ($null -eq $after[$label].RefreshDate) {
+            throw "Required worksheet query '$label' reported no refresh date after refresh. Refusing to save unverified results."
+        }
+        if ($null -eq $Before[$label].RefreshDate) {
+            # Without an earlier date to compare, require evidence from this
+            # attempt. Excel timestamps may have only whole-second precision.
+            $capturedAt = $Before[$label].CapturedAt
+            $earliestRefresh = $capturedAt.AddTicks(-($capturedAt.Ticks % [TimeSpan]::TicksPerSecond))
+            if ($after[$label].RefreshDate -lt $earliestRefresh) {
+                throw "Required worksheet query '$label' reported a date that predates this refresh. Refusing to save stale results."
+            }
+        }
+        elseif ($after[$label].RefreshDate -le $Before[$label].RefreshDate) {
             throw "Required worksheet query '$label' did not report a new connection refresh date. Refusing to save stale results."
         }
         Write-Log "Verified worksheet query '$label' refreshed through '$($after[$label].Connection)' at $($after[$label].RefreshDate.ToString('o'))."
     }
+    # The caller must settle connections and recalculate again after any extra
+    # foreground refresh, before restoring settings or attempting a save.
+    if ($ConfirmMissingDates) { return (@($after.Values | Where-Object ConfirmedSynchronously).Count -gt 0) }
 }
 
 function Write-RefreshWorkerState {

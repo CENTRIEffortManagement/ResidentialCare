@@ -37,6 +37,56 @@ function Expand-BatchArguments {
     return @($Values | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)
 }
 
+function Merge-SharedBatchJobs {
+    param([object[]] $Jobs, [object[]] $SharedUnitJobs, [string] $DateRoot)
+    $aliases = @{}; $paths = @{}
+    $remaining = [Collections.Generic.List[object]]::new()
+    foreach ($job in $Jobs) { $remaining.Add($job) }
+    foreach ($spec in $SharedUnitJobs) {
+        if ($spec.Id -cnotmatch '^[A-Za-z0-9][A-Za-z0-9_-]*$' -or -not @($spec.Units).Count -or
+            @($spec.Units | Select-Object -Unique).Count -ne @($spec.Units).Count) {
+            throw 'Shared Unit jobs require a safe ID and unique consumer Units.'
+        }
+        $members = @(foreach ($unit in $spec.Units) {
+            $match = @($remaining | Where-Object { $_.Id -eq "$unit/$($spec.Id)" -and $_.Unit -ne 'Date' })
+            if ($match.Count -ne 1) { throw "Shared Unit job not found: $unit/$($spec.Id)" }
+            $match[0]
+        })
+        if (@($members.Batch | Select-Object -Unique).Count -ne 1 -or @($members | Where-Object Role).Count) {
+            throw "Shared Unit jobs must belong to the same non-role batch: $($spec.Id)"
+        }
+        $shared = $members[0].PSObject.Copy()
+        $shared.Id = "Date/$($spec.Id)"; $shared.Unit = 'Date'; $shared.BatchKey = "Date/$($shared.Batch)"
+        $shared.RelativePath = $spec.Path -replace '\\', '/'
+        $shared.Path = Resolve-BatchPath $DateRoot $shared.RelativePath
+        $shared.SharedUnits = @($spec.Units); $shared.Aliases = @($members.Id)
+        # Preserve declared ordering and input checks when the former Unit jobs
+        # become one producer. A selected failed producer cannot use saved output.
+        $shared.Dependencies = @($members | ForEach-Object { $_.Dependencies } | Select-Object -Unique)
+        $shared.Reads = @($members | ForEach-Object { $_.Reads } | Select-Object -Unique)
+        $shared.InputPaths = @($members | ForEach-Object { $_.InputPaths } | Select-Object -Unique)
+        $shared.Exclusive = [bool] @($members | Where-Object Exclusive).Count
+        foreach ($member in $members) {
+            $aliases[$member.Id] = $shared.Id; $paths[$member.Path] = $shared.Path
+            [void] $remaining.Remove($member)
+        }
+        $remaining.Add($shared)
+    }
+    foreach ($job in $remaining) {
+        $job.Dependencies = @($job.Dependencies | ForEach-Object {
+            if ($aliases.ContainsKey($_)) { $aliases[$_] } else { $_ }
+        } | Select-Object -Unique)
+        $job.Reads = @($job.Reads | ForEach-Object {
+            if ($paths.ContainsKey($_)) { $paths[$_] } else { $_ }
+        } | Select-Object -Unique)
+    }
+    if (@($remaining | Group-Object Path | Where-Object Count -gt 1).Count -or
+        @($remaining | Group-Object Id | Where-Object Count -gt 1).Count) {
+        throw 'Shared Unit job configuration produces duplicate targets or IDs.'
+    }
+    return @($remaining)
+}
+
 function Get-BatchCatalogue {
     param([string] $RepoRoot,
         [ValidateSet('Current', 'ParallelInputs-Unit1Priority')] [string] $SequenceProfile = 'Current')
@@ -209,6 +259,8 @@ function Get-BatchCatalogue {
         if ($byId.ContainsKey($job.Id) -or $byPath.ContainsKey($job.RelativePath)) { throw "Duplicate job or target: $($job.Id)" }
         $byId[$job.Id] = $job; $byPath[$job.RelativePath] = $job
         $job | Add-Member Path (Resolve-BatchPath $dateRoot $job.RelativePath)
+        $job | Add-Member SharedUnits @()
+        $job | Add-Member Aliases @()
     }
     if ($scopePath) {
         # An old organisation input must never read a disabled Unit merely
@@ -263,6 +315,9 @@ function Get-BatchCatalogue {
         $job.Dependencies = @($job.Dependencies | Select-Object -Unique)
         $job | Add-Member Reads @($reads | Where-Object { $_ -ne $job.Path } | Select-Object -Unique)
         $job | Add-Member Exclusive ([bool] ($job.Id -in $settings.ExclusiveJobs))
+    }
+    if ($settings.ContainsKey('SharedUnitJobs')) {
+        $jobs = @(Merge-SharedBatchJobs @($jobs) @($settings.SharedUnitJobs) $dateRoot)
     }
     # Preserve batch sequencing as explicit edges, even for disjoint selections.
     foreach ($group in ($jobs | Group-Object BatchKey)) {
@@ -319,7 +374,7 @@ function Get-BatchPickList {
     # Batch IDs apply across Units: show each choice once, using one Unit that
     # actually enables the batch. A first-Unit-only sample would hide roles
     # enabled solely for later Units (for example EN / C2.4).
-    $allUnitJobs = @($Catalogue.Jobs | Where-Object Unit -ne 'Org')
+    $allUnitJobs = @($Catalogue.Jobs | Where-Object Unit -notin @('Org', 'Date'))
     $orderedUnitJobs = @($allUnitJobs | Sort-Object BatchOrder, RoleOrder, FileOrder)
     $unitJobs = @(foreach ($id in @($orderedUnitJobs | ForEach-Object Batch | Select-Object -Unique)) {
         $batchJobs = @($allUnitJobs | Where-Object Batch -eq $id)
@@ -401,7 +456,9 @@ function Select-BatchPlan {
     }
     foreach ($unit in $Units) { if ($unit -notin $Catalogue.Units) { throw "Unknown Unit: $unit" } }
     foreach ($role in $Roles) { if ($role -notin $Catalogue.Roles) { throw "Unknown or disabled role: $role" } }
-    $eligible = @($Catalogue.Jobs | Where-Object { $_.Unit -in $Units -or $_.Unit -eq 'Org' })
+    $eligible = @($Catalogue.Jobs | Where-Object {
+        $_.Unit -in $Units -or $_.Unit -eq 'Org' -or @($_.SharedUnits | Where-Object { $_ -in $Units }).Count
+    })
     $selected = @()
     if ($StartAtSequence -or $EndAtSequence -or $StartAtWorkbook) {
         $legacy = @($Catalogue.Legacy)
@@ -425,7 +482,7 @@ function Select-BatchPlan {
         }
     } elseif ($Workbooks.Count) {
         foreach ($file in $Workbooks) {
-            $match = @($eligible | Where-Object { $_.RelativePath -eq ($file -replace '\\', '/') -or (Split-Path $_.RelativePath -Leaf) -eq $file -or $_.Id -eq $file })
+            $match = @($eligible | Where-Object { $_.RelativePath -eq ($file -replace '\\', '/') -or (Split-Path $_.RelativePath -Leaf) -eq $file -or $_.Id -eq $file -or $file -in $_.Aliases })
             if ($match.Count -ne 1) { throw "Workbook selection is missing or ambiguous: $file. Use its Date-relative path." }
             $selected += $match[0]
         }
@@ -453,7 +510,7 @@ function Select-BatchPlan {
     }
     $selected = @($Catalogue.Jobs | Where-Object { $ids.ContainsKey($_.Id) })
     if (-not $selected.Count) { throw 'The selection is empty.' }
-    $unitOnlyJobs = @($selected | Where-Object { $_.Unit -ne 'Org' -and $_.Unit -notin $Catalogue.OrgUnits })
+    $unitOnlyJobs = @($selected | Where-Object { $_.Unit -notin @('Org', 'Date') -and $_.Unit -notin $Catalogue.OrgUnits })
     if ($unitOnlyJobs.Count -and @($selected | Where-Object Unit -eq 'Org').Count) {
         $unitOnlyNames = @($unitOnlyJobs | Select-Object -ExpandProperty Unit -Unique) -join ', '
         throw "Organisation jobs do not consume $unitOnlyNames yet. Select those Units without organisation batches."

@@ -1,0 +1,84 @@
+{
+  "Rows": [
+    {
+      "Id": "BD/Intervals",
+      "Finish": 46.1688435,
+      "Attempt": 1,
+      "Status": "Completed",
+      "Start": 0.7078023
+    },
+    {
+      "Id": "BD/DemandIntervals",
+      "Finish": 112.9486594,
+      "Attempt": 1,
+      "Status": "Failed",
+      "Start": 46.198104
+    },
+    {
+      "Id": "TE/Intervals",
+      "Finish": 45.9911538,
+      "Attempt": 1,
+      "Status": "Completed",
+      "Start": 0.7931096
+    },
+    {
+      "Id": "TE/DemandIntervals",
+      "Finish": 129.8876979,
+      "Attempt": 1,
+      "Status": "Failed",
+      "Start": 46.0289027
+    },
+    {
+      "Id": "JH-RY/Intervals",
+      "Finish": 48.7549958,
+      "Attempt": 1,
+      "Status": "Completed",
+      "Start": 0.8887928
+    },
+    {
+      "Id": "JH-RY/DemandIntervals",
+      "Finish": 133.8745792,
+      "Attempt": 1,
+      "Status": "Failed",
+      "Start": 48.7864213
+    }
+  ],
+  "PeakConcurrency": 3,
+  "RunId": "20261003-054015-46692947",
+  "GapSeconds": 1,
+  "Status": "PartialOrFailed",
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ActiveIntervalSeconds": 133.1667769,
+  "IncompleteAttempts": [],
+  "ElapsedSeconds": 133.8851573,
+  "Untimed": [
+    {
+      "Id": "BD/Demand",
+      "Reason": "Prerequisite BD/DemandIntervals did not complete.",
+      "Predecessors": [
+        "BD/DemandIntervals",
+        "BD/Settings"
+      ],
+      "Status": "Blocked"
+    },
+    {
+      "Id": "TE/Demand",
+      "Reason": "Prerequisite TE/DemandIntervals did not complete.",
+      "Predecessors": [
+        "TE/DemandIntervals",
+        "TE/Settings"
+      ],
+      "Status": "Blocked"
+    },
+    {
+      "Id": "JH-RY/Demand",
+      "Reason": "Prerequisite JH-RY/DemandIntervals did not complete.",
+      "Predecessors": [
+        "JH-RY/DemandIntervals",
+        "JH-RY/Settings"
+      ],
+      "Status": "Blocked"
+    }
+  ]
+}

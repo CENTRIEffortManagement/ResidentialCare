@@ -13,6 +13,11 @@
         @{ Folder = 'TE'; Roles = @('AIN', 'EN', 'RN') }
         @{ Folder = 'JH-RY'; Roles = @('AIN', 'EN', 'RN') }
     )
+    # These Unit jobs now share one Date-level workbook, refreshed once per run.
+    # Unit1 and Unit2 retain their existing Unit-level demand masters.
+    SharedUnitJobs = @(
+        @{ Id = 'DemandMaster'; Units = @('BD', 'TE', 'JH-RY'); Path = '1. Input/Demand-MasterRoster Manual Read.xlsx' }
+    )
     # Key: stable job ID printed by ShowPlan (e.g. Unit1/DemandMaster).
     # Values: additional read paths relative to the repository root. Environment-rooted
     # inputs use @{ Environment = 'PUBLIC'; Path = 'Public Scripts/CentriSyncPaths.xlsx' }.

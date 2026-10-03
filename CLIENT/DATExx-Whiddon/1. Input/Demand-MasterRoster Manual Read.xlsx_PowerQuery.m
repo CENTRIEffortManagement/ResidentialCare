@@ -1112,9 +1112,9 @@ in
     Result;
 
 // Query: MW DayShift Allocation
-// Purpose: Converts the complete fortnight productive-care budget to required roster FTE for each distinct week/day/shift.
+// Purpose: Distributes the complete fortnight productive-care budget as demand hours for each distinct week/day/shift.
 // Inputs: MW Historical DayShift and MW Role Targets.
-// Output: Facility/role/original Week No/FortnightDay/shift with unrounded 7.6-hour shift equivalents.
+// Output: Facility/role/original Week No/FortnightDay/shift with RedistributedDemandHours and 7.6-hour FTE retained for display and legacy consumers.
 // Notes: No corresponding-weekday averaging and no divide-by-two. WeekdayShift is now a unique fortnight-day/shift key.
 shared #"MW DayShift Allocation" =
 let
@@ -1131,7 +1131,10 @@ let
     RosterMinutes = Table.AddColumn(TwoStageCheck, "WeekdayShiftRosterMinutes",
         each if [#"Direct Care %"] = null or [#"Direct Care %"] <= 0 then null
         else [WeekdayShiftTargetMinutes] / [#"Direct Care %"], type nullable number),
-    RequiredFTE = Table.AddColumn(RosterMinutes, "FTE", each [WeekdayShiftRosterMinutes] / 456, type nullable number),
+    // Publish roster demand in hours; retain standard FTE for display and legacy consumers.
+    RedistributedHours = Table.AddColumn(RosterMinutes, "RedistributedDemandHours",
+        each [WeekdayShiftRosterMinutes] / 60, type nullable number),
+    RequiredFTE = Table.AddColumn(RedistributedHours, "FTE", each [RedistributedDemandHours] / 7.6, type nullable number),
     AddedShiftKey = Table.AddColumn(RequiredFTE, "WeekdayShift", each [FortnightDay] & "-" & [Shift], type text),
     Result = Table.Sort(AddedShiftKey, {
         {"Facility", Order.Ascending}, {"MinuteCategory", Order.Ascending}, {"Role", Order.Ascending},
@@ -1142,15 +1145,15 @@ in
     BUFFER;
 
 // Query: MW FTE Profile Comparison
-// Purpose: Pairs actual redistributed FTE with master-roster FTE and independently checks constant-factor profile alignment.
+// Purpose: Pairs redistributed demand hours with historical roster hours and independently checks constant-factor profile alignment.
 // Inputs: MW Historical WeekDayShift, MW DayShift Allocation and MW TargetMinutes Prepare.
-// Output: One historical facility/category/role/original week/day/shift cell, preserving all original columns and zeros.
+// Output: One historical facility/category/role/original week/day/shift cell with demand hours, existing FTE displays and proven zeros.
 // Notes: The expected factor is category target productive hours / historical productive hours across the full fortnight.
 shared #"MW FTE Profile Comparison" =
 let
     History = Table.Buffer(#"MW Historical WeekDayShift"),
-    // Compute the scalar independently of the allocation shares. Direct Care %
-    // cancels when converting productive allocations back to roster FTE.
+    // Compute the scalar independently of the demand-distribution shares. Direct Care %
+    // cancels when converting distributed productive hours back to roster hours.
     HistoricalCategories = Table.Group(History, {"Facility", "MinuteCategory"}, {
         {"ProfileHistoricalProductiveHours", each List.Sum([HistoricalProductiveHours]), type nullable number}
     }),
@@ -1164,7 +1167,7 @@ let
             {"Facility", "MinuteCategory"}, "Target", JoinKind.LeftOuter),
         "Target", {"CategoryTargetMinutes"}),
     // Keep week in the join so the two Tuesdays cannot be combined. Do not
-    // expand a duplicate allocation join: expose its count and fail alignment.
+    // expand a duplicate demand-distribution join: expose its count and fail alignment.
     JoinedAllocation = Table.NestedJoin(WithTargets,
         {"Facility", "MinuteCategory", "Role", "Week No", "FortnightDayIndex", "Shift"},
         #"MW DayShift Allocation",
@@ -1172,29 +1175,34 @@ let
         "Redistribution", JoinKind.LeftOuter),
     WithMatchCount = Table.AddColumn(JoinedAllocation, "RedistributionMatchCount", each Table.RowCount([Redistribution]), Int64.Type),
     // Only valid zero-history cells with a configured target may become zero.
-    // Missing positive-history allocations and missing targets stay null.
-    WithRedistributedFTE = Table.AddColumn(WithMatchCount, "RedistributedRosterFTE", each
-        if [CategoryTargetMinutes] = null or [HistoricalCoverageStatus] <> "PASS" or [HistoricalRosterFTE] = null then null
-        else if [RedistributionMatchCount] = 1 then [Redistribution]{0}[FTE]
-        else if [RedistributionMatchCount] = 0 and [HistoricalRosterFTE] = 0 then 0
+    // Missing positive-history demand-distribution rows and missing targets stay null.
+    WithRedistributedHours = Table.AddColumn(WithMatchCount, "RedistributedDemandHours", each
+        if [CategoryTargetMinutes] = null or [HistoricalCoverageStatus] <> "PASS" or [HistoricalRosterHours] = null then null
+        else if [RedistributionMatchCount] = 1 then [Redistribution]{0}[RedistributedDemandHours]
+        else if [RedistributionMatchCount] = 0 and [HistoricalRosterHours] = 0 then 0
         else null, type nullable number),
+    WithRedistributedFTE = Table.AddColumn(WithRedistributedHours, "RedistributedRosterFTE",
+        each [RedistributedDemandHours] / 7.6, type nullable number),
     WithExpectedFactor = Table.AddColumn(WithRedistributedFTE, "ExpectedRedistributionFactor", each
         if [CategoryTargetMinutes] = null or [ProfileHistoricalProductiveHours] = null or [ProfileHistoricalProductiveHours] <= 0 then null
         else [CategoryTargetMinutes] / 60 / [ProfileHistoricalProductiveHours], type nullable number),
     WithActualFactor = Table.AddColumn(WithExpectedFactor, "RedistributionFactor", each
-        if [HistoricalRosterFTE] = null or [HistoricalRosterFTE] <= 0 then null
-        else [RedistributedRosterFTE] / [HistoricalRosterFTE], type nullable number),
-    WithVariance = Table.AddColumn(WithActualFactor, "ProfileVarianceFTE", each
-        if [HistoricalRosterFTE] = 0 and [RedistributedRosterFTE] = 0 then 0
-        else [RedistributedRosterFTE] - [HistoricalRosterFTE] * [ExpectedRedistributionFactor], type nullable number),
+        if [HistoricalRosterHours] = null or [HistoricalRosterHours] <= 0 then null
+        else [RedistributedDemandHours] / [HistoricalRosterHours], type nullable number),
+    WithHoursVariance = Table.AddColumn(WithActualFactor, "ProfileVarianceHours", each
+        if [HistoricalRosterHours] = 0 and [RedistributedDemandHours] = 0 then 0
+        else [RedistributedDemandHours] - [HistoricalRosterHours] * [ExpectedRedistributionFactor], type nullable number),
+    // Retain the existing FTE variance for comprehension; only the hours residual gates publication.
+    WithVariance = Table.AddColumn(WithHoursVariance, "ProfileVarianceFTE",
+        each [ProfileVarianceHours] / 7.6, type nullable number),
     WithStatus = Table.AddColumn(WithVariance, "ProfileAlignmentStatus", each
-        if [HistoricalCoverageStatus] <> "PASS" or [HistoricalRosterFTE] = null then "ERROR"
+        if [HistoricalCoverageStatus] <> "PASS" or [HistoricalRosterHours] = null then "ERROR"
         else if [CategoryTargetMinutes] = null then "NO TARGET"
-        else if [RedistributionMatchCount] > 1 or [RedistributedRosterFTE] = null or [ProfileVarianceFTE] = null then "ERROR"
-        else if Number.Abs([ProfileVarianceFTE]) <= 0.000001 / 456 then
-            if [HistoricalRosterFTE] = 0 then "PASS ZERO" else "PASS"
+        else if [RedistributionMatchCount] > 1 or [RedistributedDemandHours] = null or [ProfileVarianceHours] = null then "ERROR"
+        else if Number.Abs([ProfileVarianceHours]) <= 0.000001 / 60 then
+            if [HistoricalRosterHours] = 0 then "PASS ZERO" else "PASS"
         else "ERROR", type text),
-    Result = Table.Sort(Table.RemoveColumns(WithStatus, {"Redistribution"}), {
+    Result = Table.Sort(Table.RemoveColumns(WithStatus, {"Redistribution", "ProfileVarianceHours"}), {
         {"Facility", Order.Ascending}, {"Role", Order.Ascending}, {"FortnightDayIndex", Order.Ascending}, {"ShiftIndex", Order.Ascending}
     })
 in
@@ -1223,7 +1231,7 @@ let
         {"TargetNSFTE", each List.Sum(Table.SelectRows(_, each [Shift] = "NS")[FTE]), type nullable number},
         {"DailyShiftDistributionTotal%", each List.Sum([#"RoleDayShiftDistribution%"]), type nullable number},
         {"MaximumAbsoluteTwoStageVarianceMinutes", each List.Max(List.Transform([TwoStageAllocationVarianceMinutes], Number.Abs)), type nullable number},
-        {"InvalidAllocationCount", each Table.RowCount(Table.SelectRows(_, each [FTE] = null or [WeekdayShiftTargetMinutes] = null)), Int64.Type}
+        {"InvalidAllocationCount", each Table.RowCount(Table.SelectRows(_, each [RedistributedDemandHours] = null or [WeekdayShiftTargetMinutes] = null)), Int64.Type}
     }),
     Measures = {"AllocatedDayProductiveMinutes", "AllocatedDayRosterMinutes", "DayFTEShiftTotal",
         "TargetAMFTE", "TargetPMFTE", "TargetNSFTE", "DailyShiftDistributionTotal%",
@@ -2448,10 +2456,10 @@ in
     #"Filtered Rows";
 
 // Query: MW Fortnight Hours Check
-// Purpose: Independently reconciles allocated FTE to grouped canonical RN and ALL source-target hours.
+// Purpose: Independently reconciles distributed demand hours to grouped canonical RN and ALL source-target hours.
 // Inputs: MW TargetMinutes Source Prepare and MW DayShift Allocation; evaluate after MW PreAllocation Check passes.
 // Output: RN and ALL checks per canonical facility with Actual and Expected productive-care hours per fortnight.
-// Notes: Groups the original source hours directly, avoiding the minute conversion used by allocation targets.
+// Notes: Groups the original source hours directly, avoiding the minute conversion used by demand-distribution targets.
 shared #"MW Fortnight Hours Check" =
 let
     // Match the existing 0.000001-minute tolerance, expressed in hours.
@@ -2488,7 +2496,7 @@ let
     Allocation = Table.Buffer(
         Table.SelectColumns(
             #"MW DayShift Allocation",
-            {"Facility", "MinuteCategory", "Direct Care %", "FTE"}
+            {"Facility", "MinuteCategory", "Direct Care %", "RedistributedDemandHours"}
         )
     ),
     CheckRecords =
@@ -2504,11 +2512,11 @@ let
                         each [Facility] = FacilityKey and
                             (TargetType = "ALL" or [MinuteCategory] = "RN")
                     ),
-                    // All 14 days are present once. Convert roster FTE back to
-                    // productive hours without repeating or doubling any day.
+                    // All 14 days are present once. Apply each role's Direct Care % to
+                    // authoritative demand hours without repeating or doubling any day.
                     ReconstructedHours = List.Transform(
                         Table.ToRecords(EligibleAllocation),
-                        each [FTE] * 7.6 * [#"Direct Care %"]
+                        each [RedistributedDemandHours] * [#"Direct Care %"]
                     ),
                     HasInvalidAllocation = List.NonNullCount(ReconstructedHours) <> List.Count(ReconstructedHours),
                     ActualHours =
@@ -2518,7 +2526,7 @@ let
                         else Number.Abs(ActualHours - ExpectedHours) <= ToleranceHours
                 in
                     [
-                        Check = "Allocated FTE reconciles to grouped fortnight hours",
+                        Check = "Distributed demand hours reconcile to grouped fortnight hours",
                         Severity = if Passed then "Pass" else "Error",
                         Facility = FacilityKey,
                         MinuteCategory = if TargetType = "RN" then "RN" else null,
@@ -2526,7 +2534,7 @@ let
                         Actual = ActualHours,
                         Expected = ExpectedHours,
                         Message = TargetType & " targets from " & TargetRow[TargetFacilityKeys] &
-                            ": all 14 days of FTE x 7.6 x Direct Care % must equal the grouped canonical TargetMinutes hours."
+                            ": all 14 days of RedistributedDemandHours x Direct Care % must equal the grouped canonical TargetMinutes hours."
                     ]
         ),
     Result = #"MW Check Table"(CheckRecords)
@@ -2534,20 +2542,20 @@ in
     Result;
 
 // Query: MW FTE Profile Alignment Check
-// Purpose: Validates that redistributed role/day/shift FTE is a single category-wide scalar multiple of master-roster FTE.
+// Purpose: Validates that redistributed role/day/shift demand hours are a single category-wide scalar multiple of historical roster hours.
 // Inputs: MW FTE Profile Comparison; evaluate after MW PreAllocation Check passes.
 // Output: Standard check records; errors block publication and missing targets remain warnings.
 shared #"MW FTE Profile Alignment Check" =
 let
     Result = #"MW Check Table"(List.Transform(Table.ToRecords(#"MW FTE Profile Comparison"), each [
-        Check = "Redistributed FTE preserves historical profile",
+        Check = "Redistributed demand hours preserve historical profile",
         Severity = if Text.StartsWith([ProfileAlignmentStatus], "PASS") then "Pass"
             else if [ProfileAlignmentStatus] = "NO TARGET" then "Warning" else "Error",
         Facility = [Facility], MinuteCategory = [MinuteCategory], Role = [Role],
-        Actual = [RedistributedRosterFTE],
-        Expected = if [HistoricalRosterFTE] = 0 then 0 else [HistoricalRosterFTE] * [ExpectedRedistributionFactor],
+        Actual = [RedistributedDemandHours],
+        Expected = if [HistoricalRosterHours] = 0 then 0 else [HistoricalRosterHours] * [ExpectedRedistributionFactor],
         Message = [FortnightDay] & " / " & [Shift] & ": " & [ProfileAlignmentStatus] &
-            ". Redistributed FTE must equal historical FTE times the same facility/category scalar across both weeks."
+            ". Redistributed demand hours must equal historical roster hours times the same facility/category scalar across both weeks."
     ])),
     #"Filtered Rows" = Table.SelectRows(Result, each true)
 in
@@ -2588,9 +2596,9 @@ in
     #"Removed Other Columns";
 
 // Query: MinuteWorkersFTE_TABLE
-// Purpose: Publishes the validated 14-day MinuteWorker FTE allocation without weekday averaging.
+// Purpose: Publishes the validated 14-day MinuteWorker demand distribution without weekday averaging.
 // Inputs: MW Publication Check and MW DayShift Allocation.
-// Output: One row per facility, role, FortnightDay, and shift with unrounded 7.6-hour shift equivalents in FTE.
+// Output: One row per facility, role, FortnightDay, and shift with RedistributedDemandHours and 7.6-hour FTE retained for display and legacy consumers.
 shared MinuteWorkersFTE_TABLE =
 let
     RaiseValidationError = (ErrorTitle as text, ValidationRows as table) as any =>
@@ -2693,18 +2701,18 @@ let
     ),
     DailyAllocationChecks = #"MW Daily Allocation Check",
 
-    // Reconstruct productive minutes from all 14 allocated days once, with no factor of two.
+    // Reconstruct productive minutes from all 14 days of demand hours once, with no factor of two.
     AllocationWithProductiveMinutes = Table.Buffer(
         Table.AddColumn(
             Table.SelectColumns(
                 #"MW DayShift Allocation",
                 {
                     "Facility", "MinuteCategory", "CategoryTargetMinutes",
-                    "Direct Care %", "FTE"
+                    "Direct Care %", "RedistributedDemandHours"
                 }
             ),
             "ReconciledProductiveMinutes",
-            each [FTE] * 456 * [#"Direct Care %"],
+            each [RedistributedDemandHours] * 60 * [#"Direct Care %"],
             type number
         )
     ),
@@ -2728,7 +2736,7 @@ let
         List.Transform(
             Table.ToRecords(CategoryReconciliation),
             each [
-                Check = "Allocated productive minutes reconcile to category target",
+                Check = "Distributed productive minutes reconcile to category target",
                 Severity =
                     if Number.Abs([Actual] - [Expected]) <= Tolerance then
                         "Pass"
@@ -2739,7 +2747,7 @@ let
                 Role = null,
                 Actual = [Actual],
                 Expected = [Expected],
-                Message = "Sum of all 14 days of FTE x 456 x Direct Care % must equal the fortnight category target."
+                Message = "Sum of all 14 days of RedistributedDemandHours x 60 x Direct Care % must equal the fortnight category target."
             ]
         )
     ),
@@ -2842,14 +2850,14 @@ in
     BufferedAnalysis;
 
 // Query: MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE
-// Purpose: Publishes paired historical and redistributed FTE profiles after the publication gate passes.
+// Purpose: Publishes paired historical roster and redistributed demand hours with FTE displays after the publication gate passes.
 // Inputs: MW Publication Check and MW FTE Profile Comparison.
-// Output: Historical and redistributed role/day/shift FTE at canonical Facility grain.
+// Output: Historical roster hours, RedistributedDemandHours and existing role/day/shift FTE displays at canonical Facility grain.
 shared MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE = let
     FatalChecks = Table.SelectRows(#"MW Publication Check", each [Severity] = "Error"),
     Result = if Table.RowCount(FatalChecks) > 0 then
         error Error.Record("FTE profile comparison validation failed",
-            "Resolve publication/profile checks before plotting redistributed FTE; inspect MW Historical WeekDayShift for raw history.", FatalChecks)
+            "Resolve publication/profile checks before using redistributed demand hours or plotting FTE; inspect MW Historical WeekDayShift for raw history.", FatalChecks)
         else #"MW FTE Profile Comparison"
 in
     Result;

@@ -1,0 +1,818 @@
+{
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "GapSeconds": 2,
+  "Rows": [
+    {
+      "Finish": 258.165396,
+      "Id": "Date/DemandMaster",
+      "Status": "Completed",
+      "Start": 104.6557718,
+      "Attempt": 1
+    },
+    {
+      "Finish": 50.7062657,
+      "Id": "BD/AllocationInput",
+      "Status": "Completed",
+      "Start": 2.3886598,
+      "Attempt": 1
+    },
+    {
+      "Finish": 98.4713988,
+      "Id": "BD/Settings",
+      "Status": "Completed",
+      "Start": 50.7396354,
+      "Attempt": 1
+    },
+    {
+      "Finish": 311.9339568,
+      "Id": "BD/DemandInput",
+      "Status": "Completed",
+      "Start": 258.20327,
+      "Attempt": 1
+    },
+    {
+      "Finish": 159.0064251,
+      "Id": "BD/Workers",
+      "Status": "Completed",
+      "Start": 98.5036721,
+      "Attempt": 1
+    },
+    {
+      "Finish": 341.8493375,
+      "Id": "BD/Availability",
+      "Status": "Completed",
+      "Start": 159.0662248,
+      "Attempt": 1
+    },
+    {
+      "Finish": 388.4654077,
+      "Id": "BD/Staff",
+      "Status": "Completed",
+      "Start": 341.8918229,
+      "Attempt": 1
+    },
+    {
+      "Finish": 358.7700264,
+      "Id": "BD/Intervals",
+      "Status": "Completed",
+      "Start": 311.9757252,
+      "Attempt": 1
+    },
+    {
+      "Finish": 371.6196491,
+      "Id": "BD/DemandIntervals",
+      "Status": "Failed",
+      "Start": 358.8398004,
+      "Attempt": 1
+    },
+    {
+      "Finish": 485.2792935,
+      "Id": "BD/Shifts",
+      "Status": "Completed",
+      "Start": 358.9557592,
+      "Attempt": 1
+    },
+    {
+      "Finish": 547.5760093,
+      "Id": "BD/ShiftAverage",
+      "Status": "Completed",
+      "Start": 485.3125261,
+      "Attempt": 1
+    },
+    {
+      "Finish": 589.9370896,
+      "Id": "BD/Allocation",
+      "Status": "Completed",
+      "Start": 547.6056139,
+      "Attempt": 1
+    },
+    {
+      "Finish": 632.7319159,
+      "Id": "BD/Distribution",
+      "Status": "Completed",
+      "Start": 589.963073,
+      "Attempt": 1
+    },
+    {
+      "Finish": 673.5952708,
+      "Id": "BD/MultiRole",
+      "Status": "Completed",
+      "Start": 632.7581191,
+      "Attempt": 1
+    },
+    {
+      "Finish": 54.4437894,
+      "Id": "TE/AllocationInput",
+      "Status": "Completed",
+      "Start": 2.4753099,
+      "Attempt": 1
+    },
+    {
+      "Finish": 104.6187673,
+      "Id": "TE/Settings",
+      "Status": "Completed",
+      "Start": 54.5290522,
+      "Attempt": 1
+    },
+    {
+      "Finish": 315.5475946,
+      "Id": "TE/DemandInput",
+      "Status": "Completed",
+      "Start": 258.3263344,
+      "Attempt": 1
+    },
+    {
+      "Finish": 172.4937957,
+      "Id": "TE/Workers",
+      "Status": "Completed",
+      "Start": 104.7677755,
+      "Attempt": 1
+    },
+    {
+      "Finish": 295.4029786,
+      "Id": "TE/Availability",
+      "Status": "Completed",
+      "Start": 172.5512319,
+      "Attempt": 1
+    },
+    {
+      "Finish": 343.5327984,
+      "Id": "TE/Staff",
+      "Status": "Completed",
+      "Start": 295.4438133,
+      "Attempt": 1
+    },
+    {
+      "Finish": 361.8344455,
+      "Id": "TE/Intervals",
+      "Status": "Completed",
+      "Start": 315.5923784,
+      "Attempt": 1
+    },
+    {
+      "Finish": 376.3755594,
+      "Id": "TE/DemandIntervals",
+      "Status": "Failed",
+      "Start": 361.9890385,
+      "Attempt": 1
+    },
+    {
+      "Finish": 437.4339667,
+      "Id": "TE/Shifts",
+      "Status": "Completed",
+      "Start": 362.1204154,
+      "Attempt": 1
+    },
+    {
+      "Finish": 497.667438,
+      "Id": "TE/ShiftAverage",
+      "Status": "Completed",
+      "Start": 437.4689508,
+      "Attempt": 1
+    },
+    {
+      "Finish": 541.3021665,
+      "Id": "TE/Allocation",
+      "Status": "Completed",
+      "Start": 497.7007184,
+      "Attempt": 1
+    },
+    {
+      "Finish": 584.4555654,
+      "Id": "TE/Distribution",
+      "Status": "Completed",
+      "Start": 541.3319366,
+      "Attempt": 1
+    },
+    {
+      "Finish": 625.6416131,
+      "Id": "TE/MultiRole",
+      "Status": "Completed",
+      "Start": 584.4852792,
+      "Attempt": 1
+    },
+    {
+      "Finish": 54.2055232,
+      "Id": "JH-RY/AllocationInput",
+      "Status": "Completed",
+      "Start": 2.5723044,
+      "Attempt": 1
+    },
+    {
+      "Finish": 100.8409094,
+      "Id": "JH-RY/Settings",
+      "Status": "Completed",
+      "Start": 54.2622601,
+      "Attempt": 1
+    },
+    {
+      "Finish": 317.0169963,
+      "Id": "JH-RY/DemandInput",
+      "Status": "Completed",
+      "Start": 258.4539086,
+      "Attempt": 1
+    },
+    {
+      "Finish": 161.7263943,
+      "Id": "JH-RY/Workers",
+      "Status": "Completed",
+      "Start": 100.8901402,
+      "Attempt": 1
+    },
+    {
+      "Finish": 298.3433688,
+      "Id": "JH-RY/Availability",
+      "Status": "Completed",
+      "Start": 161.7633187,
+      "Attempt": 1
+    },
+    {
+      "Finish": 347.9745673,
+      "Id": "JH-RY/Staff",
+      "Status": "Completed",
+      "Start": 298.3921714,
+      "Attempt": 1
+    },
+    {
+      "Finish": 366.4552933,
+      "Id": "JH-RY/Intervals",
+      "Status": "Completed",
+      "Start": 317.0601417,
+      "Attempt": 1
+    },
+    {
+      "Finish": 379.5827366,
+      "Id": "JH-RY/DemandIntervals",
+      "Status": "Failed",
+      "Start": 366.4905605,
+      "Attempt": 1
+    },
+    {
+      "Finish": 459.6448612,
+      "Id": "JH-RY/Shifts",
+      "Status": "Completed",
+      "Start": 366.7599673,
+      "Attempt": 1
+    },
+    {
+      "Finish": 522.9110671,
+      "Id": "JH-RY/ShiftAverage",
+      "Status": "Completed",
+      "Start": 459.6907984,
+      "Attempt": 1
+    },
+    {
+      "Finish": 565.4844473,
+      "Id": "JH-RY/Allocation",
+      "Status": "Completed",
+      "Start": 522.9396301,
+      "Attempt": 1
+    },
+    {
+      "Finish": 608.4266203,
+      "Id": "JH-RY/Distribution",
+      "Status": "Completed",
+      "Start": 565.5338565,
+      "Attempt": 1
+    },
+    {
+      "Finish": 649.6529751,
+      "Id": "JH-RY/MultiRole",
+      "Status": "Completed",
+      "Start": 608.4527813,
+      "Attempt": 1
+    },
+    {
+      "Finish": 432.2998718,
+      "Id": "Org/StaffAll",
+      "Status": "Completed",
+      "Start": 388.5047684,
+      "Attempt": 1
+    }
+  ],
+  "Untimed": [
+    {
+      "Id": "BD/Demand",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/DemandIntervals did not complete.",
+      "Predecessors": [
+        "BD/DemandIntervals",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Id": "BD/Role:AIN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Id": "BD/Role:AIN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/1"
+      ]
+    },
+    {
+      "Id": "BD/Role:AIN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/2"
+      ]
+    },
+    {
+      "Id": "BD/Role:RN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Id": "BD/Role:RN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/1"
+      ]
+    },
+    {
+      "Id": "BD/Role:RN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/2"
+      ]
+    },
+    {
+      "Id": "BD/Role:EN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Id": "BD/Role:EN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/1"
+      ]
+    },
+    {
+      "Id": "BD/Role:EN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Demand did not complete.",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/2"
+      ]
+    },
+    {
+      "Id": "BD/Capacity",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Role:AIN/3 did not complete.",
+      "Predecessors": [
+        "BD/Role:AIN/3",
+        "BD/Role:EN/3",
+        "BD/Role:RN/3",
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Id": "BD/Effort",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Capacity did not complete.",
+      "Predecessors": [
+        "BD/Capacity",
+        "BD/Demand",
+        "BD/Allocation",
+        "BD/Distribution",
+        "BD/MultiRole",
+        "BD/Staff",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Id": "TE/Demand",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/DemandIntervals did not complete.",
+      "Predecessors": [
+        "TE/DemandIntervals",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Id": "TE/Role:AIN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Id": "TE/Role:AIN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:AIN/1"
+      ]
+    },
+    {
+      "Id": "TE/Role:AIN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:AIN/2"
+      ]
+    },
+    {
+      "Id": "TE/Role:RN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Id": "TE/Role:RN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:RN/1"
+      ]
+    },
+    {
+      "Id": "TE/Role:RN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:RN/2"
+      ]
+    },
+    {
+      "Id": "TE/Role:EN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Id": "TE/Role:EN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:EN/1"
+      ]
+    },
+    {
+      "Id": "TE/Role:EN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Demand did not complete.",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:EN/2"
+      ]
+    },
+    {
+      "Id": "TE/Capacity",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Role:AIN/3 did not complete.",
+      "Predecessors": [
+        "TE/Role:AIN/3",
+        "TE/Role:EN/3",
+        "TE/Role:RN/3",
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Id": "TE/Effort",
+      "Status": "Blocked",
+      "Reason": "Prerequisite TE/Capacity did not complete.",
+      "Predecessors": [
+        "TE/Capacity",
+        "TE/Demand",
+        "TE/Allocation",
+        "TE/Distribution",
+        "TE/MultiRole",
+        "TE/Staff",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Id": "JH-RY/Demand",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/DemandIntervals did not complete.",
+      "Predecessors": [
+        "JH-RY/DemandIntervals",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:AIN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:AIN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:AIN/1"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:AIN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:AIN/2"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:RN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:RN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:RN/1"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:RN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:RN/2"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:EN/1",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:EN/2",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:EN/1"
+      ]
+    },
+    {
+      "Id": "JH-RY/Role:EN/3",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Demand did not complete.",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:EN/2"
+      ]
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Role:AIN/3 did not complete.",
+      "Predecessors": [
+        "JH-RY/Role:AIN/3",
+        "JH-RY/Role:EN/3",
+        "JH-RY/Role:RN/3",
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "Status": "Blocked",
+      "Reason": "Prerequisite JH-RY/Capacity did not complete.",
+      "Predecessors": [
+        "JH-RY/Capacity",
+        "JH-RY/Demand",
+        "JH-RY/Allocation",
+        "JH-RY/Distribution",
+        "JH-RY/MultiRole",
+        "JH-RY/Staff",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Id": "Org/EffortAll",
+      "Status": "Blocked",
+      "Reason": "Prerequisite BD/Effort did not complete.",
+      "Predecessors": [
+        "Org/StaffAll",
+        "BD/Effort",
+        "TE/Effort",
+        "JH-RY/Effort"
+      ]
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Status": "Blocked",
+      "Reason": "Prerequisite Org/EffortAll did not complete.",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ]
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Status": "Blocked",
+      "Reason": "Prerequisite Org/Outcomes did not complete.",
+      "Predecessors": [
+        "Org/Outcomes"
+      ]
+    },
+    {
+      "Id": "Org/Cost",
+      "Status": "Blocked",
+      "Reason": "Prerequisite Org/Inefficiencies did not complete.",
+      "Predecessors": [
+        "Org/Inefficiencies",
+        "Unit1/Settings"
+      ]
+    },
+    {
+      "Id": "Org/History",
+      "Status": "Blocked",
+      "Reason": "Prerequisite Org/Outcomes did not complete.",
+      "Predecessors": [
+        "Org/Outcomes"
+      ]
+    },
+    {
+      "Id": "Org/HistoryRead",
+      "Status": "Blocked",
+      "Reason": "Prerequisite Org/History did not complete.",
+      "Predecessors": [
+        "Org/History"
+      ]
+    },
+    {
+      "Id": "Org/Reporting",
+      "Status": "Blocked",
+      "Reason": "Prerequisite Org/Cost did not complete.",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ]
+    }
+  ],
+  "Status": "PartialOrFailed",
+  "IncompleteAttempts": [],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ActiveIntervalSeconds": 671.206611,
+  "RunId": "20261002-180551-0c0b0b67",
+  "ElapsedSeconds": 673.621128,
+  "PeakConcurrency": 7
+}

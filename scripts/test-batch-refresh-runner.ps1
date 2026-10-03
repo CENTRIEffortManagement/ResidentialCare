@@ -60,9 +60,9 @@ function Invoke-FakeRun {
 try {
     $catalogue = Get-BatchCatalogue $repoRoot
     $defaultRun = Select-BatchPlan $catalogue -RunAll
-    Assert-True ($defaultRun.Jobs.Count -eq 86) 'Run all selects BD, TE, JH-RY and eight organisation workbooks'
-    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 86) 'unqualified preview matches Run all scope'
-    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 38) 'default run resolves three Unit batch sets and five organisation batches'
+    Assert-True ($defaultRun.Jobs.Count -eq 84) 'Run all selects BD, TE, JH-RY, one shared demand master and eight organisation workbooks'
+    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 84) 'unqualified preview matches Run all scope'
+    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 39) 'default run resolves three Unit batch sets, one shared input batch and five organisation batches'
     Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2')).Count -eq 0 -and @($defaultRun.Jobs | Where-Object Unit -eq 'Org').Count -eq 8) 'Run all excludes legacy Units and includes the complete organisation release chain'
     Assert-True ($defaultRun.Jobs[-1].Id -eq 'Org/Reporting' -and $defaultRun.Jobs[-1].RelativePath -eq '2. Calculations/Tableau Connection.xlsx') 'Run all ends at Tableau Connection'
     Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and $catalogue.RunAllIncludeOrg) 'saved default scope includes organisation work'
@@ -109,7 +109,7 @@ try {
     $bdUnit = Select-BatchPlan $catalogue -RunAll -Units BD
     Assert-True ($bdUnit.Jobs.Count -eq 26 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work'
     $everyUnit = Select-BatchPlan $catalogue -RunAll -Units All
-    Assert-True ($everyUnit.Jobs.Count -eq 130 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit without organisation jobs'
+    Assert-True ($everyUnit.Jobs.Count -eq 128 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit and the shared master once without organisation jobs'
     $bdCapacity = @($bdUnit.Jobs | Where-Object Id -eq 'BD/Capacity')[0]
     Assert-True ('BD/Role:EN/3' -in $bdCapacity.Dependencies -and 'BD/Role:AINC4/3' -notin $bdCapacity.Dependencies) 'BD consolidation waits for EN rather than AINC4'
     $role = Select-BatchPlan $catalogue -Units Unit2 -Roles RN
@@ -135,6 +135,51 @@ try {
     $settings = $all.Jobs | Where-Object Id -eq 'Unit1/Settings'
     Assert-True ('Unit1/AllocationInput' -in $settings.Dependencies) 'allocation before settings'
 
+    $sharedMaster = @($defaultRun.Jobs | Where-Object Id -eq 'Date/DemandMaster')[0]
+    Assert-True ($sharedMaster.RelativePath -eq '1. Input/Demand-MasterRoster Manual Read.xlsx') 'shared master resolves at the Date input folder'
+    Assert-True (@($defaultRun.Jobs | Where-Object Path -eq $sharedMaster.Path).Count -eq 1) 'default run refreshes the shared master only once'
+    Assert-True (@($defaultRun.Jobs | Where-Object Id -in @('BD/DemandMaster','TE/DemandMaster','JH-RY/DemandMaster')).Count -eq 0) 'obsolete facility master targets are absent'
+    Assert-True (($sharedMaster.Dependencies -join ',') -eq 'BD/Settings,TE/Settings,JH-RY/Settings') 'shared producer retains the existing declared prerequisites'
+    foreach ($unit in @('BD','TE','JH-RY')) {
+        $demandInput = @($defaultRun.Jobs | Where-Object Id -eq "$unit/DemandInput")[0]
+        Assert-True ('Date/DemandMaster' -in $demandInput.Dependencies -and $sharedMaster.Path -in $demandInput.Reads) "$unit demand extraction waits for and reads the shared producer"
+        Assert-True (@($demandInput.Reads | Where-Object { $_ -like "*/UNITS/$unit/1. Input/Demand-MasterRoster*" -or $_ -like "*\UNITS\$unit\1. Input\Demand-MasterRoster*" }).Count -eq 0) "$unit no longer checks the obsolete master input"
+        $demandBatch = Select-BatchPlan $catalogue -Units $unit -Batches D1
+        Assert-True ($demandBatch.Jobs.Count -eq 2 -and 'Date/DemandMaster' -in $demandBatch.Jobs.Id) "$unit D1 includes its shared producer"
+    }
+    $sharedSelection = Select-BatchPlan $catalogue -Workbooks 'BD/DemandMaster','TE/DemandMaster','1. Input/Demand-MasterRoster Manual Read.xlsx'
+    Assert-True ($sharedSelection.Jobs.Count -eq 1 -and $sharedSelection.Jobs[0].Id -eq 'Date/DemandMaster') 'former job IDs and exact shared path select the same single producer'
+    $savedDemand = Select-BatchPlan $catalogue -Workbooks 'BD/DemandInput'
+    Assert-True ($savedDemand.Jobs.Count -eq 1 -and $sharedMaster.Path -in $savedDemand.Jobs[0].Reads) 'exact extraction selection validates the shared saved input without silently selecting a refresh'
+    $sharedDeps = Select-BatchPlan $catalogue -Units BD -Batches A2 -IncludeDependencies
+    Assert-True ('Date/DemandMaster' -in $sharedDeps.Jobs.Id -and 'BD/DemandMaster' -notin $sharedDeps.Jobs.Id) 'dependency expansion follows the relocated producer'
+    $parallelCatalogue = Get-BatchCatalogue $repoRoot 'ParallelInputs-Unit1Priority'
+    $parallelPlan = Select-BatchPlan $parallelCatalogue -RunAll
+    $parallelInput = @($parallelPlan.Jobs | Where-Object Id -eq 'TE/DemandInput')[0]
+    Assert-True ('Date/DemandMaster' -in $parallelInput.Dependencies -and $sharedMaster.Path -in $parallelInput.Reads) 'alternate sequence profile redirects explicit read jobs too'
+
+    # Exercise the resolved graph with synthetic files: one shared write must
+    # finish before any consumer, and its failure blocks every selected consumer.
+    $syntheticMaster = New-FakeJob 'Date/DemandMaster' 'Date/D1'
+    $syntheticConsumers = @(foreach ($unit in @('BD','TE','JH-RY')) {
+        $inputJob = @($defaultRun.Jobs | Where-Object Id -eq "$unit/DemandInput")[0]
+        New-FakeJob $inputJob.Id $inputJob.BatchKey @($inputJob.Dependencies | Where-Object { $_ -eq $syntheticMaster.Id }) @($syntheticMaster.Path)
+    })
+    $sharedResult = Invoke-FakeRun (@($syntheticMaster) + $syntheticConsumers)
+    Assert-True ($sharedResult.Code -eq 0 -and @($sharedResult.Events | Where-Object { $_ -eq 'start:Date/DemandMaster' }).Count -eq 1) 'shared producer dispatches once'
+    foreach ($consumer in $syntheticConsumers) {
+        Assert-True ($sharedResult.Events.IndexOf('end:Date/DemandMaster') -lt $sharedResult.Events.IndexOf("start:$($consumer.Id)")) 'consumer starts after shared save completion'
+    }
+    $sharedFailed = Invoke-FakeRun (@($syntheticMaster) + $syntheticConsumers) -Fail 'Date/DemandMaster'
+    Assert-True ($sharedFailed.Code -eq 1 -and @($syntheticConsumers | Where-Object { $sharedFailed.State.Jobs[$_.Id].Status -eq 'Blocked' }).Count -eq 3) 'shared producer failure blocks all three consumers'
+    $sharedLock = Join-Path $testRoot ('~$' + (Split-Path $syntheticMaster.Path -Leaf))
+    [IO.File]::WriteAllText($sharedLock, 'synthetic lock')
+    $lockedSharedIssues = @(Test-BatchPlan $sharedResult.Plan)
+    Assert-True (@($lockedSharedIssues | Where-Object { $_ -match 'Excel lock file' }).Count -gt 0) 'shared target and consumer input locks remain enforced'
+    Remove-Item -LiteralPath $sharedLock
+    Remove-Item -LiteralPath $syntheticMaster.Path
+    Assert-True (@(Test-BatchPlan $sharedResult.Plan | Where-Object { $_ -match 'Missing file' }).Count -gt 0) 'missing shared source remains a validation error'
+
     # A disposable configuration fixture tests dynamic discovery without touching
     # any workbook or the user's saved production role profile.
     $fixtureRoot = Join-Path $testRoot 'catalogue'
@@ -148,6 +193,7 @@ try {
     $fixtureSettingsPath = Join-Path $fixtureDate 'runner/ResidentialCare-BatchApproval.psd1'
     $fixtureSettingsText = [IO.File]::ReadAllText($fixtureSettingsPath)
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?ms)^    AdditionalUnits = @\(.*?^    \)', '    AdditionalUnits = @()')
+    $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?ms)^    SharedUnitJobs = @\(.*?^    \)', '    SharedUnitJobs = @()')
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    OrganisationUnits = .*$', "    OrganisationUnits = @('Unit1', 'Unit2')")
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    RunAllUnits = .*$', "    RunAllUnits = @('Unit1', 'Unit2')")
     $fixtureSettingsText = [regex]::Replace($fixtureSettingsText, '(?m)^    RunAllIncludeOrg = .*$', '    RunAllIncludeOrg = $true')

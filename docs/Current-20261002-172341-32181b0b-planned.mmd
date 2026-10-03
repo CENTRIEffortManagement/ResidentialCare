@@ -1,0 +1,136 @@
+gantt
+    title Current forecast - elapsed unknown - incomplete timing history
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section Date/D1
+    %% Untimed Date/DemandMaster; predecessors: BD/Settings, TE/Settings, JH-RY/Settings
+    section BD/A1
+    %% Predecessors:
+    BD/AllocationInput attempt 1 Forecast :task1, 2000-01-01 00:00:00.000, 2000-01-01 00:00:49.107
+    section BD/S1
+    %% Predecessors: BD/AllocationInput
+    BD/Settings attempt 1 Forecast :task2, 2000-01-01 00:00:49.107, 2000-01-01 00:01:36.542
+    section BD/D1
+    %% Untimed BD/DemandInput; predecessors: Date/DemandMaster, BD/Settings
+    section BD/C1
+    %% Predecessors: BD/AllocationInput, BD/Settings
+    BD/Workers attempt 1 Forecast :task3, 2000-01-01 00:01:36.542, 2000-01-01 00:02:36.019
+    %% Untimed BD/Availability; predecessors: BD/Workers, BD/AllocationInput, BD/Settings
+    %% Untimed BD/Staff; predecessors: BD/Availability, BD/Workers, BD/AllocationInput, BD/Settings
+    section BD/D2
+    %% Untimed BD/Intervals; predecessors: BD/AllocationInput, BD/DemandInput, BD/Settings
+    %% Untimed BD/DemandIntervals; predecessors: BD/Intervals, BD/DemandInput, BD/Settings
+    %% Untimed BD/Demand; predecessors: BD/DemandIntervals, BD/Settings
+    section BD/A2
+    %% Untimed BD/Shifts; predecessors: BD/Intervals, BD/AllocationInput, BD/Settings
+    %% Untimed BD/ShiftAverage; predecessors: BD/Shifts, BD/Settings
+    section BD/A3
+    %% Untimed BD/Allocation; predecessors: BD/ShiftAverage, BD/AllocationInput, BD/Settings
+    %% Untimed BD/Distribution; predecessors: BD/Allocation, BD/Settings
+    %% Untimed BD/MultiRole; predecessors: BD/Distribution, BD/Settings
+    section BD/C2 AIN
+    %% Untimed BD/Role:AIN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:AIN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    %% Untimed BD/Role:AIN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    section BD/C2 RN
+    %% Untimed BD/Role:RN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:RN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    %% Untimed BD/Role:RN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    section BD/C2 EN
+    %% Untimed BD/Role:EN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:EN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    %% Untimed BD/Role:EN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    section BD/U4
+    %% Untimed BD/Capacity; predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    %% Untimed BD/Effort; predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings
+    section TE/A1
+    %% Predecessors:
+    TE/AllocationInput attempt 1 Forecast :task4, 2000-01-01 00:00:00.000, 2000-01-01 00:00:50.482
+    section TE/S1
+    %% Predecessors: TE/AllocationInput
+    TE/Settings attempt 1 Forecast :task5, 2000-01-01 00:00:50.482, 2000-01-01 00:01:38.351
+    section TE/D1
+    %% Untimed TE/DemandInput; predecessors: Date/DemandMaster, TE/Settings
+    section TE/C1
+    %% Untimed TE/Workers; predecessors: TE/AllocationInput, TE/Settings
+    %% Untimed TE/Availability; predecessors: TE/Workers, TE/AllocationInput, TE/Settings
+    %% Untimed TE/Staff; predecessors: TE/Availability, TE/Workers, TE/AllocationInput, TE/Settings
+    section TE/D2
+    %% Untimed TE/Intervals; predecessors: TE/AllocationInput, TE/DemandInput, TE/Settings
+    %% Untimed TE/DemandIntervals; predecessors: TE/Intervals, TE/DemandInput, TE/Settings
+    %% Untimed TE/Demand; predecessors: TE/DemandIntervals, TE/Settings
+    section TE/A2
+    %% Untimed TE/Shifts; predecessors: TE/Intervals, TE/AllocationInput, TE/Settings
+    %% Untimed TE/ShiftAverage; predecessors: TE/Shifts, TE/Settings
+    section TE/A3
+    %% Untimed TE/Allocation; predecessors: TE/ShiftAverage, TE/AllocationInput, TE/Settings
+    %% Untimed TE/Distribution; predecessors: TE/Allocation, TE/Settings
+    %% Untimed TE/MultiRole; predecessors: TE/Distribution, TE/Settings
+    section TE/C2 AIN
+    %% Untimed TE/Role:AIN/1; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    %% Untimed TE/Role:AIN/2; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:AIN/1
+    %% Untimed TE/Role:AIN/3; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:AIN/2
+    section TE/C2 RN
+    %% Untimed TE/Role:RN/1; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    %% Untimed TE/Role:RN/2; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:RN/1
+    %% Untimed TE/Role:RN/3; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:RN/2
+    section TE/C2 EN
+    %% Untimed TE/Role:EN/1; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    %% Untimed TE/Role:EN/2; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:EN/1
+    %% Untimed TE/Role:EN/3; predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:EN/2
+    section TE/U4
+    %% Untimed TE/Capacity; predecessors: TE/Role:AIN/3, TE/Role:EN/3, TE/Role:RN/3, TE/Demand, TE/Staff, TE/Availability, TE/Settings
+    %% Untimed TE/Effort; predecessors: TE/Capacity, TE/Demand, TE/Allocation, TE/Distribution, TE/MultiRole, TE/Staff, TE/Settings
+    section JH-RY/A1
+    %% Predecessors:
+    JH-RY/AllocationInput attempt 1 Forecast :task6, 2000-01-01 00:00:00.000, 2000-01-01 00:00:49.907
+    section JH-RY/S1
+    %% Predecessors: JH-RY/AllocationInput
+    JH-RY/Settings attempt 1 Forecast :task7, 2000-01-01 00:00:49.907, 2000-01-01 00:01:37.613
+    section JH-RY/D1
+    %% Untimed JH-RY/DemandInput; predecessors: Date/DemandMaster, JH-RY/Settings
+    section JH-RY/C1
+    %% Predecessors: JH-RY/AllocationInput, JH-RY/Settings
+    JH-RY/Workers attempt 1 Forecast :task8, 2000-01-01 00:01:37.613, 2000-01-01 00:02:35.037
+    %% Untimed JH-RY/Availability; predecessors: JH-RY/Workers, JH-RY/AllocationInput, JH-RY/Settings
+    %% Untimed JH-RY/Staff; predecessors: JH-RY/Availability, JH-RY/Workers, JH-RY/AllocationInput, JH-RY/Settings
+    section JH-RY/D2
+    %% Untimed JH-RY/Intervals; predecessors: JH-RY/AllocationInput, JH-RY/DemandInput, JH-RY/Settings
+    %% Untimed JH-RY/DemandIntervals; predecessors: JH-RY/Intervals, JH-RY/DemandInput, JH-RY/Settings
+    %% Untimed JH-RY/Demand; predecessors: JH-RY/DemandIntervals, JH-RY/Settings
+    section JH-RY/A2
+    %% Untimed JH-RY/Shifts; predecessors: JH-RY/Intervals, JH-RY/AllocationInput, JH-RY/Settings
+    %% Untimed JH-RY/ShiftAverage; predecessors: JH-RY/Shifts, JH-RY/Settings
+    section JH-RY/A3
+    %% Untimed JH-RY/Allocation; predecessors: JH-RY/ShiftAverage, JH-RY/AllocationInput, JH-RY/Settings
+    %% Untimed JH-RY/Distribution; predecessors: JH-RY/Allocation, JH-RY/Settings
+    %% Untimed JH-RY/MultiRole; predecessors: JH-RY/Distribution, JH-RY/Settings
+    section JH-RY/C2 AIN
+    %% Untimed JH-RY/Role:AIN/1; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    %% Untimed JH-RY/Role:AIN/2; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:AIN/1
+    %% Untimed JH-RY/Role:AIN/3; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:AIN/2
+    section JH-RY/C2 RN
+    %% Untimed JH-RY/Role:RN/1; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    %% Untimed JH-RY/Role:RN/2; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:RN/1
+    %% Untimed JH-RY/Role:RN/3; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:RN/2
+    section JH-RY/C2 EN
+    %% Untimed JH-RY/Role:EN/1; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    %% Untimed JH-RY/Role:EN/2; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:EN/1
+    %% Untimed JH-RY/Role:EN/3; predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:EN/2
+    section JH-RY/U4
+    %% Untimed JH-RY/Capacity; predecessors: JH-RY/Role:AIN/3, JH-RY/Role:EN/3, JH-RY/Role:RN/3, JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/Settings
+    %% Untimed JH-RY/Effort; predecessors: JH-RY/Capacity, JH-RY/Demand, JH-RY/Allocation, JH-RY/Distribution, JH-RY/MultiRole, JH-RY/Staff, JH-RY/Settings
+    section Org/O1
+    %% Untimed Org/StaffAll; predecessors: BD/Staff, TE/Staff, JH-RY/Staff
+    %% Untimed Org/EffortAll; predecessors: Org/StaffAll, BD/Effort, TE/Effort, JH-RY/Effort
+    section Org/O2
+    %% Untimed Org/Outcomes; predecessors: Org/EffortAll, Org/StaffAll
+    %% Untimed Org/Inefficiencies; predecessors: Org/Outcomes
+    section Org/O3
+    %% Untimed Org/Cost; predecessors: Org/Inefficiencies, Unit1/Settings
+    section Org/O4
+    %% Untimed Org/History; predecessors: Org/Outcomes
+    %% Untimed Org/HistoryRead; predecessors: Org/History
+    section Org/O5
+    %% Untimed Org/Reporting; predecessors: Org/Cost, Org/HistoryRead, Org/Inefficiencies

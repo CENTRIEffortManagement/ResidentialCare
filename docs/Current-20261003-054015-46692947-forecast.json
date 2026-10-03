@@ -1,0 +1,119 @@
+{
+  "Complete": true,
+  "UnknownAdmission": "",
+  "Untimed": [],
+  "Durations": {
+    "JH-RY/Intervals": {
+      "Seconds": 49.0860705,
+      "SourceRun": "20261002-195708-45ccc5c2",
+      "Observed": "2026-10-02T10:03:10.9778460+00:00"
+    },
+    "TE/Intervals": {
+      "Seconds": 48.9190468,
+      "SourceRun": "20261002-195708-45ccc5c2",
+      "Observed": "2026-10-02T10:03:09.5292955+00:00"
+    },
+    "JH-RY/Demand": {
+      "Seconds": 49.3840019,
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Observed": "2026-10-01T06:43:27.5132133+00:00"
+    },
+    "BD/Demand": {
+      "Seconds": 47.3599952,
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Observed": "2026-10-01T06:43:20.1519680+00:00"
+    },
+    "TE/DemandIntervals": {
+      "Seconds": 44.6611073,
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Observed": "2026-10-01T06:42:28.6415601+00:00"
+    },
+    "BD/DemandIntervals": {
+      "Seconds": 45.2615362,
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Observed": "2026-10-01T06:42:32.7521257+00:00"
+    },
+    "JH-RY/DemandIntervals": {
+      "Seconds": 49.3206188,
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Observed": "2026-10-01T06:42:38.0861757+00:00"
+    },
+    "BD/Intervals": {
+      "Seconds": 47.275767,
+      "SourceRun": "20261002-195708-45ccc5c2",
+      "Observed": "2026-10-02T10:03:03.7489712+00:00"
+    },
+    "TE/Demand": {
+      "Seconds": 47.8202316,
+      "SourceRun": "20261001-163526-27a6f1d0",
+      "Observed": "2026-10-01T06:43:16.5040926+00:00"
+    }
+  },
+  "Peak": 3,
+  "Rows": [
+    {
+      "Id": "BD/Intervals",
+      "Finish": 47.275767,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 0.0
+    },
+    {
+      "Id": "TE/Intervals",
+      "Finish": 48.9190468,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 0.0
+    },
+    {
+      "Id": "JH-RY/Intervals",
+      "Finish": 49.0860705,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 0.0
+    },
+    {
+      "Id": "BD/DemandIntervals",
+      "Finish": 92.5373032,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 47.275767
+    },
+    {
+      "Id": "TE/DemandIntervals",
+      "Finish": 93.58015409999999,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 48.9190468
+    },
+    {
+      "Id": "JH-RY/DemandIntervals",
+      "Finish": 98.4066893,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 49.0860705
+    },
+    {
+      "Id": "BD/Demand",
+      "Finish": 139.8972984,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 92.5373032
+    },
+    {
+      "Id": "TE/Demand",
+      "Finish": 141.4003857,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 93.58015409999999
+    },
+    {
+      "Id": "JH-RY/Demand",
+      "Finish": 147.7906912,
+      "Attempt": 1,
+      "Status": "Forecast",
+      "Start": 98.4066893
+    }
+  ],
+  "TotalSeconds": 147.7906912
+}

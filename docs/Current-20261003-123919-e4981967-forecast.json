@@ -1,0 +1,71 @@
+{
+  "Untimed": [],
+  "Rows": [
+    {
+      "Start": 0.0,
+      "Attempt": 1,
+      "Finish": 41.5102407,
+      "Status": "Forecast",
+      "Id": "Org/StaffAll"
+    },
+    {
+      "Start": 41.5102407,
+      "Attempt": 1,
+      "Finish": 117.6406612,
+      "Status": "Forecast",
+      "Id": "Org/EffortAll"
+    },
+    {
+      "Start": 117.6406612,
+      "Attempt": 1,
+      "Finish": 158.1208454,
+      "Status": "Forecast",
+      "Id": "Org/Outcomes"
+    },
+    {
+      "Start": 158.1208454,
+      "Attempt": 1,
+      "Finish": 207.7854542,
+      "Status": "Forecast",
+      "Id": "Org/Inefficiencies"
+    },
+    {
+      "Start": 207.7854542,
+      "Attempt": 1,
+      "Finish": 248.8906835,
+      "Status": "Forecast",
+      "Id": "Org/Reporting"
+    }
+  ],
+  "TotalSeconds": 248.8906835,
+  "Durations": {
+    "Org/StaffAll": {
+      "Observed": "2026-10-03T01:49:04.8694597+00:00",
+      "SourceRun": "20261003-114822-8dac078c",
+      "Seconds": 41.5102407
+    },
+    "Org/Reporting": {
+      "Observed": "2026-10-03T01:52:32.3658387+00:00",
+      "SourceRun": "20261003-114822-8dac078c",
+      "Seconds": 41.1052293
+    },
+    "Org/EffortAll": {
+      "Observed": "2026-10-03T01:50:21.0308414+00:00",
+      "SourceRun": "20261003-114822-8dac078c",
+      "Seconds": 76.1304205
+    },
+    "Org/Inefficiencies": {
+      "Observed": "2026-10-03T01:51:51.2326521+00:00",
+      "SourceRun": "20261003-114822-8dac078c",
+      "Seconds": 49.6646088
+    },
+    "Org/Outcomes": {
+      "Observed": "2026-10-03T01:51:01.5446954+00:00",
+      "SourceRun": "20261003-114822-8dac078c",
+      "Seconds": 40.4801842
+    }
+  },
+  "Peak": 1,
+  "Complete": true,
+  "UnknownAdmission": ""
+}
