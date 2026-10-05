@@ -1,6 +1,6 @@
 // Power Query from: Worker Reconciliation.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\1. Input\Worker Reconciliation.xlsx
-// Extracted: 2026-10-04T19:44:42.612Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\1. Input\Worker Reconciliation.xlsx
+// Extracted: 2026-10-05T06:26:19.468Z
 
 section Section1;
 
@@ -130,6 +130,106 @@ shared #"IMPORT Combined Availabilities" = let
         else error Error.Record("Worker reconciliation records import", "Expected exactly one Combined Output sheet.", [Matches = Table.RowCount(Matches)])
 in
     CombinedOutput;
+
+// Query: IMPORT Leave Balances
+// Purpose: Read the approved LeaveBalance report navigation unchanged for worker-source reconciliation.
+// Inputs: LeaveBalance/Workflows/LeaveBalance/Analysis/1.Input/Leave Balances Report.xlsx beneath PortfolioPath.
+shared #"IMPORT Leave Balances" = let
+    SourcePath = PortfolioPath & "\LeaveBalance\Workflows\LeaveBalance\Analysis\1.Input\Leave Balances Report.xlsx",
+    Navigation = Excel.Workbook(Binary.Buffer(File.Contents(SourcePath)), null, true)
+in
+    Navigation;
+
+shared #"EXTRACT Leave Balances = Raw Sample" = let
+    Source = #"IMPORT Leave Balances",
+    Data_Sheet = Source{[Item="Data",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Data_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee Code", Int64.Type}, {"Facility", type text}, {"Position Description", type text}, {"Employee Status", type text}, {"Annual Leave Type", type any}, {"Service Leave Type", type text}, {"AL Balance Units - 30 Sep 25", type number}, {"AL $ Liability - 30 Sep 25", type number}, {"LSL Balance Units - 30 Sep 25", type number}, {"LSL $ Liability - 30 Sep 25", type number}, {"Balance Units - 31 Dec 25", type number}, {"$ Liability - 31 Dec 25", type number}, {"LSL Balance Units - 31/12/25", type number}, {"LSL $ Liability - 31/12/2025", type number}, {"Balance Units - 31 Mar 26", type number}, {"$ Liability - 31 Mar 26", type number}, {"LSL Balance Units - 31/03/2026", type number}, {"LSL $ Liability - 31/03/2026", type number}, {"Balance Units - 30/06/2026", type number}, {"$ Liability - 30/06/2026", type number}, {"LSL Balance Units - 30/06/2026", type number}, {"LSL $ Liability - 30/06/2026", type number}}),
+    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"Employee Code", Order.Ascending}})
+in
+    #"Sorted Rows";
+
+// Query: LeaveBalances_Prepare
+// Purpose: Select the three approved leave-report fields and normalize employee, facility and role identity.
+// Inputs: Table2 from IMPORT Leave Balances.
+// Output: Employee Code, Facility, Role and the existing two-character Facility-Abbrev key.
+shared #"EXTRACT LeaveBalances_Prepare" = let
+    Source = #"IMPORT Leave Balances",
+    Matches = Table.SelectRows(Source, each [Item] = "Table2" and [Kind] = "Table"),
+    LeaveTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("Leave balances preparation", "Expected exactly one Table2 table in Leave Balances Report.xlsx.", [Matches = Table.RowCount(Matches)]),
+    // Accept spacing in the supplied Employee Code header without shortening or changing employee key values.
+    NormalizeHeaderSpacing = (name as text) as text =>
+        let
+            HeaderParts = Text.Split(Text.Trim(name), " "),
+            NonEmptyParts = List.Select(HeaderParts, each _ <> ""),
+            NormalizedHeader = Text.Combine(NonEmptyParts, " ")
+        in
+            NormalizedHeader,
+    EmployeeCodeHeaders = List.Select(Table.ColumnNames(LeaveTable), each NormalizeHeaderSpacing(_) = "Employee Code"),
+    NormalizedEmployeeHeader = if List.Count(EmployeeCodeHeaders) = 1 then
+            if EmployeeCodeHeaders{0} = "Employee Code" then LeaveTable
+            else Table.RenameColumns(LeaveTable, {{EmployeeCodeHeaders{0}, "Employee Code"}})
+        else error Error.Record("Leave balances preparation", "Expected exactly one Employee Code column.", [Matches = List.Count(EmployeeCodeHeaders)]),
+    RequiredColumns = {"Employee Code", "Facility", "Position Description"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(NormalizedEmployeeHeader)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(NormalizedEmployeeHeader, RequiredColumns)
+        else error Error.Record("Leave balances preparation", "Table2 is missing required worker identity columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(Selected, {{"Employee Code", type text}, {"Facility", type text}, {"Position Description", type text}}),
+    CleanText = (value as nullable text) as nullable text =>
+        let
+            Trimmed = if value = null then null else Text.Trim(value),
+            Output = if Trimmed = "" then null else Trimmed
+        in
+            Output,
+    Normalized = Table.TransformColumns(Typed, {
+        {"Employee Code", CleanText, type nullable text},
+        {"Facility", CleanText, type nullable text},
+        {"Position Description", CleanText, type nullable text}}),
+    RenamedRole = Table.RenameColumns(Normalized, {{"Position Description", "Role"}}),
+    // Facility join keys retain the existing two-character convention; six-character locations are comparison-only.
+    WithFacilityAbbrev = Table.AddColumn(RenamedRole, "Facility-Abbrev", each
+        if [Facility] = null then null else Text.Upper(Text.Start([Facility], 2)), type nullable text)
+in
+    Table.Buffer(WithFacilityAbbrev);
+
+// Query: LeaveBalances_Workers
+// Purpose: Reduce leave-report membership to one employee-ID row without multiplying reconciled workers.
+// Inputs: LeaveBalances_Prepare.
+// Output: One leave-source marker, role, facility key and original facility label per Employee Code.
+// Notes: Conflicting roles or six-character locations are exposed by LeaveBalances_DIAGNOSTICS and block publication.
+shared LeaveBalances_Workers = let
+    Source = #"EXTRACT LeaveBalances_Prepare",
+    GroupedWorkers = Table.Group(Source, {"Employee Code"}, {
+        {"Leave Balance Role", each
+            let
+                Roles = List.RemoveNulls([Role]),
+                DistinctRoles = List.Distinct(Roles, Comparer.OrdinalIgnoreCase),
+                SortedRoles = List.Sort(DistinctRoles, Comparer.OrdinalIgnoreCase)
+            in
+                if List.IsEmpty(SortedRoles) then null else SortedRoles{0}, type nullable text},
+        {"Leave Balance Location", each
+            let
+                Locations = List.RemoveNulls([Facility]),
+                SortedLocations = List.Sort(Locations, Comparer.Ordinal)
+            in
+                if List.IsEmpty(SortedLocations) then null else SortedLocations{0}, type nullable text},
+        // Repeated rows with the same role and comparison location are one membership, even if balance values differ.
+        {"Leave Balance Identity Count", each
+            let
+                IdentityFields = Table.SelectColumns(_, {"Facility", "Role"}),
+                ComparisonIdentity = Table.TransformColumns(IdentityFields, {
+                    {"Facility", each if _ = null then null else Text.Start(_, 6), type nullable text},
+                    {"Role", each if _ = null then null else Text.Upper(_), type nullable text}}),
+                DistinctIdentities = Table.Distinct(ComparisonIdentity)
+            in
+                Table.RowCount(DistinctIdentities), Int64.Type}
+    }),
+    WithFacilityAbbrev = Table.AddColumn(GroupedWorkers, "Leave Balance Facility-Abbrev", each
+        if [Leave Balance Location] = null then null else Text.Upper(Text.Start([Leave Balance Location], 2)), type nullable text),
+    WithSourceMarker = Table.AddColumn(WithFacilityAbbrev, "In Leave Balances Source", each true, type logical)
+in
+    Table.Buffer(WithSourceMarker);
 
 // Query: Roster Prepare
 // Purpose: Normalize the published roster and derive the base role used for reconciliation.
@@ -373,24 +473,54 @@ shared CurrentWorkers_Reconciled = let
 in
     Table.Buffer(#"Expanded Selected Current Worker");
 
-// Query: Employees-ALL
-// Purpose: Reconcile allocation and records membership, then attach current-worker status and termination details.
-// Output: One or more auditable candidate rows per employee/facility/role before active-worker filtering.
-shared #"Employees-ALL" = let
-    RosterStart = RosterStartDate,
+// Query: EmployeeSourceMembership
+// Purpose: Reconcile roster and availability workers, then attach leave membership by employee ID and append leave-only IDs.
+// Inputs: Availabilities-EmployeesLIST, RosteredEmployeesTABLE and LeaveBalances_Workers.
+// Output: Worker/facility/role candidates with independent roster, availability and leave source markers.
+// Notes: Existing roster/availability joins retain their facility key; leave membership is employee-level as requested.
+shared EmployeeSourceMembership = let
     Source = Table.NestedJoin(#"Availabilities-EmployeesLIST", {"Payroll Code", "Facility-AbbrevZ"}, RosteredEmployeesTABLE, {"Employee Code", "Facility-Abbrev"}, "RosteredEmployeeShifts (2)", JoinKind.FullOuter),
     #"Expanded RosteredEmployeeShifts (2)" = Table.ExpandTableColumn(Source, "RosteredEmployeeShifts (2)", {"Department", "Employee Roster Name", "Employment Type", "Employee Code", "Role", "Facility-Abbrev", "In Allocation Source", "Location"}, {"Department", "Employee Roster Name", "Employment Type", "Employee Code", "RoleX", "Facility-AbbrevX", "In Allocation Source", "Roster Location"}),
     #"Added In Records" = Table.AddColumn(#"Expanded RosteredEmployeeShifts (2)", "In Records", each [#"In Records Source"] = true, type logical),
     #"Added In Allocation" = Table.AddColumn(#"Added In Records", "In Allocation", each [#"In Allocation Source"] = true, type logical),
-    #"Added Worker Membership" = Table.AddColumn(#"Added In Allocation", "Worker Membership", each
+    #"Added Assigned Employee" = Table.AddColumn(#"Added In Allocation", "AssignedAvailID", each [Payroll Code] ?? [Employee Code], type nullable text),
+    #"Added Join Facility" = Table.AddColumn(#"Added Assigned Employee", "Join Facility-Abbrev", each [#"Facility-AbbrevX"] ?? [#"Facility-AbbrevZ"], type nullable text),
+    #"Existing Employee IDs" = Table.Distinct(Table.SelectColumns(#"Added Join Facility", {"AssignedAvailID"})),
+    // A leave-report ID absent from both roster and availability contributes its own worker/facility row.
+    #"Leave Only Workers" = Table.NestedJoin(LeaveBalances_Workers, {"Employee Code"}, #"Existing Employee IDs",
+        {"AssignedAvailID"}, "Existing Employee Match", JoinKind.LeftAnti),
+    #"Selected Leave Only Identity" = Table.SelectColumns(#"Leave Only Workers", {"Employee Code", "Leave Balance Facility-Abbrev"}),
+    #"Named Leave Only Identity" = Table.RenameColumns(#"Selected Leave Only Identity", {
+        {"Employee Code", "AssignedAvailID"}, {"Leave Balance Facility-Abbrev", "Join Facility-Abbrev"}}),
+    #"Added Leave Only In Records" = Table.AddColumn(#"Named Leave Only Identity", "In Records", each false, type logical),
+    #"Added Leave Only In Allocation" = Table.AddColumn(#"Added Leave Only In Records", "In Allocation", each false, type logical),
+    #"Combined Worker Membership" = Table.Combine({#"Added Join Facility", #"Added Leave Only In Allocation"}),
+    // Leave membership follows the complete Employee Code, even when its facility differs from the roster or availability site.
+    #"Merged Leave Balances" = Table.NestedJoin(#"Combined Worker Membership", {"AssignedAvailID"},
+        LeaveBalances_Workers, {"Employee Code"}, "Leave Balance Worker", JoinKind.LeftOuter),
+    #"Expanded Leave Balances" = Table.ExpandTableColumn(#"Merged Leave Balances", "Leave Balance Worker",
+        {"Leave Balance Role", "Leave Balance Location", "In Leave Balances Source"},
+        {"Leave Balance Role", "Leave Balance Location", "In Leave Balances Source"}),
+    #"Added In Leave Balances" = Table.AddColumn(#"Expanded Leave Balances", "In Leave Balances", each
+        [In Leave Balances Source] = true, type logical),
+    #"Added Worker Membership" = Table.AddColumn(#"Added In Leave Balances", "Worker Membership", each
         if [In Allocation] and [In Records] then "Both"
         else if [In Allocation] then "Allocation only"
         else if [In Records] then "Records only"
-        else error "A reconciled worker must appear in Allocation, Records, or both.", type text),
-    #"Added Assigned Employee" = Table.AddColumn(#"Added Worker Membership", "AssignedAvailID", each [Payroll Code] ?? [Employee Code], type nullable text),
-    #"Added Join Facility" = Table.AddColumn(#"Added Assigned Employee", "Join Facility-Abbrev", each [#"Facility-AbbrevX"] ?? [#"Facility-AbbrevZ"], type nullable text),
-    // Employment status is employee-level; the published facility remains the Allocation/Records facility above.
-    #"Merged Current Workers" = Table.NestedJoin(#"Added Join Facility", {"AssignedAvailID"}, CurrentWorkers_Reconciled, {"Employee Code"}, "Current Worker", JoinKind.LeftOuter),
+        else if [In Leave Balances] then "Leave balances only"
+        else error "A reconciled worker must appear in Roster, Availabilities or Leave Balances.", type text)
+in
+    Table.Buffer(#"Added Worker Membership");
+
+// Query: Employees-ALL
+// Purpose: Enrich roster, availability and leave membership with current-worker employment and termination details.
+// Inputs: EmployeeSourceMembership, CurrentWorkers_Reconciled and RosterStartDate.
+// Output: Auditable employee/facility/role candidates before termination filtering.
+shared #"Employees-ALL" = let
+    RosterStart = RosterStartDate,
+    Source = EmployeeSourceMembership,
+    // Employment status is employee-level; the published facility remains the roster/availability or leave-only facility.
+    #"Merged Current Workers" = Table.NestedJoin(Source, {"AssignedAvailID"}, CurrentWorkers_Reconciled, {"Employee Code"}, "Current Worker", JoinKind.LeftOuter),
     #"Expanded Current Worker" = Table.ExpandTableColumn(#"Merged Current Workers", "Current Worker",
         {"Employee Code", "Facility-Abbrev", "Position Description", "Employee Status Status Type", "Contracted FN Hours", "Start Date", "Termination Date", "Termination Reason Description", "Current Worker Row Count", "Current Worker Eligible Row Count", "Location Description"},
         {"Employee Code.1", "Facility-AbbrevY", "Position Description", "Employee Status Status Type", "Contracted FN Hours", "Start Date", "Termination Date", "Termination Reason Description", "Current Worker Row Count", "Current Worker Eligible Row Count", "Records Location"}),
@@ -403,7 +533,7 @@ in
     #"Added Terminated Before Roster";
 
 // Query: EmployeesTABLE_Prepare
-// Purpose: Prepare active reconciled workers with explicit Allocation/Records membership and one preferred role.
+// Purpose: Prepare active reconciled workers with source membership, original locations and one preferred role.
 // Output: One preferred worker row per employee/facility.
 shared EmployeesTABLE_Prepare = let
     Source = #"Employees-ALL",
@@ -413,11 +543,12 @@ shared EmployeesTABLE_Prepare = let
     #"Added Facility" = Table.AddColumn(#"Added Employee ID", "Facility-Abbrev", each [#"Join Facility-Abbrev"] ?? [#"Facility-AbbrevY"], type nullable text),
     #"Added Employee Name" = Table.AddColumn(#"Added Facility", "Employee Roster Name", each [Allocation Employee Name] ?? [Records Employee Name], type nullable text),
     #"Added Employment Type" = Table.AddColumn(#"Added Employee Name", "EmploymentType", each [Employment Type] ?? [Employee Status Status Type], type nullable text),
-    #"Added Preferred Role Candidate" = Table.AddColumn(#"Added Employment Type", "Role", each [RoleX] ?? [Position Description], type nullable text),
+    // Retain the existing role priority; leave Position Description supplies Role only when both earlier sources are missing.
+    #"Added Preferred Role Candidate" = Table.AddColumn(#"Added Employment Type", "Role", each [RoleX] ?? [Position Description] ?? [Leave Balance Role], type nullable text),
     #"Selected Worker Fields" = Table.SelectColumns(#"Added Preferred Role Candidate",{
         "Allocation Employee Name", "Records Employee Name", "Employee Roster Name", "EmployeeID", "Facility-Abbrev", "EmploymentType", "Role",
-        "Records Location", "Roster Location", "Availabilities Location",
-        "In Allocation", "In Records", "Worker Membership", "Current Worker Match Missing", "Current Worker Record Ambiguous",
+        "Records Location", "Roster Location", "Availabilities Location", "Leave Balance Location",
+        "In Allocation", "In Records", "In Leave Balances", "Worker Membership", "Current Worker Match Missing", "Current Worker Record Ambiguous",
         "Current Worker Row Count", "Current Worker Eligible Row Count", "Position Description", "Contracted FN Hours", "Start Date", "Termination Date", "Terminated Before Roster"}),
     #"Sorted Rows" = Table.Sort(#"Selected Worker Fields",{{"EmployeeID", Order.Ascending}}),
     #"Replaced -" = Table.ReplaceValue(#"Sorted Rows"," ","-",Replacer.ReplaceText,{"EmploymentType"}),
@@ -452,6 +583,36 @@ shared EmployeesTABLE_Prepare = let
 in
     Table.Buffer(#"Removed Preference Fields");
 
+// Query: LeaveBalances_DIAGNOSTICS
+// Purpose: Expose incomplete leave-report identity and conflicting roles or locations at employee-ID grain.
+// Inputs: LeaveBalances_Workers.
+// Output: Leave-source issues that block Employees-TABLE publication.
+shared LeaveBalances_DIAGNOSTICS = let
+    Source = LeaveBalances_Workers,
+    InvalidWorkers = Table.SelectRows(Source, each [Employee Code] = null or [#"Leave Balance Facility-Abbrev"] = null or [Leave Balance Identity Count] > 1),
+    WithFacilityKey = Table.RenameColumns(InvalidWorkers, {{"Leave Balance Facility-Abbrev", "Facility-Abbrev"}}),
+    WithIssue = Table.AddColumn(WithFacilityKey, "Issue", each
+        if [Employee Code] = null or [#"Facility-Abbrev"] = null then "Incomplete leave balance identity"
+        else "Ambiguous leave balance identity", type text),
+    WithDetails = Table.AddColumn(WithIssue, "Details", each
+        if [Employee Code] = null or [#"Facility-Abbrev"] = null then "Leave Table2 requires an employee code and facility."
+        else Text.From([Leave Balance Identity Count]) & " distinct role/location identities share this employee ID.", type text)
+in
+    Table.Buffer(WithDetails);
+
+// Query: LeaveBalances_NotInEmployees_DIAGNOSTICS
+// Purpose: Show leave-report IDs absent after employee eligibility and termination checks.
+// Inputs: LeaveBalances_Workers and EmployeesTABLE_Prepare.
+// Output: Leave workers whose employee ID is absent from Employees-TABLE preparation.
+shared LeaveBalances_NotInEmployees_DIAGNOSTICS = let
+    Source = LeaveBalances_Workers,
+    EmployeeKeys = Table.SelectColumns(EmployeesTABLE_Prepare, {"EmployeeID"}),
+    UnmatchedWorkers = Table.NestedJoin(Source, {"Employee Code"}, EmployeeKeys,
+        {"EmployeeID"}, "Employee Match", JoinKind.LeftAnti),
+    Output = Table.RemoveColumns(UnmatchedWorkers, {"Employee Match"})
+in
+    Table.Buffer(Output);
+
 // Query: TerminatedWorkers_DIAGNOSTICS
 // Purpose: Show reconciled candidates excluded because their termination date precedes the roster start.
 shared TerminatedWorkers_DIAGNOSTICS = let
@@ -483,15 +644,19 @@ in
     Table.Buffer(Output);
 
 // Query: IncompleteWorkerIdentity_DIAGNOSTICS
-// Purpose: Show retained candidates missing a required identifier, facility, resolved name or role.
+// Purpose: Show retained candidates missing required identity, allowing identifier-only names for leave-only workers.
+// Notes: The approved leave source has no employee name; leave-only rows may retain a null Employee Roster Name.
 shared IncompleteWorkerIdentity_DIAGNOSTICS = let
     Source = EmployeesTABLE_Prepare,
     IsBlank = (value as any) as logical => value = null or (Value.Is(value, type text) and Text.Trim(value) = ""),
-    Filtered = Table.SelectRows(Source, each IsBlank([EmployeeID]) or IsBlank([#"Facility-Abbrev"]) or IsBlank([Employee Roster Name]) or IsBlank([Role])),
+    MissingRequiredName = (worker as record) as logical =>
+        IsBlank(worker[Employee Roster Name])
+            and not (worker[In Leave Balances] and not worker[In Allocation] and not worker[In Records]),
+    Filtered = Table.SelectRows(Source, each IsBlank([EmployeeID]) or IsBlank([#"Facility-Abbrev"]) or MissingRequiredName(_) or IsBlank([Role])),
     WithMissingFields = Table.AddColumn(Filtered, "Missing Fields", each Text.Combine(List.RemoveNulls({
         if IsBlank([EmployeeID]) then "EmployeeID" else null,
         if IsBlank([#"Facility-Abbrev"]) then "Facility-Abbrev" else null,
-        if IsBlank([Employee Roster Name]) then "Employee Roster Name" else null,
+        if MissingRequiredName(_) then "Employee Roster Name" else null,
         if IsBlank([Role]) then "Role" else null
     }), ", "), type text),
     Output = Table.SelectColumns(WithMissingFields,{"EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "Missing Fields"})
@@ -500,10 +665,10 @@ in
 
 // Query: UnmatchedCurrentWorkers_DIAGNOSTICS
 // Purpose: Show membership candidates that could not be matched to the worker report by employee ID.
-// Notes: Allocation membership is sufficient for publication; these rows receive the downstream Settings contract fallback.
+// Notes: Roster or leave membership can supply Role without a worker-report match; unmatched contracts remain null.
 shared UnmatchedCurrentWorkers_DIAGNOSTICS = let
     Source = Table.SelectRows(EmployeesTABLE_Prepare, each [Current Worker Match Missing]),
-    Output = Table.SelectColumns(Source,{"EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "In Allocation", "In Records"})
+    Output = Table.SelectColumns(Source,{"EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "In Allocation", "In Records", "In Leave Balances"})
 in
     Table.Buffer(Output);
 
@@ -516,13 +681,13 @@ in
     Table.Buffer(Output);
 
 // Query: InvalidWorkerMembership_DIAGNOSTICS
-// Purpose: Show candidates whose Allocation/Records flags do not agree with the published membership label.
+// Purpose: Show candidates missing all roster, availability and leave membership or carrying an invalid internal label.
 shared InvalidWorkerMembership_DIAGNOSTICS = let
-    ValidMembershipValues = {"Allocation only", "Records only", "Both"},
+    ValidMembershipValues = {"Allocation only", "Records only", "Both", "Leave balances only"},
     Source = Table.SelectRows(EmployeesTABLE_Prepare, each
-        (not [In Allocation] and not [In Records])
+        (not [In Allocation] and not [In Records] and not [In Leave Balances])
             or not List.Contains(ValidMembershipValues, [Worker Membership])),
-    Output = Table.SelectColumns(Source,{"EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "In Allocation", "In Records"})
+    Output = Table.SelectColumns(Source,{"EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "In Allocation", "In Records", "In Leave Balances"})
 in
     Table.Buffer(Output);
 
@@ -547,13 +712,13 @@ shared WorkerReconciliation_ISSUES = let
     IdentityIssues = Table.SelectColumns(IdentityWithDetails,{"Issue", "EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "Details"}),
 
     MembershipBase = Table.AddColumn(InvalidWorkerMembership_DIAGNOSTICS, "Issue", each "Invalid worker membership", type text),
-    MembershipWithDetails = Table.AddColumn(MembershipBase, "Details", each "Allocation/Records flags do not agree with Worker Membership.", type text),
+    MembershipWithDetails = Table.AddColumn(MembershipBase, "Details", each "Roster, availability or leave source membership is missing or invalid.", type text),
     MembershipIssues = Table.SelectColumns(MembershipWithDetails,{"Issue", "EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "Details"}),
 
-    // Only a Records-only row requires worker-report enrichment; Allocation supplies identity and role for unmatched roster workers.
-    UnmatchedBlocking = Table.SelectRows(UnmatchedCurrentWorkers_DIAGNOSTICS, each not [In Allocation]),
+    // Roster and leave sources can supply Role independently; availability-only workers still require worker-report enrichment.
+    UnmatchedBlocking = Table.SelectRows(UnmatchedCurrentWorkers_DIAGNOSTICS, each not [In Allocation] and not [In Leave Balances]),
     UnmatchedBase = Table.AddColumn(UnmatchedBlocking, "Issue", each "Current worker match missing", type text),
-    UnmatchedWithDetails = Table.AddColumn(UnmatchedBase, "Details", each "No Worker's Report row matched this Records-only employee ID.", type text),
+    UnmatchedWithDetails = Table.AddColumn(UnmatchedBase, "Details", each "No Worker's Report row matched this availability-only employee ID.", type text),
     UnmatchedIssues = Table.SelectColumns(UnmatchedWithDetails,{"Issue", "EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "Details"}),
 
     AmbiguousBase = Table.AddColumn(AmbiguousCurrentWorkers_DIAGNOSTICS, "Issue", each "Current worker record ambiguous", type text),
@@ -564,7 +729,12 @@ shared WorkerReconciliation_ISSUES = let
     TerminatedWithDetails = Table.AddColumn(TerminatedBase, "Details", each "Excluded termination date: " & Date.ToText([Excluded Termination Date], "yyyy-MM-dd"), type text),
     TerminatedIssues = Table.SelectColumns(TerminatedWithDetails,{"Issue", "EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "Details"}),
 
-    Output = Table.Combine({DuplicateIssues, IdentityIssues, MembershipIssues, UnmatchedIssues, AmbiguousIssues, TerminatedIssues})
+    LeaveRenamedIdentity = Table.RenameColumns(LeaveBalances_DIAGNOSTICS, {{"Employee Code", "EmployeeID"}, {"Leave Balance Role", "Role"}}),
+    LeaveWithName = Table.AddColumn(LeaveRenamedIdentity, "Employee Roster Name", each null, type nullable text),
+    LeaveWithMembership = Table.AddColumn(LeaveWithName, "Worker Membership", each null, type nullable text),
+    LeaveIssues = Table.SelectColumns(LeaveWithMembership,{"Issue", "EmployeeID", "Facility-Abbrev", "Employee Roster Name", "Role", "Worker Membership", "Details"}),
+
+    Output = Table.Combine({DuplicateIssues, IdentityIssues, MembershipIssues, UnmatchedIssues, AmbiguousIssues, TerminatedIssues, LeaveIssues})
 in
     Table.Buffer(Output);
 
@@ -575,17 +745,18 @@ shared WorkerReconciliation_CHECK = let
         [Check = name, Status = if failures = 0 then "Pass" else "Fail", Failures = failures, Details = details],
     Checks = {
         CheckResult("Unique employee and facility workers", Table.RowCount(DuplicateWorkers_DIAGNOSTICS), "Employees_TABLE must publish one preferred row per employee and facility."),
-        CheckResult("Complete worker identity", Table.RowCount(IncompleteWorkerIdentity_DIAGNOSTICS), "EmployeeID, facility, resolved employee name and role are required."),
-        CheckResult("Valid worker membership", Table.RowCount(InvalidWorkerMembership_DIAGNOSTICS), "Each worker must be Allocation only, Records only, or Both."),
-        CheckResult("Current worker match complete", Table.RowCount(Table.SelectRows(UnmatchedCurrentWorkers_DIAGNOSTICS, each not [In Allocation])), "Every Records-only membership candidate must match Worker's Report by employee ID; Allocation-only workers may use the Settings contract fallback."),
+        CheckResult("Complete worker identity", Table.RowCount(IncompleteWorkerIdentity_DIAGNOSTICS), "EmployeeID, facility and role are required; a name is optional only for leave-only workers."),
+        CheckResult("Valid worker membership", Table.RowCount(InvalidWorkerMembership_DIAGNOSTICS), "Each worker must have roster, availability or leave membership."),
+        CheckResult("Current worker match complete", Table.RowCount(Table.SelectRows(UnmatchedCurrentWorkers_DIAGNOSTICS, each not [In Allocation] and not [In Leave Balances])), "Availability-only workers require a Worker's Report match; roster or leave workers may supply their identity and role independently."),
         CheckResult("Current worker record unambiguous", Table.RowCount(AmbiguousCurrentWorkers_DIAGNOSTICS), "Each employee may have at most one materially distinct Worker's Report row eligible at roster start."),
-        CheckResult("No terminated workers published", Table.RowCount(LeakedTerminatedWorkers_DIAGNOSTICS), "Workers terminated before roster start must remain diagnostic-only.")
+        CheckResult("No terminated workers published", Table.RowCount(LeakedTerminatedWorkers_DIAGNOSTICS), "Workers terminated before roster start must remain diagnostic-only."),
+        CheckResult("Valid leave balance source identity", Table.RowCount(LeaveBalances_DIAGNOSTICS), "Leave Table2 must have complete employee/facility identity and one unambiguous role/location identity per employee ID.")
     }
 in
     Table.Buffer(Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = number, Details = text]));
 
 // Query: Employees-TABLE
-// Purpose: Publish the validated worker population with separate Records, Roster and Availabilities source membership.
+// Purpose: Publish the validated worker population with Records, Roster, Availabilities and Leave Balances source membership.
 // Inputs: EmployeesTABLE_Prepare and WorkerReconciliation_CHECK.
 // Output: One preferred employee/facility row with source membership, six-character locations, location agreement, employment dates and Contracted FN Hours last.
 // Notes: Worker Membership remains internal to reconciliation validation and is omitted from publication.
@@ -606,7 +777,8 @@ shared #"Employees-TABLE" = let
             SourceLabels = {
                 if [In Records] then "Records" else null,
                 if [In Roster] then "Roster" else null,
-                if [In Availabilities] then "Availabilities" else null
+                if [In Availabilities] then "Availabilities" else null,
+                if [In Leave Balances] then "Leave Balances" else null
             },
             PresentSources = List.RemoveNulls(SourceLabels),
             SourceText = Text.Combine(PresentSources, ", ")
@@ -618,13 +790,14 @@ shared #"Employees-TABLE" = let
             Prefix = if TrimmedLocation = null or TrimmedLocation = "" then null else Text.Start(TrimmedLocation, 6)
         in
             Prefix,
-    // Keep location codes in the same Records, Roster, Availabilities order as Source, including missing values for present sources.
+    // Keep locations in the same Records, Roster, Availabilities, Leave Balances order as Source, including missing values for present sources.
     #"Added Source Location Codes" = Table.AddColumn(#"Added Source", "Source Location Codes", each
         let
             RecordsCodes = if [In Records] then {LocationPrefix([Records Location])} else {},
             RosterCodes = if [In Roster] then {LocationPrefix([Roster Location])} else {},
             AvailabilitiesCodes = if [In Availabilities] then {LocationPrefix([Availabilities Location])} else {},
-            PresentSourceCodes = List.Combine({RecordsCodes, RosterCodes, AvailabilitiesCodes})
+            LeaveBalanceCodes = if [In Leave Balances] then {LocationPrefix([Leave Balance Location])} else {},
+            PresentSourceCodes = List.Combine({RecordsCodes, RosterCodes, AvailabilitiesCodes, LeaveBalanceCodes})
         in
             PresentSourceCodes, type list),
     #"Added Location" = Table.AddColumn(#"Added Source Location Codes", "Location", each
@@ -644,7 +817,7 @@ shared #"Employees-TABLE" = let
         in
             LocationsAgree, type logical),
     #"Removed Internal Fields" = Table.RemoveColumns(#"Added Locations Match", {
-        "Records Location", "Roster Location", "Availabilities Location", "Source Location Codes",
+        "Records Location", "Roster Location", "Availabilities Location", "Leave Balance Location", "Source Location Codes",
         "Allocation Employee Name", "Records Employee Name", "Worker Membership", "Current Worker Match Missing", "Current Worker Record Ambiguous",
         "Current Worker Row Count", "Current Worker Eligible Row Count", "Terminated Before Roster"}),
     #"Other Output Columns" = List.RemoveItems(Table.ColumnNames(#"Removed Internal Fields"), {"Contracted FN Hours"}),

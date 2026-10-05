@@ -1,7 +1,6 @@
 // Power Query from: Worker Reconciliation.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\1. Input\Worker Reconciliation.xlsx
-// Extracted: 2026-09-27T02:27:08.367Z
-// Source status: employee-level employment and termination repair prepared 2026-09-27; not synchronized or refresh-verified.
+// Extracted: 2026-10-05T06:26:31.826Z
 
 section Section1;
 
@@ -115,9 +114,11 @@ shared #"IMPORT Combined Roster" = let
     Navigation = Excel.Workbook(Binary.Buffer(File.Contents(SourcePath)), null, true),
     Matches = Table.SelectRows(Navigation, each [Item] = "Combined" and [Kind] = "Sheet"),
     CombinedSheet = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("Worker reconciliation roster import", "Expected exactly one Combined sheet.", [Matches = Table.RowCount(Matches)])
+        else error Error.Record("Worker reconciliation roster import", "Expected exactly one Combined sheet.", [Matches = Table.RowCount(Matches)]),
+    #"Promoted Headers" = Table.PromoteHeaders(CombinedSheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", type text}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", type text}})
 in
-    CombinedSheet;
+    #"Changed Type";
 
 // Query: IMPORT Combined Availabilities
 // Purpose: Read the local availability/leave Combined Output sheet unchanged for records-worker preparation.
@@ -133,7 +134,7 @@ in
 // Query: Roster Prepare
 // Purpose: Normalize the published roster and derive the base role used for reconciliation.
 shared #"Roster Prepare" = let
-    Source = Table.PromoteHeaders(#"IMPORT Combined Roster", [PromoteAllScalars=true]),
+    Source = #"IMPORT Combined Roster",
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", type text}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", type text}}),
     FACILITIES = Table.SelectRows(#"Changed Type", each ([Location] <> "NR: Narrabri- Robert Young")),
     // Only a terminal AM, PM or NS token is a shift suffix. Non-shift titles must not lose their final three characters.
@@ -160,9 +161,25 @@ shared #"Roster Prepare" = let
             null,
     type text
 ),
-    #"Expanded Assistant Label" = Table.ReplaceValue(#"Added Base Role","Asst","Assistant",Replacer.ReplaceText,{"Role"})
+    #"Expanded Assistant Label" = Table.ReplaceValue(#"Added Base Role","Asst","Assistant",Replacer.ReplaceText,{"Role"}),
+    #"Filtered BLANK AGENCYOUT" = Table.SelectRows(#"Expanded Assistant Label", each ([Employment Type] <> " " and [Employment Type] <> "Agency "))
 in
-    #"Expanded Assistant Label";
+    #"Filtered BLANK AGENCYOUT";
+
+// Query: Roster Blank AGENCY
+// Purpose: Review blank or agency allocation workers without failing on incomplete role or location text.
+shared #"Roster Blank AGENCY" = let
+    Source = #"IMPORT Combined Roster",
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Employment Type] = " " or [Employment Type] = "Agency ")),
+    #"Sorted Rows" = Table.Sort(#"Filtered Rows",{{"Employment Type", Order.Descending}}),
+    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows", { "Employee Code", "Location"}),
+    #"Removed Other Columns" = Table.SelectColumns(#"Removed Duplicates",{"Location", "Employment Type", "Role", "Employee Code"}),
+    #"Extracted First Characters" = Table.TransformColumns(#"Removed Other Columns", {{"Role", each if _ = null then null else Text.Start(_, 15), type nullable text}}),
+    #"Extracted First Characters1" = Table.TransformColumns(#"Extracted First Characters", {{"Location", each if _ = null then null else Text.Start(_, 2), type nullable text}}),
+    #"Removed Duplicates1" = Table.Distinct(#"Extracted First Characters1"),
+    #"Sorted Rows1" = Table.Sort(#"Removed Duplicates1",{{"Employee Code", Order.Descending}})
+in
+    #"Sorted Rows1";
 
 // Query: RosterStartDate
 // Purpose: Expose the first published-roster date used by employment eligibility and termination checks.
@@ -178,21 +195,6 @@ shared RosteredEmployeeShiftsCOUNT = let
     #"Pivoted Column" = Table.Pivot(#"Grouped Rows", List.Distinct(#"Grouped Rows"[#"Employment Type"]), "Employment Type", "Count", List.Sum)
 in
     #"Pivoted Column";
-
-// Query: Roster Blank AGENCY
-// Purpose: Review blank or agency allocation workers without failing on incomplete role or location text.
-shared #"Roster Blank AGENCY" = let
-    Source = #"Roster Prepare",
-    #"Filtered Rows" = Table.SelectRows(Source, each ([Employment Type] = " " or [Employment Type] = "Agency ")),
-    #"Sorted Rows" = Table.Sort(#"Filtered Rows",{{"Employment Type", Order.Descending}}),
-    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows", { "Employee Code", "Location"}),
-    #"Removed Other Columns" = Table.SelectColumns(#"Removed Duplicates",{"Location", "Employment Type", "Role", "Employee Code"}),
-    #"Extracted First Characters" = Table.TransformColumns(#"Removed Other Columns", {{"Role", each if _ = null then null else Text.Start(_, 15), type nullable text}}),
-    #"Extracted First Characters1" = Table.TransformColumns(#"Extracted First Characters", {{"Location", each if _ = null then null else Text.Start(_, 2), type nullable text}}),
-    #"Removed Duplicates1" = Table.Distinct(#"Extracted First Characters1"),
-    #"Sorted Rows1" = Table.Sort(#"Removed Duplicates1",{{"Employee Code", Order.Descending}})
-in
-    #"Sorted Rows1";
 
 shared RosteredEmployeeOnlyShifts = let
     Source = #"Roster Prepare",
