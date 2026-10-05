@@ -1,6 +1,6 @@
 // Power Query from: Tableau Connection.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\Tableau Connection.xlsx
-// Extracted: 2026-09-11T06:59:22.093Z
+// Extracted: 2026-10-05T04:33:22.653Z
 
 section Section1;
 
@@ -119,7 +119,61 @@ shared InefficienciesAGL2Day3210 = let
     #"OLD TABLEAU COLS" = Table.RenameColumns(#"Duplicated Column1",{{"Apn", "Ability PoN AG"}, {"Apx", "Ability PoX AG"}, {"Ai", "Ability Pl AG"}, {"Epn", "Efficiency PoN  AG"}, {"EpX", "Efficiency PoX  AG"}, {"Ein", "Efficiency Pl AG"}, {"Ipn", "Workload PoN  AG"}, {"Ipx", "Workload PoX AG"}, {"Iin", "Workload Pl AG"}}),
     #"Reordered Columns" = Table.ReorderColumns(#"OLD TABLEAU COLS",{"Level", "Date", "Role", "Role ID", "Role Abvrev", "Shift", "D", "Cs", "CX", "A", "Ability PoN AG", "Ability PoX AG", "Ability Pl AG", "AB EXCESS OVER-ALLOCATION", "AB SPARE STRETCH", "AB SPARE SLACK", "AB SPARE STRETCH ALLOCATED", "AB SPARE SLACK ALLOCATED", "AB EXCESS STRETCH (ALLOCATED)", "AB EXCESS ALLOCATED SLACK", "AB EXCESS STRETCH", "AB EXCESS SLACK", "AB POTENTIAL SHORTFALL (OVER-ALLOCATED)", "AB POTENTIAL SHORTFALL", "AB WASTED STRETCH", "AB WASTED SLACK", "AB ALLOCATED STRETCH", "AB ALLOCATED SLACK", "AB UNALLOCATED SLACK", "AB LATENT", "AB LATENT.ALLOCATED", "AB  LATENT.OVERALLOCATED", "AB Potential", "Efficiency PoN  AG", "Efficiency PoX  AG", "Efficiency Pl AG", "EF EXCESS OVER-ALLOCATION", "EF SPARE STRETCH", "EF SPARE SLACK", "EF SPARE STRETCH ALLOCATED", "EF SPARE SLACK ALLOCATED", "EF EXCESS STRETCH (ALLOCATED)", "EF EXCESS ALLOCATED SLACK", "EF EXCESS STRETCH", "EF EXCESS SLACK", "EF POTENTIAL SHORTFALL (OVER-ALLOCATED)", "EF POTENTIAL SHORTFALL", "EF WASTED STRETCH", "EF WASTED SLACK", "EF ALLOCATED STRETCH", "EF ALLOCATED SLACK", "EF UNALLOCATED SLACK", "EF LATENT", "EF LATENT.ALLOCATED", "EF LATENT.OVERALLOCATED", "EF Potential", "Workload PoN  AG", "Workload PoX AG", "Workload Pl AG", "IN EXCESS OVER-ALLOCATION", "IN SPARE STRETCH", "IN SPARE SLACK", "IN SPARE STRETCH ALLOCATED", "IN SPARE SLACK ALLOCATED", "IN EXCESS STRETCH (ALLOCATED)", "IN EXCESS ALLOCATED SLACK", "IN EXCESS STRETCH", "IN EXCESS SLACK", "IN POTENTIAL SHORTFALL (OVER-ALLOCATED)", "IN POTENTIAL SHORTFALL", "IN WASTED STRETCH", "IN WASTED SLACK", "IN ALLOCATED STRETCH", "IN ALLOCATED SLACK", "IN UNALLOCATED SLACK", "IN LATENT", "IN LATENT.ALLOCATED", "IN LATENT.OVERALLOCATED", "IN Potential"}),
     #"IN TO WL" = Table.RenameColumns(#"Reordered Columns",{{"IN EXCESS OVER-ALLOCATION", "WL EXCESS OVER-ALLOCATION"}, {"IN SPARE STRETCH", "WL SPARE STRETCH"}, {"IN SPARE SLACK", "WL SPARE SLACK"}, {"IN SPARE STRETCH ALLOCATED", "WL SPARE STRETCH ALLOCATED"}, {"IN SPARE SLACK ALLOCATED", "WL SPARE SLACK ALLOCATED"}, {"IN EXCESS STRETCH (ALLOCATED)", "WL EXCESS STRETCH (ALLOCATED)"}, {"IN EXCESS ALLOCATED SLACK", "WL EXCESS ALLOCATED SLACK"}, {"IN EXCESS STRETCH", "WL EXCESS STRETCH"}, {"IN EXCESS SLACK", "WL EXCESS SLACK"}, {"IN POTENTIAL SHORTFALL (OVER-ALLOCATED)", "WL POTENTIAL SHORTFALL (OVER-ALLOCATED)"}, {"IN POTENTIAL SHORTFALL", "WL POTENTIAL SHORTFALL"}, {"IN WASTED STRETCH", "WL WASTED STRETCH"}, {"IN WASTED SLACK", "WL WASTED SLACK"}, {"IN ALLOCATED STRETCH", "WL ALLOCATED STRETCH"}, {"IN ALLOCATED SLACK", "WL ALLOCATED SLACK"}, {"IN UNALLOCATED SLACK", "WL UNALLOCATED SLACK"}, {"IN LATENT", "WL  LATENT"}, {"IN LATENT.ALLOCATED", "WL LATENT.ALLOCATED"}, {"IN LATENT.OVERALLOCATED", "WL LATENT.OVERALLOCATED"}, {"IN Potential", "WL Potential"}}),
-    #"Sorted Rows" = Table.Sort(#"IN TO WL",{{"Facility", Order.Ascending}}),
-    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows")
+    #"Sorted Rows" = Table.Sort(#"IN TO WL",{{"Facility", Order.Ascending}})
 in
-    #"Removed Duplicates";
+    #"Sorted Rows";
+
+shared #"Errors in IMPORT InefficienciesAGL2Day3210" = let
+Source = #"IMPORT InefficienciesAGL2Day3210",
+  #"Detected Type Mismatches" = let
+    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Source, Table.ColumnsOfType(Source, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+    fieldNames = Record.FieldNames(recordTypeFields),
+    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "The type of the value does not match the type of the column.", Detail = v], fieldTypes{i}})
+in
+    Table.TransformColumns(Source, pairs),
+  #"Added Index" = Table.AddIndexColumn(#"Detected Type Mismatches", "Row Number" ,1),
+  #"Kept Errors" = Table.SelectRowsWithErrors(#"Added Index", {"Version", "Facility", "Level", "Date", "Role", "Shift", "D", "Cs", "CapacityMaxHC", "CX", "DateX", "DATESHIFT", "A", "Apn", "Apx", "Ai", "AB EXCESS OVER-ALLOCATION", "AB SPARE STRETCH", "AB SPARE SLACK", "AB SPARE STRETCH ALLOCATED", "AB SPARE SLACK ALLOCATED", "AB EXCESS STRETCH (ALLOCATED)", "AB EXCESS ALLOCATED SLACK", "AB EXCESS STRETCH", "AB EXCESS SLACK", "AB POTENTIAL SHORTFALL (OVER-ALLOCATED)", "AB POTENTIAL SHORTFALL", "AB WASTED STRETCH", "AB WASTED SLACK", "AB ALLOCATED STRETCH", "AB ALLOCATED SLACK", "AB UNALLOCATED SLACK", "AB LATENT", "AB LATENT.ALLOCATED", "AB  LATENT.OVERALLOCATED", "AB Potential", "Epn", "EpX", "Ein", "EF EXCESS OVER-ALLOCATION", "EF SPARE STRETCH", "EF SPARE SLACK", "EF SPARE STRETCH ALLOCATED", "EF SPARE SLACK ALLOCATED", "EF EXCESS STRETCH (ALLOCATED)", "EF EXCESS ALLOCATED SLACK", "EF EXCESS STRETCH", "EF EXCESS SLACK", "EF POTENTIAL SHORTFALL (OVER-ALLOCATED)", "EF POTENTIAL SHORTFALL", "EF WASTED STRETCH", "EF WASTED SLACK", "EF ALLOCATED STRETCH", "EF ALLOCATED SLACK", "EF UNALLOCATED SLACK", "EF LATENT", "EF LATENT.ALLOCATED", "EF LATENT.OVERALLOCATED", "EF Potential", "Ipn", "Ipx", "Iin", "IN EXCESS OVER-ALLOCATION", "IN SPARE STRETCH", "IN SPARE SLACK", "IN SPARE STRETCH ALLOCATED", "IN SPARE SLACK ALLOCATED", "IN EXCESS STRETCH (ALLOCATED)", "IN EXCESS ALLOCATED SLACK", "IN EXCESS STRETCH", "IN EXCESS SLACK", "IN POTENTIAL SHORTFALL (OVER-ALLOCATED)", "IN POTENTIAL SHORTFALL", "IN WASTED STRETCH", "IN WASTED SLACK", "IN ALLOCATED STRETCH", "IN ALLOCATED SLACK", "IN UNALLOCATED SLACK", "IN LATENT", "IN LATENT.ALLOCATED", "IN LATENT.OVERALLOCATED", "IN Potential"}),
+  #"Reordered Columns" = Table.ReorderColumns(#"Kept Errors", {"Row Number", "Version", "Facility", "Level", "Date", "Role", "Shift", "D", "Cs", "CapacityMaxHC", "CX", "DateX", "DATESHIFT", "A", "Apn", "Apx", "Ai", "AB EXCESS OVER-ALLOCATION", "AB SPARE STRETCH", "AB SPARE SLACK", "AB SPARE STRETCH ALLOCATED", "AB SPARE SLACK ALLOCATED", "AB EXCESS STRETCH (ALLOCATED)", "AB EXCESS ALLOCATED SLACK", "AB EXCESS STRETCH", "AB EXCESS SLACK", "AB POTENTIAL SHORTFALL (OVER-ALLOCATED)", "AB POTENTIAL SHORTFALL", "AB WASTED STRETCH", "AB WASTED SLACK", "AB ALLOCATED STRETCH", "AB ALLOCATED SLACK", "AB UNALLOCATED SLACK", "AB LATENT", "AB LATENT.ALLOCATED", "AB  LATENT.OVERALLOCATED", "AB Potential", "Epn", "EpX", "Ein", "EF EXCESS OVER-ALLOCATION", "EF SPARE STRETCH", "EF SPARE SLACK", "EF SPARE STRETCH ALLOCATED", "EF SPARE SLACK ALLOCATED", "EF EXCESS STRETCH (ALLOCATED)", "EF EXCESS ALLOCATED SLACK", "EF EXCESS STRETCH", "EF EXCESS SLACK", "EF POTENTIAL SHORTFALL (OVER-ALLOCATED)", "EF POTENTIAL SHORTFALL", "EF WASTED STRETCH", "EF WASTED SLACK", "EF ALLOCATED STRETCH", "EF ALLOCATED SLACK", "EF UNALLOCATED SLACK", "EF LATENT", "EF LATENT.ALLOCATED", "EF LATENT.OVERALLOCATED", "EF Potential", "Ipn", "Ipx", "Iin", "IN EXCESS OVER-ALLOCATION", "IN SPARE STRETCH", "IN SPARE SLACK", "IN SPARE STRETCH ALLOCATED", "IN SPARE SLACK ALLOCATED", "IN EXCESS STRETCH (ALLOCATED)", "IN EXCESS ALLOCATED SLACK", "IN EXCESS STRETCH", "IN EXCESS SLACK", "IN POTENTIAL SHORTFALL (OVER-ALLOCATED)", "IN POTENTIAL SHORTFALL", "IN WASTED STRETCH", "IN WASTED SLACK", "IN ALLOCATED STRETCH", "IN ALLOCATED SLACK", "IN UNALLOCATED SLACK", "IN LATENT", "IN LATENT.ALLOCATED", "IN LATENT.OVERALLOCATED", "IN Potential"})
+in
+  #"Reordered Columns"
+;
+
+shared #"IMPORT Table_Masterlist" = let
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\StaffListMaster.xlsx"), null, true),
+    Table_Masterlist_Table = Source{[Item="Table_Masterlist",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(Table_Masterlist_Table,{{"Role", type text}, {"Name", type text}, {"Resource", Int64.Type}, {"Misalignment", type text}})
+in
+    #"Changed Type";
+
+shared Masterlist = let
+    Source = #"IMPORT Table_Masterlist"
+in
+    Source;
+
+shared #"IMPORT Effort-All" = let
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Effort-All.xlsx"), null, true)
+in
+    Source;
+
+shared EffortAllMatrixAG1_1D = let
+    Source = #"IMPORT Effort-All",
+    EffortAllMatrixAG1_1D_2_Table = Source{[Item="EffortAllMatrixAG1_1D_2",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(EffortAllMatrixAG1_1D_2_Table,{{"Facility", type text}, {"Role", type text}, {"Shift", type text}, {"Demand", type number}, {"Capacity", type number}, {"CapacityMaxHC", Int64.Type}, {"CapacityX", type number}, {"Allocation", type number}, {"DATESHIFT", type text}, {"Date", type date}, {"DateX", type date}})
+in
+    #"Changed Type";
+
+shared RoleAvailabilityDevelopedMATRIXDELTA = let
+    Source = #"IMPORT Effort-All",
+    RoleAvailabilityDevelopedMATRIXDELTA_Table = Source{[Item="RoleAvailabilityDevelopedMATRIXDELTA",Kind="Table"]}[Data],
+    #"Changed Type1" = Table.TransformColumnTypes(RoleAvailabilityDevelopedMATRIXDELTA_Table,{{"Facility", type text}, {"Role", type text}, {"Shift", type text}, {"Date", type date}, {"Demand", type number}, {"C###", type number}, {"Allocation", type number}, {"Original Availability", type number}, {"C###-D", type number}, {"A-D", type number}, {"A-C###", type number}, {"CO-D", type number}})
+in
+    #"Changed Type1";
+
+shared ResRoleAvailabilityDevelopedMATRIX = let
+    Source = #"IMPORT Effort-All",
+    ResRoleAvailabilityDevelopedMATRIX_Table = Source{[Item="ResRoleAvailabilityDevelopedMATRIX",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(ResRoleAvailabilityDevelopedMATRIX_Table,{{"Facility", type text}, {"Role", type text}, {"Shift", type text}, {"Date", type date}, {"Resource", Int64.Type}, {"Period", Int64.Type}, {"Demand", type number}, {"C#", type number}, {"C##", type number}, {"C###", type number}, {"OriginalAvailability", type number}, {"Allocation", type number}})
+in
+    #"Changed Type";

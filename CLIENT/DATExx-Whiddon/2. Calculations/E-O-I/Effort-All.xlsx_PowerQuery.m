@@ -1,6 +1,6 @@
 // Power Query from: Effort-All.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Effort-All.xlsx
-// Extracted: 2026-09-20T21:19:08.859Z
+// Extracted: 2026-10-05T04:34:49.325Z
 
 section Section1;
 
@@ -316,13 +316,14 @@ in
 
 shared #"Availabilities Appended" = let
     Source = #"EXTRACT Facility2 RoleShiftAvailabilities",
-    #"Appended FAC1" = Table.Combine({Source, #"EXTRACT Facility1 RoleShiftAvailabilities"}),
+    #"Appended FAC1" = Table.Combine({Source, #"EXTRACT Facility1 RoleShiftAvailabilities", #"EXTRACT Facility3 RoleShiftAvailabilities"}),
     //Table.Combine({#"EXTRACT Facility1 RoleShiftAvailabilities", #"EXTRACT Facility2 RoleShiftAvailabilities"}),    //return Facility 1
     #"Renamed Columns" = Table.RenameColumns(#"Appended FAC1",{{"Capacity", "EffortType"}, {"Availability", "Effort"}}),
     #"Multiplied Column" = Table.TransformColumns(#"Renamed Columns", {{"Effort", each _ * EffectiveAvailability, type number}}),
-    #"Sorted Rows" = Table.Sort(#"Multiplied Column",{{"Facility", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"Resource", Order.Ascending}, {"EffortType", Order.Ascending}})
+    #"Sorted Rows" = Table.Sort(#"Multiplied Column",{{"Facility", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"Resource", Order.Ascending}, {"EffortType", Order.Ascending}}),
+    #"Sorted Rows1" = Table.Sort(#"Sorted Rows",{{"Period", Order.Ascending}})
 in
-    #"Sorted Rows";
+    #"Sorted Rows1";
 
 shared #"Availability Effort" = let
     Source = #"EffortAllMatrixAG1_1D-base !!",
@@ -334,20 +335,20 @@ shared #"Availability Effort" = let
     #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"Shift", type text}, {"EffortType", type text}, {"Effort", type number}, {"Resource", Int64.Type}}),
     #"Appended ALLOCATION" = Table.Combine({#"Changed Type", ResShiftAllocation}),
     #"Replaced Value" = Table.ReplaceValue(#"Appended ALLOCATION",0,null,Replacer.ReplaceValue,{"Effort"}),
-    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Facility", Order.Ascending}, {"Role", Order.Ascending}, {"Resource", Order.Ascending}})
+    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Facility", Order.Ascending}, {"Role", Order.Ascending}, {"Date", Order.Ascending}, {"EffortType", Order.Ascending}, {"Resource", Order.Ascending} })
 in
     #"Sorted Rows";
 
 shared ResRoleAvailabilityDevelopedMATRIX = let
     Source = #"Availability Effort",
-    #"Filtered NULL ROLE" = Table.SelectRows(Source, each ([Role] <> null)),
-    #"Sorted Rows2" = Table.Sort(#"Filtered NULL ROLE",{{"Date", Order.Ascending}, {"EffortType", Order.Ascending}}),
-    #"Sorted Rows" = Table.Sort(#"Sorted Rows2",{{"Effort", Order.Descending}}),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Sorted Rows",{{"Effort", type number}}),
+    #"Filtered NULL ROLE" = Table.SelectRows(Source, each ([Role] <> null) ),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Filtered NULL ROLE",{{"Effort", type number}}),
     #"Sorted Rows1" = Table.Sort(#"Changed Type1",{{"Resource", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"EffortType", Order.Ascending}}),
-    #"Pivoted Column" = Table.Pivot(#"Sorted Rows1", List.Distinct(#"Sorted Rows1"[EffortType]), "EffortType", "Effort")
+    #"Pivoted Column" = Table.Pivot(#"Sorted Rows1", List.Distinct(#"Sorted Rows1"[EffortType]), "EffortType", "Effort"),
+    #"Merged Queries" = Table.NestedJoin(#"Pivoted Column", {"Facility", "Role", "Resource"}, #"IMPORT MasterStaffList_All", {"Facility-Abbrev", "Role", "Resource"}, "IMPORT MasterStaffList_All", JoinKind.LeftOuter),
+    #"Expanded IMPORT MasterStaffList_All" = Table.ExpandTableColumn(#"Merged Queries", "IMPORT MasterStaffList_All", {"EmployeeID"}, {"EmployeeID"})
 in
-    #"Pivoted Column";
+    #"Expanded IMPORT MasterStaffList_All";
 
 shared #"Capacity SUM" = let
     Source = EffortAllMatrixAG1_1D,
@@ -364,12 +365,12 @@ in
 shared RoleAvailabilityDevelopedMATRIXDELTA = let
     Source = ResRoleAvailabilityDevelopedMATRIX,
     #"Grouped Rows" = Table.Group(Source, {"Facility", "Role", "Shift", "Date"}, {{"Demand", each List.Sum([Demand]), type nullable number}, {"C###", each List.Sum([#"C###"]), type nullable number}, {"Allocation", each List.Sum([Allocation]), type nullable number}, {"Original Availability", each List.Sum([OriginalAvailability]), type nullable number}}),
-    #"Inserted Subtraction" = Table.AddColumn(#"Grouped Rows", "C###-D", each [#"C###"] - [Demand], type number),
-    #"Inserted Addition" = Table.AddColumn(#"Inserted Subtraction", "A-D", each [Allocation] - [Demand], type number),
-    #"Inserted Subtraction1" = Table.AddColumn(#"Inserted Addition", "A-C###", each [#"C###"] - [Allocation], type number),
-    #"Inserted Subtraction2" = Table.AddColumn(#"Inserted Subtraction1", "CO-D", each [Original Availability] - [Demand], type number)
+    #"Inserted C###-D" = Table.AddColumn(#"Grouped Rows", "C###-D", each [#"C###"] - [Demand], type number),
+    #"Inserted A-D" = Table.AddColumn(#"Inserted C###-D", "A-D", each [Allocation] - [Demand], type number),
+    #"Inserted A-C###" = Table.AddColumn(#"Inserted A-D", "A-C###", each [#"C###"] - [Allocation], type number),
+    #"Inserted CO-D" = Table.AddColumn(#"Inserted A-C###", "CO-D", each [Original Availability] - [Demand], type number)
 in
-    #"Inserted Subtraction2";
+    #"Inserted CO-D";
 
 shared MaxAvailabilities = let
     Source = #"Availabilities Appended",
@@ -427,6 +428,13 @@ in
 in
     Source;
 
+shared #"IMPORT MasterStaffList_All" = let
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\StafMasterList-All.xlsx"), null, true),
+    MasterStaffList_All_Table = Source{[Item="MasterStaffList_All",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(MasterStaffList_All_Table,{{"Name", type text}, {"Role", type text}, {"Resource", Int64.Type}, {"Misalignment", type text}, {"Source", type text}, {"EmployeeID", Int64.Type}, {"Facility-Abbrev", type text}, {"EmploymentType", type text}, {"PreferredRole", type text}, {"In Allocation", type logical}, {"In Records", type logical}, {"Worker Membership", type text}, {"Worker Record Status", type text}, {"Worker Contract Issue", type any}, {"Contract Source", type text}, {"Contracted FN Hours", type number}, {"Roster Start", Int64.Type}, {"Roster End", Int64.Type}, {"Roster Fortnights", Int64.Type}, {"Contracted Roster Hours", Int64.Type}, {"Contracted Shift Equivalent", type number}, {"Contracted Shifts", Int64.Type}, {"Settings Max Availability", Int64.Type}, {"Effective Shift Cap", Int64.Type}, {"Limit Basis", type text}, {"Facility", type text}})
+in
+    #"Changed Type";
+
 shared #"IMPORT Facility3 Effort" = let
     Source = Table.Buffer(Excel.Workbook(Binary.Buffer(File.Contents(
     ResolveFacilityPath(Units{0}[Facility3]) & "\2. Calculations\Effort.xlsx")), null, true))
@@ -456,3 +464,9 @@ shared #"EXTRACT Facility3 ResShiftAllocation" = let
     #"Replaced Value1" = Table.ReplaceValue(#"Changed Type1","1","2",Replacer.ReplaceText,{"Facility"})
 in
     #"Replaced Value1";
+
+shared #"EffortAllMatrixAG1_1D-base !! (2)" = let
+    Source = #"EffortAllMatrixAG1_1D-base !!",
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Role] = null or [Role] = "AIN") and ([Shift] = "AM") and ([Date] = #date(2026, 7, 24)))
+in
+    #"Filtered Rows";
