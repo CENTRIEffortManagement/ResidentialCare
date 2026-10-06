@@ -405,9 +405,10 @@ in
 shared A2ReductionCandidateIssues_Prepare = let
     Source = A2ReductionCandidates_Prepare,
     ResourceBudgets = Table.Group(Source, {"Resource"}, {{"BudgetValues", each List.Count(List.Distinct([#"ResAv-C'"])), Int64.Type}}),
-    InconsistentResources = Table.SelectRows(ResourceBudgets, each [BudgetValues] <> 1)[Resource],
+    // These small key lists are searched once per candidate; buffer their final values rather than regrouping on enumeration.
+    InconsistentResources = List.Buffer(Table.SelectRows(ResourceBudgets, each [BudgetValues] <> 1)[Resource]),
     PeriodBudgets = Table.Group(Source, {"Period"}, {{"BudgetValues", each List.Count(List.Distinct([MaxPeriodReduction])), Int64.Type}}),
-    InconsistentPeriods = Table.SelectRows(PeriodBudgets, each [BudgetValues] <> 1)[Period],
+    InconsistentPeriods = List.Buffer(Table.SelectRows(PeriodBudgets, each [BudgetValues] <> 1)[Period]),
     WithReason = Table.AddColumn(Source, "Reason", each
         let Reasons = List.RemoveNulls({[BudgetIssueReason],
             if List.Contains(InconsistentResources, [Resource]) then "Resource reduction budget differs between candidates" else null,
@@ -422,16 +423,16 @@ in
 // Query: Period Running Total
 // Purpose: Expose initial period budgets and period priority positions for the joint reducer, without consuming prefix budgets.
 // Notes: The legacy PeriodRunningTotal column now contains a priority ordinal; accepted budget use is AcceptedPeriodRunningTotal.
+// Notes: The following Resource-priority stage buffers its sorted result, so this intermediate wide table stays unbuffered.
 shared #"Period Running Total" = let
     Source = A2ReductionCandidates_Prepare,
     JoinedPeriodLimits = Table.NestedJoin(Source, {"Period"}, PeriodCapIndexLimits, {"Period"}, "PeriodLimits", JoinKind.LeftOuter),
     ExpandedPeriodLimits = Table.ExpandTableColumn(JoinedPeriodLimits, "PeriodLimits", {"StartPeriodIndex", "PeriodAvailNumber"}, {"StartPeriodIndex", "PeriodAvailNumber"}),
     WithPriorityPosition = Table.AddColumn(ExpandedPeriodLimits, "PeriodRunningTotal", each [PeriodIndexX] - [StartPeriodIndex] + 1, Int64.Type),
     WithWholeAmount = Table.AddColumn(WithPriorityPosition, "Reduction", each [CellAmount], type nullable number),
-    WithPendingDecision = Table.AddColumn(WithWholeAmount, "ReducePeriod", each "Joint decision pending", type text),
-    BUFFER = Table.Buffer(WithPendingDecision)
+    WithPendingDecision = Table.AddColumn(WithWholeAmount, "ReducePeriod", each "Joint decision pending", type text)
 in
-    BUFFER;
+    WithPendingDecision;
 
 [ Description = "BUFFER" ]
 // Query: ResCapPrioritisedTABLE
@@ -467,6 +468,17 @@ in
     not List.IsEmpty(CandidateRecords) and not List.IsEmpty(RemainingDays)
         and (candidateDay = List.Min(RemainingDays) or candidateDay = List.Max(RemainingDays));
 
+// Query: A2RemainingSpareTrimAllowed
+// Purpose: Test an optional candidate against one cluster's already maintained remaining days.
+// Notes: Original workday anchors stay in this list; only accepted outside optional days are removed from it.
+shared A2RemainingSpareTrimAllowed = (remainingRecords as list, candidateDay as number) as logical =>
+let
+    RemainingDays = List.Transform(remainingRecords, each _[Day]),
+    CandidateRecords = List.Select(remainingRecords, each _[Day] = candidateDay and _[AllocationWorkday] = false)
+in
+    not List.IsEmpty(CandidateRecords) and not List.IsEmpty(RemainingDays)
+        and (candidateDay = List.Min(RemainingDays) or candidateDay = List.Max(RemainingDays));
+
 // Query: A2SetBudgetSpent
 // Purpose: Update one accepted-removal budget total in an immutable keyed state record.
 shared A2SetBudgetSpent = (totals as record, key as text, amount as number) as record =>
@@ -480,6 +492,7 @@ in
 // Query: A2JointReductionPass
 // Purpose: Scan candidates in business-priority order and spend Resource and Period budgets only on accepted outermost whole-cell removals.
 // Notes: Rejected candidates do not change the state. A later pass can revisit an inner day exposed by an accepted outer trim.
+// Notes: The original calendar argument is retained; initialized state holds the current remaining calendar and keyed removals.
 shared A2JointReductionPass = (candidates as list, clusterDaysByKey as record, initialState as record) as record =>
     List.Accumulate(candidates, initialState, (state, candidate) =>
         let
@@ -487,44 +500,92 @@ shared A2JointReductionPass = (candidates as list, clusterDaysByKey as record, i
             PeriodKey = Number.ToText(candidate[Period], "0", "en-AU"),
             ResourceSpent = Record.FieldOrDefault(state[ResourceSpent], ResourceKey, 0),
             PeriodSpent = Record.FieldOrDefault(state[PeriodSpent], PeriodKey, 0),
-            AlreadyRemoved = List.Contains(state[RemovedDayKeys], candidate[DayKey]),
-            ClusterDays = Record.Field(clusterDaysByKey, candidate[ClusterKey]),
-            CanTrim = if AlreadyRemoved then false else A2OuterSpareTrimAllowed(ClusterDays, state[RemovedDayKeys], candidate[Day]),
+            AlreadyRemoved = Record.HasFields(state[RemovedDayKeys], candidate[DayKey]),
+            ClusterDays = Record.Field(state[RemainingClusterDays], candidate[ClusterKey]),
+            CanTrim = if AlreadyRemoved then false else A2RemainingSpareTrimAllowed(ClusterDays, candidate[Day]),
             CanSpend = candidate[CellAmount] <= candidate[#"ResAv-C'"] - ResourceSpent
                 and candidate[CellAmount] <= candidate[MaxPeriodReduction] - PeriodSpent,
             Accepted = not AlreadyRemoved and CanTrim and CanSpend,
-            Decision = [CellKey = candidate[CellKey], ResourceAcceptedRemoval = ResourceSpent + candidate[CellAmount],
-                PeriodAcceptedRemoval = PeriodSpent + candidate[CellAmount], AcceptanceOrder = state[AcceptedCount] + 1]
+            Decision = [CellKey = candidate[CellKey], Resource = candidate[Resource], Period = candidate[Period],
+                PRCell = candidate[PRCell], Reduction = -candidate[CellAmount],
+                ResourceAcceptedRemoval = ResourceSpent + candidate[CellAmount],
+                PeriodAcceptedRemoval = PeriodSpent + candidate[CellAmount], AcceptanceOrder = state[AcceptedCount] + 1],
+            // Update only this cluster after acceptance; other clusters and every original anchor remain unchanged.
+            RemainingDays = List.Buffer(List.Select(ClusterDays, each _[AllocationWorkday] = true or _[DayKey] <> candidate[DayKey])),
+            OtherClusters = Record.RemoveFields(state[RemainingClusterDays], {candidate[ClusterKey]}),
+            UpdatedClusters = Record.AddField(OtherClusters, candidate[ClusterKey], RemainingDays)
         in if not Accepted then state else
             [ResourceSpent = A2SetBudgetSpent(state[ResourceSpent], ResourceKey, candidate[CellAmount]),
              PeriodSpent = A2SetBudgetSpent(state[PeriodSpent], PeriodKey, candidate[CellAmount]),
-             RemovedDayKeys = state[RemovedDayKeys] & {candidate[DayKey]},
+              RemovedDayKeys = Record.AddField(state[RemovedDayKeys], candidate[DayKey], true),
+              RemainingClusterDays = UpdatedClusters,
              AcceptedByCell = Record.AddField(state[AcceptedByCell], candidate[CellKey], Decision),
              AcceptedCount = state[AcceptedCount] + 1]);
 
-// Query: A2JointReductionDecisions
-// Purpose: Complete accepted-only joint-budget reduction decisions, rescanning deferred inner candidates until no further trim is accepted.
-// Output: One candidate decision with accepted totals, signed whole-cell reduction and an explicit reason for rejection.
-shared A2JointReductionDecisions = let
+// Query: A2JointReductionCandidateRows_Prepare
+// Purpose: Retain the existing ordered audit candidates after excluding Resources with unusable budgets or cell amounts.
+// Output: The complete candidate columns in their original business-priority order.
+shared A2JointReductionCandidateRows_Prepare = let
     IssueResources = List.Buffer(List.Distinct(A2ReductionCandidateIssues_Prepare[Resource])),
-    CandidateRows = Table.SelectRows(ResCapPrioritisedTABLE, each not List.Contains(IssueResources, [Resource])),
-    CandidateRecords = List.Buffer(Table.ToRecords(CandidateRows)),
-    DayGroups = Table.Group(A2ReductionWorkdaySchedule_Prepare, {"Resource", "PlannedCluster"}, {{"ClusterDays", each Table.ToRecords(_), type list}}),
+    CandidateRows = Table.SelectRows(ResCapPrioritisedTABLE, each not List.Contains(IssueResources, [Resource]))
+in
+    CandidateRows;
+
+// Query: A2JointReductionState_Prepare
+// Purpose: Calculate the accepted-only joint budget state with narrow candidate records and cluster-local remaining days.
+// Output: Internal reducer state; accepted reductions and the full audit are prepared separately from it.
+// Notes: Candidate order and full-pass deferred reconsideration are unchanged. No rejection reason is evaluated here.
+shared A2JointReductionState_Prepare = let
+    CandidateColumns = Table.SelectColumns(A2JointReductionCandidateRows_Prepare,
+        {"Resource", "Period", "PRCell", "CellAmount", "DayKey", "CellKey", "ClusterKey", "Day", "ResAv-C'", "MaxPeriodReduction"}),
+    CandidateRecords = List.Buffer(Table.ToRecords(CandidateColumns)),
+    DayColumns = Table.SelectColumns(A2ReductionWorkdaySchedule_Prepare,
+        {"Resource", "PlannedCluster", "Day", "DayKey", "AllocationWorkday"}),
+    DayGroups = Table.Group(DayColumns, {"Resource", "PlannedCluster"}, {{"ClusterDays", each
+        let ClusterColumns = Table.SelectColumns(_, {"Day", "DayKey", "AllocationWorkday"})
+        in List.Buffer(Table.ToRecords(ClusterColumns)), type list}}),
     WithClusterKey = Table.AddColumn(DayGroups, "Name", each "R" & Number.ToText([Resource], "0", "en-AU")
         & "-C" & Number.ToText([PlannedCluster], "0", "en-AU"), type text),
     KeyedClusterDays = Table.RenameColumns(Table.SelectColumns(WithClusterKey, {"Name", "ClusterDays"}), {{"ClusterDays", "Value"}}),
     ClusterDaysByKey = Record.FromTable(KeyedClusterDays),
-    InitialState = [ResourceSpent = [], PeriodSpent = [], RemovedDayKeys = {}, AcceptedByCell = [], AcceptedCount = 0],
+    InitialState = [ResourceSpent = [], PeriodSpent = [], RemovedDayKeys = [],
+        RemainingClusterDays = ClusterDaysByKey, AcceptedByCell = [], AcceptedCount = 0],
     PassStates = List.Generate(() => [State = InitialState, Continue = true], each [Continue], each
         let NextState = A2JointReductionPass(CandidateRecords, ClusterDaysByKey, [State])
         in [State = NextState, Continue = NextState[AcceptedCount] > [State][AcceptedCount]], each [State]),
-    FinalState = List.Last(PassStates),
+    FinalState = List.Last(PassStates)
+in
+    FinalState;
+
+// Query: A2AcceptedJointReductions_Prepare
+// Purpose: Prepare only accepted signed reductions without constructing reasons or wide rows for rejected candidates.
+// Output: Existing reduction fields plus acceptance order for the legacy output's deterministic sort.
+shared A2AcceptedJointReductions_Prepare = let
+    FinalState = A2JointReductionState_Prepare,
+    AcceptedRecords = Record.FieldValues(FinalState[AcceptedByCell]),
+    OutputColumns = {"Resource", "Period", "PRCell", "Reduction", "ResourceAcceptedRemoval", "AcceptanceOrder"},
+    SelectedRecords = List.Transform(AcceptedRecords, each Record.SelectFields(_, OutputColumns)),
+    AcceptedRows = Table.FromRecords(SelectedRecords, type table [Resource = number, Period = number,
+        PRCell = text, Reduction = any, ResourceAcceptedRemoval = any, AcceptanceOrder = number]),
+    // Preserve the public reduction table's inherited Int64 key metadata and expanded any-valued amount/total fields.
+    TypedAcceptedKeys = Table.TransformColumnTypes(AcceptedRows, {{"Resource", Int64.Type}, {"Period", Int64.Type}}),
+    RenamedTotals = Table.RenameColumns(TypedAcceptedKeys, {{"ResourceAcceptedRemoval", "ResRunningTotal"}})
+in
+    RenamedTotals;
+
+// Query: A2JointReductionDecisions
+// Purpose: Publish every existing candidate decision and rejection reason from the completed joint budget state.
+// Output: The unchanged full audit schema, including ordinary budget and edge rejections used by diagnostics.
+// Notes: The main accepted reduction path is separate, so it does not force rejected-candidate reasons.
+shared A2JointReductionDecisions = let
+    CandidateRows = A2JointReductionCandidateRows_Prepare,
+    FinalState = A2JointReductionState_Prepare,
     WithDecision = Table.AddColumn(CandidateRows, "JointDecision", each
         let
             AcceptedRecord = Record.FieldOrDefault(FinalState[AcceptedByCell], [CellKey], null),
             ResourceSpent = Record.FieldOrDefault(FinalState[ResourceSpent], Number.ToText([Resource], "0", "en-AU"), 0),
             PeriodSpent = Record.FieldOrDefault(FinalState[PeriodSpent], Number.ToText([Period], "0", "en-AU"), 0),
-            CanTrim = A2OuterSpareTrimAllowed(Record.Field(ClusterDaysByKey, [ClusterKey]), FinalState[RemovedDayKeys], [Day]),
+            CanTrim = A2RemainingSpareTrimAllowed(Record.Field(FinalState[RemainingClusterDays], [ClusterKey]), [Day]),
             Reason = if AcceptedRecord <> null then "Accepted whole optional cell"
                 else if not CanTrim then "Deferred inner spare day remains protected by an outer worked day"
                 else if [CellAmount] > [#"ResAv-C'"] - ResourceSpent then "Remaining Resource reduction budget is smaller than this whole optional cell"
@@ -545,12 +606,10 @@ in
 // Purpose: Publish accepted whole-cell reductions with Resource totals accumulated only from accepted joint decisions.
 // Output: The existing Resource/Period/PRCell/signed Reduction/ResRunningTotal interface.
 shared #"Resource Running total" = let
-    Source = A2JointReductionDecisions,
-    AcceptedDecisions = Table.SelectRows(Source, each [Accepted] = true),
-    OrderedAcceptedDecisions = Table.Sort(AcceptedDecisions, {{"Resource", Order.Ascending}, {"AcceptanceOrder", Order.Ascending}}),
-    SelectedColumns = Table.SelectColumns(OrderedAcceptedDecisions, {"Resource", "Period", "PRCell", "SignedReduction", "ResRunningTotal"}),
-    RenamedReduction = Table.RenameColumns(SelectedColumns, {{"SignedReduction", "Reduction"}}),
-    BUFFER = Table.Buffer(RenamedReduction)
+    Source = A2AcceptedJointReductions_Prepare,
+    OrderedAcceptedDecisions = Table.Sort(Source, {{"Resource", Order.Ascending}, {"AcceptanceOrder", Order.Ascending}}),
+    SelectedColumns = Table.SelectColumns(OrderedAcceptedDecisions, {"Resource", "Period", "PRCell", "Reduction", "ResRunningTotal"}),
+    BUFFER = Table.Buffer(SelectedColumns)
 in
     BUFFER;
 
@@ -738,13 +797,14 @@ shared A2PublishedClusterSchedule_Prepare = A2ClusterSchedule(A2PublishedDaySche
 
 // Query: A2OriginalDaySchedule_Prepare
 // Purpose: Isolate the original allocation workdays without counting optional capacity as allocation work.
+// Notes: Reuse the buffered published-day table; the subsequent cluster aggregation buffers its smaller result.
 shared A2OriginalDaySchedule_Prepare = let
     Source = A2PublishedDaySchedule_Prepare,
     OriginalFlags = Table.TransformColumns(Source, {{"OptionalSpareWorkday", each false, type logical}}),
     RemovedPublishedWorkday = Table.RemoveColumns(OriginalFlags, {"Workday"}),
     WithOriginalWorkday = Table.AddColumn(RemovedPublishedWorkday, "Workday", each [AllocationWorkday], type logical)
 in
-    Table.Buffer(WithOriginalWorkday);
+    WithOriginalWorkday;
 
 // Query: A2OriginalClusterSchedule_Prepare
 // Purpose: Expose the allocation-only cluster calendar for separate preexisting-breach diagnostics.
@@ -753,6 +813,7 @@ shared A2OriginalClusterSchedule_Prepare = A2ClusterSchedule(A2OriginalDaySchedu
 // Query: A2CalendarRuleIssues
 // Purpose: Return one issue per breached worked-day or full-off-day rule on an already prepared cluster calendar.
 // Notes: This helper reports failures; it does not raise errors, choose spare days or change availability.
+// Notes: The callers buffer their final issues after adding Origin, avoiding another intermediate issue-table buffer.
 shared A2CalendarRuleIssues = (clusters as table) as table =>
 let
     OversizedClusters = Table.SelectRows(clusters, each [WorkedDays] > 5),
@@ -766,7 +827,7 @@ let
         & " full off days between them; minimum is 2", type text),
     Issues = Table.Combine({ClusterReasons, GapReasons})
 in
-    Table.Buffer(Issues);
+    Issues;
 
 // Query: A2OriginalCalendarIssues_Prepare
 // Purpose: Report preexisting allocation-only breaches separately from any optional-spare publication failure.

@@ -224,11 +224,12 @@ in
 // Query: A1MapResourceIdentity
 // Purpose: Keep the source row and every identity candidate, assigning a Resource only for one usable match.
 // Output: Source columns plus ResourceMatches, MatchCount and nullable Resource.
+// Notes: Resource-key uniqueness uses one narrow join; the original Name/Role candidate evidence remains unchanged.
 shared A1MapResourceIdentity = (source as table, resourceMap as table) as table =>
 let
     ResourceKeyCounts = Table.Group(resourceMap, {"Resource"}, {{"IdentityCount", each Table.RowCount(_), Int64.Type}}),
     UniqueResourceRows = Table.SelectRows(ResourceKeyCounts, each [Resource] <> null and [IdentityCount] = 1),
-    UniqueResourceKeys = List.Buffer(UniqueResourceRows[Resource]),
+    UniqueResourceKeys = Table.Buffer(Table.SelectColumns(UniqueResourceRows, {"Resource"})),
     JoinedCandidates = Table.NestedJoin(source, {"Name", "Role"}, resourceMap,
         {"Name", "Role"}, "ResourceMatches", JoinKind.LeftOuter),
     CountedCandidates = Table.AddColumn(JoinedCandidates, "MatchCount", each Table.RowCount([ResourceMatches]), Int64.Type),
@@ -238,10 +239,16 @@ let
             UsableRole = try [Role] <> null and Text.Trim([Role]) <> "" otherwise false
         in
             if [MatchCount] = 1 and UsableName and UsableRole
-                and List.Contains(UniqueResourceKeys, [ResourceMatches]{0}[Resource])
-            then [ResourceMatches]{0}[Resource] else null, type nullable number)
+            then [ResourceMatches]{0}[Resource] else null, type nullable number),
+    // Join the narrow key set once instead of scanning every Resource key for each input row.
+    JoinedUniqueResourceKeys = Table.NestedJoin(AssignedResource, {"Resource"}, UniqueResourceKeys,
+        {"Resource"}, "A1UniqueResourceKey", JoinKind.LeftOuter),
+    ValidatedResource = Table.AddColumn(JoinedUniqueResourceKeys, "A1ValidatedResource", each
+        if Table.IsEmpty([A1UniqueResourceKey]) then null else [Resource], type nullable number),
+    RemovedKeyHelpers = Table.RemoveColumns(ValidatedResource, {"Resource", "A1UniqueResourceKey"}),
+    Output = Table.RenameColumns(RemovedKeyHelpers, {{"A1ValidatedResource", "Resource"}})
 in
-    AssignedResource;
+    Output;
 
 // Query: A1AvailabilityIdentity_Prepare
 // Purpose: Assess availability identities without expanding ambiguous joins.
@@ -910,7 +917,8 @@ shared ResDaysAllocated = let
                 "AllData",
                 (tbl) =>
                     let
-                        flags    = Table.Column(tbl, "AllocFlag"),
+                        // Reuse this Resource's short day list for the five neighbour reads per day.
+                        flags    = List.Buffer(Table.Column(tbl, "AllocFlag")),
                         n        = List.Count(flags),
                         getD     = (i, o) => if i+o < 0 or i+o >= n then "0" else Text.From(flags{i+o}),
                         enriched = Table.AddColumn(
@@ -963,7 +971,8 @@ shared AllocationCode = let
       Grouped,
       {"Group",(tbl) =>
         let
-          resList = Table.Column(tbl, "Resource"),
+          // Buffer only this Resource's day list, rather than another full day table.
+          resList = List.Buffer(Table.Column(tbl, "Resource")),
           n       = List.Count(resList),
           getRes  = (i,off) => let p = i+off in if p<0 or p>=n then null else resList{p},
           step1   = Table.AddColumn(tbl, "Yesterday.Resource2", each getRes([Idx], -2), Int64.Type),
@@ -1322,8 +1331,8 @@ in
 // Notes: Missing third neighbours remain null; unseen days are not assumed to be off.
 shared #"WD Type" = let
     Source = Clusters,
-    Custom1 = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(Custom1, {"ClusterNumber"}, ClusterAllocation, {"ClusterIndex"}, "ClusterAllocation", JoinKind.LeftOuter),
+    // Clusters already buffers this complete day table; retain only the separate narrow neighbour lookup below.
+    #"Merged Queries" = Table.NestedJoin(Source, {"ClusterNumber"}, ClusterAllocation, {"ClusterIndex"}, "ClusterAllocation", JoinKind.LeftOuter),
     #"Expanded ClusterAllocation" = Table.ExpandTableColumn(#"Merged Queries", "ClusterAllocation", {"ClusterAllocation"}, {"ClusterAllocation"}),
     NeighbourFlags = Table.Buffer(Table.SelectColumns(ResDaysAllocated, {"Resource", "Day", "AllocFlag"})),
     WithPreviousThirdDay = Table.AddColumn(#"Expanded ClusterAllocation", "PreviousThirdDay", each [Day] - 3, Int64.Type),
@@ -2113,15 +2122,19 @@ in
 shared A1PriorityInterface_CHECK = let
     DayPriorities = ResPeriodShiftNWDTABLE,
     CapPriorities = ResPeriodCapPrioritised,
+    // Each key view is reused by population/count/uniqueness checks; avoid retaining the full priority rows.
+    // Missing fields remain missing so the existing check functions retain their error behaviour.
+    DayPriorityKeys = Table.Buffer(Table.SelectColumns(DayPriorities, {"Resource", "Period"}, MissingField.Ignore)),
+    CapPriorityKeys = Table.Buffer(Table.SelectColumns(CapPriorities, {"Resource", "Period"}, MissingField.Ignore)),
     DayColumns = {"Resource", "Day", "Period", "Shifts", "ClusterAllocation", "NWDPriority", "NWDType"},
     CapColumns = {"Resource", "Period", "PRCell", "UnassignedAvail", "ResAv-C'", "PeriodA-CNeg", "C'-D", "ClusterAllocation", "NWDPriority", "NWDType"},
     Checks = {
         A1CheckResult("NWD priority handoff has required columns", () => List.Count(List.Difference(DayColumns, Table.ColumnNames(DayPriorities)))),
-        A1CheckResult("NWD priority keys are populated", () => Table.RowCount(Table.SelectRows(DayPriorities, each [Resource] = null or [Period] = null))),
-        A1CheckResult("NWD priority keys are unique", () => Table.RowCount(DayPriorities) - Table.RowCount(Table.Distinct(DayPriorities, {"Resource", "Period"}))),
+        A1CheckResult("NWD priority keys are populated", () => Table.RowCount(Table.SelectRows(DayPriorityKeys, each [Resource] = null or [Period] = null))),
+        A1CheckResult("NWD priority keys are unique", () => Table.RowCount(DayPriorityKeys) - Table.RowCount(Table.Distinct(DayPriorityKeys, {"Resource", "Period"}))),
         A1CheckResult("Cap priority handoff has required columns", () => List.Count(List.Difference(CapColumns, Table.ColumnNames(CapPriorities)))),
-        A1CheckResult("Cap priority keys are populated", () => Table.RowCount(Table.SelectRows(CapPriorities, each [Resource] = null or [Period] = null))),
-        A1CheckResult("Cap priority keys are unique", () => Table.RowCount(CapPriorities) - Table.RowCount(Table.Distinct(CapPriorities, {"Resource", "Period"})))
+        A1CheckResult("Cap priority keys are populated", () => Table.RowCount(Table.SelectRows(CapPriorityKeys, each [Resource] = null or [Period] = null))),
+        A1CheckResult("Cap priority keys are unique", () => Table.RowCount(CapPriorityKeys) - Table.RowCount(Table.Distinct(CapPriorityKeys, {"Resource", "Period"})))
     },
     Output = Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text])
 in
@@ -2153,6 +2166,34 @@ let
 in
     Output;
 
+// Query: A1ExcludedSpareResources_Prepare
+// Purpose: Identify excluded Resources from compact permission/day coverage facts without constructing the period metadata skeleton.
+// Inputs: Resource permissions, authoritative day decisions and the same configured calendar used by the skeleton.
+// Output: One Resource key for each worker with a denied permission, denied planning day or missing configured-day decision.
+// Notes: An empty configured calendar has no skeleton rows and therefore no excluded Resources to count.
+shared A1ExcludedSpareResources_Prepare = let
+    CalendarPeriods = Table.SelectRows(#"PeriodShiftDay B", each [Period] <> "W"),
+    ConfiguredDays = Table.Distinct(Table.SelectColumns(CalendarPeriods, {"Day"})),
+    ConfiguredDayCount = Table.RowCount(ConfiguredDays),
+    ResourceKeys = Table.Distinct(Table.SelectColumns(A1ResourceGrid_Prepare, {"Resource"})),
+    ResourcePermissions = Table.SelectColumns(A1ResourceSpareStatus_Prepare, {"Resource", "SpareCalculationAllowed"}),
+    DayPermissions = Table.SelectColumns(A1SpareDayChoices_Prepare, {"Resource", "Day", "SparePlanningAllowed"}),
+    JoinedConfiguredDays = Table.NestedJoin(DayPermissions, {"Day"}, ConfiguredDays, {"Day"}, "ConfiguredDay", JoinKind.Inner),
+    ConfiguredDayPermissions = Table.RemoveColumns(JoinedConfiguredDays, {"ConfiguredDay"}),
+    PlanningByResource = Table.Group(ConfiguredDayPermissions, {"Resource"},
+        {{"PlanningAllowed", each List.AllTrue(List.Transform([SparePlanningAllowed], each _ = true)), type logical},
+         {"PlannedDayCount", each List.Count(List.Distinct([Day])), Int64.Type}}),
+    JoinedResourcePermission = Table.NestedJoin(ResourceKeys, {"Resource"}, ResourcePermissions, {"Resource"}, "ResourcePermission", JoinKind.LeftOuter),
+    ExpandedResourcePermission = Table.ExpandTableColumn(JoinedResourcePermission, "ResourcePermission", {"SpareCalculationAllowed"}),
+    JoinedPlanningPermission = Table.NestedJoin(ExpandedResourcePermission, {"Resource"}, PlanningByResource, {"Resource"}, "PlanningPermission", JoinKind.LeftOuter),
+    ExpandedPlanningPermission = Table.ExpandTableColumn(JoinedPlanningPermission, "PlanningPermission", {"PlanningAllowed", "PlannedDayCount"}),
+    ExcludedResources = Table.SelectRows(ExpandedPlanningPermission, each
+        [SpareCalculationAllowed] <> true or [PlanningAllowed] <> true or [PlannedDayCount] <> ConfiguredDayCount),
+    Output = if ConfiguredDayCount = 0 then Table.FirstN(ResourceKeys, 0)
+        else Table.Distinct(Table.SelectColumns(ExcludedResources, {"Resource"}))
+in
+    Output;
+
 // Query: CapacityDiagnostics_SUMMARY
 // Purpose: Publish nonblocking A.1 check results for manual review and future runner collection.
 // Output: Stage, Check, Status, Failures and Details; a failed check never deliberately stops other Resources.
@@ -2164,7 +2205,7 @@ shared CapacityDiagnostics_SUMMARY = let
     EligibilityChecks = A1DiagnosticSummary("Spare day eligibility checks", () => A1SpareEligibility_CHECK),
     SpareChecks = A1DiagnosticSummary("Resource spare exclusions", () => Table.FromRecords({
         A1CheckResult("Resources excluded from spare calculations", () =>
-            Table.RowCount(Table.Distinct(Table.SelectColumns(Table.SelectRows(#"ResourcePeriodTABLE-empty", each [SpareCalculationAllowed] = false), {"Resource"})))),
+            Table.RowCount(A1ExcludedSpareResources_Prepare)),
         A1CheckResult("Malformed allocation amounts", () => Table.RowCount(A1AllocationValueIssues_Prepare)),
         A1CheckResult("Skipped allocation records", () => Table.RowCount(A1AllocationIdentity_EXCEPTIONS))
     }, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text])),

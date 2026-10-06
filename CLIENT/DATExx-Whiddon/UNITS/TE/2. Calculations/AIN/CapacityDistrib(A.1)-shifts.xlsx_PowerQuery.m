@@ -224,11 +224,12 @@ in
 // Query: A1MapResourceIdentity
 // Purpose: Keep the source row and every identity candidate, assigning a Resource only for one usable match.
 // Output: Source columns plus ResourceMatches, MatchCount and nullable Resource.
+// Notes: Resource-key uniqueness uses one narrow join; the original Name/Role candidate evidence remains unchanged.
 shared A1MapResourceIdentity = (source as table, resourceMap as table) as table =>
 let
     ResourceKeyCounts = Table.Group(resourceMap, {"Resource"}, {{"IdentityCount", each Table.RowCount(_), Int64.Type}}),
     UniqueResourceRows = Table.SelectRows(ResourceKeyCounts, each [Resource] <> null and [IdentityCount] = 1),
-    UniqueResourceKeys = List.Buffer(UniqueResourceRows[Resource]),
+    UniqueResourceKeys = Table.Buffer(Table.SelectColumns(UniqueResourceRows, {"Resource"})),
     JoinedCandidates = Table.NestedJoin(source, {"Name", "Role"}, resourceMap,
         {"Name", "Role"}, "ResourceMatches", JoinKind.LeftOuter),
     CountedCandidates = Table.AddColumn(JoinedCandidates, "MatchCount", each Table.RowCount([ResourceMatches]), Int64.Type),
@@ -238,10 +239,16 @@ let
             UsableRole = try [Role] <> null and Text.Trim([Role]) <> "" otherwise false
         in
             if [MatchCount] = 1 and UsableName and UsableRole
-                and List.Contains(UniqueResourceKeys, [ResourceMatches]{0}[Resource])
-            then [ResourceMatches]{0}[Resource] else null, type nullable number)
+            then [ResourceMatches]{0}[Resource] else null, type nullable number),
+    // Join the narrow key set once instead of scanning every Resource key for each input row.
+    JoinedUniqueResourceKeys = Table.NestedJoin(AssignedResource, {"Resource"}, UniqueResourceKeys,
+        {"Resource"}, "A1UniqueResourceKey", JoinKind.LeftOuter),
+    ValidatedResource = Table.AddColumn(JoinedUniqueResourceKeys, "A1ValidatedResource", each
+        if Table.IsEmpty([A1UniqueResourceKey]) then null else [Resource], type nullable number),
+    RemovedKeyHelpers = Table.RemoveColumns(ValidatedResource, {"Resource", "A1UniqueResourceKey"}),
+    Output = Table.RenameColumns(RemovedKeyHelpers, {{"A1ValidatedResource", "Resource"}})
 in
-    AssignedResource;
+    Output;
 
 // Query: A1AvailabilityIdentity_Prepare
 // Purpose: Assess availability identities without expanding ambiguous joins.
@@ -407,6 +414,7 @@ in Table.Buffer(Selected);
 
 // Query: A1ContractIssueReason
 // Purpose: Assess one Resource's contract without letting another Resource's error stop the calculation.
+// Notes: A usable employee cap cannot exceed this workbook's validated Settings roster maximum.
 shared A1ContractIssueReason = (contracts as table, expectedRole as text) as nullable text =>
 let
     MatchCount = Table.RowCount(contracts),
@@ -420,12 +428,17 @@ let
                 IsNumeric = Value.Is(Cap, type number),
                 IsUsableCap = if not IsNumeric then false else
                     not Number.IsNaN(Cap) and Number.Abs(Cap) <> #infinity and Cap > 0 and Cap = Number.RoundDown(Cap),
+                MaximumStatus = A1SettingsMaximum_Status,
+                ExceedsSettingsMaximum = if not IsUsableCap or MaximumStatus[Status] <> "Pass" then false
+                    else Cap > MaximumStatus[Value],
                 ContractRole = try Contract[Role] otherwise null,
                 PreferredRole = try Contract[PreferredRole] otherwise null,
                 Employee = try Text.Trim(Contract[EmployeeID]) otherwise null,
                 LimitBasis = try Text.Trim(Contract[Limit Basis]) otherwise null,
                 Reasons = List.RemoveNulls({
                     if IsUsableCap then null else "Invalid effective shift cap",
+                    if MaximumStatus[Status] = "Pass" then null else "Settings roster shift maximum is unavailable: " & MaximumStatus[Details],
+                    if ExceedsSettingsMaximum then "Effective shift cap exceeds Settings roster shift maximum" else null,
                     if ContractRole = expectedRole and PreferredRole = expectedRole then null else "Preferred role does not match contract",
                     if Employee = null or Employee = "" then "Missing Employee identifier" else null,
                     if LimitBasis = null or LimitBasis = "" then "Missing limit basis" else null
@@ -486,8 +499,12 @@ shared A1ResourceSpareIssues_Prepare = let
             Table.FirstN(A1IdentityIssues_Prepare, 0)
         else A1IssueDetails(A1ResourceGrid_Prepare, "Working-day threshold", WorkingDayAllocationThreshold_Status[Details],
             "Resource spare not evaluated; allocation evidence retained"),
+    MaximumStatus = A1SettingsMaximum_Status,
+    MaximumIssues = if MaximumStatus[Status] = "Pass" then Table.FirstN(A1IdentityIssues_Prepare, 0)
+        else A1IssueDetails(A1ResourceGrid_Prepare, "Settings roster shift maximum", MaximumStatus[Details],
+            "Resource spare not evaluated; allocation evidence retained"),
     Details = Table.Combine({A1IdentityIssues_Prepare, A1AllocationValueIssues_Prepare, A1ContractIssues_Prepare,
-        A1AvailabilityPeriodIssues_Prepare, A1ClusterIssues_Prepare, ParameterIssues}),
+        A1AvailabilityPeriodIssues_Prepare, A1ClusterIssues_Prepare, A1AllocatedCalendarIssues_Prepare, ParameterIssues, MaximumIssues}),
     Identifiable = Table.SelectRows(Details, each [Resource] <> null),
     ResourceReasons = Table.Group(Identifiable, {"Resource"},
         {{"SpareIssueReason", each Text.Combine(List.Sort(List.Distinct([Reason])), "; "), type text}})
@@ -517,7 +534,7 @@ in
     #"Changed Type";
 
 // Query: ResourcePeriodTABLE-empty
-// Purpose: Carry Resource spare decisions and allocation evidence through the existing A.2 skeleton interface.
+// Purpose: Carry Resource spare permission, allocation evidence and authoritative day/shift choices through the existing A.2 skeleton.
 shared #"ResourcePeriodTABLE-empty" = let
     JoinedStatus = Table.NestedJoin(A1ResourcePeriods_Prepare, {"Resource"}, A1ResourceSpareStatus_Prepare,
         {"Resource"}, "SpareStatus", JoinKind.LeftOuter),
@@ -531,7 +548,23 @@ shared #"ResourcePeriodTABLE-empty" = let
         {{"OriginalAvailability", each List.Sum([Availability]), type number}}),
     JoinedAudit = Table.NestedJoin(CompletedEvidence, {"Role", "Resource", "Period"}, AuditAvailability,
         {"Role", "Resource", "Period"}, "AuditAvailability", JoinKind.LeftOuter),
-    Output = Table.ExpandTableColumn(JoinedAudit, "AuditAvailability", {"OriginalAvailability"}, {"OriginalAvailability"})
+    ExpandedAudit = Table.ExpandTableColumn(JoinedAudit, "AuditAvailability", {"OriginalAvailability"}, {"OriginalAvailability"}),
+    JoinedDayChoices = Table.NestedJoin(ExpandedAudit, {"Resource", "Day"}, A1SpareDayChoices_Prepare,
+        {"Resource", "Day"}, "SpareDayChoices", JoinKind.LeftOuter),
+    ExpandedDayChoices = Table.ExpandTableColumn(JoinedDayChoices, "SpareDayChoices",
+        {"AllocationWorkday", "SpareDayEligible", "CandidatePeriod", "SpareEligibilityReason", "PlannedCluster", "ExtensionSide", "SparePlanningAllowed"},
+        {"AllocationWorkday", "SpareDayEligible", "CandidatePeriod", "SpareEligibilityReason", "PlannedCluster", "ExtensionSide", "SparePlanningAllowed"}),
+    WithPlanningPermission = Table.AddColumn(ExpandedDayChoices, "PreparedSpareCalculationAllowed", each
+        [SpareCalculationAllowed] = true and [SparePlanningAllowed] = true, type logical),
+    WithPlanningReason = Table.AddColumn(WithPlanningPermission, "PreparedSpareIssueReason", each
+        if [SpareIssueReason] <> null then [SpareIssueReason]
+        else if [SparePlanningAllowed] <> true then [SpareEligibilityReason] else null, type nullable text),
+    RemovedEarlierGuards = Table.RemoveColumns(WithPlanningReason, {"SpareCalculationAllowed", "SpareIssueReason", "SparePlanningAllowed"}),
+    RenamedPlanningGuards = Table.RenameColumns(RemovedEarlierGuards,
+        {{"PreparedSpareCalculationAllowed", "SpareCalculationAllowed"}, {"PreparedSpareIssueReason", "SpareIssueReason"}}),
+    WithPeriodChoice = Table.AddColumn(RenamedPlanningGuards, "SparePeriodSelected", each
+        [SpareDayEligible] = true and [Period] = [CandidatePeriod], type logical),
+    Output = Table.RemoveColumns(WithPeriodChoice, {"CandidatePeriod"})
 in
     Output;
 
@@ -646,13 +679,11 @@ shared #"PeriodA-C' Neg(Surfit)" = let
 in
     #"Sorted Rows";
 
+// Query: PeriodC'
+// Purpose: Calculate period capacity from preserved allocation cells and jointly eligible spare choices.
 shared #"PeriodC'" = let
-    Source = Table.NestedJoin(#"ResPeriodAvailabilityTABLE !!", {"Resource", "Period"}, #"ResourcePeriodTABLE-empty", {"Resource", "Period"}, "ResourcePeriodTABLE-empty", JoinKind.LeftOuter),
-    #"Expanded DAY" = Table.ExpandTableColumn(Source, "ResourcePeriodTABLE-empty", {"Day"}, {"Day"}),
-    #"Merged Queries" = Table.NestedJoin(#"Expanded DAY", {"Resource", "Day"}, ResDayNWDTABLE, {"Resource", "Day"}, "ResDayNWDTABLE", JoinKind.LeftOuter),
-    #"Expanded ResDayNWDTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ResDayNWDTABLE", {"PotentialAvailability"}, {"PotentialAvailability"}),
-    #"Filtered Rows" = Table.SelectRows(#"Expanded ResDayNWDTABLE", each ([PotentialAvailability] = null)),
-    #"Grouped C'" = Table.Group(#"Filtered Rows", {"Period"}, {{"PeriodC'", each List.Sum([Availability]), type number}})
+    PreparedCapacity = #"C' ResSingleShiftDayTABLE",
+    #"Grouped C'" = Table.Group(PreparedCapacity, {"Period"}, {{"PeriodC'", each List.Sum([Availability]), type number}})
 in
     #"Grouped C'";
 
@@ -681,16 +712,48 @@ shared #"PeriodC'-DPos (ExcessPot)" = let
 in
     #"Filtered Rows";
 
-shared #"ResC'" = let
-    Source = #"C' ResSingleShiftDayTABLE",
-    #"Grouped Rows" = Table.Group(Source, {"Resource"}, {{"RosterAvailability", each List.Sum([Availability]), type number}})
+// Query: A1AllocatedShiftSlots_Prepare
+// Purpose: Count each positive mapped allocation cell once across the configured roster for the shift-slot cap.
+// Notes: Includes unavailable cells and positive allocation evidence below the legacy shift thresholds; quantities remain unchanged.
+shared A1AllocatedShiftSlots_Prepare = let
+    AllocatedCells = Table.Distinct(Table.SelectColumns(A1AllocationEvidence_Prepare, {"Resource", "Period"})),
+    ResourceSlotCounts = Table.Group(AllocatedCells, {"Resource"}, {{"AllocatedShiftSlots", each Table.RowCount(_), Int64.Type}})
 in
-    #"Grouped Rows";
+    Table.Buffer(ResourceSlotCounts);
+
+// Query: ResC'
+// Purpose: Calculate the overlap-free allocation-plus-selected-spare footprint used by the early Resource cap target.
+// Output: Resource and RosterAvailability over the configured Settings roster, preserving the existing target interface.
+// Notes: Allocated slots count once even without availability; their protected C' availability is never counted a second time.
+shared #"ResC'" = let
+    PreparedCapacity = #"C' ResSingleShiftDayTABLE",
+    OptionalCellsJoined = Table.NestedJoin(PreparedCapacity, {"Resource", "Period"}, A1AllocationEvidence_Prepare,
+        {"Resource", "Period"}, "AllocationEvidence", JoinKind.LeftAnti),
+    OptionalCells = Table.RemoveColumns(OptionalCellsJoined, {"AllocationEvidence"}),
+    ResourceOptionalCapacity = Table.Group(OptionalCells, {"Resource"},
+        {{"SelectedOptionalCapacity", each List.Sum([Availability]), type number}}),
+    ResourceKeys = Table.Distinct(Table.Combine({Table.SelectColumns(A1AllocatedShiftSlots_Prepare, {"Resource"}),
+        Table.SelectColumns(ResourceOptionalCapacity, {"Resource"})})),
+    JoinedAllocatedSlots = Table.NestedJoin(ResourceKeys, {"Resource"}, A1AllocatedShiftSlots_Prepare,
+        {"Resource"}, "AllocatedSlots", JoinKind.LeftOuter),
+    ExpandedAllocatedSlots = Table.ExpandTableColumn(JoinedAllocatedSlots, "AllocatedSlots", {"AllocatedShiftSlots"}),
+    JoinedOptionalCapacity = Table.NestedJoin(ExpandedAllocatedSlots, {"Resource"}, ResourceOptionalCapacity,
+        {"Resource"}, "OptionalCapacity", JoinKind.LeftOuter),
+    ExpandedOptionalCapacity = Table.ExpandTableColumn(JoinedOptionalCapacity, "OptionalCapacity", {"SelectedOptionalCapacity"}),
+    CompletedCounts = Table.ReplaceValue(ExpandedOptionalCapacity, null, 0, Replacer.ReplaceValue,
+        {"AllocatedShiftSlots", "SelectedOptionalCapacity"}),
+    WithCapFootprint = Table.AddColumn(CompletedCounts, "RosterAvailability", each
+        [AllocatedShiftSlots] + [SelectedOptionalCapacity], type number),
+    Output = Table.SelectColumns(WithCapFootprint, {"Resource", "RosterAvailability"})
+in
+    Table.Buffer(Output);
 
 // Query: A1ResourceContract_CHECK
 // Purpose: Report preferred-role contract validity and coverage without a publication stop.
+// Notes: The Settings maximum is validated without rounding; unknown maxima exclude spare and remain Error/Fail evidence.
 shared A1ResourceContract_CHECK = let
     Contracts = A1ResourceContract,
+    MaximumStatus = A1SettingsMaximum_Status,
     // Inspect raw mapped availability so Resource exclusion cannot hide a contract failure.
     AvailabilityResources = Table.Distinct(Table.SelectColumns(A1AvailabilityPeriods_Prepare, {"Resource"})),
     Coverage = Table.NestedJoin(AvailabilityResources, {"Resource"}, Contracts, {"Resource"}, "Contract", JoinKind.LeftOuter),
@@ -700,15 +763,21 @@ shared A1ResourceContract_CHECK = let
         {"Role", "EmployeeID", "PreferredRole", "Effective Shift Cap", "Limit Basis"},
         {"Contract Role", "EmployeeID", "PreferredRole", "Effective Shift Cap", "Limit Basis"}),
     Checks = {
+        [Check = "Settings roster shift maximum", Status = MaximumStatus[Status],
+            Failures = if MaximumStatus[Status] = "Pass" then 0 else 1, Details = MaximumStatus[Details]],
         A1CheckResult("Contract Resources are populated", () => Table.RowCount(Table.SelectRows(Contracts, each [Resource] = null))),
         A1CheckResult("Unique Resource contracts", () => Table.RowCount(Contracts) -
             Table.RowCount(Table.Distinct(Contracts, {"Resource"}))),
         A1CheckResult("Complete availability contract coverage", () =>
             Table.RowCount(Table.SelectRows(WithMatchCount, each [ContractMatchCount] <> 1))),
-        A1CheckResult("Valid effective shift caps", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
-            [Effective Shift Cap] = null or Number.IsNaN([Effective Shift Cap])
-            or Number.Abs([Effective Shift Cap]) = #infinity or [Effective Shift Cap] <= 0
-            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])))),
+        A1CheckResult("Valid effective shift caps", () =>
+            if MaximumStatus[Status] <> "Pass" then
+                error Error.Record("A1.SettingsMaximumUnavailable", "Effective shift caps cannot be validated without a usable Settings roster maximum.", MaximumStatus[Details])
+            else Table.RowCount(Table.SelectRows(ExpandedMatches, each
+                [Effective Shift Cap] = null or Number.IsNaN([Effective Shift Cap])
+                or Number.Abs([Effective Shift Cap]) = #infinity or [Effective Shift Cap] <= 0
+                or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])
+                or [Effective Shift Cap] > MaximumStatus[Value]))),
         A1CheckResult("Preferred role matches contract", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
             [Contract Role] <> Role or [PreferredRole] <> Role))),
         A1CheckResult("Employee identifiers are populated", () => Table.RowCount(Table.SelectRows(ExpandedMatches, each
@@ -723,6 +792,7 @@ in
 
 // Query: ResAv-C'
 // Purpose: Apply contract caps only to Resources whose spare calculations can be evaluated.
+// Notes: RosterAvailability is allocated shift slots plus selected optional capacity, rather than availability alone.
 shared #"ResAv-C'" = let
     EligibleResources = Table.SelectRows(A1ResourceSpareStatus_Prepare, each [SpareCalculationAllowed] = true),
     JoinedStatus = Table.NestedJoin(#"ResC'", {"Resource"}, EligibleResources, {"Resource"}, "SpareStatus", JoinKind.Inner),
@@ -739,6 +809,9 @@ in
     #"Renamed Columns";
 
 [ Description = "BUFFER   Tag RP cell with R that need to reduced becuase over allocated" ]
+// Query: ResPeriod(ExcessPot)SpareAvailabilityTABLE
+// Purpose: Prepare surplus-period reduction candidates from the selected eligible capacity set.
+// Notes: Cap and surplus arithmetic is unchanged; raw legacy shift-removal flags cannot override the prepared choice.
 shared #"ResPeriod(ExcessPot)SpareAvailabilityTABLE" = let
     Source = #"C' ResSingleShiftDayTABLE",
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
@@ -750,15 +823,13 @@ shared #"ResPeriod(ExcessPot)SpareAvailabilityTABLE" = let
     #"Expanded ResRosterAvailability" = Table.ExpandTableColumn(#"Merged RESAv-C'", "ResRosterAvailability", {"ResAv-C'"}, {"ResAv-C'"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded ResRosterAvailability", {"Period"}, #"PeriodC'-DPos (ExcessPot)", {"Period"}, "PeriodD-A", JoinKind.LeftOuter),
     #"Expanded SURPLUS-PERIODC'-D.POS" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodD-A", {"C'-D", "C'/D"}, {"C'-D", "C'/D"}),
-    #"Merged Queries3" = Table.NestedJoin(#"Expanded SURPLUS-PERIODC'-D.POS", {"Resource", "Period"}, #"MultiDayPeriod-Remove", {"Resource", "AvailablePeriod"}, "MultiDayPeriod-Remove", JoinKind.LeftOuter),
-    #"Expanded MULTIDAYPERIOD -REMOVE" = Table.ExpandTableColumn(#"Merged Queries3", "MultiDayPeriod-Remove", {"NoAllocationKeep"}, {"NoAllocationKeep"}),
-    #"Filtered MULTISHIFTDAY-LOWERPRIORITY" = Table.SelectRows(#"Expanded MULTIDAYPERIOD -REMOVE", each ([NoAllocationKeep] <> false       )),
-    #"Replaced Value" = Table.ReplaceValue(#"Filtered MULTISHIFTDAY-LOWERPRIORITY",null,0,Replacer.ReplaceValue,{"C'-D"}),
+    // C' already contains only the chosen legal shift; legacy multishift flags must not veto that authoritative choice.
+    #"Replaced Value" = Table.ReplaceValue(#"Expanded SURPLUS-PERIODC'-D.POS",null,0,Replacer.ReplaceValue,{"C'-D"}),
     #"Added UNASSIGNEDAVAIL" = Table.AddColumn(#"Replaced Value", "UnassignedAvail", each if [#"C'-D"] > 0 and [#"ResAv-C'"] >0 
 then [Availability]
 else 0),
     #"Filtered UNASSIGNEDAVAIL" = Table.SelectRows(#"Added UNASSIGNEDAVAIL", each ([UnassignedAvail] <>0)),
-    #"Removed Columns" = Table.RemoveColumns(#"Filtered UNASSIGNEDAVAIL",{"Availability", "C'-D", "C'/D", "NoAllocationKeep"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Filtered UNASSIGNEDAVAIL",{"Availability", "C'-D", "C'/D"}),
     #"Added COMBINE P+R" = Table.AddColumn(#"Removed Columns", "PRCell", each "P" & Text.From([Period]) & "-R" & Text.From([Resource]))
 in
     #"Added COMBINE P+R";
@@ -846,7 +917,8 @@ shared ResDaysAllocated = let
                 "AllData",
                 (tbl) =>
                     let
-                        flags    = Table.Column(tbl, "AllocFlag"),
+                        // Reuse this Resource's short day list for the five neighbour reads per day.
+                        flags    = List.Buffer(Table.Column(tbl, "AllocFlag")),
                         n        = List.Count(flags),
                         getD     = (i, o) => if i+o < 0 or i+o >= n then "0" else Text.From(flags{i+o}),
                         enriched = Table.AddColumn(
@@ -899,7 +971,8 @@ shared AllocationCode = let
       Grouped,
       {"Group",(tbl) =>
         let
-          resList = Table.Column(tbl, "Resource"),
+          // Buffer only this Resource's day list, rather than another full day table.
+          resList = List.Buffer(Table.Column(tbl, "Resource")),
           n       = List.Count(resList),
           getRes  = (i,off) => let p = i+off in if p<0 or p>=n then null else resList{p},
           step1   = Table.AddColumn(tbl, "Yesterday.Resource2", each getRes([Idx], -2), Int64.Type),
@@ -1253,16 +1326,24 @@ shared ClusterAllocation = let
 in
     BUFFER;
 
-[ Description = "BUFFER #(lf)S2, P2 dev debt #(lf)Opportunity to discriminate with small Cluster Allocation#(lf)i.e. change the cluster it is associated with" ]
+// Query: WD Type
+// Purpose: Classify allocated-day neighbours using actual flags from the same Resource.
+// Notes: Missing third neighbours remain null; unseen days are not assumed to be off.
 shared #"WD Type" = let
     Source = Clusters,
-    Custom1 = Table.Buffer(Source),
-    #"Merged Queries" = Table.NestedJoin(Custom1, {"ClusterNumber"}, ClusterAllocation, {"ClusterIndex"}, "ClusterAllocation", JoinKind.LeftOuter),
+    // Clusters already buffers this complete day table; retain only the separate narrow neighbour lookup below.
+    #"Merged Queries" = Table.NestedJoin(Source, {"ClusterNumber"}, ClusterAllocation, {"ClusterIndex"}, "ClusterAllocation", JoinKind.LeftOuter),
     #"Expanded ClusterAllocation" = Table.ExpandTableColumn(#"Merged Queries", "ClusterAllocation", {"ClusterAllocation"}, {"ClusterAllocation"}),
-    #"BUFFER LIST" = List.Buffer(#"Expanded ClusterAllocation"[Code]),
-    // S2, P2 dev debt 
-    // Opportunity to discriminate with small Cluster Allocation
-    #"Added NWD TYPE" = Table.AddColumn(#"Expanded ClusterAllocation", "NWDType", each if [Allocation] = 1  then "Allocated" 
+    NeighbourFlags = Table.Buffer(Table.SelectColumns(ResDaysAllocated, {"Resource", "Day", "AllocFlag"})),
+    WithPreviousThirdDay = Table.AddColumn(#"Expanded ClusterAllocation", "PreviousThirdDay", each [Day] - 3, Int64.Type),
+    JoinedPreviousThirdDay = Table.NestedJoin(WithPreviousThirdDay, {"Resource", "PreviousThirdDay"},
+        NeighbourFlags, {"Resource", "Day"}, "PreviousThird", JoinKind.LeftOuter),
+    ExpandedPreviousThirdDay = Table.ExpandTableColumn(JoinedPreviousThirdDay, "PreviousThird", {"AllocFlag"}, {"PreviousThirdAllocation"}),
+    WithNextThirdDay = Table.AddColumn(ExpandedPreviousThirdDay, "NextThirdDay", each [Day] + 3, Int64.Type),
+    JoinedNextThirdDay = Table.NestedJoin(WithNextThirdDay, {"Resource", "NextThirdDay"},
+        NeighbourFlags, {"Resource", "Day"}, "NextThird", JoinKind.LeftOuter),
+    ExpandedNextThirdDay = Table.ExpandTableColumn(JoinedNextThirdDay, "NextThird", {"AllocFlag"}, {"NextThirdAllocation"}),
+    #"Added NWD TYPE" = Table.AddColumn(ExpandedNextThirdDay, "NWDType", each if [Allocation] = 1  then "Allocated"
 
         else if [Code] = "00000" then "Reducable"
 
@@ -1287,7 +1368,7 @@ shared #"WD Type" = let
         else if [Code] = "10001" 
             and [ResourceStartEnd]<>"ResourceStart2" 
             and [ResourceStartEnd]<>"ResourceEnd2"         
-        then "S2, P2"
+        then "S2,P2"
 
 
     //P2
@@ -1349,13 +1430,13 @@ shared #"WD Type" = let
 
         
         else if [Code] = "01010" 
-               and ("Yesterday.Alloction3" = 1 
-               or "Tomorrow.Alloction3" = 1) 
+               and ([PreviousThirdAllocation] = 1
+               or [NextThirdAllocation] = 1)
                then "1D Off Conditional"
 
         else if [Code] = "01011" 
-               and ("Yesterday.Alloction3" = 0 
-               or "Tomorrow.Alloction3" = 0) 
+               and ([PreviousThirdAllocation] = 0
+               or [NextThirdAllocation] = 0)
                then "1D Off Conditional"
 
 
@@ -1377,41 +1458,349 @@ shared #"WD Type" = let
 in
     #"Removed Other Columns";
 
-// Query: ResDayPotentialAvailabilityTABLE
-// Purpose: Preserve the existing day decisions and their cluster-size context for downstream priorities.
-// Notes: U/R classification rules are unchanged; coordinated day eligibility is repaired in the next stage.
-shared ResDayPotentialAvailabilityTABLE = let
-    Source = #"WD Type",
-  
-
-
-    #"POTENTIAL ALLOCATION" = Table.AddColumn(Source, "PotentialAvailability", each if    [NWDType] = "Allocated" then "U"
-    
-    else if [NWDType] = "Reducable" then "R"
-
-    else if [ClusterAllocation] >= MaxShiftCluster then "R"
-    
-    else if [ClusterAllocation] = (MaxShiftCluster -1)
-        and ([NWDType] = "1D Off"   or  [NWDType] <> "S1" or [NWDType] <> "P1") 
-        then "R" 
-    
-    else if [ClusterAllocation] <= (MaxShiftCluster -2)
-        and  ([NWDType] = "1D Off"   
-        or  [NWDType] <> "S1" 
-        or [NWDType] <> "P1" 
-        or [NWDType] <> "S2"  
-        or [NWDType] <> "S2,P2" 
-        or [NWDType] <> "P1,S2"
-        or [NWDType] <> "P2,S1")
-        then "R"
-      
-
-   
-    else "U"),
-    #"Removed Other Columns" = Table.SelectColumns(#"POTENTIAL ALLOCATION",{"Resource", "Day", "NWDType", "PotentialAvailability", "ClusterAllocation"}),
-    BUFFER = Table.Buffer(#"Removed Other Columns")
+// Query: A1WorkdayClusters
+// Purpose: Describe chronological work clusters using the existing qualifying-workday definition.
+// Notes: One internal off day joins neighbouring worked days; size counts worked days, not elapsed span.
+shared A1WorkdayClusters = (workedDays as list) as table =>
+let
+    OrderedDays = List.Sort(List.Distinct(List.RemoveNulls(workedDays))),
+    ClusterRows = List.Accumulate(OrderedDays, {}, (clusters, day) =>
+        let
+            Previous = if List.IsEmpty(clusters) then null else List.Last(clusters),
+            SameCluster = Previous <> null and day - Previous[EndDay] <= 2,
+            UpdatedCluster = if SameCluster then
+                    [PlannedCluster = Previous[PlannedCluster], StartDay = Previous[StartDay], EndDay = day,
+                     WorkedDays = Previous[WorkedDays] + 1]
+                else [PlannedCluster = List.Count(clusters) + 1, StartDay = day, EndDay = day, WorkedDays = 1],
+            UpdatedRows = if SameCluster then List.RemoveLastN(clusters, 1) & {UpdatedCluster} else clusters & {UpdatedCluster}
+        in UpdatedRows),
+    Output = Table.FromRecords(ClusterRows,
+        type table [PlannedCluster = number, StartDay = number, EndDay = number, WorkedDays = number])
 in
-    BUFFER;
+    Output;
+
+// Query: A1AllocatedClusters_Prepare
+// Purpose: Build an ungated baseline calendar so pre-existing allocation breaches cannot be hidden by spare exclusions.
+shared A1AllocatedClusters_Prepare = let
+    WorkedDays = Table.SelectRows(ResDaysAllocated, each [AllocFlag] = 1),
+    ResourceClusters = Table.Group(WorkedDays, {"Resource"}, {{"Clusters", each A1WorkdayClusters([Day]), type table}}),
+    Output = Table.ExpandTableColumn(ResourceClusters, "Clusters", {"PlannedCluster", "StartDay", "EndDay", "WorkedDays"})
+in
+    Table.Buffer(Output);
+
+// Query: A1AllocatedCalendarIssues_Prepare
+// Purpose: Report allocated clusters already above five worked days and exclude their Resource's optional spare.
+// Notes: Allocation facts remain available; this check does not deliberately stop other Resources.
+shared A1AllocatedCalendarIssues_Prepare = let
+    Breaches = Table.SelectRows(A1AllocatedClusters_Prepare, each [WorkedDays] > MaxShiftCluster),
+    CalendarDates = Table.Group(#"PeriodShiftDay B", {"Day"}, {{"Date", each List.Min([Date]), type date}}),
+    JoinedDates = Table.NestedJoin(Breaches, {"StartDay"}, CalendarDates, {"Day"}, "CalendarDates", JoinKind.LeftOuter),
+    ExpandedDates = Table.ExpandTableColumn(JoinedDates, "CalendarDates", {"Date"}),
+    JoinedNames = Table.NestedJoin(ExpandedDates, {"Resource"}, A1ResourceGrid_Prepare, {"Resource"}, "ResourceNames", JoinKind.LeftOuter),
+    ExpandedNames = Table.ExpandTableColumn(JoinedNames, "ResourceNames", {"Role", "Name"}),
+    Output = A1IssueDetails(ExpandedNames, "Existing allocated calendar",
+        "Original allocated cluster exceeds five qualifying worked days", "Allocation evidence retained; Resource spare excluded")
+in
+    Output;
+
+// Query: A1DayPriorities_Prepare
+// Purpose: Match canonical day classifications to the existing priority settings, including the former S2, P2 spelling.
+shared A1DayPriorities_Prepare = let
+    CanonicalTypes = Table.TransformColumns(#"SET NWDPriority", {{"NWD Type", each Text.Replace(_, ", ", ","), type text}}),
+    TypedPriorities = Table.TransformColumnTypes(CanonicalTypes, {{"NWDPriority", type number}})
+in
+    TypedPriorities;
+
+// Query: A1OptionalShiftChoices_Prepare
+// Purpose: Select one available shift on a genuinely unallocated day before calendar eligibility is calculated.
+// Notes: Retain the existing lowest raw capacity/demand preference; Period provides a stable tie-break.
+shared A1OptionalShiftChoices_Prepare = let
+    AvailableCells = Table.SelectRows(ResDayPeriodAvailabilityTABLE, each [Availability] > 0 and [SpareCalculationAllowed] = true),
+    EvidenceDaysJoined = Table.NestedJoin(A1AllocationEvidence_Prepare, {"Period"}, #"PeriodShiftDay B", {"Period"}, "Calendar", JoinKind.LeftOuter),
+    EvidenceDaysExpanded = Table.ExpandTableColumn(EvidenceDaysJoined, "Calendar", {"Day"}),
+    EvidenceDays = Table.Distinct(Table.SelectColumns(EvidenceDaysExpanded, {"Resource", "Day"})),
+    UnallocatedDaysJoined = Table.NestedJoin(AvailableCells, {"Resource", "Day"}, EvidenceDays, {"Resource", "Day"}, "ExistingWork", JoinKind.LeftAnti),
+    UnallocatedCells = Table.RemoveColumns(UnallocatedDaysJoined, {"ExistingWork"}),
+    JoinedCapacity = Table.NestedJoin(UnallocatedCells, {"Period"}, PeriodCapacityTABLE, {"Period"}, "RawCapacity", JoinKind.LeftOuter),
+    ExpandedCapacity = Table.ExpandTableColumn(JoinedCapacity, "RawCapacity", {"Capacity"}),
+    JoinedDemand = Table.NestedJoin(ExpandedCapacity, {"Period"}, #"PeriodDemandTABLE !!", {"Period"}, "Demand", JoinKind.LeftOuter),
+    ExpandedDemand = Table.ExpandTableColumn(JoinedDemand, "Demand", {"D"}),
+    ResourceDays = Table.Group(ExpandedDemand, {"Resource", "Day"}, {{"ChosenShift", each
+        let
+            AvailableShifts = _,
+            Attempt = try
+                let
+                    WithShiftPreference = Table.AddColumn(AvailableShifts, "ShiftPreference", each
+                        if [D] = null or [D] = 0 then 0 else [Capacity] / [D], type number),
+                    OrderedShifts = Table.Sort(WithShiftPreference, {{"ShiftPreference", Order.Ascending}, {"Period", Order.Ascending}}),
+                    SelectedShift = Table.First(OrderedShifts),
+                    Choice = [CandidatePeriod = SelectedShift[Period], ShiftPreference = SelectedShift[ShiftPreference], ShiftChoiceIssueReason = null]
+                in if Value.Is(Choice[CandidatePeriod], type number) and Value.Is(Choice[ShiftPreference], type number)
+                    and not Number.IsNaN(Choice[ShiftPreference]) and Number.Abs(Choice[ShiftPreference]) <> #infinity then Choice
+                    else error "Optional shift ranking is not a finite numeric result",
+            Choice = if Attempt[HasError] then [CandidatePeriod = null, ShiftPreference = null,
+                ShiftChoiceIssueReason = "Optional shift choice error: " & (try Attempt[Error][Message] otherwise "Evaluation unavailable")]
+                else Attempt[Value]
+        in Choice, type record}}),
+    ExpandedChoice = Table.ExpandRecordColumn(ResourceDays, "ChosenShift", {"CandidatePeriod", "ShiftPreference", "ShiftChoiceIssueReason"})
+in
+    Table.Buffer(ExpandedChoice);
+
+// Query: A1OptionalShiftChoiceIssues_Prepare
+// Purpose: Publish optional shift-ranking errors after excluding only the affected Resource's spare.
+shared A1OptionalShiftChoiceIssues_Prepare = let
+    ChoiceErrors = Table.SelectRows(A1OptionalShiftChoices_Prepare, each [ShiftChoiceIssueReason] <> null),
+    CalendarDates = Table.Group(#"PeriodShiftDay B", {"Day"}, {{"Date", each List.Min([Date]), type date}}),
+    JoinedDates = Table.NestedJoin(ChoiceErrors, {"Day"}, CalendarDates, {"Day"}, "CalendarDate", JoinKind.LeftOuter),
+    ExpandedDates = Table.ExpandTableColumn(JoinedDates, "CalendarDate", {"Date"}),
+    JoinedNames = Table.NestedJoin(ExpandedDates, {"Resource"}, A1ResourceGrid_Prepare, {"Resource"}, "ResourceName", JoinKind.LeftOuter),
+    ExpandedNames = Table.ExpandTableColumn(JoinedNames, "ResourceName", {"Role", "Name"}),
+    WithDetails = Table.AddColumn(ExpandedNames, "IssueDetails", (row) => A1IssueDetails(Table.FromRecords({row}),
+        "Optional spare shift choice", row[ShiftChoiceIssueReason], "Resource spare excluded; allocation evidence retained")),
+    Output = if Table.IsEmpty(WithDetails) then A1IssueDetails(Table.FirstN(A1ResourceGrid_Prepare, 0),
+        "Optional spare shift choice", "", "") else Table.Combine(WithDetails[IssueDetails])
+in
+    Output;
+
+// Query: A1PlanSpareDays
+// Purpose: Select legal allocated-cluster extensions and spare-only clusters for every usable Resource.
+// Inputs: One row per configured day, one optional shift choice, existing day priorities and Resource spare status.
+// Notes: Original internal breaks stay off. Work across one off day remains one cluster; separate clusters retain two off days.
+shared A1PlanSpareDays = (resourceDays as table) as table =>
+let
+    OrderedDays = Table.Sort(resourceDays, {{"Day", Order.Ascending}}),
+    DayRows = Table.ToRecords(OrderedDays),
+    OriginalClusters = Table.ToRecords(A1WorkdayClusters(Table.SelectRows(OrderedDays, each [AllocFlag] = 1)[Day])),
+    InitialClusters = List.Transform(OriginalClusters, each Record.AddField(_, "Kind", "Allocation")),
+    ResourceAllowed = List.AllTrue(OrderedDays[SpareCalculationAllowed]),
+    OptionalDays = Table.SelectRows(OrderedDays, each [AllocFlag] = 0 and [CandidatePeriod] <> null),
+    // Prefer adjacent allocated-cluster extensions across its remaining workday allowance; the old two-day label is not a cut-off.
+    // The next frontier must be selected first. Both ends still consume the same cluster allowance.
+    WithOptions = Table.AddColumn(OptionalDays, "ExtensionOptions", (day) => List.Combine(List.Transform(OriginalClusters, (cluster) =>
+        if day[Day] < cluster[StartDay] and cluster[StartDay] - day[Day] <= MaxShiftCluster - cluster[WorkedDays] then
+            {[PlannedCluster = cluster[PlannedCluster], ExtensionSide = "Start", Distance = cluster[StartDay] - day[Day]]}
+        else if day[Day] > cluster[EndDay] and day[Day] - cluster[EndDay] <= MaxShiftCluster - cluster[WorkedDays] then
+            {[PlannedCluster = cluster[PlannedCluster], ExtensionSide = "Finish", Distance = day[Day] - cluster[EndDay]]}
+        else {}))),
+    ExpandedOptionsList = Table.ExpandListColumn(WithOptions, "ExtensionOptions"),
+    NonemptyOptions = Table.SelectRows(ExpandedOptionsList, each [ExtensionOptions] <> null),
+    ExpandedOptions = Table.ExpandRecordColumn(NonemptyOptions, "ExtensionOptions", {"PlannedCluster", "ExtensionSide", "Distance"}),
+    OrderedOptions = Table.Sort(ExpandedOptions, {{"Distance", Order.Ascending}, {"NWDPriority", Order.Descending},
+        {"ShiftPreference", Order.Ascending}, {"Day", Order.Ascending}, {"PlannedCluster", Order.Ascending}}),
+    // The state is accepted choices only: rejected choices never consume a workday or rest-gap allowance.
+    ExtensionState = List.Accumulate(Table.ToRecords(OrderedOptions), [Clusters = InitialClusters, Accepted = {}, Rejected = {}], (state, option) =>
+        let
+            ClusterPosition = List.PositionOf(List.Transform(state[Clusters], each [PlannedCluster]), option[PlannedCluster]),
+            Cluster = state[Clusters]{ClusterPosition},
+            AlreadySelected = List.Contains(List.Transform(state[Accepted], each [Day]), option[Day]),
+            IsFrontier = if option[ExtensionSide] = "Start" then option[Day] = Cluster[StartDay] - 1 else option[Day] = Cluster[EndDay] + 1,
+            ProposedStart = if option[ExtensionSide] = "Start" then option[Day] else Cluster[StartDay],
+            ProposedEnd = if option[ExtensionSide] = "Finish" then option[Day] else Cluster[EndDay],
+            OtherClusters = List.RemoveRange(state[Clusters], ClusterPosition, 1),
+            RestPreserved = List.AllTrue(List.Transform(OtherClusters, each
+                ProposedStart - [EndDay] - 1 >= 2 or [StartDay] - ProposedEnd - 1 >= 2)),
+            Reason = if not ResourceAllowed then "Resource spare excluded by input or existing calendar issues"
+                else if AlreadySelected then "Day already assigned to an accepted cluster"
+                else if not IsFrontier then "Next adjacent extension day was not selected"
+                else if Cluster[WorkedDays] >= MaxShiftCluster then "Five-worked-day cluster allowance exhausted"
+                else if not RestPreserved then "Two full off days must remain between clusters"
+                else null,
+            UpdatedCluster = [PlannedCluster = Cluster[PlannedCluster], StartDay = ProposedStart, EndDay = ProposedEnd,
+                WorkedDays = Cluster[WorkedDays] + 1, Kind = Cluster[Kind]],
+            AcceptedChoice = [Day = option[Day], PlannedCluster = option[PlannedCluster], ExtensionSide = option[ExtensionSide]],
+            NextState = if Reason = null then
+                [Clusters = List.ReplaceRange(state[Clusters], ClusterPosition, 1, {UpdatedCluster}),
+                 Accepted = state[Accepted] & {AcceptedChoice}, Rejected = state[Rejected]]
+                else [Clusters = state[Clusters], Accepted = state[Accepted],
+                      Rejected = state[Rejected] & {[Day = option[Day], Reason = Reason]}]
+        in NextState),
+    RemainingDays = Table.SelectRows(OptionalDays, each not List.Contains(List.Transform(ExtensionState[Accepted], each [Day]), [Day])),
+    OrderedRemainingDays = Table.Sort(RemainingDays, {{"Day", Order.Ascending}, {"CandidatePeriod", Order.Ascending}}),
+    // Every remaining day is considered, including workers with no allocations and availability outside the former window.
+    // This deterministic chronological pass chooses legal spare; it does not claim the maximum possible number of spare days.
+    SpareState = List.Accumulate(Table.ToRecords(OrderedRemainingDays), ExtensionState, (state, day) =>
+        let
+            InsideOriginalCluster = List.AnyTrue(List.Transform(OriginalClusters, each day[Day] >= [StartDay] and day[Day] <= [EndDay])),
+            PotentialOwners = List.Select(state[Clusters], each [WorkedDays] < MaxShiftCluster and
+                ((day[Day] < [StartDay] and [StartDay] - day[Day] <= 2)
+                    or (day[Day] > [EndDay] and day[Day] - [EndDay] <= 2))),
+            GrowthChoices = List.Transform(PotentialOwners, (cluster) =>
+                let
+                    BeforeCluster = day[Day] < cluster[StartDay],
+                    ProposedStart = if BeforeCluster then day[Day] else cluster[StartDay],
+                    ProposedEnd = if BeforeCluster then cluster[EndDay] else day[Day],
+                    OtherClusters = List.Select(state[Clusters], each [PlannedCluster] <> cluster[PlannedCluster]),
+                    RestPreserved = List.AllTrue(List.Transform(OtherClusters, each
+                        ProposedStart - [EndDay] - 1 >= 2 or [StartDay] - ProposedEnd - 1 >= 2))
+                in [PlannedCluster = cluster[PlannedCluster], StartDay = ProposedStart, EndDay = ProposedEnd,
+                    WorkedDays = cluster[WorkedDays] + 1, Kind = cluster[Kind], RestPreserved = RestPreserved,
+                    Distance = if BeforeCluster then cluster[StartDay] - day[Day] else day[Day] - cluster[EndDay],
+                    ExtensionSide = if cluster[Kind] = "Spare" then "Spare-only" else if BeforeCluster then "Start" else "Finish"]),
+            FeasibleGrowth = List.Select(GrowthChoices, each [RestPreserved]),
+            OrderedGrowth = if List.IsEmpty(FeasibleGrowth) then null else
+                Table.Sort(Table.FromRecords(FeasibleGrowth), {{"Distance", Order.Ascending}, {"PlannedCluster", Order.Ascending}}),
+            GrowingCluster = if OrderedGrowth = null then null else Table.First(OrderedGrowth),
+            SeedRestPreserved = List.AllTrue(List.Transform(state[Clusters], each
+                day[Day] - [EndDay] - 1 >= 2 or [StartDay] - day[Day] - 1 >= 2)),
+            CanSelect = ResourceAllowed and not InsideOriginalCluster and (GrowingCluster <> null or SeedRestPreserved),
+            NewClusterNumber = if List.IsEmpty(state[Clusters]) then 1 else List.Max(List.Transform(state[Clusters], each [PlannedCluster])) + 1,
+            SelectedCluster = if GrowingCluster = null then
+                    [PlannedCluster = NewClusterNumber, StartDay = day[Day], EndDay = day[Day], WorkedDays = 1, Kind = "Spare"]
+                else Record.SelectFields(GrowingCluster, {"PlannedCluster", "StartDay", "EndDay", "WorkedDays", "Kind"}),
+            UpdatedClusters = if GrowingCluster = null then state[Clusters] & {SelectedCluster}
+                else List.Transform(state[Clusters], each if [PlannedCluster] = SelectedCluster[PlannedCluster] then SelectedCluster else _),
+            AcceptedChoice = [Day = day[Day], PlannedCluster = SelectedCluster[PlannedCluster],
+                ExtensionSide = if GrowingCluster = null then "Spare-only" else GrowingCluster[ExtensionSide]],
+            Reason = if not ResourceAllowed then "Resource spare excluded by input or existing calendar issues"
+                else if InsideOriginalCluster then "Existing internal one-day break retained"
+                else "Five-worked-day limit or two full off days prevent this spare day",
+            NextState = if CanSelect then [Clusters = UpdatedClusters, Accepted = state[Accepted] & {AcceptedChoice}, Rejected = state[Rejected]]
+                else [Clusters = state[Clusters], Accepted = state[Accepted], Rejected = state[Rejected] & {[Day = day[Day], Reason = Reason]}]
+        in NextState),
+    Decisions = List.Transform(DayRows, (day) =>
+        let
+            Allocated = day[AllocFlag] = 1,
+            OriginalOwner = List.Select(OriginalClusters, each day[Day] >= [StartDay] and day[Day] <= [EndDay]),
+            AcceptedChoices = List.Select(SpareState[Accepted], each [Day] = day[Day]),
+            Selected = not List.IsEmpty(AcceptedChoices),
+            Rejections = List.Select(SpareState[Rejected], each [Day] = day[Day]),
+            Owner = if Allocated and not List.IsEmpty(OriginalOwner) then OriginalOwner{0}[PlannedCluster]
+                else if Selected then AcceptedChoices{0}[PlannedCluster] else null,
+            Reason = if not ResourceAllowed then "Resource spare excluded: " & Text.From(day[SpareIssueReason])
+                else if Allocated then "Original allocated workday retained"
+                else if day[CandidatePeriod] = null then "No available optional shift on a genuinely unallocated day"
+                else if Selected then "Selected within the five-worked-day and two-day-break allowances"
+                else if not List.IsEmpty(OriginalOwner) then "Existing internal one-day break retained"
+                else if not List.IsEmpty(Rejections) then List.Last(Rejections)[Reason]
+                else "Five-worked-day limit or two full off days prevent this spare day"
+        in [Resource = day[Resource], Day = day[Day], AllocationWorkday = Allocated, SpareDayEligible = Selected, SparePlanningAllowed = ResourceAllowed,
+            CandidatePeriod = day[CandidatePeriod], PlannedCluster = Owner,
+            ExtensionSide = if Selected then AcceptedChoices{0}[ExtensionSide] else null, SpareEligibilityReason = Reason]),
+    Output = Table.FromRecords(Decisions, type table [Resource = nullable number, Day = number, AllocationWorkday = logical,
+        SpareDayEligible = logical, SparePlanningAllowed = logical, CandidatePeriod = nullable number, PlannedCluster = nullable number,
+        ExtensionSide = nullable text, SpareEligibilityReason = text])
+in
+    Output;
+
+// Query: A1SpareDayChoices_Prepare
+// Purpose: Apply the joint planner independently per Resource, retaining explicit decisions on every configured day.
+// Notes: An individual planning error excludes that Resource's spare and remains visible in diagnostic reasons.
+shared A1SpareDayChoices_Prepare = let
+    JoinedTypes = Table.NestedJoin(ResDaysAllocated, {"Resource", "Day"}, #"WD Type", {"Resource", "Day"}, "DayType", JoinKind.LeftOuter),
+    ExpandedTypes = Table.ExpandTableColumn(JoinedTypes, "DayType", {"NWDType"}),
+    JoinedPriorities = Table.NestedJoin(ExpandedTypes, {"NWDType"}, A1DayPriorities_Prepare, {"NWD Type"}, "Priority", JoinKind.LeftOuter),
+    ExpandedPriorities = Table.ExpandTableColumn(JoinedPriorities, "Priority", {"NWDPriority"}),
+    JoinedChoices = Table.NestedJoin(ExpandedPriorities, {"Resource", "Day"}, A1OptionalShiftChoices_Prepare, {"Resource", "Day"}, "ShiftChoice", JoinKind.LeftOuter),
+    ExpandedChoices = Table.ExpandTableColumn(JoinedChoices, "ShiftChoice", {"CandidatePeriod", "ShiftPreference", "ShiftChoiceIssueReason"}),
+    JoinedStatus = Table.NestedJoin(ExpandedChoices, {"Resource"}, A1ResourceSpareStatus_Prepare, {"Resource"}, "SpareStatus", JoinKind.LeftOuter),
+    ExpandedStatus = Table.ExpandTableColumn(JoinedStatus, "SpareStatus", {"SpareCalculationAllowed", "SpareIssueReason"}),
+    ResourcePlans = Table.Group(ExpandedStatus, {"Resource"}, {{"Plan", each
+        let
+            InputRows = _,
+            ShiftIssues = List.Distinct(List.RemoveNulls(InputRows[ShiftChoiceIssueReason])),
+            ResourceRows = if List.IsEmpty(ShiftIssues) then InputRows else Table.TransformColumns(InputRows,
+                {{"SpareCalculationAllowed", each false, type logical}, {"SpareIssueReason", each Text.Combine(ShiftIssues, "; "), type text}}),
+            Attempt = try Table.Buffer(A1PlanSpareDays(ResourceRows)),
+            // The fallback does not rerun the failed planner or optional-shift calculations.
+            OriginalClusters = Table.ToRecords(A1WorkdayClusters(Table.SelectRows(ResourceRows, each [AllocFlag] = 1)[Day])),
+            ExcludedRows = List.Transform(Table.ToRecords(ResourceRows), (day) =>
+                let
+                    OriginalOwner = List.Select(OriginalClusters, each day[Day] >= [StartDay] and day[Day] <= [EndDay])
+                in [Resource = day[Resource], Day = day[Day], AllocationWorkday = day[AllocFlag] = 1,
+                    SpareDayEligible = false, SparePlanningAllowed = false, CandidatePeriod = null,
+                    PlannedCluster = if day[AllocFlag] = 1 and not List.IsEmpty(OriginalOwner) then OriginalOwner{0}[PlannedCluster] else null,
+                    ExtensionSide = null, SpareEligibilityReason = "Spare planner evaluation error: " &
+                        (try Attempt[Error][Message] otherwise "Evaluation unavailable")]),
+            ExcludedPlan = Table.FromRecords(ExcludedRows, type table [Resource = nullable number, Day = number,
+                AllocationWorkday = logical, SpareDayEligible = logical, SparePlanningAllowed = logical, CandidatePeriod = nullable number,
+                PlannedCluster = nullable number, ExtensionSide = nullable text, SpareEligibilityReason = text]),
+            Plan = if Attempt[HasError] then ExcludedPlan else Attempt[Value]
+        in Plan, type table}}),
+    Output = Table.ExpandTableColumn(ResourcePlans, "Plan", {"Day", "AllocationWorkday", "SpareDayEligible", "SparePlanningAllowed", "CandidatePeriod",
+        "PlannedCluster", "ExtensionSide", "SpareEligibilityReason"})
+in
+    Table.Buffer(Output);
+
+// Query: A1PlannedClusters_Prepare
+// Purpose: Describe the accepted allocation-plus-spare calendar independently of capacity publication.
+shared A1PlannedClusters_Prepare = let
+    PlannedWorkdays = Table.SelectRows(A1SpareDayChoices_Prepare, each [AllocationWorkday] or [SpareDayEligible]),
+    PlannedClusters = Table.Group(PlannedWorkdays, {"Resource", "PlannedCluster"},
+        {{"StartDay", each List.Min([Day]), type number}, {"EndDay", each List.Max([Day]), type number},
+         {"WorkedDays", each List.Count(List.Distinct([Day])), Int64.Type},
+         {"SpareDays", each Table.RowCount(Table.SelectRows(_, each [SpareDayEligible])), Int64.Type}})
+in
+    PlannedClusters;
+
+// Query: A1SpareCalendarIssues_Prepare
+// Purpose: Report spare planning errors, spare-induced size breaches and missing two-day breaks without stopping the run.
+// Notes: Pre-existing allocation breaches are reported separately by A1AllocatedCalendarIssues_Prepare.
+shared A1SpareCalendarIssues_Prepare = let
+    PlanningErrors = Table.SelectRows(A1SpareDayChoices_Prepare, each Text.StartsWith([SpareEligibilityReason], "Spare planner evaluation error:")),
+    ErrorRows = Table.Distinct(PlanningErrors, {"Resource"}),
+    ErrorDetails = A1IssueDetails(ErrorRows, "Spare day planning", "Resource spare planner could not be evaluated",
+        "Resource spare excluded; inspect A1SpareDayChoices_Prepare for the evaluation reason"),
+    OversizedClusters = Table.SelectRows(A1PlannedClusters_Prepare, each [WorkedDays] > MaxShiftCluster and [SpareDays] > 0),
+    SizeDetails = A1IssueDetails(OversizedClusters, "Selected spare calendar", "Selected spare exceeds five worked days in its planned cluster",
+        "Review the joint planner; allocation evidence retained"),
+    ResourceCalendars = Table.Group(A1PlannedClusters_Prepare, {"Resource"}, {{"GapIssues", each
+        let
+            OrderedClusters = Table.Sort(_, {{"StartDay", Order.Ascending}, {"PlannedCluster", Order.Ascending}}),
+            IndexedClusters = Table.AddIndexColumn(OrderedClusters, "ClusterPosition", 0, 1, Int64.Type),
+            WithGap = Table.AddColumn(IndexedClusters, "OffDays", each
+                if [ClusterPosition] = 0 then null else [StartDay] - OrderedClusters{[ClusterPosition] - 1}[EndDay] - 1, type nullable number),
+            InvalidGaps = Table.SelectRows(WithGap, each [OffDays] <> null and [OffDays] < 2)
+        in InvalidGaps, type table}}),
+    GapRows = if Table.IsEmpty(ResourceCalendars) then Table.FirstN(A1PlannedClusters_Prepare, 0) else Table.Combine(ResourceCalendars[GapIssues]),
+    GapDetails = A1IssueDetails(GapRows, "Selected spare calendar", "Fewer than two full off days remain between planned clusters",
+        "Review the joint planner; allocation evidence retained"),
+    Output = Table.Combine({ErrorDetails, SizeDetails, GapDetails})
+in
+    Output;
+
+// Query: A1SpareEligibility_CHECK
+// Purpose: Check selected-day keys, period choices and complete planned calendar invariants before A.2 consumes them.
+shared A1SpareEligibility_CHECK = let
+    Decisions = A1SpareDayChoices_Prepare,
+    SelectedDays = Table.SelectRows(Decisions, each [SpareDayEligible]),
+    PlannerErrors = Table.SelectRows(Decisions, each Text.StartsWith([SpareEligibilityReason], "Spare planner evaluation error:")),
+    PlannerErrorCount = Table.RowCount(Table.Distinct(PlannerErrors, {"Resource"})),
+    ChoiceErrorCount = Table.RowCount(Table.Distinct(A1OptionalShiftChoiceIssues_Prepare, {"Resource"})),
+    Checks = {
+        [Check = "Optional spare shift selection evaluation", Status = if ChoiceErrorCount = 0 then "Pass" else "Error",
+            Failures = ChoiceErrorCount, Details = if ChoiceErrorCount = 0 then null else
+                "Affected Resource spare excluded; see A1OptionalShiftChoiceIssues_Prepare"],
+        [Check = "Resource spare planner evaluation", Status = if PlannerErrorCount = 0 then "Pass" else "Error",
+            Failures = PlannerErrorCount, Details = if PlannerErrorCount = 0 then null else
+                "Affected Resource spare excluded; see A1SpareDayChoices_Prepare for the evaluation reason"],
+        A1CheckResult("Spare day decisions have unique Resource/day keys", () =>
+            Table.RowCount(Decisions) - Table.RowCount(Table.Distinct(Decisions, {"Resource", "Day"}))),
+        A1CheckResult("Spare day decisions cover every configured Resource/day", () =>
+            Table.RowCount(ResDaysAllocated) - Table.RowCount(Decisions)),
+        A1CheckResult("Selected spare has a shift and planned cluster", () =>
+            Table.RowCount(Table.SelectRows(SelectedDays, each [CandidatePeriod] = null or [PlannedCluster] = null or [AllocationWorkday]))),
+        A1CheckResult("Selected spare respects five worked days and two off days", () =>
+            Table.RowCount(Table.SelectRows(A1SpareCalendarIssues_Prepare, each [Check] = "Selected spare calendar"))),
+        A1CheckResult("Existing allocated calendar respects five worked days", () => Table.RowCount(A1AllocatedCalendarIssues_Prepare))
+    },
+    Output = Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text])
+in
+    Output;
+
+// Query: ResDayPotentialAvailabilityTABLE
+// Purpose: Publish explicit day decisions instead of the former always-true category exclusions.
+// Notes: U identifies allocated or excluded days; R identifies jointly selected optional spare for reduction priorities.
+shared ResDayPotentialAvailabilityTABLE = let
+    JoinedTypes = Table.NestedJoin(A1SpareDayChoices_Prepare, {"Resource", "Day"}, #"WD Type", {"Resource", "Day"}, "DayType", JoinKind.LeftOuter),
+    ExpandedTypes = Table.ExpandTableColumn(JoinedTypes, "DayType", {"NWDType"}),
+    JoinedOwningCluster = Table.NestedJoin(ExpandedTypes, {"Resource", "PlannedCluster"}, A1AllocatedClusters_Prepare,
+        {"Resource", "PlannedCluster"}, "OwningAllocatedCluster", JoinKind.LeftOuter),
+    ExpandedClusterSize = Table.ExpandTableColumn(JoinedOwningCluster, "OwningAllocatedCluster", {"WorkedDays"}, {"ClusterAllocation"}),
+    CompletedClusterSize = Table.ReplaceValue(ExpandedClusterSize, null, 0, Replacer.ReplaceValue, {"ClusterAllocation"}),
+    WithPotentialAvailability = Table.AddColumn(CompletedClusterSize, "PotentialAvailability", each if [SpareDayEligible] then "R" else "U", type text),
+    Output = Table.SelectColumns(WithPotentialAvailability, {"Resource", "Day", "NWDType", "PotentialAvailability", "ClusterAllocation"})
+in
+    Table.Buffer(Output);
 
 [ Description = "BUFFER" ]
 // Query: ResPeriodShiftNWDTABLE
@@ -1420,7 +1809,7 @@ shared ResPeriodShiftNWDTABLE = let
     Source = ResDayPotentialAvailabilityTABLE,
     #"Filtered Rows" = Table.SelectRows(Source, each ([PotentialAvailability] = "R")),
     #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"PotentialAvailability"}),
-    #"Merged Queries" = Table.NestedJoin(#"Removed Columns", {"NWDType"}, #"SET NWDPriority", {"NWD Type"}, "NWDPrioritiesTABLE", JoinKind.LeftOuter),
+    #"Merged Queries" = Table.NestedJoin(#"Removed Columns", {"NWDType"}, A1DayPriorities_Prepare, {"NWD Type"}, "NWDPrioritiesTABLE", JoinKind.LeftOuter),
     #"Expanded NWDPrioritiesTABLE" = Table.ExpandTableColumn(#"Merged Queries", "NWDPrioritiesTABLE", {"NWDPriority"}, {"NWDPriority"}),
     #"Sorted Rows" = Table.Sort(#"Expanded NWDPrioritiesTABLE",{{"Resource", Order.Ascending}, {"Day", Order.Ascending}}),
     #"Merged Queries1" = Table.NestedJoin(#"Sorted Rows", {"Day"}, #"PeriodShiftDay B", {"Day"}, "Period.1", JoinKind.LeftOuter),
@@ -1562,15 +1951,18 @@ shared SingleShiftDayPeriodMatch = let
 in
     #"Removed Columns2";
 
-[ Description = "BUFFER" ]
+// Query: C' ResSingleShiftDayTABLE
+// Purpose: Publish preserved allocated availability and the one chosen shift on each jointly eligible spare day.
+// Notes: Cap targets use this prepared set; raw availability cannot bypass calendar or shift selection.
 shared #"C' ResSingleShiftDayTABLE" = let
-    Source = Table.Combine({MultiDayPeriodMatchTABLE, SingleShiftDayPeriods}),
-    #"Appended MULTIDAYPERIOD-REDUCIBLE" = Table.Combine({Source, #"MultiDayPeriod-Reducibile"}),
-    #"Removed Duplicates" = Table.Distinct(#"Appended MULTIDAYPERIOD-REDUCIBLE"),
-    #"Merged Queries" = Table.NestedJoin(#"Removed Duplicates", {"Resource", "Period"}, #"ResPeriodAvailabilityTABLE !!", {"Resource", "Period"}, "ResPeriodAvailabilityTABLE", JoinKind.LeftOuter),
-    #"BUFFER Expanded ResPeriodAvailabilityTABLE" = Table.Buffer(Table.ExpandTableColumn(#"Merged Queries", "ResPeriodAvailabilityTABLE", {"Availability"}, {"Availability"}))
+    JoinedDayChoices = Table.NestedJoin(ResDayPeriodAvailabilityTABLE, {"Resource", "Day"}, A1SpareDayChoices_Prepare,
+        {"Resource", "Day"}, "DayChoice", JoinKind.LeftOuter),
+    ExpandedChoices = Table.ExpandTableColumn(JoinedDayChoices, "DayChoice", {"SpareDayEligible", "CandidatePeriod"}),
+    PreparedCells = Table.SelectRows(ExpandedChoices, each [Availability] > 0 and
+        ([HasAllocationEvidence] = true or ([SpareDayEligible] = true and [Period] = [CandidatePeriod]))),
+    Output = Table.SelectColumns(PreparedCells, {"Resource", "Period", "Availability"})
 in
-    #"BUFFER Expanded ResPeriodAvailabilityTABLE";
+    Table.Buffer(Output);
 
 shared #"C' SUM" = let
     Source = List.Sum(#"C' ResSingleShiftDayTABLE"[Availability])
@@ -1650,10 +2042,19 @@ shared MultiDayPeriodMatchTABLE = let
 in
     #"Removed Columns1";
 
+// Query: SingleShiftDayPeriods
+// Purpose: Include the missing unallocated single-available-shift days alongside existing allocated shift matches.
+// Notes: This is raw shift preparation; the joint calendar planner decides whether its optional days may be retained.
 shared SingleShiftDayPeriods = let
-    // SingleShiftDayAvail+Multi + SingleDayShiftMatchTABLE
-    Source = Table.Combine({SingleShiftDayPeriodMatch, #"SingleShiftDayAvail+MultiAllocation B"}),
-    #"Sorted Rows" = Table.Sort(Source,{{"Resource", Order.Ascending}, {"Period", Order.Ascending}})
+    SingleShiftDays = Table.SelectRows(ResDayAvailabilityTABLE, each [DayShiftCount] = 1),
+    JoinedAvailablePeriods = Table.NestedJoin(SingleShiftDays, {"Resource", "Day"}, ResDayPeriodAvailabilityTABLE,
+        {"Resource", "Day"}, "AvailablePeriods", JoinKind.LeftOuter),
+    ExpandedAvailablePeriods = Table.ExpandTableColumn(JoinedAvailablePeriods, "AvailablePeriods", {"Period", "Availability"}),
+    PositiveAvailability = Table.SelectRows(ExpandedAvailablePeriods, each [Availability] > 0),
+    SingleAvailablePeriodKeys = Table.SelectColumns(PositiveAvailability, {"Resource", "Period"}),
+    CombinedMatches = Table.Combine({SingleShiftDayPeriodMatch, #"SingleShiftDayAvail+MultiAllocation B", SingleAvailablePeriodKeys}),
+    UniqueMatches = Table.Distinct(CombinedMatches, {"Resource", "Period"}),
+    #"Sorted Rows" = Table.Sort(UniqueMatches,{{"Resource", Order.Ascending}, {"Period", Order.Ascending}})
 in
     #"Sorted Rows";
 
@@ -1717,19 +2118,23 @@ in
 
 // Query: A1PriorityInterface_CHECK
 // Purpose: Report priority handoff schema and key failures without deliberately stopping publication.
-// Notes: Null cluster sizes are allowed on days outside allocated clusters; calendar eligibility rules are unchanged.
+// Notes: ClusterAllocation counts original allocated workdays, or zero for spare-only clusters; eligibility has a separate calendar check.
 shared A1PriorityInterface_CHECK = let
     DayPriorities = ResPeriodShiftNWDTABLE,
     CapPriorities = ResPeriodCapPrioritised,
+    // Each key view is reused by population/count/uniqueness checks; avoid retaining the full priority rows.
+    // Missing fields remain missing so the existing check functions retain their error behaviour.
+    DayPriorityKeys = Table.Buffer(Table.SelectColumns(DayPriorities, {"Resource", "Period"}, MissingField.Ignore)),
+    CapPriorityKeys = Table.Buffer(Table.SelectColumns(CapPriorities, {"Resource", "Period"}, MissingField.Ignore)),
     DayColumns = {"Resource", "Day", "Period", "Shifts", "ClusterAllocation", "NWDPriority", "NWDType"},
     CapColumns = {"Resource", "Period", "PRCell", "UnassignedAvail", "ResAv-C'", "PeriodA-CNeg", "C'-D", "ClusterAllocation", "NWDPriority", "NWDType"},
     Checks = {
         A1CheckResult("NWD priority handoff has required columns", () => List.Count(List.Difference(DayColumns, Table.ColumnNames(DayPriorities)))),
-        A1CheckResult("NWD priority keys are populated", () => Table.RowCount(Table.SelectRows(DayPriorities, each [Resource] = null or [Period] = null))),
-        A1CheckResult("NWD priority keys are unique", () => Table.RowCount(DayPriorities) - Table.RowCount(Table.Distinct(DayPriorities, {"Resource", "Period"}))),
+        A1CheckResult("NWD priority keys are populated", () => Table.RowCount(Table.SelectRows(DayPriorityKeys, each [Resource] = null or [Period] = null))),
+        A1CheckResult("NWD priority keys are unique", () => Table.RowCount(DayPriorityKeys) - Table.RowCount(Table.Distinct(DayPriorityKeys, {"Resource", "Period"}))),
         A1CheckResult("Cap priority handoff has required columns", () => List.Count(List.Difference(CapColumns, Table.ColumnNames(CapPriorities)))),
-        A1CheckResult("Cap priority keys are populated", () => Table.RowCount(Table.SelectRows(CapPriorities, each [Resource] = null or [Period] = null))),
-        A1CheckResult("Cap priority keys are unique", () => Table.RowCount(CapPriorities) - Table.RowCount(Table.Distinct(CapPriorities, {"Resource", "Period"})))
+        A1CheckResult("Cap priority keys are populated", () => Table.RowCount(Table.SelectRows(CapPriorityKeys, each [Resource] = null or [Period] = null))),
+        A1CheckResult("Cap priority keys are unique", () => Table.RowCount(CapPriorityKeys) - Table.RowCount(Table.Distinct(CapPriorityKeys, {"Resource", "Period"})))
     },
     Output = Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text])
 in
@@ -1761,6 +2166,34 @@ let
 in
     Output;
 
+// Query: A1ExcludedSpareResources_Prepare
+// Purpose: Identify excluded Resources from compact permission/day coverage facts without constructing the period metadata skeleton.
+// Inputs: Resource permissions, authoritative day decisions and the same configured calendar used by the skeleton.
+// Output: One Resource key for each worker with a denied permission, denied planning day or missing configured-day decision.
+// Notes: An empty configured calendar has no skeleton rows and therefore no excluded Resources to count.
+shared A1ExcludedSpareResources_Prepare = let
+    CalendarPeriods = Table.SelectRows(#"PeriodShiftDay B", each [Period] <> "W"),
+    ConfiguredDays = Table.Distinct(Table.SelectColumns(CalendarPeriods, {"Day"})),
+    ConfiguredDayCount = Table.RowCount(ConfiguredDays),
+    ResourceKeys = Table.Distinct(Table.SelectColumns(A1ResourceGrid_Prepare, {"Resource"})),
+    ResourcePermissions = Table.SelectColumns(A1ResourceSpareStatus_Prepare, {"Resource", "SpareCalculationAllowed"}),
+    DayPermissions = Table.SelectColumns(A1SpareDayChoices_Prepare, {"Resource", "Day", "SparePlanningAllowed"}),
+    JoinedConfiguredDays = Table.NestedJoin(DayPermissions, {"Day"}, ConfiguredDays, {"Day"}, "ConfiguredDay", JoinKind.Inner),
+    ConfiguredDayPermissions = Table.RemoveColumns(JoinedConfiguredDays, {"ConfiguredDay"}),
+    PlanningByResource = Table.Group(ConfiguredDayPermissions, {"Resource"},
+        {{"PlanningAllowed", each List.AllTrue(List.Transform([SparePlanningAllowed], each _ = true)), type logical},
+         {"PlannedDayCount", each List.Count(List.Distinct([Day])), Int64.Type}}),
+    JoinedResourcePermission = Table.NestedJoin(ResourceKeys, {"Resource"}, ResourcePermissions, {"Resource"}, "ResourcePermission", JoinKind.LeftOuter),
+    ExpandedResourcePermission = Table.ExpandTableColumn(JoinedResourcePermission, "ResourcePermission", {"SpareCalculationAllowed"}),
+    JoinedPlanningPermission = Table.NestedJoin(ExpandedResourcePermission, {"Resource"}, PlanningByResource, {"Resource"}, "PlanningPermission", JoinKind.LeftOuter),
+    ExpandedPlanningPermission = Table.ExpandTableColumn(JoinedPlanningPermission, "PlanningPermission", {"PlanningAllowed", "PlannedDayCount"}),
+    ExcludedResources = Table.SelectRows(ExpandedPlanningPermission, each
+        [SpareCalculationAllowed] <> true or [PlanningAllowed] <> true or [PlannedDayCount] <> ConfiguredDayCount),
+    Output = if ConfiguredDayCount = 0 then Table.FirstN(ResourceKeys, 0)
+        else Table.Distinct(Table.SelectColumns(ExcludedResources, {"Resource"}))
+in
+    Output;
+
 // Query: CapacityDiagnostics_SUMMARY
 // Purpose: Publish nonblocking A.1 check results for manual review and future runner collection.
 // Output: Stage, Check, Status, Failures and Details; a failed check never deliberately stops other Resources.
@@ -1769,8 +2202,10 @@ shared CapacityDiagnostics_SUMMARY = let
     ContractChecks = A1DiagnosticSummary("Resource contract checks", () => A1ResourceContract_CHECK),
     ClusterChecks = A1DiagnosticSummary("Cluster lookup checks", () => A1ClusterLookup_CHECK),
     PriorityChecks = A1DiagnosticSummary("Priority handoff checks", () => A1PriorityInterface_CHECK),
+    EligibilityChecks = A1DiagnosticSummary("Spare day eligibility checks", () => A1SpareEligibility_CHECK),
     SpareChecks = A1DiagnosticSummary("Resource spare exclusions", () => Table.FromRecords({
-        A1CheckResult("Resources excluded from spare calculations", () => Table.RowCount(A1ResourceSpareIssues_Prepare)),
+        A1CheckResult("Resources excluded from spare calculations", () =>
+            Table.RowCount(A1ExcludedSpareResources_Prepare)),
         A1CheckResult("Malformed allocation amounts", () => Table.RowCount(A1AllocationValueIssues_Prepare)),
         A1CheckResult("Skipped allocation records", () => Table.RowCount(A1AllocationIdentity_EXCEPTIONS))
     }, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text])),
@@ -1778,7 +2213,7 @@ shared CapacityDiagnostics_SUMMARY = let
     ParameterCheck = #table(type table [Stage = text, Check = text, Status = text, Failures = nullable number, Details = nullable text],
         {{"A.1", "Working-day allocation threshold", ParameterStatus[Status],
             if ParameterStatus[Status] = "Pass" then 0 else 1, ParameterStatus[Details]}}),
-    Output = Table.Combine({IdentityChecks, ContractChecks, ClusterChecks, PriorityChecks, SpareChecks, ParameterCheck})
+    Output = Table.Combine({IdentityChecks, ContractChecks, ClusterChecks, PriorityChecks, EligibilityChecks, SpareChecks, ParameterCheck})
 in
     Table.Buffer(Output);
 
@@ -1790,12 +2225,21 @@ shared CapacityDiagnostics_DETAILS = let
     ContractDetails = A1DiagnosticDetails("Resource contract", () => A1ContractIssues_Prepare),
     PeriodDetails = A1DiagnosticDetails("Availability period", () => A1AvailabilityPeriodIssues_Prepare),
     ClusterDetails = A1DiagnosticDetails("Cluster lookup", () => A1ClusterIssues_Prepare),
+    AllocatedCalendarDetails = A1DiagnosticDetails("Existing allocated calendar", () => A1AllocatedCalendarIssues_Prepare),
+    SpareCalendarDetails = A1DiagnosticDetails("Selected spare calendar", () => A1SpareCalendarIssues_Prepare),
+    ShiftChoiceDetails = A1DiagnosticDetails("Optional spare shift choice", () => A1OptionalShiftChoiceIssues_Prepare),
     ParameterStatus = WorkingDayAllocationThreshold_Status,
     ParameterDetails = if ParameterStatus[Status] = "Pass" then Table.FirstN(IdentityDetails, 0)
         else A1DiagnosticDetails("Working-day threshold", () =>
             A1IssueDetails(A1ResourceGrid_Prepare, "Working-day threshold", ParameterStatus[Details],
                 "Resource spare not evaluated; allocation evidence retained")),
-    Output = Table.Combine({IdentityDetails, AllocationDetails, ContractDetails, PeriodDetails, ClusterDetails, ParameterDetails})
+    MaximumStatus = A1SettingsMaximum_Status,
+    MaximumDetails = if MaximumStatus[Status] = "Pass" then Table.FirstN(IdentityDetails, 0)
+        else A1DiagnosticDetails("Settings roster shift maximum", () =>
+            A1IssueDetails(A1ResourceGrid_Prepare, "Settings roster shift maximum", MaximumStatus[Details],
+                "Resource spare not evaluated; allocation evidence retained")),
+    Output = Table.Combine({IdentityDetails, AllocationDetails, ContractDetails, PeriodDetails, ClusterDetails,
+        AllocatedCalendarDetails, SpareCalendarDetails, ShiftChoiceDetails, ParameterDetails, MaximumDetails})
 in
     Table.Buffer(Output);
 
@@ -1977,16 +2421,40 @@ shared #"EXTRACT Date_From" = let
 in
     Value;
 
-// Query: EXTRACT MaxAvailability
-// Purpose: Preserve the legacy Settings maximum interface; employee Effective Shift Cap is canonical for A.1.
-// Notes: Retained for compatibility and no longer used by the cap calculation.
-shared #"EXTRACT MaxAvailability" = let
-    Source = #"IMPORT Settings Data"{[Item="MaxAvailability", Kind="Table"]}[Data],
-    RequiredColumn = if Table.HasColumns(Source, {"MaxAvailability"}) then Source
-        else error "MaxAvailability must contain a MaxAvailability column.",
-    SingleRow = if Table.RowCount(RequiredColumn) = 1 then RequiredColumn
-        else error "MaxAvailability must contain exactly one data row.",
-    Typed = Table.TransformColumnTypes(SingleRow, {{"MaxAvailability", Int64.Type}}),
-    Value = Typed{0}[MaxAvailability]
+// Query: A1SettingsMaximum_Status
+// Purpose: Validate the raw Settings roster maximum and capture unusable configuration without stopping diagnostics.
+// Output: Pass/Fail/Error, a finite positive whole maximum or null, and the validation/evaluation reason.
+// Notes: No integer conversion, default maximum or silent cap clamp is applied.
+shared A1SettingsMaximum_Status = let
+    SettingAttempt = try
+        let
+            Navigation = #"IMPORT Settings Data",
+            Matches = Table.SelectRows(Navigation, each [Item] = "MaxAvailability" and [Kind] = "Table"),
+            MatchCount = Table.RowCount(Matches),
+            SettingsTable = if MatchCount = 1 then Matches{0}[Data]
+                else error Error.Record("A1.SettingsMaximumValidation", "Expected exactly one Settings MaxAvailability table; found " & Text.From(MatchCount) & ".", null),
+            RequiredColumn = if Table.HasColumns(SettingsTable, {"MaxAvailability"}) then SettingsTable
+                else error Error.Record("A1.SettingsMaximumValidation", "MaxAvailability must contain a MaxAvailability column.", null),
+            RowCount = Table.RowCount(RequiredColumn),
+            SettingValue = if RowCount = 1 then RequiredColumn{0}[MaxAvailability]
+                else error Error.Record("A1.SettingsMaximumValidation", "MaxAvailability must contain exactly one data row; found " & Text.From(RowCount) & ".", null),
+            IsUsableMaximum = if not Value.Is(SettingValue, type number) then false else
+                not Number.IsNaN(SettingValue) and Number.Abs(SettingValue) <> #infinity
+                    and SettingValue > 0 and SettingValue = Number.RoundDown(SettingValue),
+            ValidatedValue = if IsUsableMaximum then SettingValue
+                else error Error.Record("A1.SettingsMaximumValidation", "MaxAvailability must be a finite positive whole number.", null)
+        in
+            ValidatedValue,
+    Output = [
+        Status = if not SettingAttempt[HasError] then "Pass"
+            else if SettingAttempt[Error][Reason] = "A1.SettingsMaximumValidation" then "Fail" else "Error",
+        Value = if SettingAttempt[HasError] then null else SettingAttempt[Value],
+        Details = if SettingAttempt[HasError] then SettingAttempt[Error][Message] else null
+    ]
 in
-    Value;
+    Output;
+
+// Query: EXTRACT MaxAvailability
+// Purpose: Preserve the existing Settings maximum interface using the validated roster value.
+// Notes: Null denotes an unavailable maximum; optional spare is excluded through Resource diagnostics.
+shared #"EXTRACT MaxAvailability" = A1SettingsMaximum_Status[Value];
