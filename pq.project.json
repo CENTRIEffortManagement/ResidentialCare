@@ -8,6 +8,9 @@
   },
   "batchRunner": {
     "dateRoot": "CLIENT/DATExx-Whiddon",
+    "workbookRoots": {
+      "LeaveBalanceStats": "../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations"
+    },
     "catalogue": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchCatalogue.psd1",
     "sequenceProfiles": {
       "Current": "CLIENT/DATExx-Whiddon/runner/ResidentialCare-BatchCatalogue.psd1",
@@ -23,4 +26,3 @@
     ]
   }
 }
-

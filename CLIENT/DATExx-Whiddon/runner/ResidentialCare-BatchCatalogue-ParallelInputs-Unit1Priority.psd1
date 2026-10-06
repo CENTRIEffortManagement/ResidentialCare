@@ -3,7 +3,7 @@
     # ParallelInputs-Unit1Priority: static startup inputs confirmed by the operator.
     # Source files not already declared remain unverified; never invent read paths.
     # Sequence references resolve paths from the unchanged legacy manifests.
-    BatchOrder = @('A1', 'S1', 'D1', 'C1', 'D2', 'A2', 'A3', 'C2', 'U4', 'O1', 'O2', 'O3', 'O4', 'O5')
+    BatchOrder = @('A1', 'S1', 'D1', 'C1', 'D2', 'A2', 'A3', 'C2', 'U4', 'O1', 'O2', 'O3', 'O4', 'O5', 'O6')
     BatchTitles = @{
         A1 = 'Allocation transformation'
         S1 = 'Shared controls'
@@ -19,6 +19,7 @@
         O3 = 'Cost'
         O4 = 'Outcome history'
         O5 = 'Reporting release'
+        O6 = 'Leave Balance Stats'
     }
     UnitJobs = @(
         @{ Id = 'AllocationInput'; Batch = 'A1'; Sequence = 1; Depends = @(); ReadJobs = @() }
@@ -49,5 +50,8 @@
         @{ Id = 'History'; Batch = 'O4'; Sequence = 6; Depends = @('Outcomes'); UnitDepends = @() }
         @{ Id = 'HistoryRead'; Batch = 'O4'; Sequence = 7; Depends = @('History'); UnitDepends = @(); Inputs = @('2. Calculations/EOW/Grid Thresholds.xlsx') }
         @{ Id = 'Reporting'; Batch = 'O5'; Sequence = 8; Depends = @('Cost', 'HistoryRead', 'Inefficiencies'); UnitDepends = @() }
+        # Final ordering only; workbook imports have not been inspected.
+        @{ Id = 'LeaveBalanceStats'; Batch = 'O6'; Root = 'LeaveBalanceStats'; Path = 'LBStats.xlsx'; Depends = @('Reporting'); UnitDepends = @(); ReadJobs = @() }
+        @{ Id = 'LeaveBalanceReporting'; Batch = 'O6'; Root = 'LeaveBalanceStats'; Path = 'TableauConnect-LB.xlsx'; Depends = @('LeaveBalanceStats'); UnitDepends = @(); ReadJobs = @() }
     )
 }

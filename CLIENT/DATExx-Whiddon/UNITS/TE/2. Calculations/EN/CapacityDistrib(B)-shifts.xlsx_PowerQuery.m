@@ -1,8 +1,298 @@
 // Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Workbook: CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
-// Source status: authoritative .m; availability lineage gate added 2026-09-19.
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
+// Extracted: 2026-10-05T07:55:23.444Z
 
 section Section1;
+
+// Query: fnBInputIssues
+// Purpose: Attribute input schema, cell and duplicate-key failures without stopping unrelated Resources.
+// Inputs: A captured input evaluation, its required columns and join keys.
+// Output: Diagnostic detail rows; a null Resource blocks all spare when attribution is impossible.
+// Notes: Unmatched allocation rows are reported separately without causing scope-wide spare exclusion.
+shared fnBInputIssues = (inputName as text, snapshot as record, requiredColumns as list, keys as list, skipUnmatchedAllocation as logical) as table =>
+let
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text],
+    RoleValue = try Role otherwise null,
+    MakeIssue = (status as text, resource as nullable number, period as nullable number, reason as text) as record =>
+        [Stage = "B", Check = inputName, Status = status, Resource = resource, Role = RoleValue, Name = null, Date = null, Period = period, Reason = reason,
+         Action = if resource = null then "Exclude all spare calculations; retain allocation evidence" else "Exclude spare calculations for this Resource; retain allocation evidence"],
+    ReadFailed = snapshot[HasError],
+    Raw = if ReadFailed then #table({}, {}) else snapshot[Value],
+    MissingColumns = if ReadFailed then requiredColumns else List.Difference(requiredColumns, Table.ColumnNames(Raw)),
+    SchemaIssues = if ReadFailed then {MakeIssue("Error", null, null, try snapshot[Error][Message] otherwise "Input evaluation failed")}
+        else if not List.IsEmpty(MissingColumns) then {MakeIssue("Error", null, null, "Missing required columns: " & Text.Combine(MissingColumns, ", "))} else {},
+    HasSchema = not ReadFailed and List.IsEmpty(MissingColumns),
+    UsableSchema = if HasSchema then Raw else #table(requiredColumns, {}),
+    RowsToCheck = if skipUnmatchedAllocation then Table.SelectRows(UsableSchema, each (try [Resource] otherwise null) <> null) else UsableSchema,
+    ErrorRows = Table.SelectRowsWithErrors(RowsToCheck, requiredColumns),
+    CellIssues = List.Transform(Table.ToRecords(ErrorRows), each MakeIssue("Error", try _[Resource] otherwise null, try _[Period] otherwise null, "Required input value contains an error")),
+    WithoutErrors = Table.RemoveRowsWithErrors(RowsToCheck, requiredColumns),
+    IsMissingKey = (row as record) as logical => List.AnyTrue(List.Transform(keys, (key) =>
+        let value = Record.Field(row, key) in value = null or (Value.Is(value, type text) and Text.Trim(value) = ""))),
+    MissingKeys = Table.SelectRows(WithoutErrors, IsMissingKey),
+    MissingKeyIssues = List.Transform(Table.ToRecords(MissingKeys), each MakeIssue("Fail", try _[Resource] otherwise null, try _[Period] otherwise null, "Required join key is missing")),
+    CompleteKeys = Table.SelectRows(WithoutErrors, each not IsMissingKey(_)),
+    KeyCounts = Table.Group(CompleteKeys, keys, {{"KeyCount", each Table.RowCount(_), Int64.Type}}),
+    DuplicateKeys = Table.SelectRows(KeyCounts, each [KeyCount] > 1),
+    DuplicateIssues = List.Transform(Table.ToRecords(DuplicateKeys), each MakeIssue("Fail", try _[Resource] otherwise null, try _[Period] otherwise null, "Duplicate join key; rows=" & Text.From(_[KeyCount]))),
+    Combined = SchemaIssues & CellIssues & MissingKeyIssues & DuplicateIssues,
+    // Every issue supplies all fields; preserve required types without nullable-only missing-field substitution.
+    Output = Table.FromRecords(Combined, DetailType)
+in
+    Table.Buffer(Output);
+
+// Query: fnBPreparedInput
+// Purpose: Return schema-safe rows for calculations after retaining failures in separate diagnostics.
+// Notes: Empty fallback tables are accompanied by Error diagnostics and scope-wide spare exclusion.
+shared fnBPreparedInput = (snapshot as record, requiredColumns as list, emptyTable as table) as table =>
+let
+    Raw = if snapshot[HasError] then emptyTable else snapshot[Value],
+    HasSchema = List.IsEmpty(List.Difference(requiredColumns, Table.ColumnNames(Raw))),
+    WithSchema = if HasSchema then Raw else emptyTable,
+    WithoutErrors = Table.RemoveRowsWithErrors(WithSchema, requiredColumns),
+    WithKeys = Table.SelectRows(WithoutErrors, each (if Table.HasColumns(WithoutErrors, {"Resource"}) then [Resource] <> null else true)
+        and (if Table.HasColumns(WithoutErrors, {"Period"}) then [Period] <> null else true))
+in
+    Table.Buffer(WithKeys);
+
+// Query: BContractInput_RESULT
+// Purpose: Capture contract import failures for honest diagnostics and Resource-scoped spare exclusion.
+shared BContractInput_RESULT = try Table.Buffer(#"IMPORT ResourceContract");
+
+// Query: BOriginalAvailabilityInput_RESULT
+// Purpose: Capture the existing A.1 original-availability import without substituting another source.
+shared BOriginalAvailabilityInput_RESULT = try Table.Buffer(#"IMPORT AvailabilityOriginal");
+
+// Query: BCappedAvailabilityInput_RESULT
+// Purpose: Capture A.2 C# plus the Stage 1 Resource mask and allocation evidence.
+shared BCappedAvailabilityInput_RESULT = try Table.Buffer(#"IMPORT ResPeriodAvailabilityCapped(C#)");
+
+// Query: BPriorityInput_RESULT
+// Purpose: Capture the true NWD priority table and typed input errors before Resource spare exclusions.
+shared BPriorityInput_RESULT = try let
+    Source = #"EXTRACT ResPeriodNWDTABLE",
+    TypedPriorities = Table.TransformColumnTypes(Source, {{"Resource", Int64.Type}, {"Period", Int64.Type}, {"NWDPriority", Int64.Type}})
+in
+    Table.Buffer(TypedPriorities);
+
+// Query: BDemandInput_RESULT
+// Purpose: Capture demand input failures so surviving allocation evidence can still be published.
+shared BDemandInput_RESULT = try Table.Buffer(#"IMPORT Demand");
+
+// Query: BAllocationInput_RESULT
+// Purpose: Capture the unchanged actual-allocation interface for calculation-side checks.
+shared BAllocationInput_RESULT = try Table.Buffer(ResPeriodAllocationTABLE);
+
+// Query: BOriginalAvailability_Prepare
+// Purpose: Prepare usable original-availability rows without discarding the raw import diagnostics.
+shared BOriginalAvailability_Prepare = fnBPreparedInput(BOriginalAvailabilityInput_RESULT, {"Role", "Resource", "Period", "Availability"},
+    #table(type table [Role = nullable text, Resource = nullable number, Period = nullable number, Availability = nullable number], {}));
+
+// Query: BCappedAvailability_Prepare
+// Purpose: Prepare usable raw C# rows before masking; diagnostics and lineage inspect this unmasked view.
+shared BCappedAvailability_Prepare = fnBPreparedInput(BCappedAvailabilityInput_RESULT, {"Role", "Resource", "Period", "AvailabilityCapped"},
+    #table(type table [Role = nullable text, Resource = nullable number, Period = nullable number, AvailabilityCapped = nullable number], {}));
+
+// Query: BPriority_Prepare
+// Purpose: Select usable NWD priorities after capturing typed input failures for nonblocking diagnostics.
+shared BPriority_Prepare = let
+    PreparedInput = fnBPreparedInput(BPriorityInput_RESULT, {"Resource", "Period", "NWDPriority"},
+        #table(type table [Resource = nullable number, Period = nullable number, NWDPriority = nullable number], {})),
+    SelectedPriorities = Table.SelectColumns(PreparedInput, {"Resource", "Period", "NWDPriority"}),
+    SortedPriorities = Table.Sort(SelectedPriorities, {{"Resource", Order.Ascending}, {"Period", Order.Ascending}})
+in
+    Table.Buffer(SortedPriorities);
+
+// Query: BDemand_Prepare
+// Purpose: Prepare demand for existing B arithmetic; failures remain visible and block optional spare.
+shared BDemand_Prepare = fnBPreparedInput(BDemandInput_RESULT, {"Period", "D", "Role", "Shift", "Facility", "Date"},
+    #table(type table [Period = nullable number, D = nullable number, Role = nullable text, Shift = nullable text, Facility = nullable text, Date = nullable date], {}));
+
+// Query: BAllocationFacts_Prepare
+// Purpose: Retain usable individual allocation facts for the existing period-allocation arithmetic.
+shared BAllocationFacts_Prepare = fnBPreparedInput(BAllocationInput_RESULT, {"Resource", "Period", "Allocation"},
+    #table(type table [Resource = nullable number, Period = nullable number, Allocation = nullable number], {}));
+
+// Query: BAllocation_CalculationTABLE
+// Purpose: Supply one join row per Resource/Period while preserving all actual rows in ResPeriodAllocationTABLE.
+// Notes: Duplicate facts are diagnosed; this grouped view prevents multiplicative calculation joins.
+shared BAllocation_CalculationTABLE = let
+    GroupedFacts = Table.Group(BAllocationFacts_Prepare, {"Resource", "Period"}, {
+        {"Allocation", each List.Sum([Allocation]), type nullable number},
+        {"HasAllocationEvidence", each List.AnyTrue(List.Transform([Allocation], each _ <> null and _ > 0)), type logical}
+    })
+in
+    Table.Buffer(GroupedFacts);
+
+// Query: BUnmatchedAllocation_EXCEPTIONS
+// Purpose: Flag skipped allocation rows with unusable Resource identity without stopping other Resources.
+// Output: The allocation quantity remains visible as evidence; these exceptions do not block all spare calculations.
+shared BUnmatchedAllocation_EXCEPTIONS = let
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text, AllocationEvidence = nullable number],
+    RoleValue = try Role otherwise null,
+    Raw = if BAllocationInput_RESULT[HasError] then #table({"Resource"}, {}) else BAllocationInput_RESULT[Value],
+    Rows = if not Table.HasColumns(Raw, {"Resource"}) then {} else Table.ToRecords(Table.SelectRows(Raw, each (try [Resource] otherwise null) = null)),
+    Issues = List.Transform(Rows, each [Stage = "B", Check = "Allocation input", Status = if (try _[Resource] otherwise "Error") = "Error" then "Error" else "Fail",
+        Resource = null, Role = try _[Role] otherwise RoleValue, Name = try _[Name] otherwise null, Date = try _[Date] otherwise null, Period = try _[Period] otherwise null,
+        Reason = "Allocation has no usable Resource match", Action = "Allocation skipped; evidence retained; other Resources continue", AllocationEvidence = try _[Allocation] otherwise null]),
+    Output = Table.FromRecords(Issues, DetailType)
+in
+    Table.Buffer(Output);
+
+// Query: BInputIssues_DETAILS
+// Purpose: Collect Resource-local key failures and scope-wide source/schema errors before calculations.
+shared BInputIssues_DETAILS = Table.Combine({
+    fnBInputIssues("Demand input", BDemandInput_RESULT, {"Period", "D", "Role", "Shift", "Facility", "Date"}, {"Period"}, false),
+    fnBInputIssues("Allocation input", BAllocationInput_RESULT, {"Resource", "Period", "Allocation"}, {"Resource", "Period"}, true),
+    fnBInputIssues("C# input", BCappedAvailabilityInput_RESULT, {"Role", "Resource", "Period", "AvailabilityCapped"}, {"Resource", "Period"}, false),
+    fnBInputIssues("Original availability input", BOriginalAvailabilityInput_RESULT, {"Role", "Resource", "Period", "Availability"}, {"Resource", "Period"}, false),
+    fnBInputIssues("Priority input", BPriorityInput_RESULT, {"Resource", "Period", "NWDPriority"}, {"Resource", "Period"}, false),
+    fnBInputIssues("Resource contract keys", BContractInput_RESULT, {"Resource", "Effective Shift Cap", "Limit Basis", "Worker Record Status"}, {"Resource"}, false),
+    BUnmatchedAllocation_EXCEPTIONS
+});
+
+// Query: BContractIssues_DETAILS
+// Purpose: Attribute invalid, missing and disallowed fallback caps to affected Resources without inventing caps.
+shared BContractIssues_DETAILS = let
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text],
+    RoleValue = try Role otherwise null,
+    MakeIssue = (resource as nullable number, reason as text) as record => [Stage = "B", Check = "Resource contracts", Status = "Fail", Resource = resource, Role = RoleValue, Name = null, Date = null, Period = null, Reason = reason,
+        Action = if resource = null then "Exclude all spare calculations; retain allocation evidence" else "Exclude spare calculations for this Resource; retain allocation evidence"],
+    Contracts = fnBPreparedInput(BContractInput_RESULT, {"Resource", "Effective Shift Cap", "Limit Basis", "Worker Record Status"},
+        #table(type table [Resource = nullable number, #"Effective Shift Cap" = nullable number, #"Limit Basis" = nullable text, #"Worker Record Status" = nullable text], {})),
+    InvalidRows = Table.SelectRows(Contracts, each [Effective Shift Cap] = null or Number.IsNaN([Effective Shift Cap]) or [Effective Shift Cap] = #infinity or [Effective Shift Cap] = -#infinity or [Effective Shift Cap] <= 0
+        or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap]) or [Limit Basis] = null or Text.Trim([Limit Basis]) = ""),
+    InvalidIssues = List.Transform(Table.ToRecords(InvalidRows), each MakeIssue(_[Resource], "Effective Shift Cap or Limit Basis is missing or invalid")),
+    PositiveOriginal = Table.SelectRows(BOriginalAvailability_Prepare, each [Availability] <> null and [Availability] > 0),
+    PositiveCapped = Table.SelectRows(BCappedAvailability_Prepare, each [AvailabilityCapped] <> null and [AvailabilityCapped] > 0),
+    PositiveResources = Table.Distinct(Table.Combine({Table.SelectColumns(PositiveOriginal, {"Resource"}), Table.SelectColumns(PositiveCapped, {"Resource"})})),
+    MissingCaps = Table.NestedJoin(PositiveResources, {"Resource"}, Contracts, {"Resource"}, "Contracts", JoinKind.LeftAnti),
+    MissingIssues = List.Transform(MissingCaps[Resource], each MakeIssue(_, "Positive availability has no Resource contract")),
+    FallbackResources = Table.SelectRows(Contracts, each [Worker Record Status] = "Not found"),
+    InvalidFallback = Table.NestedJoin(Table.Distinct(Table.SelectColumns(PositiveOriginal, {"Resource"})), {"Resource"}, FallbackResources, {"Resource"}, "Fallback", JoinKind.Inner),
+    FallbackIssues = List.Transform(InvalidFallback[Resource], each MakeIssue(_, "Missing-worker fallback has positive AIN availability")),
+    Output = Table.FromRecords(InvalidIssues & MissingIssues & FallbackIssues, DetailType)
+in
+    Table.Buffer(Output);
+
+// Query: BMaskIssues_DETAILS
+// Purpose: Require explicit upstream Resource permission; missing masks are Error rather than an implied Pass.
+shared BMaskIssues_DETAILS = let
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text],
+    RoleValue = try Role otherwise null,
+    MakeIssue = (status as text, resource as nullable number, reason as text) as record => [Stage = "B", Check = "Upstream spare permission", Status = status, Resource = resource, Role = RoleValue, Name = null, Date = null, Period = null, Reason = reason,
+        Action = if resource = null then "Exclude all spare calculations; retain allocation evidence" else "Exclude spare calculations for this Resource; retain allocation evidence"],
+    RequiredMetadata = {"SpareCalculationAllowed", "SpareIssueReason", "HasAllocationEvidence", "OriginalAvailability"},
+    ReadIssues = (snapshot as record, inputName as text) as list =>
+        let
+            Raw = if snapshot[HasError] then #table({}, {}) else snapshot[Value],
+            MissingMetadata = List.Difference(RequiredMetadata, Table.ColumnNames(Raw)),
+            SchemaIssues = if snapshot[HasError] then {} else if not List.IsEmpty(MissingMetadata) then
+                {MakeIssue("Error", null, inputName & " is missing Stage 1 metadata: " & Text.Combine(MissingMetadata, ", "))} else {},
+            Rows = if snapshot[HasError] or not List.IsEmpty(MissingMetadata) then {} else Table.ToRecords(Raw),
+            HasValidMetadata = (row as record) as logical => try Value.Is(row[SpareCalculationAllowed], type logical)
+                and Value.Is(row[HasAllocationEvidence], type logical)
+                and (row[SpareIssueReason] = null or Value.Is(row[SpareIssueReason], type text))
+                and (row[OriginalAvailability] = null or Value.Is(row[OriginalAvailability], type number)) otherwise false,
+            BlockedRows = List.Select(Rows, each not HasValidMetadata(_) or (try _[SpareCalculationAllowed] otherwise false) <> true),
+            RowIssues = List.Transform(BlockedRows, each MakeIssue(
+                if HasValidMetadata(_) then "Fail" else "Error",
+                try _[Resource] otherwise null,
+                inputName & ": " & (if not HasValidMetadata(_) then "Stage 1 metadata is invalid or contains an error" else
+                    (try if _[SpareIssueReason] = null or Text.Trim(_[SpareIssueReason]) = "" then "Spare permission is false or unusable" else _[SpareIssueReason] otherwise "Spare permission is false or unusable"))))
+        in SchemaIssues & RowIssues,
+    Issues = ReadIssues(BOriginalAvailabilityInput_RESULT, "A.1 original availability") & ReadIssues(BCappedAvailabilityInput_RESULT, "A.2 C#"),
+    Output = Table.Distinct(Table.FromRecords(Issues, DetailType))
+in
+    Table.Buffer(Output);
+
+// Query: BAvailabilityLineage_Prepare
+// Purpose: Inspect unmasked positive A.2 cells against original A.1 availability before Resource exclusion.
+shared BAvailabilityLineage_Prepare = let
+    PositiveCapped = Table.SelectRows(BCappedAvailability_Prepare, each [AvailabilityCapped] <> null and [AvailabilityCapped] > 0),
+    Original = Table.SelectColumns(BOriginalAvailability_Prepare, {"Role", "Resource", "Period", "Availability"}),
+    Joined = Table.NestedJoin(PositiveCapped, {"Role", "Resource", "Period"}, Original, {"Role", "Resource", "Period"}, "OriginalRows", JoinKind.LeftOuter),
+    Assessed = Table.AddColumn(Joined, "LineageIssue", each if Table.IsEmpty([OriginalRows]) then "No original A.1 availability row"
+        else if Table.RowCount([OriginalRows]) <> 1 then "Ambiguous original A.1 availability rows"
+        else if [OriginalRows]{0}[Availability] = null or [OriginalRows]{0}[Availability] <= 0 then "Original A.1 availability is not positive" else null, type nullable text),
+    Failures = Table.SelectRows(Assessed, each [LineageIssue] <> null),
+    Output = Table.RemoveColumns(Failures, {"OriginalRows"})
+in
+    Table.Buffer(Output);
+
+// Query: BLineageIssues_DETAILS
+// Purpose: Exclude spare for each Resource with unsupported C# while preserving allocation evidence.
+shared BLineageIssues_DETAILS = let
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text],
+    Rows = List.Transform(Table.ToRecords(BAvailabilityLineage_Prepare), each [Stage = "B", Check = "Availability lineage", Status = "Fail", Resource = _[Resource], Role = _[Role], Name = null, Date = null, Period = _[Period], Reason = _[LineageIssue], Action = "Exclude spare calculations for this Resource; retain allocation evidence"])
+in
+    Table.FromRecords(Rows, DetailType);
+
+// Query: BPreCalculationIssues_DETAILS
+// Purpose: Collect input issues before calculations, keeping Resource permission independent of output diagnostics.
+shared BPreCalculationIssues_DETAILS = Table.Buffer(Table.Combine({BInputIssues_DETAILS, BContractIssues_DETAILS, BMaskIssues_DETAILS, BLineageIssues_DETAILS}));
+
+// Query: BRedistribution_RESULT
+// Purpose: Capture optional redistribution failure without concealing it or discarding allocation evidence.
+shared BRedistribution_RESULT = try let
+    Rows = Table.Buffer(#"ReDistribPeriodAvailbility TABLE"),
+    ErrorRows = Table.SelectRowsWithErrors(Rows),
+    CheckedRows = if Table.IsEmpty(ErrorRows) then Rows else error Error.Record("CapacityDistribB.RedistributionErrors", "Optional redistribution contains cell errors.", ErrorRows)
+in
+    CheckedRows;
+
+// Query: BFinalReduction_RESULT
+// Purpose: Capture optional final-reduction failure; final capacity then excludes all unallocated spare.
+shared BFinalReduction_RESULT = try let
+    Rows = Table.Buffer(SubtractOverallocatedResources),
+    ErrorRows = Table.SelectRowsWithErrors(Rows),
+    CheckedRows = if Table.IsEmpty(ErrorRows) then Rows else error Error.Record("CapacityDistribB.FinalReductionErrors", "Optional final reduction contains cell errors.", ErrorRows)
+in
+    CheckedRows;
+
+// Query: BOptionalCalculationIssues_DETAILS
+// Purpose: Report every optional-calculation fallback as Error with scope-wide spare exclusion.
+// Notes: These post-calculation checks do not feed BResourceSpareEligibility and cannot form a dependency cycle.
+shared BOptionalCalculationIssues_DETAILS = let
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text],
+    RoleValue = try Role otherwise null,
+    CaptureIssue = (checkName as text, snapshot as record) as list => if snapshot[HasError] then
+        {[Stage = "B", Check = checkName, Status = "Error", Resource = null, Role = RoleValue, Name = null, Date = null, Period = null,
+          Reason = try snapshot[Error][Message] otherwise "Optional calculation failed", Action = "Exclude all spare calculations for this output stage; retain allocation evidence"]} else {},
+    Issues = CaptureIssue("Redistribution calculation", BRedistribution_RESULT) & CaptureIssue("Final reduction calculation", BFinalReduction_RESULT)
+in
+    Table.FromRecords(Issues, DetailType);
+
+// Query: CapacityDiagnostics_DETAILS
+// Purpose: Publish truthful Stage 1 issues including errors that caused optional-calculation fallback.
+// Output: Resource-level evidence; a null Resource denotes a source/schema or calculation issue affecting all spare.
+shared CapacityDiagnostics_DETAILS = Table.Buffer(Table.Combine({BPreCalculationIssues_DETAILS, BOptionalCalculationIssues_DETAILS}));
+
+// Query: CapacityDiagnostics_SUMMARY
+// Purpose: Summarise real Pass, Fail and Error statuses without disguising failed inputs as successful calculations.
+shared CapacityDiagnostics_SUMMARY = let
+    CheckNames = {"Demand input", "Allocation input", "C# input", "Original availability input", "Priority input", "Resource contract keys", "Resource contracts", "Upstream spare permission", "Availability lineage", "Redistribution calculation", "Final reduction calculation"},
+    SummaryRows = List.Transform(CheckNames, (checkName) =>
+        let Issues = Table.SelectRows(CapacityDiagnostics_DETAILS, each [Check] = checkName)
+        in [Stage = "B", Check = checkName, Status = if List.Contains(Issues[Status], "Error") then "Error" else if Table.IsEmpty(Issues) then "Pass" else "Fail",
+            Failures = Table.RowCount(Issues), Details = if Table.IsEmpty(Issues) then null else Text.Combine(List.Distinct(Issues[Reason]), "; ")]),
+    Output = Table.FromRecords(SummaryRows, type table [Stage = text, Check = text, Status = text, Failures = nullable number, Details = nullable text])
+in
+    Table.Buffer(Output);
+
+// Query: BResourceSpareEligibility
+// Purpose: Combine upstream permission and B-local issues at Resource grain before any spare calculation.
+// Notes: Diagnostics depend only on captured inputs; this view never reads C## or C### and cannot form an output cycle.
+shared BResourceSpareEligibility = let
+    Resources = Table.Distinct(Table.Combine({Table.SelectColumns(BOriginalAvailability_Prepare, {"Resource"}), Table.SelectColumns(BCappedAvailability_Prepare, {"Resource"}), Table.SelectColumns(BAllocation_CalculationTABLE, {"Resource"})})),
+    GlobalIssues = Table.SelectRows(BPreCalculationIssues_DETAILS, each [Resource] = null and [Action] <> "Allocation skipped; evidence retained; other Resources continue"),
+    ResourceIssues = Table.SelectRows(BPreCalculationIssues_DETAILS, each [Resource] <> null),
+    JoinedIssues = Table.NestedJoin(Resources, {"Resource"}, ResourceIssues, {"Resource"}, "ResourceIssues", JoinKind.LeftOuter),
+    WithPermission = Table.AddColumn(JoinedIssues, "SpareCalculationAllowed", each Table.IsEmpty(GlobalIssues) and Table.IsEmpty([ResourceIssues]), type logical),
+    WithReason = Table.AddColumn(WithPermission, "SpareIssueReason", each if [SpareCalculationAllowed] then null else Text.Combine(List.Distinct(GlobalIssues[Reason] & [ResourceIssues][Reason]), "; "), type nullable text),
+    Output = Table.RemoveColumns(WithReason, {"ResourceIssues"})
+in
+    Table.Buffer(Output);
 
 // Query: fnAddIndexedRunningTotal
 // Purpose: Calculate inclusive running totals in one pass through the existing indexed priority order.
@@ -97,14 +387,16 @@ in
     #"Expanded ResMaxAddition";
 
 [ Description = "%#(lf)(A-D) gaps divided to D #(lf)#(lf)Not really ABi - but should still provide same ranking of prorrity" ]
+// Query: PeriodUnderallcationPrioritised
+// Purpose: Retain the existing redistribution priority inputs using the checked priority preparation interface.
 shared PeriodUnderallcationPrioritised = let
     Source = ResPeriodOverallocationReduction,
     #"Merged Queries2" = Table.NestedJoin(Source, {"Resource", "Period"}, ResPeriodMaxAddition, {"Resource", "Period"}, "ResPeriodMaxAddition", JoinKind.LeftOuter),
     #"Expanded ResPeriodMaxAddition" = Table.ExpandTableColumn(#"Merged Queries2", "ResPeriodMaxAddition", {"ResMaxReduction"}, {"ResMaxReduction"}),
     #"Merged Queries1" = Table.NestedJoin(#"Expanded ResPeriodMaxAddition", {"Period"}, PeriodDemandTABLE, {"Period"}, "PeriodDemandTABLE", JoinKind.LeftOuter),
     #"Expanded PeriodDemandTABLE" = Table.ExpandTableColumn(#"Merged Queries1", "PeriodDemandTABLE", {"D"}, {"D"}),
-    #"Merged Queries" = Table.NestedJoin(#"Expanded PeriodDemandTABLE", {"Resource", "Period"}, #"IMPORT ResPeriodNWDTABLE", {"Resource", "Period"}, "IMPORT ResPeriodNWDTABLE", JoinKind.LeftOuter),
-    #"Expanded NSWPRIORITIES" = Table.ExpandTableColumn(#"Merged Queries", "IMPORT ResPeriodNWDTABLE", {"NWDPriority"}, {"NWDPriority"}),
+    #"Merged Queries" = Table.NestedJoin(#"Expanded PeriodDemandTABLE", {"Resource", "Period"}, BPriority_Prepare, {"Resource", "Period"}, "EXTRACT ResPeriodNWDTABLE", JoinKind.LeftOuter),
+    #"Expanded NSWPRIORITIES" = Table.ExpandTableColumn(#"Merged Queries", "EXTRACT ResPeriodNWDTABLE", {"NWDPriority"}, {"NWDPriority"}),
     BUFFER = Table.Buffer(#"Expanded NSWPRIORITIES")
 in
     BUFFER;
@@ -116,10 +408,12 @@ shared #"PrioritiseRedistribAvail-Setup" = let
 in
     #"Added FTE";
 
+// Query: PrioritiseRedistribAvail-Distrib
+// Purpose: Retain redistribution rankings and resolve Resource priority ties by Period.
 shared #"PrioritiseRedistribAvail-Distrib" = let
     Source = #"PrioritiseRedistribAvail-Setup",
     #"Renamed Columns" = Table.RenameColumns(Source,{{"Index", "IndexAllRows"}}),
-    #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"Resource", Order.Ascending}, {"C#/D", Order.Descending}, {"ExcessC#-D", Order.Descending}, {"NWDPriority", Order.Descending}}),
+    #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"Resource", Order.Ascending}, {"C#/D", Order.Descending}, {"ExcessC#-D", Order.Descending}, {"NWDPriority", Order.Descending}, {"Period", Order.Ascending}}),
     #"Added Index" = Table.AddIndexColumn(#"Sorted Rows", "IndexAllRowPrioritySort", 2
 , 1, Int64.Type)
 in
@@ -148,9 +442,11 @@ in
     #"Added KEEP";
 
 [ Description = "BUFFER" ]
+// Query: ReDistribResAvailabilityTABLE
+// Purpose: Index redistribution rows in stable Period/Resource order for period running totals.
 shared ReDistribResAvailabilityTABLE = let
     Source = ReDistributeResAvailability,
-    #"Sorted Rows" = Table.Sort(Source,{{"Period", Order.Ascending}}),
+    #"Sorted Rows" = Table.Sort(Source,{{"Period", Order.Ascending}, {"Resource", Order.Ascending}}),
     #"Added Index" = Table.AddIndexColumn(#"Sorted Rows", "Index", 2, 1, Int64.Type),
     #"Removed Columns" = Table.RemoveColumns(#"Added Index",{"D", "NWDPriority", "IndexAllRows", "FTE", "IndexAllRowPrioritySort", "StartResIndex", "ResExcessAvailable", "ResAvailNumber", "Subtraction"}),
     BUFFER = Table.Buffer(#"Removed Columns")
@@ -197,8 +493,10 @@ shared ReAllocateMATRIX = let
 in
     #"Pivoted Column1";
 
+// Query: ResRosterAvailabilityC##CapReduction
+// Purpose: Calculate the existing C## cap-reduction target only for Resources allowed to calculate spare.
 shared #"ResRosterAvailabilityC##CapReduction" = let
-    Source = #"C##TABLE",
+    Source = Table.SelectRows(#"C##TABLE", each [SpareCalculationAllowed] = true),
     #"Grouped Rows" = Table.Group(Source, {"Resource"}, {{"RosterAvailability", each List.Sum([#"C##"]), type nullable number}}),
     #"Replaced Value" = Table.ReplaceValue(#"Grouped Rows",null,0,Replacer.ReplaceValue,{"RosterAvailability"}),
     // Join the cap only after aggregation so contract totals are never repeated at Resource-Period grain.
@@ -207,11 +505,7 @@ shared #"ResRosterAvailabilityC##CapReduction" = let
     #"Added AVAILCAP" = Table.AddColumn(#"Expanded Effective Shift Cap", "RosterAvailabilityCAPPED", each
         // Allocation-only Resources can remain in the grid with zero availability and no contract cap.
         if [RosterAvailability] = 0 then 0
-        else if [Effective Shift Cap] = null then error Error.Record(
-            "CapacityDistribB.MissingResourceCap",
-            "A Resource with positive C## availability has no Effective Shift Cap.",
-            [Resource = [Resource], RosterAvailability = [RosterAvailability]]
-        )
+        else if [Effective Shift Cap] = null then null
         else if [RosterAvailability] > [Effective Shift Cap] then [Effective Shift Cap]
         else [RosterAvailability], type number),
     #"Inserted Subtraction" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
@@ -301,69 +595,39 @@ in
     Table.Buffer(ApplicableRoleCaps);
 
 // Query: BResourceContract_CHECK
-// Purpose: Validate unique Resource contracts, usable caps and complete coverage of AIN availability resources.
-// Output: Connection-only diagnostic rows used by BResourceContract and the final B publication gate.
+// Purpose: Retain the legacy contract-check interface with honest Stage 1 failure statuses.
+// Output: Diagnostic rows only; failed Resources lose spare calculations without stopping unrelated Resources.
 shared BResourceContract_CHECK = let
-    Contracts = #"IMPORT ResourceContract",
-    ContractKeys = Table.SelectColumns(Contracts, {"Resource"}),
-    ErrorKeyRows = Table.RowCount(Table.SelectRowsWithErrors(ContractKeys, {"Resource"})),
-    KeysWithoutErrors = Table.RemoveRowsWithErrors(ContractKeys, {"Resource"}),
-    MissingKeyRows = Table.RowCount(Table.SelectRows(KeysWithoutErrors, each [Resource] = null)),
-    CompleteKeys = Table.SelectRows(KeysWithoutErrors, each [Resource] <> null),
-    ContractCounts = Table.Group(CompleteKeys, {"Resource"}, {{"ContractRows", each Table.RowCount(_), Int64.Type}}),
-    DuplicateResourceGroups = Table.RowCount(Table.SelectRows(ContractCounts, each [ContractRows] > 1)),
-    ContractValues = Table.SelectColumns(Contracts, {"Effective Shift Cap", "Limit Basis"}),
-    ErrorContractRows = Table.RowCount(Table.SelectRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"})),
-    ContractValuesWithoutErrors = Table.RemoveRowsWithErrors(ContractValues, {"Effective Shift Cap", "Limit Basis"}),
-    InvalidCapRows = ErrorContractRows + Table.RowCount(Table.SelectRows(ContractValuesWithoutErrors, each
-        [Effective Shift Cap] = null
-            or [Effective Shift Cap] <= 0
-            or [Effective Shift Cap] <> Number.RoundDown([Effective Shift Cap])
-            or [Limit Basis] = null
-            or Text.Trim([Limit Basis]) = "")),
-    // Coverage is assessed at Resource grain before any Resource-Period distribution joins.
-    AvailabilityResources = Table.Distinct(Table.SelectColumns(
-        // Only Resources contributing positive availability require contract coverage.
-        Table.SelectRows(#"IMPORT AvailabilityOriginal", each
-            [Resource] <> null and [Availability] <> null and [Availability] > 0),
-        {"Resource"}
-    )),
-    MissingCoverage = Table.RowCount(Table.NestedJoin(
-        AvailabilityResources, {"Resource"}, CompleteKeys, {"Resource"}, "Contract", JoinKind.LeftAnti
-    )),
-    MissingWorkerKeys = Table.Distinct(Table.SelectColumns(
-        Table.SelectRows(Table.RemoveRowsWithErrors(Contracts, {"Resource", "Worker Record Status"}), each
-            [Resource] <> null and [Worker Record Status] = "Not found"),
-        {"Resource"}
-    )),
-    // The Settings fallback is allowed only for allocation-only Resources that contribute no AIN availability.
-    MissingWorkerPositiveAvailability = Table.RowCount(Table.NestedJoin(
-        AvailabilityResources, {"Resource"}, MissingWorkerKeys, {"Resource"}, "MissingWorker", JoinKind.Inner
-    )),
-    Checks = #table(
-        type table [Check = text, Status = text, Failures = number, Details = nullable text],
-        {
-            {"Populated Resource contract keys", if ErrorKeyRows + MissingKeyRows = 0 then "Pass" else "Fail", ErrorKeyRows + MissingKeyRows, null},
-            {"Unique Resource contracts", if DuplicateResourceGroups = 0 then "Pass" else "Fail", DuplicateResourceGroups, null},
-            {"Valid effective Resource caps", if InvalidCapRows = 0 then "Pass" else "Fail", InvalidCapRows, null},
-            {"Complete AIN availability contract coverage", if MissingCoverage = 0 then "Pass" else "Fail", MissingCoverage, null},
-            {"Missing-worker fallback has zero AIN availability", if MissingWorkerPositiveAvailability = 0 then "Pass" else "Fail", MissingWorkerPositiveAvailability, null}
-        }
-    )
+    KeyIssues = Table.SelectRows(BInputIssues_DETAILS, each [Check] = "Resource contract keys"),
+    MakeCheck = (checkName as text, issues as table) as record => [Check = checkName,
+        Status = if List.Contains(issues[Status], "Error") then "Error" else if Table.IsEmpty(issues) then "Pass" else "Fail",
+        Failures = Table.RowCount(issues), Details = if Table.IsEmpty(issues) then null else Text.Combine(List.Distinct(issues[Reason]), "; ")],
+    SchemaOrCellIssues = Table.SelectRows(KeyIssues, each [Status] = "Error"),
+    Checks = Table.FromRecords({
+        MakeCheck("Populated Resource contract keys", Table.SelectRows(KeyIssues, each not Text.StartsWith([Reason], "Duplicate join key"))),
+        MakeCheck("Unique Resource contracts", Table.Combine({SchemaOrCellIssues, Table.SelectRows(KeyIssues, each Text.StartsWith([Reason], "Duplicate join key"))})),
+        MakeCheck("Valid effective Resource caps", Table.Combine({SchemaOrCellIssues, Table.SelectRows(BContractIssues_DETAILS, each Text.StartsWith([Reason], "Effective Shift Cap"))})),
+        MakeCheck("Complete AIN availability contract coverage", Table.Combine({SchemaOrCellIssues, Table.SelectRows(BContractIssues_DETAILS, each [Reason] = "Positive availability has no Resource contract")})),
+        MakeCheck("Missing-worker fallback has zero AIN availability", Table.Combine({SchemaOrCellIssues, Table.SelectRows(BContractIssues_DETAILS, each [Reason] = "Missing-worker fallback has positive AIN availability")}))
+    }, type table [Check = text, Status = text, Failures = number, Details = nullable text])
 in
     Table.Buffer(Checks);
 
 // Query: BResourceContract
-// Purpose: Publish one validated Effective Shift Cap per Resource for B's Resource-grain calculations.
+// Purpose: Publish only unique usable contract caps; affected Resources are excluded through Stage 1 diagnostics.
 shared BResourceContract = let
-    Failures = Table.SelectRows(BResourceContract_CHECK, each [Status] <> "Pass"),
-    Checked = if Table.IsEmpty(Failures) then #"IMPORT ResourceContract"
-        else error Error.Record(
-            "CapacityDistribB.ResourceContractValidation",
-            "Resource contracts are missing, duplicated or invalid. Review BResourceContract_CHECK.",
-            Failures
-        ),
-    Output = Table.SelectColumns(Checked, {"Resource", "Effective Shift Cap", "Limit Basis"})
+    PreparedContracts = fnBPreparedInput(BContractInput_RESULT, {"Resource", "Effective Shift Cap", "Limit Basis", "Worker Record Status"},
+        #table(type table [Resource = nullable number, #"Effective Shift Cap" = nullable number, #"Limit Basis" = nullable text, #"Worker Record Status" = nullable text], {})),
+    ValidCaps = Table.SelectRows(PreparedContracts, each [Effective Shift Cap] <> null and not Number.IsNaN([Effective Shift Cap]) and [Effective Shift Cap] <> #infinity and [Effective Shift Cap] <> -#infinity and [Effective Shift Cap] > 0
+        and [Effective Shift Cap] = Number.RoundDown([Effective Shift Cap]) and [Limit Basis] <> null and Text.Trim([Limit Basis]) <> ""),
+    Counts = Table.Group(PreparedContracts, {"Resource"}, {{"ContractRows", each Table.RowCount(_), Int64.Type}}),
+    UniqueResources = Table.SelectRows(Counts, each [ContractRows] = 1),
+    UniqueCaps = Table.NestedJoin(ValidCaps, {"Resource"}, UniqueResources, {"Resource"}, "UniqueResource", JoinKind.Inner),
+    ContractIssueResources = Table.Distinct(Table.SelectColumns(Table.Combine({
+        Table.SelectRows(BInputIssues_DETAILS, each [Check] = "Resource contract keys" and [Resource] <> null), BContractIssues_DETAILS
+    }), {"Resource"})),
+    UnambiguousCaps = Table.NestedJoin(UniqueCaps, {"Resource"}, ContractIssueResources, {"Resource"}, "ContractIssues", JoinKind.LeftAnti),
+    Output = Table.SelectColumns(UnambiguousCaps, {"Resource", "Effective Shift Cap", "Limit Basis"})
 in
     Table.Buffer(Output);
 
@@ -415,18 +679,19 @@ shared #"IMPORT ResPeriodAvailabilityCapped(C#)" = let
 in
     #"Removed Columns";
 
-// Query: IMPORT ResPeriodNWDTABLE
-// Purpose: Read the existing A.1 resource-period priority worksheet, preserving header promotion and types.
-shared #"IMPORT ResPeriodNWDTABLE" = let
+// Query: EXTRACT ResPeriodNWDTABLE
+// Purpose: Return A.1's true NWD priority table unchanged from the existing workbook import.
+// Notes: The user confirmed all A.1 loaded outputs are tables; ResPeriodWDTABLE remains A.2's separate workday-status interface.
+shared #"EXTRACT ResPeriodNWDTABLE" = let
     Source = #"IMPORTSource A1",
-    ResPeriodWDTABLE_Sheet = Source{[Item="ResPeriodWDTABLE",Kind="Sheet"]}[Data],
-    #"Promoted Headers" = Table.PromoteHeaders(ResPeriodWDTABLE_Sheet, [PromoteAllScalars=true]),
-    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Resource", Int64.Type}, {"Day", Int64.Type}, {"PotentialAvailability", type text}, {"Period", Int64.Type}, {"Availability", Int64.Type}, {"RosteredPeriodStatus", type text}})
+    PriorityTable = Source{[Item="ResPeriodShiftNWDTABLE",Kind="Table"]}[Data]
 in
-    #"Changed Type";
+    PriorityTable;
 
+// Query: PeriodAllocationTABLE
+// Purpose: Preserve B's individual-fact AllocationThreshold arithmetic and period totals on usable allocation evidence.
 shared PeriodAllocationTABLE = let
-    Source = ResPeriodAllocationTABLE,
+    Source = BAllocationFacts_Prepare,
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"Period", Int64.Type}}),
     #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Allocation", "AllocationX"}}),
     #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns", "Allocation", each if [AllocationX] > AllocationThreshold then 1 else [AllocationX]),
@@ -441,8 +706,10 @@ shared #"PeriodA-D" = let
 in
     #"Sorted Rows";
 
+// Query: ResRosterAvailabilityCapReduction
+// Purpose: Calculate the existing C# cap-reduction target only for Resources allowed to calculate spare.
 shared ResRosterAvailabilityCapReduction = let
-    Source = ResPeriodAvailabilityTABLE,
+    Source = Table.SelectRows(ResPeriodAvailabilityTABLE, each [SpareCalculationAllowed] = true),
     #"Grouped ROSTERAVAILABILITY" = Table.Group(Source, {"Resource"}, {{"RosterAvailability", each List.Sum([#"C#"]), type nullable number}}),
     #"Replaced Value" = Table.ReplaceValue(#"Grouped ROSTERAVAILABILITY",null,0,Replacer.ReplaceValue,{"RosterAvailability"}),
     // Join the cap only after aggregation so contract totals are never repeated at Resource-Period grain.
@@ -451,11 +718,7 @@ shared ResRosterAvailabilityCapReduction = let
     #"Added AVAILCAP" = Table.AddColumn(#"Expanded Effective Shift Cap", "RosterAvailabilityCAPPED", each
         // Allocation-only Resources can remain in the grid with zero availability and no contract cap.
         if [RosterAvailability] = 0 then 0
-        else if [Effective Shift Cap] = null then error Error.Record(
-            "CapacityDistribB.MissingResourceCap",
-            "A Resource with positive C# availability has no Effective Shift Cap.",
-            [Resource = [Resource], RosterAvailability = [RosterAvailability]]
-        )
+        else if [Effective Shift Cap] = null then null
         else if [RosterAvailability] > [Effective Shift Cap] then [Effective Shift Cap]
         else [RosterAvailability], type number),
     #"Inserted Subtraction" = Table.AddColumn(#"Added AVAILCAP", "AvailabilityReduction", each [RosterAvailability] - [RosterAvailabilityCAPPED], type number),
@@ -464,6 +727,8 @@ in
     #"Removed Columns";
 
 [ Description = "BUFFER" ]
+// Query: ResPeriodOverallocationReduction
+// Purpose: Retain the existing redistribution candidates after excluding every Resource with a spare-calculation issue.
 shared ResPeriodOverallocationReduction = let
     // Period A-D Overallocated
     Source = #"PeriodA-DPos (Overallocation)",
@@ -476,7 +741,10 @@ shared ResPeriodOverallocationReduction = let
     #"Expanded ResourcePeriods-EmptyTABLE" = Table.ExpandTableColumn(#"Merged Queries3", "ResourcePeriods-EmptyTABLE", {"Resource"}, {"Resource"}),
     #"Reordered Columns1" = Table.ReorderColumns(#"Expanded ResourcePeriods-EmptyTABLE",{"Resource", "Period", "D", "A", "A-D", "PeriodCapacity", "ExcessC#-D", "C#/D"}),
     #"Changed Type" = Table.TransformColumnTypes(#"Reordered Columns1",{{"Resource", Int64.Type}}),
-    #"Merged Queries2" = Table.NestedJoin(#"Changed Type", {"Period", "Resource"}, ResPeriodAllocationTABLE, {"Period", "Resource"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
+    // Resource-local failures remove all optional candidates before allocation and priority joins.
+    AllowedResources = List.Buffer(Table.SelectRows(BResourceSpareEligibility, each [SpareCalculationAllowed])[Resource]),
+    EligibleResources = Table.SelectRows(#"Changed Type", each List.Contains(AllowedResources, [Resource])),
+    #"Merged Queries2" = Table.NestedJoin(EligibleResources, {"Period", "Resource"}, BAllocation_CalculationTABLE, {"Period", "Resource"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded ResPeriodAllocationTABLE" = Table.ExpandTableColumn(#"Merged Queries2", "ResPeriodAllocationTABLE", {"Allocation"}, {"Allocation"}),
     #"Merged Queries5" = Table.NestedJoin(#"Expanded ResPeriodAllocationTABLE", {"Resource"}, ResRosterAvailabilityCapReduction, {"Resource"}, "ResRosterAvailabilityCapReduction", JoinKind.LeftOuter),
     #"Expanded ResRosterAvailabilityCapReduction1" = Table.ExpandTableColumn(#"Merged Queries5", "ResRosterAvailabilityCapReduction", {"AvailabilityReduction"}, {"ResAvailabilityReduction"}),
@@ -517,8 +785,10 @@ shared AvailabilityOriginalMATRIX = let
 in
     #"Pivoted Column";
 
+// Query: PeriodDemandTABLE
+// Purpose: Preserve the period-demand interface using schema-safe preparation and separate error diagnostics.
 shared PeriodDemandTABLE = let
-    Source = #"IMPORT Demand",
+    Source = BDemand_Prepare,
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"Period", Int64.Type}})
 in
     #"Changed Type";
@@ -531,19 +801,37 @@ in
     #"Pivoted Column";
 
 [ Description = "BUFFER-All cells capped availability" ]
+// Query: ResPeriodAvailabilityCapped(C#)TABLE
+// Purpose: Apply upstream and B-local Resource permission to spare while retaining cells with actual-allocation evidence.
+// Output: One Resource/Period C# row with Stage 1 permission, reason and allocation evidence.
 shared #"ResPeriodAvailabilityCapped(C#)TABLE" = let
-    Source = #"IMPORT ResPeriodAvailabilityCapped(C#)",
-    BUFFER = Table.Buffer(Source),
-    #"Renamed Columns" = Table.RenameColumns(BUFFER,{{"AvailabilityCapped", "C#"}}),
-    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each ([#"C#"] <> null)),
-    #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows",0,null,Replacer.ReplaceValue,{"C#"}),
-    #"Filtered Rows1" = Table.SelectRows(#"Replaced Value", each ([Role] = Role) )
+    Source = BCappedAvailability_Prepare,
+    RoleRows = Table.SelectRows(Source, each [Role] = Role and [AvailabilityCapped] <> null),
+    // A duplicate input key is already a Resource issue. Preserve one existing allocated-cell amount, never multiply it through joins.
+    GroupedCells = Table.Group(RoleRows, {"Resource", "Period"}, {
+        {"Role", each List.First([Role]), type nullable text},
+        {"C#", each List.Max([AvailabilityCapped]), type nullable number},
+        {"UpstreamAllocationEvidence", each List.AnyTrue(List.Transform(Table.ToRecords(_), each (try _[HasAllocationEvidence] otherwise false) = true)), type logical},
+        {"OriginalAvailability", each List.Max(List.Transform(Table.ToRecords(_), each try _[OriginalAvailability] otherwise null)), type nullable number}
+    }),
+    JoinedAllocationEvidence = Table.NestedJoin(GroupedCells, {"Resource", "Period"}, BAllocation_CalculationTABLE, {"Resource", "Period"}, "AllocationEvidence", JoinKind.LeftOuter),
+    WithAllocationEvidence = Table.AddColumn(JoinedAllocationEvidence, "HasAllocationEvidence", each [UpstreamAllocationEvidence]
+        or (not Table.IsEmpty([AllocationEvidence]) and [AllocationEvidence]{0}[HasAllocationEvidence]), type logical),
+    RemovedEvidenceJoin = Table.RemoveColumns(WithAllocationEvidence, {"UpstreamAllocationEvidence", "AllocationEvidence"}),
+    JoinedPermission = Table.NestedJoin(RemovedEvidenceJoin, {"Resource"}, BResourceSpareEligibility, {"Resource"}, "SpareEligibility", JoinKind.LeftOuter),
+    ExpandedPermission = Table.ExpandTableColumn(JoinedPermission, "SpareEligibility", {"SpareCalculationAllowed", "SpareIssueReason"}, {"SpareCalculationAllowed", "SpareIssueReason"}),
+    WithMaskedCapacity = Table.AddColumn(ExpandedPermission, "MaskedC#", each if [SpareCalculationAllowed] = true or [HasAllocationEvidence] then [#"C#"] else null, type nullable number),
+    RemovedUnmaskedCapacity = Table.RemoveColumns(WithMaskedCapacity, {"C#"}),
+    RenamedCapacity = Table.RenameColumns(RemovedUnmaskedCapacity, {{"MaskedC#", "C#"}}),
+    ZeroToNull = Table.ReplaceValue(RenamedCapacity, 0, null, Replacer.ReplaceValue, {"C#"})
 in
-    #"Filtered Rows1";
+    Table.Buffer(ZeroToNull);
 
+// Query: ResPeriodAvailabilityCapped(C#)MATRIX
+// Purpose: Preserve the legacy C# matrix grain without using Stage 1 metadata as pivot keys.
 shared #"ResPeriodAvailabilityCapped(C#)MATRIX" = let
     Source = #"ResPeriodAvailabilityCapped(C#)TABLE",
-    #"Removed Columns" = Table.RemoveColumns(Source,{"Role"}),
+    #"Removed Columns" = Table.SelectColumns(Source,{"Resource", "Period", "C#"}),
     #"Pivoted Column" = Table.Pivot(Table.TransformColumnTypes(#"Removed Columns", {{"Period", type text}}, "en-AU"), List.Distinct(Table.TransformColumnTypes(#"Removed Columns", {{"Period", type text}}, "en-AU")[Period]), "Period", "C#", List.Sum)
 in
     #"Pivoted Column";
@@ -554,16 +842,17 @@ in
     Source;
 
 // Query: CapacityDistribB_INPUT_CHECK
-// Purpose: Check the required keys of the four inputs used by B's joins before publishing final capacity.
-// Output: Four diagnostic rows; a missing column, key error, missing key or duplicate key blocks C###TABLE B.
-// Notes: Check the existing consumer inputs, including retained zero-to-null availability rows; do not change their filters.
+// Purpose: Retain the four legacy input-check rows while diagnosing raw inputs before Resource exclusion.
+// Output: Honest Passed flags; failures are diagnostic and are no longer a global publication gate.
 shared CapacityDistribB_INPUT_CHECK = let
-    CheckKeys = (inputName as text, inputTable as table, keys as list) as record =>
+    CheckKeys = (inputName as text, snapshot as record, keys as list, detailCheck as text, skipUnmatched as logical) as record =>
         let
+            inputTable = if snapshot[HasError] then #table({}, {}) else snapshot[Value],
             MissingColumns = List.Difference(keys, Table.ColumnNames(inputTable)),
-            HasRequiredColumns = List.IsEmpty(MissingColumns),
+            HasRequiredColumns = not snapshot[HasError] and List.IsEmpty(MissingColumns),
+            MatchedRows = if skipUnmatched and HasRequiredColumns then Table.SelectRows(inputTable, each (try [Resource] otherwise null) <> null) else inputTable,
             // Only key columns are buffered and scanned; the calculation's input table is not altered.
-            KeyRows = if HasRequiredColumns then Table.Buffer(Table.SelectColumns(inputTable, keys)) else #table(keys, {}),
+            KeyRows = if HasRequiredColumns then Table.Buffer(Table.SelectColumns(MatchedRows, keys)) else #table(keys, {}),
             ErrorKeyRows = if HasRequiredColumns then Table.RowCount(Table.SelectRowsWithErrors(KeyRows, keys)) else null,
             KeysWithoutErrors = Table.RemoveRowsWithErrors(KeyRows, keys),
             HasMissingKey = (row as record) as logical => List.AnyTrue(List.Transform(
@@ -582,12 +871,13 @@ shared CapacityDistribB_INPUT_CHECK = let
             MissingKeyRows = MissingKeyRows,
             DuplicateKeyGroups = DuplicateKeyGroups,
             Passed = HasRequiredColumns and ErrorKeyRows = 0 and MissingKeyRows = 0 and DuplicateKeyGroups = 0
+                and Table.IsEmpty(Table.SelectRows(BInputIssues_DETAILS, each [Check] = detailCheck))
         ],
     Checks = {
-        CheckKeys("PeriodDemandTABLE", PeriodDemandTABLE, {"Period"}),
-        CheckKeys("ResPeriodAllocationTABLE", ResPeriodAllocationTABLE, {"Resource", "Period"}),
-        CheckKeys("ResPeriodAvailabilityCapped(C#)TABLE", #"ResPeriodAvailabilityCapped(C#)TABLE", {"Resource", "Period"}),
-        CheckKeys("IMPORT ResPeriodNWDTABLE", #"IMPORT ResPeriodNWDTABLE", {"Resource", "Period"})
+        CheckKeys("PeriodDemandTABLE", BDemandInput_RESULT, {"Period"}, "Demand input", false),
+        CheckKeys("ResPeriodAllocationTABLE", BAllocationInput_RESULT, {"Resource", "Period"}, "Allocation input", true),
+        CheckKeys("ResPeriodAvailabilityCapped(C#)TABLE", BCappedAvailabilityInput_RESULT, {"Resource", "Period"}, "C# input", false),
+        CheckKeys("EXTRACT ResPeriodNWDTABLE", BPriorityInput_RESULT, {"Resource", "Period"}, "Priority input", false)
     },
     TypedChecks = Table.TransformColumnTypes(Table.FromRecords(Checks), {
         {"Input", type text}, {"Keys", type text}, {"MissingColumns", type text},
@@ -599,21 +889,10 @@ in
 
 // Query: CapacityDistribB_AVAILABILITY_LINEAGE_CHECK
 // Purpose: Identify positive A.2 Resource/Period availability without positive original A.1 availability.
-// Output: One diagnostic row per unsupported positive C#; an empty table passes the final B gate.
+// Output: One diagnostic row per unsupported positive C#; affected Resources lose spare calculations.
 // Notes: B must not carry stale A.2 capacity into a Resource/Period absent from the current A.1 source.
 shared CapacityDistribB_AVAILABILITY_LINEAGE_CHECK = let
-    PositiveCapped = Table.SelectRows(#"ResPeriodAvailabilityCapped(C#)TABLE", each [#"C#"] <> null and [#"C#"] > 0),
-    Original = Table.SelectColumns(#"IMPORT AvailabilityOriginal", {"Role", "Resource", "Period", "Availability"}),
-    Joined = Table.NestedJoin(PositiveCapped, {"Role", "Resource", "Period"},
-        Original, {"Role", "Resource", "Period"}, "OriginalRows", JoinKind.LeftOuter),
-    Assessed = Table.AddColumn(Joined, "LineageIssue", each
-        if Table.IsEmpty([OriginalRows]) then "No original A.1 availability row"
-        else if Table.RowCount([OriginalRows]) <> 1 then "Ambiguous original A.1 availability rows"
-        else if [OriginalRows]{0}[Availability] = null or [OriginalRows]{0}[Availability] <= 0 then
-            "Original A.1 availability is not positive"
-        else null, type nullable text),
-    Failures = Table.SelectRows(Assessed, each [LineageIssue] <> null),
-    Output = Table.RemoveColumns(Failures, {"OriginalRows"})
+    Output = Table.RenameColumns(BAvailabilityLineage_Prepare, {{"AvailabilityCapped", "C#"}})
 in Table.Buffer(Output);
 
 shared #"ResPeriodAvailabilityCapped(C#)SUM" = let
@@ -643,15 +922,15 @@ in
 
 [ Description = "BUFFER" ]
 // Query: PrioritiseReductionAvail-Setup
-// Purpose: Attach resource-period priorities and retain the existing reduction sort and index.
+// Purpose: Attach resource-period priorities and resolve period reduction ties by Resource.
 shared #"PrioritiseReductionAvail-Setup" = let
     Source = Table.NestedJoin(#"ResPeriodMaxC##Reduction", {"Period"}, #"PeriodOverallocatedExcess%", {"Period"}, "PeriodOverallocatedPriroristised", JoinKind.LeftOuter),
     #"Expanded PeriodOverallocatedPriroristised" = Table.ExpandTableColumn(Source, "PeriodOverallocatedPriroristised", {"Excess%"}, {"Excess%"}),
     // Pair Resource with Resource and Period with Period; positional join keys must use the same order.
-    #"Merged Queries" = Table.NestedJoin(#"Expanded PeriodOverallocatedPriroristised", {"Resource", "Period"}, #"IMPORT ResPeriodNWDTABLE", {"Resource", "Period"}, "IMPORT ResPeriodNWDTABLE", JoinKind.LeftOuter),
-    #"Expanded IMPORT ResPeriodNWDTABLE" = Table.ExpandTableColumn(#"Merged Queries", "IMPORT ResPeriodNWDTABLE", {"NWDPriority"}, {"NWDPriority"}),
-    #"Inserted MINAVAILABLEREDUCTION" = Table.AddColumn(#"Expanded IMPORT ResPeriodNWDTABLE", "MinimumAvailable", each List.Min({[#"C##"], [#"A-D"]})),
-    #"Sorted Rows" = Table.Sort(#"Inserted MINAVAILABLEREDUCTION",{{"Period", Order.Ascending}, {"Excess%", Order.Descending}, {"ResPeriodC##MAXReduction", Order.Descending}}),
+    #"Merged Queries" = Table.NestedJoin(#"Expanded PeriodOverallocatedPriroristised", {"Resource", "Period"}, BPriority_Prepare, {"Resource", "Period"}, "EXTRACT ResPeriodNWDTABLE", JoinKind.LeftOuter),
+    #"Expanded EXTRACT ResPeriodNWDTABLE" = Table.ExpandTableColumn(#"Merged Queries", "EXTRACT ResPeriodNWDTABLE", {"NWDPriority"}, {"NWDPriority"}),
+    #"Inserted MINAVAILABLEREDUCTION" = Table.AddColumn(#"Expanded EXTRACT ResPeriodNWDTABLE", "MinimumAvailable", each List.Min({[#"C##"], [#"A-D"]})),
+    #"Sorted Rows" = Table.Sort(#"Inserted MINAVAILABLEREDUCTION",{{"Period", Order.Ascending}, {"Excess%", Order.Descending}, {"ResPeriodC##MAXReduction", Order.Descending}, {"Resource", Order.Ascending}}),
     #"Added Index" = Table.AddIndexColumn(#"Sorted Rows", "IndexAllRows", 2, 1, Int64.Type),
     BUFFER = Table.Buffer(#"Added Index")
 in
@@ -681,12 +960,14 @@ shared SubtractOverallatedPeriods = let
 in
     #"Added KEEP";
 
+// Query: ResIndex-Steup
+// Purpose: Retain Resource reduction rankings and resolve ties by Period before indexing.
 shared #"ResIndex-Steup" = let
     Source = SubtractOverallatedPeriods,
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource"}, #"ResRosterAvailabilityC##CapReduction", {"Resource"}, "ResRosterAvailabilityC##CapReduction", JoinKind.LeftOuter),
     #"Expanded ResRosterAvailabilityC##CapReduction" = Table.ExpandTableColumn(#"Merged Queries", "ResRosterAvailabilityC##CapReduction", {"MaxC##Reduction"}, {"MaxC##Reduction"}),
     #"Removed Other Columns" = Table.SelectColumns(#"Expanded ResRosterAvailabilityC##CapReduction",{"Period", "Resource", "A-D", "ResPeriodC##MAXReduction", "MinimumAvailable", "RunningPeriodTotal", "KeepRunningTotal", "MaxC##Reduction"}),
-    #"Sorted Rows" = Table.Sort(#"Removed Other Columns",{{"Resource", Order.Ascending}, {"MaxC##Reduction", Order.Descending}}),
+    #"Sorted Rows" = Table.Sort(#"Removed Other Columns",{{"Resource", Order.Ascending}, {"MaxC##Reduction", Order.Descending}, {"Period", Order.Ascending}}),
     #"Added Index" = Table.AddIndexColumn(#"Sorted Rows", "IndexAllRows", 2, 1, Int64.Type)
 in
     #"Added Index";
@@ -718,16 +999,23 @@ shared ReduceCheck = let
 in
     #"Grouped Rows";
 
+// Query: C##TABLE
+// Purpose: Preserve redistribution arithmetic and exclude spare when its optional calculation fails.
 shared #"C##TABLE" = let
     Source = #"ResPeriodAvailabilityCapped(C#)TABLE",
-    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, #"ReDistribPeriodAvailbility TABLE", {"Resource", "Period"}, "ReDistribAvailabilityTABLE", JoinKind.LeftOuter),
+    RedistributionRows = if BRedistribution_RESULT[HasError] then #table(type table [Resource = nullable number, Period = nullable number, #"C#" = nullable number], {}) else BRedistribution_RESULT[Value],
+    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, RedistributionRows, {"Resource", "Period"}, "ReDistribAvailabilityTABLE", JoinKind.LeftOuter),
     #"Expanded ReDistribAvailabilityTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ReDistribAvailabilityTABLE", {"C#"}, {"C#.1"}),
     #"Replaced Value" = Table.ReplaceValue(#"Expanded ReDistribAvailabilityTABLE",null,0,Replacer.ReplaceValue,{"C#.1"}),
-    #"CHANGE C" = Table.AddColumn(#"Replaced Value", "C##", each [#"C#"] - [#"C#.1"], type number),
+    #"CHANGE C" = Table.AddColumn(#"Replaced Value", "C##", each if BRedistribution_RESULT[HasError] and not [HasAllocationEvidence] then null else [#"C#"] - [#"C#.1"], type number),
     #"Removed Columns" = Table.RemoveColumns(#"CHANGE C",{"C#", "C#.1"}),
-    #"Replaced Value1" = Table.ReplaceValue(#"Removed Columns",0,null,Replacer.ReplaceValue,{"C##"})
+    #"Replaced Value1" = Table.ReplaceValue(#"Removed Columns",0,null,Replacer.ReplaceValue,{"C##"}),
+    WithStagePermission = Table.TransformColumns(#"Replaced Value1", {
+        {"SpareCalculationAllowed", each _ = true and not BRedistribution_RESULT[HasError], type logical},
+        {"SpareIssueReason", each if not BRedistribution_RESULT[HasError] then _ else Text.Combine(List.RemoveNulls({_, "Redistribution calculation failed; all spare excluded at C##"}), "; "), type nullable text}
+    })
 in
-    #"Replaced Value1";
+    WithStagePermission;
 
 shared #"C##SUM" = let
     Source = #"C##TABLE",
@@ -736,9 +1024,12 @@ shared #"C##SUM" = let
 in
     #"Calculated Sum";
 
+// Query: C##MATRIX
+// Purpose: Preserve the legacy C## matrix grain without using Stage 1 metadata as pivot keys.
 shared #"C##MATRIX" = let
     Source = #"C##TABLE",
-    #"Sorted Rows" = Table.Sort(Source,{{"Period", Order.Ascending}, {"Resource", Order.Ascending}}),
+    LegacyMatrixColumns = Table.SelectColumns(Source, {"Resource", "Period", "Role", "C##"}),
+    #"Sorted Rows" = Table.Sort(LegacyMatrixColumns,{{"Period", Order.Ascending}, {"Resource", Order.Ascending}}),
     #"Pivoted Column1" = Table.Pivot(Table.TransformColumnTypes(#"Sorted Rows", {{"Period", type text}}, "en-AU"), List.Distinct(Table.TransformColumnTypes(#"Sorted Rows", {{"Period", type text}}, "en-AU")[Period]), "Period", "C##", List.Sum)
 in
     #"Pivoted Column1";
@@ -768,8 +1059,13 @@ shared PeriodCapacityTABLE = let
 in
     #"Grouped Rows";
 
+// Query: ResMaxAvailability
+// Purpose: Retain original availability and usable cap audit measures without inventing a missing Resource cap.
+// Query: ResMaxAvailability
+// Purpose: Report the A.1 published availability total and its known contract limit at Resource grain.
+// Notes: A.1 published Availability excludes issue-Resource spare; raw per-cell OriginalAvailability remains on the capacity tables.
 shared ResMaxAvailability = let
-    Source = #"IMPORT AvailabilityOriginal",
+    Source = BOriginalAvailability_Prepare,
     #"Grouped Rows" = Table.Group(Source, {"Resource"}, {{"ResAvailability", each List.Sum([Availability]), type nullable number}}),
     // ResMaxAvail is a Resource measure, so attach the contract cap after Resource aggregation.
     #"Merged Resource Contract" = Table.NestedJoin(#"Grouped Rows", {"Resource"}, BResourceContract, {"Resource"}, "ResourceContract", JoinKind.LeftOuter),
@@ -778,11 +1074,8 @@ shared ResMaxAvailability = let
         // A Resource with no original availability does not need a contract cap in this calculation.
         if [ResAvailability] = null then 0
         else if [ResAvailability] = 0 then 0
-        else if [Effective Shift Cap] = null then error Error.Record(
-            "CapacityDistribB.MissingResourceCap",
-            "A Resource with positive original availability has no Effective Shift Cap.",
-            [Resource = [Resource], ResAvailability = [ResAvailability]]
-        )
+        // An unusable cap remains unknown in the audit output; it is never invented as zero or a Settings fallback.
+        else if [Effective Shift Cap] = null then null
         else if [ResAvailability] > [Effective Shift Cap] then [Effective Shift Cap]
         else [ResAvailability], type number),
     #"Removed Effective Shift Cap" = Table.RemoveColumns(#"Added RESMAXAVAILABILITY", {"Effective Shift Cap"})
@@ -845,11 +1138,14 @@ in
     #"Inserted Minimum";
 
 [ Description = "BUFFER" ]
+// Query: ResPeriodMaxC##Reduction
+// Purpose: Retain the existing final-reduction candidates only for Resources whose spare remains eligible.
 shared #"ResPeriodMaxC##Reduction" = let
     Source = Table.NestedJoin(#"PeriodC##MaxReduction", {"Period"}, #"C##TABLE", {"Period"}, "C##TABLE", JoinKind.LeftOuter),
     #"Expanded C##TABLE" = Table.ExpandTableColumn(Source, "C##TABLE", {"Resource", "C##"}, {"Resource", "C##"}),
-    #"Filtered Rows" = Table.SelectRows(#"Expanded C##TABLE", each ([#"C##"] <> null)),
-    #"Merged Queries1" = Table.NestedJoin(#"Filtered Rows", {"Resource", "Period"}, ResPeriodAllocationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
+    AllowedResources = List.Buffer(Table.SelectRows(BResourceSpareEligibility, each [SpareCalculationAllowed])[Resource]),
+    #"Filtered Rows" = Table.SelectRows(#"Expanded C##TABLE", each ([#"C##"] <> null) and not BRedistribution_RESULT[HasError] and List.Contains(AllowedResources, [Resource])),
+    #"Merged Queries1" = Table.NestedJoin(#"Filtered Rows", {"Resource", "Period"}, BAllocation_CalculationTABLE, {"Resource", "Period"}, "ResPeriodAllocationTABLE", JoinKind.LeftOuter),
     #"Expanded ResPeriodAllocationTABLE" = Table.ExpandTableColumn(#"Merged Queries1", "ResPeriodAllocationTABLE", {"Allocation"}, {"Allocation"}),
     #"Filtered NOT ALLOCATED" = Table.SelectRows(#"Expanded ResPeriodAllocationTABLE", each ([Allocation] = null)),
     #"Reordered Columns" = Table.ReorderColumns(#"Filtered NOT ALLOCATED",{"Period", "Resource", "C##", "PeriodMaxC##Reduction","ExcessC##-D", "C##/D", "A-D"}),
@@ -864,35 +1160,25 @@ in
     BUFFER;
 
 // Query: C###TABLE B
-// Purpose: Publish final B capacity only after the required input join keys pass validation.
+// Purpose: Publish final B capacity with Resource-local spare exclusion and honest nonblocking diagnostics.
 // Output: Preserve the existing final-capacity table interface used by C###SUM and C###MATRIX.
 shared #"C###TABLE B" = let
-    InputChecks = CapacityDistribB_INPUT_CHECK,
-    ContractChecks = BResourceContract_CHECK,
-    AvailabilityLineageFailures = CapacityDistribB_AVAILABILITY_LINEAGE_CHECK,
-    // Gate the source actually consumed below so lazy evaluation cannot skip required validation.
-    Source = if List.AllTrue(InputChecks[Passed])
-        and List.AllTrue(List.Transform(ContractChecks[Status], each _ = "Pass"))
-        and Table.IsEmpty(AvailabilityLineageFailures) then #"C##TABLE"
-        else error Error.Record(
-            "CapacityDistribB.InputValidation",
-            "Required join keys, Resource contracts or A.2-to-A.1 availability lineage failed validation.",
-            [
-                InputFailures = Table.SelectRows(InputChecks, each [Passed] <> true),
-                ContractFailures = Table.SelectRows(ContractChecks, each [Status] <> "Pass"),
-                AvailabilityLineageFailures = AvailabilityLineageFailures
-            ]
-        ),
-    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, SubtractOverallocatedResources, {"Resource", "Period"}, "SubtractAvailablilityTABLE", JoinKind.LeftOuter),
+    Source = #"C##TABLE",
+    ReductionRows = if BFinalReduction_RESULT[HasError] then #table(type table [Resource = nullable number, Period = nullable number, MinimumAvailable = nullable number, KeepPR = nullable text], {}) else BFinalReduction_RESULT[Value],
+    #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, ReductionRows, {"Resource", "Period"}, "SubtractAvailablilityTABLE", JoinKind.LeftOuter),
     #"Expanded SubtractAvailablilityTABLE" = Table.ExpandTableColumn(#"Merged Queries", "SubtractAvailablilityTABLE", {"MinimumAvailable", "KeepPR"}, {"MinimumAvailable", "KeepPR"}),
     #"Replaced Value" = Table.ReplaceValue(#"Expanded SubtractAvailablilityTABLE",null,0,Replacer.ReplaceValue,{"MinimumAvailable"}),
-    #"Inserted Subtraction" = Table.AddColumn(#"Replaced Value", "C###", each [#"C##"] - [MinimumAvailable], type number),
+    #"Inserted Subtraction" = Table.AddColumn(#"Replaced Value", "C###", each if BFinalReduction_RESULT[HasError] and not [HasAllocationEvidence] then null else [#"C##"] - [MinimumAvailable], type number),
     #"Removed Columns" = Table.RemoveColumns(#"Inserted Subtraction",{"C##", "MinimumAvailable", "KeepPR"}),
     #"Replaced Value1" = Table.ReplaceValue(#"Removed Columns",0,null,Replacer.ReplaceValue,{"C###"}),
     #"Merged Queries1" = Table.NestedJoin(#"Replaced Value1", {"Resource"}, ResMaxAvailability, {"Resource"}, "ResMaxAvailability", JoinKind.LeftOuter),
-    #"Expanded ResMaxAvailability" = Table.ExpandTableColumn(#"Merged Queries1", "ResMaxAvailability", {"ResAvailability", "ResMaxAvail"}, {"ResAvailability", "ResMaxAvail"})
+    #"Expanded ResMaxAvailability" = Table.ExpandTableColumn(#"Merged Queries1", "ResMaxAvailability", {"ResAvailability", "ResMaxAvail"}, {"ResAvailability", "ResMaxAvail"}),
+    WithFinalPermission = Table.TransformColumns(#"Expanded ResMaxAvailability", {
+        {"SpareCalculationAllowed", each _ = true and not BFinalReduction_RESULT[HasError], type logical},
+        {"SpareIssueReason", each if not BFinalReduction_RESULT[HasError] then _ else Text.Combine(List.RemoveNulls({_, "Final reduction calculation failed; all spare excluded at C###"}), "; "), type nullable text}
+    })
 in
-    #"Expanded ResMaxAvailability";
+    WithFinalPermission;
 
 shared #"C###SUM" = let
     Source = #"C###TABLE B",
@@ -901,9 +1187,12 @@ shared #"C###SUM" = let
 in
     #"Calculated Sum";
 
+// Query: C###MATRIX
+// Purpose: Preserve the legacy final-capacity matrix grain without using Stage 1 metadata as pivot keys.
 shared #"C###MATRIX" = let
     Source = #"C###TABLE B",
-    #"Sorted Rows" = Table.Sort(Source,{{"Period", Order.Ascending}, {"Resource", Order.Ascending}}),
+    LegacyMatrixColumns = Table.SelectColumns(Source, {"Resource", "Period", "Role", "C###", "ResAvailability", "ResMaxAvail"}),
+    #"Sorted Rows" = Table.Sort(LegacyMatrixColumns,{{"Period", Order.Ascending}, {"Resource", Order.Ascending}}),
     #"Pivoted Column" = Table.Pivot(Table.TransformColumnTypes(#"Sorted Rows", {{"Period", type text}}, "en-AU"), List.Distinct(Table.TransformColumnTypes(#"Sorted Rows", {{"Period", type text}}, "en-AU")[Period]), "Period", "C###", List.Sum)
 in
     #"Pivoted Column";

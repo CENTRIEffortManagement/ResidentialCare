@@ -22,6 +22,19 @@ function Resolve-BatchPath {
     return $path
 }
 
+function Resolve-BatchWorkbookRoot {
+    param([string] $RepoRoot, [string] $RelativePath)
+    if ([string]::IsNullOrWhiteSpace($RelativePath) -or [IO.Path]::IsPathRooted($RelativePath)) {
+        throw 'Workbook roots must be nonempty repo-relative paths.'
+    }
+    # Named workbook roots may use a sibling project, bounded by the shared
+    # parent. Targets still cannot escape that root or traverse junctions.
+    $parent = Split-Path ([IO.Path]::GetFullPath($RepoRoot)) -Parent
+    $candidate = [IO.Path]::GetFullPath((Join-Path $RepoRoot $RelativePath))
+    $relativeToParent = [IO.Path]::GetRelativePath($parent, $candidate)
+    return Resolve-BatchPath $parent $relativeToParent
+}
+
 function Get-BatchFingerprint {
     param([string[]] $Files)
     $parts = foreach ($file in $Files) {
@@ -243,22 +256,39 @@ function Get-BatchCatalogue {
         $legacy.Add([pscustomobject]@{ Global = $globalSequence; Local = [int] $entry.Sequence; Unit = 'Org'; Path = ($entry.Path -replace '\\', '/') })
     }
     foreach ($spec in $catalogue.OrgJobs) {
-        $entry = @($orgManifest.Workbooks | Where-Object Sequence -eq $spec.Sequence)
-        if ($entry.Count -ne 1) { throw "Invalid organisation manifest reference: $($spec.Sequence)" }
+        $targetRoot = $dateRoot
+        if ($spec.ContainsKey('Sequence')) {
+            if ($spec.ContainsKey('Root') -or $spec.ContainsKey('Path')) { throw 'Organisation targets must use either a manifest sequence or a named workbook root.' }
+            $entry = @($orgManifest.Workbooks | Where-Object Sequence -eq $spec.Sequence)
+            if ($entry.Count -ne 1) { throw "Invalid organisation manifest reference: $($spec.Sequence)" }
+            $targetRelativePath = $entry[0].Path
+            $fileOrder = [int] $spec.Sequence
+        } else {
+            if (-not $spec.ContainsKey('Root') -or -not $spec.ContainsKey('Path') -or
+                -not $config.PSObject.Properties['workbookRoots'] -or
+                -not $config.workbookRoots.PSObject.Properties[$spec.Root]) {
+                throw "Organisation job requires a configured workbook root: $($spec.Id)"
+            }
+            $targetRoot = Resolve-BatchWorkbookRoot $RepoRoot $config.workbookRoots.($spec.Root)
+            $targetRelativePath = $spec.Path
+            if ([IO.Path]::GetExtension($targetRelativePath) -ne '.xlsx') { throw "Invalid workbook target: $targetRelativePath" }
+            $fileOrder = $jobs.Count
+        }
+        $targetPath = Resolve-BatchPath $targetRoot $targetRelativePath
         $deps = @($spec.Depends | ForEach-Object { "Org/$_" })
         foreach ($unit in $orgUnits) { $deps += @($spec.UnitDepends | ForEach-Object { "$unit/$_" }) }
         $jobs.Add([pscustomobject]@{
             Id = "Org/$($spec.Id)"; Unit = 'Org'; Batch = $spec.Batch; BatchKey = "Org/$($spec.Batch)"; Role = ''
-            RelativePath = ($entry[0].Path -replace '\\', '/'); Dependencies = $deps
+            RelativePath = ([IO.Path]::GetRelativePath($dateRoot, $targetPath) -replace '\\', '/'); Path = $targetPath; Dependencies = $deps
             InputPaths = $(if ($spec.ContainsKey('Inputs')) { @($spec.Inputs) } else { @() })
-            BatchOrder = [array]::IndexOf($catalogue.BatchOrder, $spec.Batch); RoleOrder = 0; FileOrder = [int] $spec.Sequence
+            BatchOrder = [array]::IndexOf($catalogue.BatchOrder, $spec.Batch); RoleOrder = 0; FileOrder = $fileOrder
         })
     }
     $byId = @{}; $byPath = @{}
     foreach ($job in $jobs) {
         if ($byId.ContainsKey($job.Id) -or $byPath.ContainsKey($job.RelativePath)) { throw "Duplicate job or target: $($job.Id)" }
         $byId[$job.Id] = $job; $byPath[$job.RelativePath] = $job
-        $job | Add-Member Path (Resolve-BatchPath $dateRoot $job.RelativePath)
+        if (-not $job.PSObject.Properties['Path']) { $job | Add-Member Path (Resolve-BatchPath $dateRoot $job.RelativePath) }
         $job | Add-Member SharedUnits @()
         $job | Add-Member Aliases @()
     }
@@ -286,7 +316,12 @@ function Get-BatchCatalogue {
         # ReadJobs is independent of ordering edges. Existing catalogues retain
         # their implicit producer reads; explicit reads survive an ordering edit.
         $readJobs = @($job.Dependencies)
-        if ($job.Unit -ne 'Org' -and -not $job.Role) {
+        if ($job.Unit -eq 'Org') {
+            $definition = @($catalogue.OrgJobs | Where-Object { "Org/$($_.Id)" -eq $job.Id })[0]
+            if ($definition.ContainsKey('ReadJobs')) {
+                $readJobs = @($definition.ReadJobs | ForEach-Object { "Org/$_" })
+            }
+        } elseif (-not $job.Role) {
             $definition = @($catalogue.UnitJobs | Where-Object { "$($job.Unit)/$($_.Id)" -eq $job.Id })[0]
             if ($definition.ContainsKey('ReadJobs')) {
                 $readJobs = @($definition.ReadJobs | ForEach-Object {
@@ -432,7 +467,7 @@ function Select-BatchPlan {
         [switch] $IncludeOrg, [switch] $IncludeDependencies)
     $Units = @(Expand-BatchArguments $Units); $Batches = @(Expand-BatchArguments $Batches)
     $Batches = @($Batches | ForEach-Object {
-        if ($_ -match '^0([1-5])$') {
+        if ($_ -match '^0([1-6])$') {
             $orgBatch = "O$($Matches[1])"
             Write-Host "Interpreting batch ID $_ as $orgBatch (letter O)."
             $orgBatch

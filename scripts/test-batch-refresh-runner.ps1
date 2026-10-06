@@ -60,11 +60,11 @@ function Invoke-FakeRun {
 try {
     $catalogue = Get-BatchCatalogue $repoRoot
     $defaultRun = Select-BatchPlan $catalogue -RunAll
-    Assert-True ($defaultRun.Jobs.Count -eq 84) 'Run all selects BD, TE, JH-RY, one shared demand master and eight organisation workbooks'
-    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 84) 'unqualified preview matches Run all scope'
-    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 39) 'default run resolves three Unit batch sets, one shared input batch and five organisation batches'
-    Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2')).Count -eq 0 -and @($defaultRun.Jobs | Where-Object Unit -eq 'Org').Count -eq 8) 'Run all excludes legacy Units and includes the complete organisation release chain'
-    Assert-True ($defaultRun.Jobs[-1].Id -eq 'Org/Reporting' -and $defaultRun.Jobs[-1].RelativePath -eq '2. Calculations/Tableau Connection.xlsx') 'Run all ends at Tableau Connection'
+    Assert-True ($defaultRun.Jobs.Count -eq 86) 'Run all selects BD, TE, JH-RY, one shared demand master and ten organisation workbooks'
+    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 86) 'unqualified preview matches Run all scope'
+    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 40) 'default run resolves three Unit batch sets, one shared input batch and six organisation batches'
+    Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2')).Count -eq 0 -and @($defaultRun.Jobs | Where-Object Unit -eq 'Org').Count -eq 10) 'Run all excludes legacy Units and includes the complete organisation release chain'
+    Assert-True ($defaultRun.Jobs[-1].Id -eq 'Org/LeaveBalanceReporting' -and (Split-Path $defaultRun.Jobs[-1].Path -Leaf) -eq 'TableauConnect-LB.xlsx') 'Run all ends at the Leave Balance reporting workbook'
     Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and $catalogue.RunAllIncludeOrg) 'saved default scope includes organisation work'
     $all = Select-BatchPlan $catalogue -RunAll -Units Unit1,Unit2
     Assert-True ($all.Jobs.Count -eq 52 -and @($all.Jobs | Group-Object BatchKey).Count -eq 22) 'explicit legacy Unit selection remains available without organisation work'
@@ -92,6 +92,18 @@ try {
     Assert-True ([array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'C2.4 -*' })) -lt [array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'U4 -*' }))) 'all C2 role choices are listed before U4'
     Assert-True (@($pickList | Where-Object { $_ -like 'C2 - All enabled*' }).Count -eq 1) 'all-role shorthand is offered once'
     Assert-True ('O1 - Cross-unit assembly [StafMasterList-All.xlsx, Effort-All.xlsx]' -in $pickList) 'organisation choices include files'
+    Assert-True ('O6 - Leave Balance Stats [LBStats.xlsx, TableauConnect-LB.xlsx]' -in $pickList) 'Leave Balance batch picker shows its title and ordered files'
+    Assert-True ([array]::IndexOf($pickList, 'O6 - Leave Balance Stats [LBStats.xlsx, TableauConnect-LB.xlsx]') -gt [array]::IndexOf($pickList, 'O5 - Reporting release [Tableau Connection.xlsx]')) 'Leave Balance is the final organisation batch choice'
+    Assert-True (-not (Test-BatchSelectionNeedsUnits $catalogue @('O6'))) 'Leave Balance batch runs once without a Unit prompt'
+    $leaveBalance = Select-BatchPlan $catalogue -Batches O6
+    Assert-True (($leaveBalance.Jobs.Id -join ',') -eq 'Org/LeaveBalanceStats,Org/LeaveBalanceReporting' -and @($leaveBalance.Jobs | Group-Object BatchKey).Count -eq 1) 'Leave Balance selection contains exactly the two ordered workbooks once'
+    $leaveBalanceStats = $leaveBalance.Jobs[0]
+    $leaveBalanceReporting = $leaveBalance.Jobs[1]
+    Assert-True (($leaveBalanceStats.Dependencies -join ',') -eq 'Org/Reporting' -and ($leaveBalanceReporting.Dependencies -join ',') -eq 'Org/LeaveBalanceStats') 'final batch follows ResidentialCare reporting and then its stats workbook'
+    Assert-True ($leaveBalanceStats.Reads.Count -eq 0 -and $leaveBalanceReporting.Reads.Count -eq 0) 'ordering does not invent unverified workbook inputs'
+    $project = Get-Content -LiteralPath (Join-Path $repoRoot 'pq.project.json') -Raw | ConvertFrom-Json
+    $leaveBalanceRoot = Resolve-BatchWorkbookRoot $repoRoot $project.batchRunner.workbookRoots.LeaveBalanceStats
+    Assert-True ($leaveBalanceStats.Path -eq (Resolve-BatchPath $leaveBalanceRoot 'LBStats.xlsx') -and $leaveBalanceReporting.Path -eq (Resolve-BatchPath $leaveBalanceRoot 'TableauConnect-LB.xlsx')) 'named root resolves the exact two LeaveBalance targets'
     $savedTitles = $catalogue.BatchTitles
     try {
         $catalogue.BatchTitles = @{}
@@ -130,6 +142,24 @@ try {
     Assert-Throws { Select-BatchPlan $catalogue -RunAll -Batches A1 } 'mixed selectors rejected'
     Assert-Throws { Select-BatchPlan $catalogue -StartAtSequence 5 -EndAtSequence 3 } 'reversed range rejected'
     Assert-Throws { Resolve-BatchPath $testRoot '../escape.data' } 'path boundary enforced'
+    # Named roots may reach the sibling project, while each target remains bounded
+    # by that configured directory. Guard checks use only disposable directories.
+    $rootGuardParent = Join-Path $testRoot 'root-guards'
+    $rootGuardRepo = Join-Path $rootGuardParent 'project'
+    $rootGuardSibling = Join-Path $rootGuardParent 'sibling/Analysis'
+    [void] [IO.Directory]::CreateDirectory($rootGuardRepo)
+    [void] [IO.Directory]::CreateDirectory($rootGuardSibling)
+    Assert-True ((Resolve-BatchWorkbookRoot $rootGuardRepo '../sibling/Analysis') -eq [IO.Path]::GetFullPath($rootGuardSibling)) 'repo-relative sibling workbook root is supported'
+    Assert-Throws { Resolve-BatchWorkbookRoot $rootGuardRepo '../../outside' } 'workbook root cannot escape the shared parent'
+    Assert-Throws { Resolve-BatchWorkbookRoot $rootGuardRepo $rootGuardSibling } 'absolute workbook root is rejected'
+    Assert-Throws { Resolve-BatchPath $rootGuardSibling '../escape.data' } 'workbook target cannot escape its named root'
+    $rootGuardAlias = Join-Path $rootGuardParent 'alias'
+    try {
+        [void] (New-Item -ItemType Junction -Path $rootGuardAlias -Target $rootGuardSibling)
+        Assert-Throws { Resolve-BatchWorkbookRoot $rootGuardRepo '../alias' } 'workbook root rejects reparse-point aliases'
+    } finally {
+        if (Test-Path -LiteralPath $rootGuardAlias) { Remove-Item -LiteralPath $rootGuardAlias -Force }
+    }
     $shifts = $all.Jobs | Where-Object Id -eq 'Unit1/Shifts'
     Assert-True ('Unit1/Intervals' -in $shifts.Dependencies -and 'Unit1/Demand' -notin $shifts.Dependencies) 'A2 waits for Intervals, not all D2'
     $settings = $all.Jobs | Where-Object Id -eq 'Unit1/Settings'
@@ -157,6 +187,20 @@ try {
     $parallelPlan = Select-BatchPlan $parallelCatalogue -RunAll
     $parallelInput = @($parallelPlan.Jobs | Where-Object Id -eq 'TE/DemandInput')[0]
     Assert-True ('Date/DemandMaster' -in $parallelInput.Dependencies -and $sharedMaster.Path -in $parallelInput.Reads) 'alternate sequence profile redirects explicit read jobs too'
+    Assert-True (($parallelPlan.Jobs | Select-Object -Last 2 | ForEach-Object Id) -join ',' -eq 'Org/LeaveBalanceStats,Org/LeaveBalanceReporting') 'alternate sequence profile includes the final Leave Balance batch'
+
+    # Synthetic final-chain jobs verify save ordering and failure propagation.
+    $syntheticRelease = New-FakeJob 'Org/Reporting' 'Org/O5'
+    $syntheticStats = New-FakeJob $leaveBalanceStats.Id $leaveBalanceStats.BatchKey $leaveBalanceStats.Dependencies
+    $syntheticReporting = New-FakeJob $leaveBalanceReporting.Id $leaveBalanceReporting.BatchKey $leaveBalanceReporting.Dependencies
+    $leaveBalanceResult = Invoke-FakeRun @($syntheticRelease, $syntheticStats, $syntheticReporting) -Slow 'Org/Reporting'
+    Assert-True ($leaveBalanceResult.Code -eq 0 -and $leaveBalanceResult.Events.IndexOf('end:Org/Reporting') -lt $leaveBalanceResult.Events.IndexOf('start:Org/LeaveBalanceStats')) 'final batch starts after the preceding reporting save'
+    Assert-True ($leaveBalanceResult.Events.IndexOf('end:Org/LeaveBalanceStats') -lt $leaveBalanceResult.Events.IndexOf('start:Org/LeaveBalanceReporting')) 'Leave Balance reporting starts after its stats save'
+    Assert-True (@($leaveBalanceResult.Events | Where-Object { $_ -eq 'start:Org/LeaveBalanceStats' }).Count -eq 1 -and @($leaveBalanceResult.Events | Where-Object { $_ -eq 'start:Org/LeaveBalanceReporting' }).Count -eq 1) 'each final workbook dispatches once'
+    $leaveBalanceFailed = Invoke-FakeRun @($syntheticRelease, $syntheticStats, $syntheticReporting) -Fail 'Org/Reporting'
+    Assert-True ($leaveBalanceFailed.Code -eq 1 -and $leaveBalanceFailed.State.Jobs[$syntheticStats.Id].Status -eq 'Blocked' -and $leaveBalanceFailed.State.Jobs[$syntheticReporting.Id].Status -eq 'Blocked') 'failed preceding reporting blocks the final batch'
+    $leaveBalanceFailed = Invoke-FakeRun @($syntheticRelease, $syntheticStats, $syntheticReporting) -Fail $syntheticStats.Id
+    Assert-True ($leaveBalanceFailed.Code -eq 1 -and $leaveBalanceFailed.State.Jobs[$syntheticReporting.Id].Status -eq 'Blocked') 'failed Leave Balance stats blocks its reporting workbook'
 
     # Exercise the resolved graph with synthetic files: one shared write must
     # finish before any consumer, and its failure blocks every selected consumer.
@@ -204,7 +248,7 @@ try {
         $content = "@{ SchemaVersion = 1; Roles = @($entries, @{ Folder = 'Disabled'; Enabled = `$false }); RoleWorkbookOrder = @('CapacityDistrib(A.1)-shifts.xlsx','CapacityDistrib(A.2)-shifts.xlsx','CapacityDistrib(B)-shifts.xlsx') }"
         [IO.File]::WriteAllText($profilePath, $content)
         $dynamic = Get-BatchCatalogue $fixtureRoot
-        Assert-True ($dynamic.Jobs.Count -eq (2 * (17 + 3 * $count) + 8)) "dynamic expansion for $count roles"
+        Assert-True ($dynamic.Jobs.Count -eq (2 * (17 + 3 * $count) + 10)) "dynamic expansion for $count roles"
         Assert-True (@($dynamic.Jobs | Where-Object Role -eq 'Disabled').Count -eq 0) 'disabled roles excluded'
         $dynamicPlan = Select-BatchPlan $dynamic -Units Unit1 -Batches "C2.$count"
         Assert-True ($dynamicPlan.Jobs.Count -eq 3 -and $dynamicPlan.Jobs[0].Role -eq "Role$count") 'last dynamic role identity'

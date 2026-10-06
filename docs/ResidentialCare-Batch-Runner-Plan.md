@@ -30,7 +30,7 @@ Run these examples from the repository root, using PowerShell 7:
 
 ```powershell
 # Primary action: BD, TE and JH-RY, then the organisation release chain
-# through Tableau Connection.xlsx.
+# through Leave Balance Stats, ending at TableauConnect-LB.xlsx.
 ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -RunAll
 
 # No Excel: inspect the resolved plan, or validate file access and locks.
@@ -66,8 +66,9 @@ Run these examples from the repository root, using PowerShell 7:
 ```
 
 Opening the command without arguments presents a menu; option 1 is Run all. The
-current setting refreshes BD, TE and JH-RY, then runs all eight organisation
-workbooks through `Tableau Connection.xlsx`. Unit1 and Unit2 remain available
+current setting refreshes BD, TE and JH-RY, then runs the eight ResidentialCare
+organisation workbooks through `Tableau Connection.xlsx`, followed by the final
+Leave Balance Stats batch. Unit1 and Unit2 remain available
 through option 3 as explicit Unit selections.
 The menu leaves successful, blocked and failed results visible until the operator
 presses a key to close the window. This includes validation and status results.
@@ -83,8 +84,8 @@ C2 all-enabled-roles choice and dynamically generated C2.1 through C2.N choices,
 with role names and filenames. The same list-before-prompt rule applies when an
 agent asks the user to choose batches in conversation. The list is generated
 from current configuration, not copied from a potentially outdated diagram.
-Organisation batch IDs use the letter `O`, as in `O1,O2,O5`. The runner also
-accepts `01` through `05` with a leading zero as aliases for `O1` through `O5`
+Organisation batch IDs use the letter `O`, as in `O1,O2,O6`. The runner also
+accepts `01` through `06` with a leading zero as aliases for `O1` through `O6`
 and prints the interpretation before resolving the plan. A batch selection
 containing only organisation IDs runs those batches once and does not ask for
 Units. A mixed Unit and organisation batch selection asks for Units; that answer
@@ -124,7 +125,7 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   as `Date/DemandMaster`, then releases each selected Unit's demand extract.
   `SharedUnitJobs` in the batch settings declares these consumers; Unit1 and
   Unit2 retain their Unit-level masters. Existing declared prerequisites and
-  file-access checks still apply. The default full run now contains 84 files.
+  file-access checks still apply. The default full run now contains 86 files.
 - C1 starts with Worker Reconciliation.xlsx, then Capacity-ShiftAvailability.xlsx
   and StaffListMaster.xlsx.
 - C2.1 through C2.N expand from enabled roles in the saved client profile.
@@ -132,6 +133,15 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   identity uses the Unit and role-folder name; display numbering is frozen for
   a run. Test folders and unlisted roles are not auto-included.
 - Organisation batches O1 through O5 run once, not once per selected Unit.
+- O6 — Leave Balance Stats is the last batch in both sequence profiles. It
+  waits for O5, then runs `LBStats.xlsx` before `TableauConnect-LB.xlsx`, once
+  per run. Its named workbook root is configured in `pq.project.json` as
+  `../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations`. Targets stay
+  inside this root; sibling root configuration cannot escape the projects'
+  shared parent or traverse reparse points. These are ordering dependencies;
+  the workbook imports have not been inspected or added as declared inputs.
+  Select it with `-Batches O6`; `-Batches O6 -ValidateSelectionOnly` checks
+  access without opening Excel. Explicit Unit-only selections omit O6.
 
 The current two-Unit, three-role profile resolves to **60 files in 27 batches**:
 26 files per Unit and eight organisation files.

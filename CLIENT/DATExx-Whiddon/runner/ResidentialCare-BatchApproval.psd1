@@ -3,7 +3,7 @@
     # key are retained for compatibility; there is no separate live-approval gate.
     OrganisationUnits = @('BD', 'TE', 'JH-RY')
     # Default menu option 1 and unqualified -RunAll scope. Run the configured
-    # Units and then the organisation release chain through Tableau Connection.
+    # Units and then the organisation release chain through Leave Balance Stats.
     RunAllUnits = @('BD', 'TE', 'JH-RY')
     RunAllIncludeOrg = $true
     # Current facility Units use EN. Existing Unit1/Unit2 roles are unchanged
