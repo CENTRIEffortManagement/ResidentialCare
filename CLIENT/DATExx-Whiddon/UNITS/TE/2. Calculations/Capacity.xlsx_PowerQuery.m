@@ -1,6 +1,6 @@
 // Power Query from: Capacity.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\Capacity.xlsx
-// Extracted: 2026-09-27T08:04:12.515Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Capacity.xlsx
+// Extracted: 2026-10-07T06:55:17.023Z
 
 section Section1;
 
@@ -135,12 +135,20 @@ in
     #"Sorted Rows"
    ;
 
+// Query: AvailabilityDeveloped
+// Purpose: Publish the existing availability stages with reporting columns only.
+// Inputs: Original availability from A.1, C# from A.2, and C##/C### from B for the configured roles.
+// Output: Role, Resource, Period, Availability, AvailabilityType, Facility, ResAvailability and ResMaxAvail.
+// Notes: Calculation and diagnostic metadata must not become row keys in downstream reporting pivots.
 shared AvailabilityDeveloped = let
     Source = Table.Combine({#"IMPORT OriginalResPeriodAvailabilityTABLE1", #"IMPORT Role1C#TABLE", #"IMPORT Role1C##TABLE1", #"IMPORT Role1C###TABLE1", #"IMPORT C#TABLE2", #"IMPORT C##TABLE2", #"IMPORT C###TABLE2", #"IMPORT Role3C#TABLE", #"IMPORT Role3C##TABLE", #"IMPORT Role3C###TABLE", #"IMPORT OriginalResPeriodAvailabilityTABLE2", #"IMPORT OriginalResPeriodAvailabilityTABLE3"}),
     #"Added Custom" = Table.AddColumn(Source, "Facility", each Facility),
-    #"Replaced Value" = Table.ReplaceValue(#"Added Custom",0,null,Replacer.ReplaceValue,{"Availability"})
+    #"Replaced Value" = Table.ReplaceValue(#"Added Custom",0,null,Replacer.ReplaceValue,{"Availability"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Replaced Value",{"OriginalAvailability"}),
+    // Preserve the extracted removal above, then restrict the reporting interface to its business columns.
+    ReportingColumns = Table.SelectColumns(#"Removed Columns", {"Role", "Resource", "Period", "Availability", "AvailabilityType", "Facility", "ResAvailability", "ResMaxAvail"})
 in
-    #"Replaced Value";
+    ReportingColumns;
 
 shared AvailabilityDevelopedMATRIX = let
     Source = AvailabilityDeveloped,

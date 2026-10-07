@@ -597,11 +597,11 @@ in
 
 // Query: BCapTotals_Capped
 // Purpose: Reuse the C# allocation-plus-spare totals in redistribution and its priority preparation.
-shared BCapTotals_Capped = fnBResourceCapTotals(#"ResPeriodAvailabilityCapped(C#)TABLE", "C#");
+shared BCapTotals_Capped = fnBResourceCapTotals(BMaskedCapacity_Prepare, "C#");
 
 // Query: BCapTotals_Redistributed
 // Purpose: Reuse the C## allocation-plus-spare totals in final reduction and its priority preparation.
-shared BCapTotals_Redistributed = fnBResourceCapTotals(#"C##TABLE", "C##");
+shared BCapTotals_Redistributed = fnBResourceCapTotals(BRedistributedCapacity_Prepare, "C##");
 
 // Query: fnBWorkCalendar
 // Purpose: Preserve original flagged workday anchors and add only retained optional workdays.
@@ -640,7 +640,7 @@ in
 // Query: BRedistributionSelection
 // Purpose: Jointly accept redistribution removals within the Resource cap and Period demand allowances.
 shared BRedistributionSelection = let
-    Cells = #"ResPeriodAvailabilityCapped(C#)TABLE",
+    Cells = BMaskedCapacity_Prepare,
     OptionalCandidates = fnBOptionalCandidates(Cells, "C#"),
     OriginalOrder = Table.SelectColumns(#"PrioritiseRedistribAvail-Distrib", {"Resource", "Period", "IndexAllRowPrioritySort"}),
     JoinedOrder = Table.NestedJoin(OptionalCandidates, {"Resource", "Period"}, OriginalOrder, {"Resource", "Period"}, "Preference", JoinKind.Inner),
@@ -654,7 +654,7 @@ in
 // Query: BNormalFinalReductionSelection
 // Purpose: Apply the final demand-surplus allowances with accepted-only joint Resource and Period state.
 shared BNormalFinalReductionSelection = let
-    Cells = #"C##TABLE",
+    Cells = BRedistributedCapacity_Prepare,
     OptionalCandidates = fnBOptionalCandidates(Cells, "C##"),
     // Preserve the existing Period / allocation-excess / cap-reduction / Resource ordering; only budget acceptance changes.
     OriginalOrder = Table.SelectColumns(#"PrioritiseReductionAvail-Setup", {"Resource", "Period", "IndexAllRows"}),
@@ -671,7 +671,7 @@ in
 // Query: BPostDemandReduction_Prepare
 // Purpose: Prepare current capacity after normal accepted reductions for the independent hard-cap selection.
 shared BPostDemandReduction_Prepare = let
-    Joined = Table.NestedJoin(#"C##TABLE", {"Resource", "Period"}, BNormalFinalReductionSelection, {"Resource", "Period"}, "Reduction", JoinKind.LeftOuter),
+    Joined = Table.NestedJoin(BRedistributedCapacity_Prepare, {"Resource", "Period"}, BNormalFinalReductionSelection, {"Resource", "Period"}, "Reduction", JoinKind.LeftOuter),
     WithRemaining = Table.AddColumn(Joined, "RemainingCapacity", each [#"C##"] - (if Table.IsEmpty([Reduction]) then 0 else [Reduction]{0}[ReductionAmount]), type nullable number),
     Output = Table.RemoveColumns(WithRemaining, {"Reduction"})
 in
@@ -1083,10 +1083,12 @@ in
     #"Pivoted Column";
 
 [ Description = "BUFFER-All cells capped availability" ]
-// Query: ResPeriodAvailabilityCapped(C#)TABLE
+// Query: BMaskedCapacity_Prepare
 // Purpose: Apply upstream and B-local Resource permission to spare while retaining cells with actual-allocation evidence.
-// Output: One Resource/Period C# row with Stage 1 permission, reason and allocation evidence.
-shared #"ResPeriodAvailabilityCapped(C#)TABLE" = let
+// Inputs: BCappedAvailability_Prepare, BAllocation_CalculationTABLE and BResourceSpareEligibility.
+// Output: One Resource/Period C# row with permission, original availability, eligibility and work-calendar evidence for internal calculation and diagnostics.
+// Notes: Raw ExtensionSide and SpareEligibilityReason remain validated by BSparePlanIssues_DETAILS; neither is needed after grouping.
+shared BMaskedCapacity_Prepare = let
     UsableOrdinal = (values as list) as nullable number => let
         Value = try List.First(values) otherwise null,
         Valid = fnBFiniteNumber(Value) and Value > 0 and Value = Number.RoundDown(Value)
@@ -1103,9 +1105,7 @@ shared #"ResPeriodAvailabilityCapped(C#)TABLE" = let
         {"PlannedCluster", each try UsableOrdinal([PlannedCluster]) otherwise null, type nullable number},
         {"AllocationWorkday", each (try List.First([AllocationWorkday]) otherwise false) = true, type logical},
         {"SpareDayEligible", each (try List.First([SpareDayEligible]) otherwise false) = true, type logical},
-        {"SparePeriodSelected", each (try List.First([SparePeriodSelected]) otherwise false) = true, type logical},
-        {"ExtensionSide", each let Value = try List.First([ExtensionSide]) otherwise null in if Value.Is(Value, type text) then Value else null, type nullable text},
-        {"SpareEligibilityReason", each let Value = try List.First([SpareEligibilityReason]) otherwise null in if Value.Is(Value, type text) then Value else null, type nullable text}
+        {"SparePeriodSelected", each (try List.First([SparePeriodSelected]) otherwise false) = true, type logical}
     }),
     JoinedAllocationEvidence = Table.NestedJoin(GroupedCells, {"Resource", "Period"}, BAllocation_CalculationTABLE, {"Resource", "Period"}, "AllocationEvidence", JoinKind.LeftOuter),
     WithAllocationEvidence = Table.AddColumn(JoinedAllocationEvidence, "HasAllocationEvidence", each [UpstreamAllocationEvidence]
@@ -1119,6 +1119,16 @@ shared #"ResPeriodAvailabilityCapped(C#)TABLE" = let
     ZeroToNull = Table.ReplaceValue(RenamedCapacity, 0, null, Replacer.ReplaceValue, {"C#"})
 in
     Table.Buffer(ZeroToNull);
+
+// Query: ResPeriodAvailabilityCapped(C#)TABLE
+// Purpose: Publish capped capacity using the established business columns without exposing internal audit fields.
+// Inputs: BMaskedCapacity_Prepare; full evidence remains there for calculations and diagnostics.
+// Output: Resource, Period, Role and C# at the existing Resource/Period grain.
+shared #"ResPeriodAvailabilityCapped(C#)TABLE" = let
+    Source = BMaskedCapacity_Prepare,
+    PublicColumns = Table.SelectColumns(Source, {"Resource", "Period", "Role", "C#"})
+in
+    PublicColumns;
 
 // Query: ResPeriodAvailabilityCapped(C#)MATRIX
 // Purpose: Preserve the legacy C# matrix grain without using Stage 1 metadata as pivot keys.
@@ -1278,10 +1288,12 @@ shared ReduceCheck = let
 in
     #"Grouped Rows";
 
-// Query: C##TABLE
+// Query: BRedistributedCapacity_Prepare
 // Purpose: Preserve redistribution arithmetic and exclude spare when its optional calculation fails.
-shared #"C##TABLE" = let
-    Source = #"ResPeriodAvailabilityCapped(C#)TABLE",
+// Inputs: BMaskedCapacity_Prepare and BRedistribution_RESULT.
+// Output: Resource/Period C## capacity with the evidence and permission fields required by subsequent reductions and diagnostics.
+shared BRedistributedCapacity_Prepare = let
+    Source = BMaskedCapacity_Prepare,
     RedistributionRows = if BRedistribution_RESULT[HasError] then #table(type table [Resource = nullable number, Period = nullable number, #"C#" = nullable number], {}) else BRedistribution_RESULT[Value],
     #"Merged Queries" = Table.NestedJoin(Source, {"Resource", "Period"}, RedistributionRows, {"Resource", "Period"}, "ReDistribAvailabilityTABLE", JoinKind.LeftOuter),
     #"Expanded ReDistribAvailabilityTABLE" = Table.ExpandTableColumn(#"Merged Queries", "ReDistribAvailabilityTABLE", {"C#"}, {"C#.1"}),
@@ -1295,6 +1307,16 @@ shared #"C##TABLE" = let
     })
 in
     WithStagePermission;
+
+// Query: C##TABLE
+// Purpose: Publish redistributed capacity using the established business columns without exposing internal audit fields.
+// Inputs: BRedistributedCapacity_Prepare; full evidence remains there for calculations and diagnostics.
+// Output: Resource, Period, Role and C## at the existing Resource/Period grain.
+shared #"C##TABLE" = let
+    Source = BRedistributedCapacity_Prepare,
+    PublicColumns = Table.SelectColumns(Source, {"Resource", "Period", "Role", "C##"})
+in
+    PublicColumns;
 
 shared #"C##SUM" = let
     Source = #"C##TABLE",
@@ -1441,7 +1463,7 @@ in
 // Query: BFinalCapacity_Prepare
 // Purpose: Subtract accepted normal and forced whole-cell reductions while preserving allocated capacity.
 shared BFinalCapacity_Prepare = let
-    Source = #"C##TABLE",
+    Source = BRedistributedCapacity_Prepare,
     ReductionRows = if BFinalReduction_RESULT[HasError] then #table(type table [Resource = nullable number, Period = nullable number, MinimumAvailable = nullable number], {}) else BFinalReduction_RESULT[Value],
     JoinedReduction = Table.NestedJoin(Source, {"Resource", "Period"}, ReductionRows, {"Resource", "Period"}, "Reduction", JoinKind.LeftOuter),
     WithFinalCapacity = Table.AddColumn(JoinedReduction, "C###", each
@@ -1481,7 +1503,7 @@ in
 // Purpose: Show the published allocation-plus-spare footprint against each usable effective cap.
 // Notes: Preexisting allocated slots above cap remain visible; they are never removed to produce a Pass.
 shared BFinalCap_CHECK = let
-    Totals = fnBResourceCapTotals(#"C###TABLE B", "C###"),
+    Totals = fnBResourceCapTotals(BPublishedCapacity_Prepare, "C###"),
     EvidenceInputIssues = Table.SelectRows(BInputIssues_DETAILS, each [Check] = "Allocation input" or [Check] = "C# input"),
     EvidenceMaskIssues = Table.SelectRows(BMaskIssues_DETAILS, each [Status] = "Error"),
     IncompleteEvidence = Table.Combine({EvidenceInputIssues, EvidenceMaskIssues}),
@@ -1503,11 +1525,11 @@ shared BFinalOutputIssues_DETAILS = let
     CapIssues = List.Transform(Table.ToRecords(CapFailures), each MakeIssue("Published effective cap", _[Status], _[Resource], null,
         if _[Status] = "NotEvaluated" then "Published cap cannot be fully checked: usable contract or complete allocation evidence is missing"
         else "Allocated plus optional slots exceed effective cap; origin: " & _[Origin] & "; total=" & Text.From(_[TotalSlots]) & "; cap=" & Text.From(_[Effective Shift Cap]))),
-    Output = #"C###TABLE B",
+    Output = BPublishedCapacity_Prepare,
     BadSpare = Table.SelectRows(Output, each not [HasAllocationEvidence] and [#"C###"] <> null and [#"C###"] > 0 and
         (not [SpareCalculationAllowed] or not [SpareDayEligible] or not [SparePeriodSelected] or [#"C###"] <> 1 or [OriginalAvailability] = null or [OriginalAvailability] <= 0)),
     SpareIssues = List.Transform(Table.ToRecords(BadSpare), each MakeIssue("Published spare lineage", "Fail", _[Resource], _[Period], "Retained spare is not a whole eligible selected original-availability cell")),
-    Protected = Table.SelectRows(#"ResPeriodAvailabilityCapped(C#)TABLE", each [HasAllocationEvidence]),
+    Protected = Table.SelectRows(BMaskedCapacity_Prepare, each [HasAllocationEvidence]),
     JoinedProtected = Table.NestedJoin(Protected, {"Resource", "Period"}, Output, {"Resource", "Period"}, "Published", JoinKind.LeftOuter),
     LostAllocation = Table.SelectRows(JoinedProtected, each Table.RowCount([Published]) <> 1 or not ([#"C#"] = [Published]{0}[#"C###"])),
     AllocationIssues = List.Transform(Table.ToRecords(LostAllocation), each MakeIssue("Allocated capacity preserved", "Fail", _[Resource], _[Period], "Allocated C# capacity was changed or lost before publication")),
@@ -1544,10 +1566,11 @@ shared BPublicationResourceIssues_Prepare = let
 in
     Table.Buffer(WithExclusion);
 
-// Query: C###TABLE B
-// Purpose: Publish final B capacity with Resource-local spare exclusion and honest nonblocking diagnostics.
-// Output: Preserve the existing final-capacity table interface used by C###SUM and C###MATRIX.
-shared #"C###TABLE B" = let
+// Query: BPublishedCapacity_Prepare
+// Purpose: Prepare final B capacity with Resource-local spare exclusion and honest nonblocking diagnostics.
+// Inputs: BFinalCapacity_Prepare, BPublicationResourceIssues_Prepare, BFinalReduction_RESULT and ResMaxAvailability.
+// Output: Final Resource/Period C### capacity, availability totals and full calculation evidence for publication checks.
+shared BPublishedCapacity_Prepare = let
     Source = BFinalCapacity_Prepare,
     JoinedPublicationIssues = Table.NestedJoin(Source, {"Resource"}, BPublicationResourceIssues_Prepare, {"Resource"}, "PublicationIssues", JoinKind.LeftOuter),
     ExpandedPublicationIssues = Table.ExpandTableColumn(JoinedPublicationIssues, "PublicationIssues", {"PublicationReasons", "PublicationSpareExcluded"}, {"PublicationReasons", "PublicationSpareExcluded"}),
@@ -1568,6 +1591,16 @@ shared #"C###TABLE B" = let
     Output = Table.ExpandTableColumn(JoinedAvailabilityAudit, "AvailabilityAudit", {"ResAvailability", "ResMaxAvail"}, {"ResAvailability", "ResMaxAvail"})
 in
     Table.Buffer(Output);
+
+// Query: C###TABLE B
+// Purpose: Publish final capacity and Resource availability totals without exposing internal audit fields.
+// Inputs: BPublishedCapacity_Prepare; full evidence remains there for publication checks and diagnostics.
+// Output: Resource, Period, Role, C###, ResAvailability and ResMaxAvail at the existing Resource/Period grain.
+shared #"C###TABLE B" = let
+    Source = BPublishedCapacity_Prepare,
+    PublicColumns = Table.SelectColumns(Source, {"Resource", "Period", "Role", "C###", "ResAvailability", "ResMaxAvail"})
+in
+    PublicColumns;
 
 shared #"C###SUM" = let
     Source = #"C###TABLE B",

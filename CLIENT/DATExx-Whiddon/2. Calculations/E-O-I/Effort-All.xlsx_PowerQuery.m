@@ -314,17 +314,28 @@ shared EffortAllMatrixAG1_1D = let
 in
     #"Renamed Columns";
 
+// Query: Availabilities Appended
+// Purpose: Combine configured units' availability measures at the established reporting grain.
+// Output: Facility/Role/Resource/Period/Date/Shift, EffortType/Effort and the Resource audit totals.
+// Notes: Keep only legacy reporting fields so calculation metadata cannot become additional pivot keys.
 shared #"Availabilities Appended" = let
     Source = #"EXTRACT Facility2 RoleShiftAvailabilities",
     #"Appended FAC1" = Table.Combine({Source, #"EXTRACT Facility1 RoleShiftAvailabilities", #"EXTRACT Facility3 RoleShiftAvailabilities"}),
     //Table.Combine({#"EXTRACT Facility1 RoleShiftAvailabilities", #"EXTRACT Facility2 RoleShiftAvailabilities"}),    //return Facility 1
-    #"Renamed Columns" = Table.RenameColumns(#"Appended FAC1",{{"Capacity", "EffortType"}, {"Availability", "Effort"}}),
+    ReportingColumns = Table.SelectColumns(#"Appended FAC1",
+        {"Role", "Resource", "Period", "Availability", "Capacity", "Facility", "Date", "Shift", "ResAvailability", "ResMaxAvail"}),
+    #"Renamed Columns" = Table.RenameColumns(ReportingColumns,{{"Capacity", "EffortType"}, {"Availability", "Effort"}}),
     #"Multiplied Column" = Table.TransformColumns(#"Renamed Columns", {{"Effort", each _ * EffectiveAvailability, type number}}),
     #"Sorted Rows" = Table.Sort(#"Multiplied Column",{{"Facility", Order.Ascending}, {"Date", Order.Ascending}, {"Shift", Order.Ascending}, {"Resource", Order.Ascending}, {"EffortType", Order.Ascending}}),
     #"Sorted Rows1" = Table.Sort(#"Sorted Rows",{{"Period", Order.Ascending}})
 in
     #"Sorted Rows1";
 
+// Query: Availability Effort
+// Purpose: Publish the established long-format demand, availability-stage and allocation measures.
+// Output: Facility, Role, Shift, Date, EffortType, Effort, Resource and Period.
+// Notes: Demand retains its Role/shift grain with null Resource/Period.
+// The existing wide pivot keys are Facility, Role, Resource, Period, Date and Shift.
 shared #"Availability Effort" = let
     Source = #"EffortAllMatrixAG1_1D-base !!",
     #"Removed Other Columns" = Table.SelectColumns(Source,{"Facility", "Role", "Shift", "Demand", "Date"}),
@@ -334,7 +345,9 @@ shared #"Availability Effort" = let
     #"Removed Columns" = Table.RemoveColumns(#"Appended AVAILABILITIES",{"ResAvailability", "ResMaxAvail"}),
     #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"Shift", type text}, {"EffortType", type text}, {"Effort", type number}, {"Resource", Int64.Type}}),
     #"Appended ALLOCATION" = Table.Combine({#"Changed Type", ResShiftAllocation}),
-    #"Replaced Value" = Table.ReplaceValue(#"Appended ALLOCATION",0,null,Replacer.ReplaceValue,{"Effort"}),
+    ReportingColumns = Table.SelectColumns(#"Appended ALLOCATION",
+        {"Facility", "Role", "Shift", "Date", "EffortType", "Effort", "Resource", "Period"}),
+    #"Replaced Value" = Table.ReplaceValue(ReportingColumns,0,null,Replacer.ReplaceValue,{"Effort"}),
     #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Facility", Order.Ascending}, {"Role", Order.Ascending}, {"Date", Order.Ascending}, {"EffortType", Order.Ascending}, {"Resource", Order.Ascending} })
 in
     #"Sorted Rows";
