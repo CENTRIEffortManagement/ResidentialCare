@@ -1,16 +1,16 @@
 // Power Query from: Demand-MasterRoster Manual Read.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\1. Input\Demand-MasterRoster Manual Read.xlsx
+// Pathname: CLIENT/DATExx-Whiddon/1. Input/Demand-MasterRoster Manual Read.xlsx
 // Extracted: 2026-10-01T04:24:33.820Z
 
 section Section1;
 
 // Query: IMPORT Master
-// Purpose: Reads the approved, deliberately fixed Unit1 Master Roster source.
+// Purpose: Reads the approved, deliberately fixed organisation-level Master Roster source.
 // Output: Buffered workbook navigation snapshot; no business transformation is applied.
 // Notes: The fixed source is temporary while one workbook analyses all facilities.
 shared #"IMPORT Master" =
 let
-    SourcePath = "C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\1. Input\Master Roster.xlsx",
+    SourcePath = "C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\1. Input\Master Roster.xlsx",
     Workbook = Excel.Workbook(
         Binary.Buffer(File.Contents(SourcePath)),
         null,
@@ -20,7 +20,7 @@ in
     Table.Buffer(Workbook);
 
 // Query: EXTRACT Master Combined
-// Purpose: Navigates to the Combined sheet in the imported Unit1 Master Roster without transforming it.
+// Purpose: Navigates to the Combined sheet in the imported organisation-level Master Roster without transforming it.
 // Inputs: IMPORT Master.
 // Output: Raw Combined-sheet rows.
 shared #"EXTRACT Master Combined" =
@@ -31,7 +31,7 @@ in
     CombinedSheet;
 
 // Query: Master Source Prepare
-// Purpose: Promotes and types the approved Unit1 Master Roster fields used by the analysis.
+// Purpose: Promotes and types the approved organisation-level Master Roster fields used by the analysis.
 // Inputs: EXTRACT Master Combined.
 // Output: Buffered typed Master Roster rows.
 shared #"Master Source Prepare" =
