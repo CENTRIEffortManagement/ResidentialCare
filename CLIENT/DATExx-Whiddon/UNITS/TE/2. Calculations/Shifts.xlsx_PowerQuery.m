@@ -1,11 +1,9 @@
 // Power Query from: Shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\Shifts.xlsx
-// Extracted: 2026-09-24T08:43:00.784Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Shifts.xlsx
+// Extracted: 2026-10-05T08:25:52.219Z
 
 section Section1;
 
-// Query: UnitL1PathTABLE
-// Purpose: Resolve this workbook's calculation folder through canonical FilePathUrl and CentriSyncPaths.
 shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
 let
     FilePathUrl =

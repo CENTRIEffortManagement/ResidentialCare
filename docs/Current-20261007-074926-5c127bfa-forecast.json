@@ -1,0 +1,35 @@
+{
+  "Peak": 1,
+  "Rows": [
+    {
+      "Finish": 83.434959,
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "Org/LeaveBalanceStats"
+    },
+    {
+      "Finish": 130.1105479,
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 83.434959,
+      "Id": "Org/LeaveBalanceReporting"
+    }
+  ],
+  "Untimed": [],
+  "TotalSeconds": 130.1105479,
+  "UnknownAdmission": "",
+  "Complete": true,
+  "Durations": {
+    "Org/LeaveBalanceReporting": {
+      "Observed": "2026-10-06T05:45:27.3991140+00:00",
+      "Seconds": 46.6755889,
+      "SourceRun": "20261006-164316-b15534a7"
+    },
+    "Org/LeaveBalanceStats": {
+      "Observed": "2026-10-06T05:44:40.6827234+00:00",
+      "Seconds": 83.434959,
+      "SourceRun": "20261006-164316-b15534a7"
+    }
+  }
+}

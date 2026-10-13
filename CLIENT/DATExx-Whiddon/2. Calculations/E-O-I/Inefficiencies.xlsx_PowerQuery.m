@@ -1,6 +1,6 @@
 // Power Query from: Inefficiencies.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Inefficiencies.xlsx
-// Extracted: 2026-09-25T01:12:42.752Z
+// Extracted: 2026-10-13T01:14:22.936Z
 
 section Section1;
 

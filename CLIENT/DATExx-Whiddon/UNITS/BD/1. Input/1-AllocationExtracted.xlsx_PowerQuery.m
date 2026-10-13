@@ -1,6 +1,6 @@
 // Power Query from: 1-AllocationExtracted.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\1. Input\1-AllocationExtracted.xlsx
-// Extracted: 2026-10-01T00:33:19.963Z
+// Extracted: 2026-10-06T04:27:34.205Z
 
 section Section1;
 
@@ -166,7 +166,7 @@ in
 
 shared #"Allocation Prepare" = let
     Source = #"IMPORT Roster",
-    #"Trimmed SPACES" = Table.TransformColumns(Source,{{"Location", Text.Trim, type text}}),
+    #"Trimmed SPACES" = Table.TransformColumns(Source,{{"Location", Text.Trim, type text}, {"Role", Text.Trim, type text}, {"Employee Roster Name", Text.Trim, type text}}),
     #"Filter AGENCY" = Table.SelectRows(#"Trimmed SPACES", each ([Employment Type] <> " " and [Employment Type] <> "Agency ")),
     #"Merged Queries" = Table.NestedJoin(#"Filter AGENCY", {"Location"}, #"LINK Facilities", {"Title"}, "LINK Facilities", JoinKind.LeftOuter),
     #"Expanded LINK Facilities" = Table.ExpandTableColumn(#"Merged Queries", "LINK Facilities", {"Facility-Abbrev"}, {"Facility-Abbrev"}),
@@ -276,9 +276,10 @@ shared #"IMPORT Roster" = let
     Source = Excel.Workbook(File.Contents(Unit1Path & "\1. Input\Allocation\Published Roster.xlsx"), null, true),
     Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
     #"Promoted Headers1" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", Int64.Type}})
+    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", Int64.Type}}),
+    BUFFER = Table.Buffer(#"Changed Type1")
 in
-    #"Changed Type1";
+    BUFFER;
 
 shared #"LINK Roles" = let
     Source = SharePoint.Tables("https://centri001.sharepoint.com/sites/WhiddonCENTRI", [Implementation="2.0", ViewMode="All"]),
