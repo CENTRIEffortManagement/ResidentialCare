@@ -1,0 +1,125 @@
+{
+  "PeakConcurrency": 4,
+  "IncompleteAttempts": [],
+  "RunId": "20261007-174421-7e95aec8",
+  "Untimed": [
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "BD/Capacity",
+        "BD/Demand",
+        "BD/Allocation",
+        "BD/Distribution",
+        "BD/MultiRole",
+        "BD/Staff",
+        "BD/Settings"
+      ],
+      "Id": "BD/Effort",
+      "Reason": "External-user policy blocked access: Tableau (PID 73048) after waiting 15 second(s). No save attempted by this check; this is not an Excel save error. Close/disconnect those applications before retrying: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Effort.xlsx"
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/StaffAll",
+        "BD/Effort",
+        "TE/Effort",
+        "JH-RY/Effort"
+      ],
+      "Id": "Org/EffortAll",
+      "Reason": "Prerequisite BD/Effort did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ],
+      "Id": "Org/Outcomes",
+      "Reason": "Prerequisite Org/EffortAll did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Outcomes"
+      ],
+      "Id": "Org/Inefficiencies",
+      "Reason": "Prerequisite Org/Outcomes did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ],
+      "Id": "Org/Reporting",
+      "Reason": "Prerequisite Org/Inefficiencies did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Reporting"
+      ],
+      "Id": "Org/LeaveBalanceStats",
+      "Reason": "Prerequisite Org/Reporting did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/LeaveBalanceStats"
+      ],
+      "Id": "Org/LeaveBalanceReporting",
+      "Reason": "Prerequisite Org/LeaveBalanceStats did not complete."
+    }
+  ],
+  "ActiveIntervalSeconds": 114.96780820000001,
+  "Status": "PartialOrFailed",
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Rows": [
+    {
+      "Status": "Completed",
+      "Attempt": 1,
+      "Start": 2.0240489,
+      "Id": "BD/Capacity",
+      "Finish": 53.3337962
+    },
+    {
+      "Status": "Completed",
+      "Attempt": 1,
+      "Start": 2.2730217,
+      "Id": "TE/Capacity",
+      "Finish": 69.9371132
+    },
+    {
+      "Status": "Completed",
+      "Attempt": 1,
+      "Start": 69.9769235,
+      "Id": "TE/Effort",
+      "Finish": 115.017692
+    },
+    {
+      "Status": "Completed",
+      "Attempt": 1,
+      "Start": 2.3810844,
+      "Id": "JH-RY/Capacity",
+      "Finish": 69.9316249
+    },
+    {
+      "Status": "Completed",
+      "Attempt": 1,
+      "Start": 70.0552312,
+      "Id": "JH-RY/Effort",
+      "Finish": 117.0316674
+    },
+    {
+      "Status": "Completed",
+      "Attempt": 1,
+      "Start": 2.5681509,
+      "Id": "Org/StaffAll",
+      "Finish": 53.0943844
+    }
+  ],
+  "GapSeconds": 2,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ElapsedSeconds": 117.0441215
+}

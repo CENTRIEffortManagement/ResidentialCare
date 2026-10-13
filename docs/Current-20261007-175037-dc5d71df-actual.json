@@ -1,0 +1,105 @@
+{
+  "Status": "Completed",
+  "PeakConcurrency": 4,
+  "ActiveIntervalSeconds": 456.2264105,
+  "RunId": "20261007-175037-dc5d71df",
+  "IncompleteAttempts": [],
+  "GapSeconds": 1,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ElapsedSeconds": 457.2914931,
+  "Rows": [
+    {
+      "Start": 0.8865404,
+      "Attempt": 1,
+      "Id": "BD/Capacity",
+      "Status": "Completed",
+      "Finish": 50.6473616
+    },
+    {
+      "Start": 50.6847882,
+      "Attempt": 1,
+      "Id": "BD/Effort",
+      "Status": "Completed",
+      "Finish": 98.1244257
+    },
+    {
+      "Start": 0.9730062,
+      "Attempt": 1,
+      "Id": "TE/Capacity",
+      "Status": "Completed",
+      "Finish": 50.8230911
+    },
+    {
+      "Start": 50.860819,
+      "Attempt": 1,
+      "Id": "TE/Effort",
+      "Status": "Completed",
+      "Finish": 97.7910866
+    },
+    {
+      "Start": 1.160018,
+      "Attempt": 1,
+      "Id": "JH-RY/Capacity",
+      "Status": "Completed",
+      "Finish": 49.8041171
+    },
+    {
+      "Start": 49.8511244,
+      "Attempt": 1,
+      "Id": "JH-RY/Effort",
+      "Status": "Completed",
+      "Finish": 95.5295569
+    },
+    {
+      "Start": 1.373002,
+      "Attempt": 1,
+      "Id": "Org/StaffAll",
+      "Status": "Completed",
+      "Finish": 49.5667037
+    },
+    {
+      "Start": 98.1519883,
+      "Attempt": 1,
+      "Id": "Org/EffortAll",
+      "Status": "Completed",
+      "Finish": 186.7624715
+    },
+    {
+      "Start": 186.8064965,
+      "Attempt": 1,
+      "Id": "Org/Outcomes",
+      "Status": "Completed",
+      "Finish": 226.9759534
+    },
+    {
+      "Start": 226.9986419,
+      "Attempt": 1,
+      "Id": "Org/Inefficiencies",
+      "Status": "Completed",
+      "Finish": 276.3646427
+    },
+    {
+      "Start": 276.3915416,
+      "Attempt": 1,
+      "Id": "Org/Reporting",
+      "Status": "Completed",
+      "Finish": 327.4267103
+    },
+    {
+      "Start": 327.4518729,
+      "Attempt": 1,
+      "Id": "Org/LeaveBalanceStats",
+      "Status": "Completed",
+      "Finish": 411.8030143
+    },
+    {
+      "Start": 411.8237428,
+      "Attempt": 1,
+      "Id": "Org/LeaveBalanceReporting",
+      "Status": "Completed",
+      "Finish": 457.280017
+    }
+  ],
+  "Untimed": []
+}

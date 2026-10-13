@@ -1,0 +1,96 @@
+gantt
+    title Current forecast - elapsed 00 11 02
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/C2 AIN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role AIN/1 attempt 1 Forecast :task1, 2000-01-01 00:00:00.000, 2000-01-01 00:01:59.901
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    BD/Role AIN/2 attempt 1 Forecast :task2, 2000-01-01 00:01:59.901, 2000-01-01 00:04:09.633
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    BD/Role AIN/3 attempt 1 Forecast :task3, 2000-01-01 00:04:09.633, 2000-01-01 00:06:07.507
+    section BD/C2 RN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role RN/1 attempt 1 Forecast :task4, 2000-01-01 00:00:00.000, 2000-01-01 00:01:46.766
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    BD/Role RN/2 attempt 1 Forecast :task5, 2000-01-01 00:01:46.766, 2000-01-01 00:02:56.064
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    BD/Role RN/3 attempt 1 Forecast :task6, 2000-01-01 00:02:56.064, 2000-01-01 00:04:14.502
+    section BD/C2 EN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role EN/1 attempt 1 Forecast :task7, 2000-01-01 00:00:00.000, 2000-01-01 00:01:41.892
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    BD/Role EN/2 attempt 1 Forecast :task8, 2000-01-01 00:01:41.892, 2000-01-01 00:02:49.983
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    BD/Role EN/3 attempt 1 Forecast :task9, 2000-01-01 00:02:49.983, 2000-01-01 00:04:01.297
+    section BD/U4
+    %% Predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    BD/Capacity attempt 1 Forecast :task10, 2000-01-01 00:06:07.507, 2000-01-01 00:06:55.413
+    %% Predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings
+    BD/Effort attempt 1 Forecast :task11, 2000-01-01 00:06:55.413, 2000-01-01 00:07:43.499
+    section TE/C2 AIN
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    TE/Role AIN/1 attempt 1 Forecast :task12, 2000-01-01 00:00:00.000, 2000-01-01 00:02:18.212
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:AIN/1
+    TE/Role AIN/2 attempt 1 Forecast :task13, 2000-01-01 00:02:18.212, 2000-01-01 00:04:19.503
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:AIN/2
+    TE/Role AIN/3 attempt 1 Forecast :task14, 2000-01-01 00:04:19.503, 2000-01-01 00:05:55.009
+    section TE/C2 RN
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    TE/Role RN/1 attempt 1 Forecast :task15, 2000-01-01 00:00:00.000, 2000-01-01 00:01:51.313
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:RN/1
+    TE/Role RN/2 attempt 1 Forecast :task16, 2000-01-01 00:01:51.313, 2000-01-01 00:02:50.579
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:RN/2
+    TE/Role RN/3 attempt 1 Forecast :task17, 2000-01-01 00:02:50.579, 2000-01-01 00:03:54.730
+    section TE/C2 EN
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    TE/Role EN/1 attempt 1 Forecast :task18, 2000-01-01 00:00:00.000, 2000-01-01 00:01:57.286
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:EN/1
+    TE/Role EN/2 attempt 1 Forecast :task19, 2000-01-01 00:01:57.286, 2000-01-01 00:02:54.965
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:EN/2
+    TE/Role EN/3 attempt 1 Forecast :task20, 2000-01-01 00:02:54.965, 2000-01-01 00:03:58.603
+    section TE/U4
+    %% Predecessors: TE/Role:AIN/3, TE/Role:EN/3, TE/Role:RN/3, TE/Demand, TE/Staff, TE/Availability, TE/Settings
+    TE/Capacity attempt 1 Forecast :task21, 2000-01-01 00:05:55.009, 2000-01-01 00:06:42.124
+    %% Predecessors: TE/Capacity, TE/Demand, TE/Allocation, TE/Distribution, TE/MultiRole, TE/Staff, TE/Settings
+    TE/Effort attempt 1 Forecast :task22, 2000-01-01 00:06:42.124, 2000-01-01 00:07:27.120
+    section JH-RY/C2 AIN
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    JH-RY/Role AIN/1 attempt 1 Forecast :task23, 2000-01-01 00:00:00.000, 2000-01-01 00:01:59.630
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:AIN/1
+    JH-RY/Role AIN/2 attempt 1 Forecast :task24, 2000-01-01 00:01:59.630, 2000-01-01 00:03:40.723
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:AIN/2
+    JH-RY/Role AIN/3 attempt 1 Forecast :task25, 2000-01-01 00:03:40.723, 2000-01-01 00:04:59.240
+    section JH-RY/C2 RN
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    JH-RY/Role RN/1 attempt 1 Forecast :task26, 2000-01-01 00:00:00.000, 2000-01-01 00:01:51.854
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:RN/1
+    JH-RY/Role RN/2 attempt 1 Forecast :task27, 2000-01-01 00:01:51.854, 2000-01-01 00:02:51.981
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:RN/2
+    JH-RY/Role RN/3 attempt 1 Forecast :task28, 2000-01-01 00:02:51.981, 2000-01-01 00:03:53.984
+    section JH-RY/C2 EN
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    JH-RY/Role EN/1 attempt 1 Forecast :task29, 2000-01-01 00:00:00.000, 2000-01-01 00:01:58.535
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:EN/1
+    JH-RY/Role EN/2 attempt 1 Forecast :task30, 2000-01-01 00:01:58.535, 2000-01-01 00:02:57.130
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:EN/2
+    JH-RY/Role EN/3 attempt 1 Forecast :task31, 2000-01-01 00:02:57.130, 2000-01-01 00:03:57.722
+    section JH-RY/U4
+    %% Predecessors: JH-RY/Role:AIN/3, JH-RY/Role:EN/3, JH-RY/Role:RN/3, JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/Settings
+    JH-RY/Capacity attempt 1 Forecast :task32, 2000-01-01 00:04:59.240, 2000-01-01 00:05:45.437
+    %% Predecessors: JH-RY/Capacity, JH-RY/Demand, JH-RY/Allocation, JH-RY/Distribution, JH-RY/MultiRole, JH-RY/Staff, JH-RY/Settings
+    JH-RY/Effort attempt 1 Forecast :task33, 2000-01-01 00:05:45.437, 2000-01-01 00:06:31.397
+    section Org/O1
+    %% Predecessors: BD/Staff, TE/Staff, JH-RY/Staff
+    Org/StaffAll attempt 1 Forecast :task34, 2000-01-01 00:00:00.000, 2000-01-01 00:00:45.197
+    %% Predecessors: Org/StaffAll, BD/Effort, TE/Effort, JH-RY/Effort
+    Org/EffortAll attempt 1 Forecast :task35, 2000-01-01 00:07:43.499, 2000-01-01 00:08:47.958
+    section Org/O2
+    %% Predecessors: Org/EffortAll, Org/StaffAll
+    Org/Outcomes attempt 1 Forecast :task36, 2000-01-01 00:08:47.958, 2000-01-01 00:09:28.387
+    %% Predecessors: Org/Outcomes
+    Org/Inefficiencies attempt 1 Forecast :task37, 2000-01-01 00:09:28.387, 2000-01-01 00:10:19.293
+    section Org/O5
+    %% Predecessors: Org/Cost, Org/HistoryRead, Org/Inefficiencies
+    Org/Reporting attempt 1 Forecast :task38, 2000-01-01 00:10:19.293, 2000-01-01 00:11:02.670

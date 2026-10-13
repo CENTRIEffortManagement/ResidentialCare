@@ -1,6 +1,6 @@
 // Power Query from: Worker Reconciliation.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\1. Input\Worker Reconciliation.xlsx
-// Extracted: 2026-10-04T19:44:42.612Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\1. Input\Worker Reconciliation.xlsx
+// Extracted: 2026-10-05T08:01:14.691Z
 
 section Section1;
 
@@ -140,11 +140,20 @@ shared #"IMPORT Leave Balances" = let
 in
     Navigation;
 
+shared #"EXTRACT Leave Balances = Raw Sample" = let
+    Source = #"IMPORT Leave Balances",
+    Data_Sheet = Source{[Item="Data",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Data_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee Code", Int64.Type}, {"Facility", type text}, {"Position Description", type text}, {"Employee Status", type text}, {"Annual Leave Type", type any}, {"Service Leave Type", type text}, {"AL Balance Units - 30 Sep 25", type number}, {"AL $ Liability - 30 Sep 25", type number}, {"LSL Balance Units - 30 Sep 25", type number}, {"LSL $ Liability - 30 Sep 25", type number}, {"Balance Units - 31 Dec 25", type number}, {"$ Liability - 31 Dec 25", type number}, {"LSL Balance Units - 31/12/25", type number}, {"LSL $ Liability - 31/12/2025", type number}, {"Balance Units - 31 Mar 26", type number}, {"$ Liability - 31 Mar 26", type number}, {"LSL Balance Units - 31/03/2026", type number}, {"LSL $ Liability - 31/03/2026", type number}, {"Balance Units - 30/06/2026", type number}, {"$ Liability - 30/06/2026", type number}, {"LSL Balance Units - 30/06/2026", type number}, {"LSL $ Liability - 30/06/2026", type number}}),
+    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"Employee Code", Order.Ascending}})
+in
+    #"Sorted Rows";
+
 // Query: LeaveBalances_Prepare
 // Purpose: Select the three approved leave-report fields and normalize employee, facility and role identity.
 // Inputs: Table2 from IMPORT Leave Balances.
 // Output: Employee Code, Facility, Role and the existing two-character Facility-Abbrev key.
-shared LeaveBalances_Prepare = let
+shared #"EXTRACT LeaveBalances_Prepare" = let
     Source = #"IMPORT Leave Balances",
     Matches = Table.SelectRows(Source, each [Item] = "Table2" and [Kind] = "Table"),
     LeaveTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
@@ -190,7 +199,7 @@ in
 // Output: One leave-source marker, role, facility key and original facility label per Employee Code.
 // Notes: Conflicting roles or six-character locations are exposed by LeaveBalances_DIAGNOSTICS and block publication.
 shared LeaveBalances_Workers = let
-    Source = LeaveBalances_Prepare,
+    Source = #"EXTRACT LeaveBalances_Prepare",
     GroupedWorkers = Table.Group(Source, {"Employee Code"}, {
         {"Leave Balance Role", each
             let

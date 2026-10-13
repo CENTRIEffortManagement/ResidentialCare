@@ -1,0 +1,167 @@
+{
+  "Durations": {
+    "Org/Outcomes": {
+      "Seconds": 40.6034276,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:27:01.2252916+00:00"
+    },
+    "Org/Inefficiencies": {
+      "Seconds": 50.0923107,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:27:51.3418368+00:00"
+    },
+    "BD/Capacity": {
+      "Seconds": 47.9129941,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:24:10.8643481+00:00"
+    },
+    "TE/Capacity": {
+      "Seconds": 46.1855793,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:24:24.0545397+00:00"
+    },
+    "Org/LeaveBalanceStats": {
+      "Seconds": 77.1938947,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:30:36.6666055+00:00"
+    },
+    "JH-RY/Effort": {
+      "Seconds": 50.8131182,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:24:32.5492094+00:00"
+    },
+    "TE/Effort": {
+      "Seconds": 45.3425846,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:25:09.4353529+00:00"
+    },
+    "Org/EffortAll": {
+      "Seconds": 71.1240356,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:26:20.5932148+00:00"
+    },
+    "Org/LeaveBalanceReporting": {
+      "Seconds": 45.2259257,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:31:21.9181677+00:00"
+    },
+    "Org/StaffAll": {
+      "Seconds": 45.6888657,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:12:43.4364307+00:00"
+    },
+    "JH-RY/Capacity": {
+      "Seconds": 46.709645,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:23:41.6979116+00:00"
+    },
+    "BD/Effort": {
+      "Seconds": 46.3869344,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:24:57.2836489+00:00"
+    },
+    "Org/Reporting": {
+      "Seconds": 43.2412418,
+      "SourceRun": "20261007-080645-d268fb4f",
+      "Observed": "2026-10-06T21:29:19.4463722+00:00"
+    }
+  },
+  "Rows": [
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "BD/Capacity",
+      "Finish": 47.9129941
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "TE/Capacity",
+      "Finish": 46.1855793
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "JH-RY/Capacity",
+      "Finish": 46.709645
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "Org/StaffAll",
+      "Finish": 45.6888657
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 46.1855793,
+      "Id": "TE/Effort",
+      "Finish": 91.52816390000001
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 46.709645,
+      "Id": "JH-RY/Effort",
+      "Finish": 97.5227632
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 47.9129941,
+      "Id": "BD/Effort",
+      "Finish": 94.2999285
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 97.5227632,
+      "Id": "Org/EffortAll",
+      "Finish": 168.6467988
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 168.6467988,
+      "Id": "Org/Outcomes",
+      "Finish": 209.2502264
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 209.2502264,
+      "Id": "Org/Inefficiencies",
+      "Finish": 259.3425371
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 259.3425371,
+      "Id": "Org/Reporting",
+      "Finish": 302.5837789
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 302.5837789,
+      "Id": "Org/LeaveBalanceStats",
+      "Finish": 379.7776736
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 379.7776736,
+      "Id": "Org/LeaveBalanceReporting",
+      "Finish": 425.0035993
+    }
+  ],
+  "Peak": 4,
+  "UnknownAdmission": "",
+  "Untimed": [],
+  "TotalSeconds": 425.0035993,
+  "Complete": true
+}

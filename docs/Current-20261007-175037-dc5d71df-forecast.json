@@ -1,0 +1,167 @@
+{
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Finish": 51.3097473,
+      "Start": 0.0,
+      "Id": "BD/Capacity",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 67.6640915,
+      "Start": 0.0,
+      "Id": "TE/Capacity",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 67.5505405,
+      "Start": 0.0,
+      "Id": "JH-RY/Capacity",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 50.5262335,
+      "Start": 0.0,
+      "Id": "Org/StaffAll",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 97.6966817,
+      "Start": 51.3097473,
+      "Id": "BD/Effort",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 114.5269767,
+      "Start": 67.5505405,
+      "Id": "JH-RY/Effort",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 112.70486,
+      "Start": 67.6640915,
+      "Id": "TE/Effort",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 185.6510123,
+      "Start": 114.5269767,
+      "Id": "Org/EffortAll",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 226.2544399,
+      "Start": 185.6510123,
+      "Id": "Org/Outcomes",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 276.3467506,
+      "Start": 226.2544399,
+      "Id": "Org/Inefficiencies",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 319.5879924,
+      "Start": 276.3467506,
+      "Id": "Org/Reporting",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 396.7818871,
+      "Start": 319.5879924,
+      "Id": "Org/LeaveBalanceStats",
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 442.0078128,
+      "Start": 396.7818871,
+      "Id": "Org/LeaveBalanceReporting",
+      "Status": "Forecast"
+    }
+  ],
+  "Durations": {
+    "JH-RY/Effort": {
+      "Observed": "2026-10-07T06:46:18.4476718+00:00",
+      "Seconds": 46.9764362,
+      "SourceRun": "20261007-174421-7e95aec8"
+    },
+    "Org/Inefficiencies": {
+      "Observed": "2026-10-06T21:27:51.3418368+00:00",
+      "Seconds": 50.0923107,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "Org/Outcomes": {
+      "Observed": "2026-10-06T21:27:01.2252916+00:00",
+      "Seconds": 40.6034276,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "Org/StaffAll": {
+      "Observed": "2026-10-07T06:45:14.5103888+00:00",
+      "Seconds": 50.5262335,
+      "SourceRun": "20261007-174421-7e95aec8"
+    },
+    "JH-RY/Capacity": {
+      "Observed": "2026-10-07T06:45:31.3476293+00:00",
+      "Seconds": 67.5505405,
+      "SourceRun": "20261007-174421-7e95aec8"
+    },
+    "Org/Reporting": {
+      "Observed": "2026-10-06T21:29:19.4463722+00:00",
+      "Seconds": 43.2412418,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "Org/LeaveBalanceStats": {
+      "Observed": "2026-10-06T21:30:36.6666055+00:00",
+      "Seconds": 77.1938947,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "Org/EffortAll": {
+      "Observed": "2026-10-06T21:26:20.5932148+00:00",
+      "Seconds": 71.1240356,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "TE/Capacity": {
+      "Observed": "2026-10-07T06:45:31.3531176+00:00",
+      "Seconds": 67.6640915,
+      "SourceRun": "20261007-174421-7e95aec8"
+    },
+    "TE/Effort": {
+      "Observed": "2026-10-07T06:46:16.4336964+00:00",
+      "Seconds": 45.0407685,
+      "SourceRun": "20261007-174421-7e95aec8"
+    },
+    "Org/LeaveBalanceReporting": {
+      "Observed": "2026-10-06T21:31:21.9181677+00:00",
+      "Seconds": 45.2259257,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "BD/Effort": {
+      "Observed": "2026-10-06T21:24:57.2836489+00:00",
+      "Seconds": 46.3869344,
+      "SourceRun": "20261007-080645-d268fb4f"
+    },
+    "BD/Capacity": {
+      "Observed": "2026-10-07T06:45:14.7498006+00:00",
+      "Seconds": 51.3097473,
+      "SourceRun": "20261007-174421-7e95aec8"
+    }
+  },
+  "TotalSeconds": 442.0078128,
+  "Peak": 4,
+  "UnknownAdmission": "",
+  "Complete": true,
+  "Untimed": []
+}

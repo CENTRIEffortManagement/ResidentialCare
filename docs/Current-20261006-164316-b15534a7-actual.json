@@ -1,0 +1,28 @@
+{
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "GapSeconds": 1,
+  "ActiveIntervalSeconds": 130.11054790000003,
+  "RunId": "20261006-164316-b15534a7",
+  "Status": "Completed",
+  "IncompleteAttempts": [],
+  "ElapsedSeconds": 131.0903562,
+  "Rows": [
+    {
+      "Start": 0.9303753,
+      "Id": "Org/LeaveBalanceStats",
+      "Finish": 84.3653343,
+      "Attempt": 1,
+      "Status": "Completed"
+    },
+    {
+      "Start": 84.406136,
+      "Id": "Org/LeaveBalanceReporting",
+      "Finish": 131.0817249,
+      "Attempt": 1,
+      "Status": "Completed"
+    }
+  ],
+  "PeakConcurrency": 1,
+  "Untimed": [],
+  "OriginalIllustrativeBaselineSeconds": 1043
+}

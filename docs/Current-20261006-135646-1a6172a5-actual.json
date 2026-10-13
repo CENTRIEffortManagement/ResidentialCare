@@ -1,0 +1,602 @@
+{
+  "IncompleteAttempts": [],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ActiveIntervalSeconds": 1283.2234839999996,
+  "Status": "Completed",
+  "GapSeconds": 2,
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Start": 102.1257932,
+      "Id": "Date/DemandMaster",
+      "Finish": 253.5432426,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1.8791101,
+      "Id": "BD/AllocationInput",
+      "Finish": 52.5152683,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 52.577075,
+      "Id": "BD/Settings",
+      "Finish": 102.0968318,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 253.5739521,
+      "Id": "BD/DemandInput",
+      "Finish": 304.3275035,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 102.1951378,
+      "Id": "BD/Workers",
+      "Finish": 169.7205104,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 169.7535375,
+      "Id": "BD/Availability",
+      "Finish": 254.8257597,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 254.869184,
+      "Id": "BD/Staff",
+      "Finish": 305.927466,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 304.3550795,
+      "Id": "BD/Intervals",
+      "Finish": 348.2964436,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 348.3238221,
+      "Id": "BD/DemandIntervals",
+      "Finish": 483.2379485,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 483.274217,
+      "Id": "BD/Demand",
+      "Finish": 560.1740176,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 348.3927488,
+      "Id": "BD/Shifts",
+      "Finish": 442.1344904,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 442.1659285,
+      "Id": "BD/ShiftAverage",
+      "Finish": 504.1682917,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 504.2071394,
+      "Id": "BD/Allocation",
+      "Finish": 549.0194459,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 549.0517699,
+      "Id": "BD/Distribution",
+      "Finish": 595.11043,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 595.1700012,
+      "Id": "BD/MultiRole",
+      "Finish": 645.1774579,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 560.2085902,
+      "Id": "BD/Role:AIN/1",
+      "Finish": 667.0350462,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 667.0930506,
+      "Id": "BD/Role:AIN/2",
+      "Finish": 775.4522211,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 775.5000714,
+      "Id": "BD/Role:AIN/3",
+      "Finish": 898.6050822,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 560.3292673,
+      "Id": "BD/Role:RN/1",
+      "Finish": 652.4640697,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 652.5244576,
+      "Id": "BD/Role:RN/2",
+      "Finish": 714.6793074,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 714.7699965,
+      "Id": "BD/Role:RN/3",
+      "Finish": 787.8837192,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 560.4456566,
+      "Id": "BD/Role:EN/1",
+      "Finish": 656.3125912,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 656.364454,
+      "Id": "BD/Role:EN/2",
+      "Finish": 716.5413573,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 716.6160587,
+      "Id": "BD/Role:EN/3",
+      "Finish": 787.5901997,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 898.6381048,
+      "Id": "BD/Capacity",
+      "Finish": 947.2741127,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 947.3067088,
+      "Id": "BD/Effort",
+      "Finish": 993.972586,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 2.0108504,
+      "Id": "TE/AllocationInput",
+      "Finish": 52.832281,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 52.8702411,
+      "Id": "TE/Settings",
+      "Finish": 101.0080127,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 253.6470824,
+      "Id": "TE/DemandInput",
+      "Finish": 306.110867,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 101.0359716,
+      "Id": "TE/Workers",
+      "Finish": 165.6888911,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 165.7200433,
+      "Id": "TE/Availability",
+      "Finish": 247.1605654,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 247.1989952,
+      "Id": "TE/Staff",
+      "Finish": 294.4927154,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 306.1839462,
+      "Id": "TE/Intervals",
+      "Finish": 352.114263,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 352.1596769,
+      "Id": "TE/DemandIntervals",
+      "Finish": 534.5559138,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 534.5845331,
+      "Id": "TE/Demand",
+      "Finish": 617.412322,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 352.279723,
+      "Id": "TE/Shifts",
+      "Finish": 433.1338608,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 433.1689688,
+      "Id": "TE/ShiftAverage",
+      "Finish": 498.7373816,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 498.7755969,
+      "Id": "TE/Allocation",
+      "Finish": 544.206293,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 544.2752751,
+      "Id": "TE/Distribution",
+      "Finish": 589.2059496,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 589.2844074,
+      "Id": "TE/MultiRole",
+      "Finish": 639.3518281,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 617.459088,
+      "Id": "TE/Role:AIN/1",
+      "Finish": 733.0715453,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 733.1269121,
+      "Id": "TE/Role:AIN/2",
+      "Finish": 850.2928923,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 850.3303414,
+      "Id": "TE/Role:AIN/3",
+      "Finish": 941.8353193,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 617.6281439,
+      "Id": "TE/Role:RN/1",
+      "Finish": 724.1507294,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 724.2023898,
+      "Id": "TE/Role:RN/2",
+      "Finish": 777.6837304,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 777.8163442,
+      "Id": "TE/Role:RN/3",
+      "Finish": 834.8877162,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 617.8107176,
+      "Id": "TE/Role:EN/1",
+      "Finish": 725.2212536,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 725.3682338,
+      "Id": "TE/Role:EN/2",
+      "Finish": 779.4543475,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 779.50519,
+      "Id": "TE/Role:EN/3",
+      "Finish": 837.9417022,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 941.8693379,
+      "Id": "TE/Capacity",
+      "Finish": 993.3535824,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 993.3809638,
+      "Id": "TE/Effort",
+      "Finish": 1037.2515331,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 2.1024199,
+      "Id": "JH-RY/AllocationInput",
+      "Finish": 52.2068393,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 52.2488743,
+      "Id": "JH-RY/Settings",
+      "Finish": 98.6172941,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 253.7264817,
+      "Id": "JH-RY/DemandInput",
+      "Finish": 310.1785685,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 98.6443519,
+      "Id": "JH-RY/Workers",
+      "Finish": 163.4868516,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 163.5367278,
+      "Id": "JH-RY/Availability",
+      "Finish": 244.0593009,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 244.1015516,
+      "Id": "JH-RY/Staff",
+      "Finish": 288.1091973,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 310.2268563,
+      "Id": "JH-RY/Intervals",
+      "Finish": 355.5830759,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 355.6200673,
+      "Id": "JH-RY/DemandIntervals",
+      "Finish": 519.6379772,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 519.6767189,
+      "Id": "JH-RY/Demand",
+      "Finish": 599.8264452,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 355.7248673,
+      "Id": "JH-RY/Shifts",
+      "Finish": 431.8997458,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 431.9331002,
+      "Id": "JH-RY/ShiftAverage",
+      "Finish": 493.4130207,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 493.4486023,
+      "Id": "JH-RY/Allocation",
+      "Finish": 539.9055834,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 539.9333729,
+      "Id": "JH-RY/Distribution",
+      "Finish": 584.3440781,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 584.4045624,
+      "Id": "JH-RY/MultiRole",
+      "Finish": 632.9779035,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 599.8755337,
+      "Id": "JH-RY/Role:AIN/1",
+      "Finish": 700.4454912,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 700.4996158,
+      "Id": "JH-RY/Role:AIN/2",
+      "Finish": 783.0520139,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 783.1141219,
+      "Id": "JH-RY/Role:AIN/3",
+      "Finish": 871.7720954,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 600.0110757,
+      "Id": "JH-RY/Role:RN/1",
+      "Finish": 697.1484739,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 697.2036818,
+      "Id": "JH-RY/Role:RN/2",
+      "Finish": 749.7180582,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 749.8162436,
+      "Id": "JH-RY/Role:RN/3",
+      "Finish": 808.2327879,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 600.1458721,
+      "Id": "JH-RY/Role:EN/1",
+      "Finish": 697.6164077,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 697.6819124,
+      "Id": "JH-RY/Role:EN/2",
+      "Finish": 757.0816354,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 757.1611658,
+      "Id": "JH-RY/Role:EN/3",
+      "Finish": 815.9860071,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 871.8043886,
+      "Id": "JH-RY/Capacity",
+      "Finish": 926.8179812,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 926.853262,
+      "Id": "JH-RY/Effort",
+      "Finish": 976.5224197,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 305.9742326,
+      "Id": "Org/StaffAll",
+      "Finish": 349.0343411,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1037.2796088,
+      "Id": "Org/EffortAll",
+      "Finish": 1109.2128505,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1109.2377091,
+      "Id": "Org/Outcomes",
+      "Finish": 1149.7079141,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1149.7294596,
+      "Id": "Org/Inefficiencies",
+      "Finish": 1198.6302085,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1198.6543231,
+      "Id": "Org/Cost",
+      "Finish": 1243.3084709,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1149.8364748,
+      "Id": "Org/History",
+      "Finish": 1192.6333296,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1192.6541883,
+      "Id": "Org/HistoryRead",
+      "Finish": 1238.8988863,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1243.3723886,
+      "Id": "Org/Reporting",
+      "Finish": 1285.2409916,
+      "Status": "Completed"
+    }
+  ],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "PeakConcurrency": 12,
+  "RunId": "20261006-135646-1a6172a5",
+  "ElapsedSeconds": 1285.2829041,
+  "Untimed": []
+}

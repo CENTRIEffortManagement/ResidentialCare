@@ -1,0 +1,291 @@
+{
+  "PeakConcurrency": 10,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "RunId": "20261007-071631-492cd2e4",
+  "GapSeconds": 16,
+  "IncompleteAttempts": [],
+  "Status": "PartialOrFailed",
+  "Untimed": [
+    {
+      "Id": "Org/EffortAll",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/StaffAll",
+        "BD/Effort",
+        "TE/Effort",
+        "JH-RY/Effort"
+      ],
+      "Reason": "External-user policy blocked access: Tableau (PID 90200) after waiting 15 second(s). No save attempted by this check; this is not an Excel save error. Close/disconnect those applications before retrying: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\Effort-All.xlsx"
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ],
+      "Reason": "Waiting for Org/EffortAll"
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Outcomes"
+      ],
+      "Reason": "Waiting for Org/Outcomes"
+    },
+    {
+      "Id": "Org/Reporting",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ],
+      "Reason": "Waiting for Org/Inefficiencies"
+    }
+  ],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ElapsedSeconds": 630.8427483,
+  "Rows": [
+    {
+      "Id": "BD/Role:AIN/1",
+      "Status": "Completed",
+      "Start": 0.9436791,
+      "Finish": 230.7394922,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:AIN/2",
+      "Status": "Completed",
+      "Start": 230.791149,
+      "Finish": 317.5983726,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:AIN/3",
+      "Status": "Completed",
+      "Start": 317.6393067,
+      "Finish": 504.7416321,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:RN/1",
+      "Status": "Completed",
+      "Start": 1.0146528,
+      "Finish": 132.5074863,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:RN/2",
+      "Status": "Completed",
+      "Start": 132.5659365,
+      "Finish": 196.9111139,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:RN/3",
+      "Status": "Completed",
+      "Start": 197.0174707,
+      "Finish": 289.4451753,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:EN/1",
+      "Status": "Completed",
+      "Start": 1.0628334,
+      "Finish": 134.8171449,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:EN/2",
+      "Status": "Completed",
+      "Start": 134.8789293,
+      "Finish": 200.9424642,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Role:EN/3",
+      "Status": "Completed",
+      "Start": 201.0149713,
+      "Finish": 292.6217882,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Capacity",
+      "Status": "Completed",
+      "Start": 504.7932718,
+      "Finish": 564.1821396,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Effort",
+      "Status": "Completed",
+      "Start": 564.2180181,
+      "Finish": 615.763937,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:AIN/1",
+      "Status": "Completed",
+      "Start": 1.1118231,
+      "Finish": 187.026116,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:AIN/2",
+      "Status": "Completed",
+      "Start": 187.0886776,
+      "Finish": 261.5153121,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:AIN/3",
+      "Status": "Completed",
+      "Start": 261.5709904,
+      "Finish": 429.2810384,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:RN/1",
+      "Status": "Completed",
+      "Start": 1.1584534,
+      "Finish": 140.0673261,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:RN/2",
+      "Status": "Completed",
+      "Start": 140.3356598,
+      "Finish": 206.2430204,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:RN/3",
+      "Status": "Completed",
+      "Start": 206.2934105,
+      "Finish": 282.4952337,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:EN/1",
+      "Status": "Completed",
+      "Start": 1.2328165,
+      "Finish": 146.8544293,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:EN/2",
+      "Status": "Completed",
+      "Start": 146.9072547,
+      "Finish": 211.654751,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Role:EN/3",
+      "Status": "Completed",
+      "Start": 211.7018855,
+      "Finish": 287.2572899,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Capacity",
+      "Status": "Completed",
+      "Start": 429.3180445,
+      "Finish": 484.7140507,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Effort",
+      "Status": "Completed",
+      "Start": 484.7539349,
+      "Finish": 536.803803,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:AIN/1",
+      "Status": "Completed",
+      "Start": 1.2893985,
+      "Finish": 170.864708,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:AIN/2",
+      "Status": "Completed",
+      "Start": 170.920198,
+      "Finish": 239.5193206,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:AIN/3",
+      "Status": "Completed",
+      "Start": 239.5769734,
+      "Finish": 368.0738874,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:RN/1",
+      "Status": "Completed",
+      "Start": 2.0829432,
+      "Finish": 145.3604988,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:RN/2",
+      "Status": "Completed",
+      "Start": 145.4063094,
+      "Finish": 208.3984329,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:RN/3",
+      "Status": "Completed",
+      "Start": 208.4469892,
+      "Finish": 283.7381647,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:EN/1",
+      "Status": "Completed",
+      "Start": 2.200037,
+      "Finish": 148.396351,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:EN/2",
+      "Status": "Completed",
+      "Start": 148.491805,
+      "Finish": 212.1068287,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Role:EN/3",
+      "Status": "Completed",
+      "Start": 212.1565946,
+      "Finish": 287.5195767,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "Status": "Completed",
+      "Start": 368.1177857,
+      "Finish": 423.9755655,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "Status": "Completed",
+      "Start": 424.0154685,
+      "Finish": 475.9161328,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/StaffAll",
+      "Status": "Completed",
+      "Start": 2.3359936,
+      "Finish": 78.0365273,
+      "Attempt": 1
+    }
+  ],
+  "ActiveIntervalSeconds": 614.7843794
+}
