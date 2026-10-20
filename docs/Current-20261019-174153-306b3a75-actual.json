@@ -1,0 +1,114 @@
+{
+  "ActiveIntervalSeconds": 367.4566865,
+  "IncompleteAttempts": [],
+  "Status": "PartialOrFailed",
+  "Rows": [
+    {
+      "Id": "BD/Capacity",
+      "Finish": 46.0915547,
+      "Start": 0.9246745,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Effort",
+      "Finish": 90.8422297,
+      "Start": 46.1261197,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Capacity",
+      "Finish": 46.4990824,
+      "Start": 1.0046956,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Effort",
+      "Finish": 90.8471321,
+      "Start": 46.5234591,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "Finish": 49.0835509,
+      "Start": 1.054902,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "Finish": 93.8261463,
+      "Start": 49.118247,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/StaffAll",
+      "Finish": 46.3675037,
+      "Start": 1.0991582,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/EffortAll",
+      "Finish": 162.9349931,
+      "Start": 93.8473023,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Finish": 202.5446117,
+      "Start": 162.9528947,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Finish": 250.5305177,
+      "Start": 202.5602165,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Reporting",
+      "Finish": 291.4202238,
+      "Start": 250.5479061,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/LeaveBalanceStats",
+      "Finish": 338.8730467,
+      "Start": 291.4359433,
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/LeaveBalanceReduction",
+      "Finish": 368.4837891,
+      "Start": 338.8877045,
+      "Status": "Failed",
+      "Attempt": 1
+    }
+  ],
+  "ElapsedSeconds": 368.4970166,
+  "Untimed": [
+    {
+      "Id": "Org/LeaveBalanceReporting",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/LeaveBalanceReduction"
+      ],
+      "Reason": "Prerequisite Org/LeaveBalanceReduction did not complete."
+    }
+  ],
+  "GapSeconds": 1,
+  "PeakConcurrency": 4,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "RunId": "20261019-174153-306b3a75",
+  "OriginalIllustrativeBaselineSeconds": 1043
+}

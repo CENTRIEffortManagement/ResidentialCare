@@ -1,0 +1,175 @@
+{
+  "UnknownAdmission": "Org/LeaveBalanceReduction",
+  "Rows": [
+    {
+      "Id": "BD/Capacity",
+      "Status": "Forecast",
+      "Finish": 46.6076603,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Capacity",
+      "Status": "Forecast",
+      "Finish": 43.5650636,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "Status": "Forecast",
+      "Finish": 44.3089425,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/StaffAll",
+      "Status": "Forecast",
+      "Finish": 43.4383535,
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Id": "TE/Effort",
+      "Status": "Forecast",
+      "Finish": 86.14722090000001,
+      "Start": 43.5650636,
+      "Attempt": 1
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "Status": "Forecast",
+      "Finish": 89.29824070000001,
+      "Start": 44.3089425,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Effort",
+      "Status": "Forecast",
+      "Finish": 91.5565247,
+      "Start": 46.6076603,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/EffortAll",
+      "Status": "Forecast",
+      "Finish": 163.3860607,
+      "Start": 91.5565247,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Status": "Forecast",
+      "Finish": 204.1494339,
+      "Start": 163.3860607,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Status": "Forecast",
+      "Finish": 254.109507,
+      "Start": 204.1494339,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/Reporting",
+      "Status": "Forecast",
+      "Finish": 297.6742587,
+      "Start": 254.109507,
+      "Attempt": 1
+    },
+    {
+      "Id": "Org/LeaveBalanceStats",
+      "Status": "Forecast",
+      "Finish": 381.5245506,
+      "Start": 297.6742587,
+      "Attempt": 1
+    }
+  ],
+  "Peak": 4,
+  "Durations": {
+    "Org/EffortAll": {
+      "SourceRun": "20261010-165943-73f81a58",
+      "Seconds": 71.829536,
+      "Observed": "2026-10-10T06:19:39.5418848+00:00"
+    },
+    "JH-RY/Capacity": {
+      "SourceRun": "20261019-173509-a939e53c",
+      "Seconds": 44.3089425,
+      "Observed": "2026-10-19T06:35:55.3030294+00:00"
+    },
+    "Org/LeaveBalanceReporting": {
+      "SourceRun": "20261011-174814-76501a6a",
+      "Seconds": 45.8953585,
+      "Observed": "2026-10-11T06:52:40.3112247+00:00"
+    },
+    "BD/Capacity": {
+      "SourceRun": "20261010-165943-73f81a58",
+      "Seconds": 46.6076603,
+      "Observed": "2026-10-10T06:17:42.6938714+00:00"
+    },
+    "TE/Effort": {
+      "SourceRun": "20261019-173509-a939e53c",
+      "Seconds": 42.5821573,
+      "Observed": "2026-10-19T06:36:37.0947378+00:00"
+    },
+    "Org/LeaveBalanceStats": {
+      "SourceRun": "20261011-174814-76501a6a",
+      "Seconds": 83.8502919,
+      "Observed": "2026-10-11T06:51:54.3900550+00:00"
+    },
+    "BD/Effort": {
+      "SourceRun": "20261010-165943-73f81a58",
+      "Seconds": 44.9488644,
+      "Observed": "2026-10-10T06:18:27.6790790+00:00"
+    },
+    "JH-RY/Effort": {
+      "SourceRun": "20261019-173509-a939e53c",
+      "Seconds": 44.9892982,
+      "Observed": "2026-10-19T06:36:40.3177475+00:00"
+    },
+    "Org/Outcomes": {
+      "SourceRun": "20261011-174814-76501a6a",
+      "Seconds": 40.7633732,
+      "Observed": "2026-10-11T06:48:56.9301654+00:00"
+    },
+    "Org/Reporting": {
+      "SourceRun": "20261011-174814-76501a6a",
+      "Seconds": 43.5647517,
+      "Observed": "2026-10-11T06:50:30.5144647+00:00"
+    },
+    "Org/StaffAll": {
+      "SourceRun": "20261019-173509-a939e53c",
+      "Seconds": 43.4383535,
+      "Observed": "2026-10-19T06:35:54.4915243+00:00"
+    },
+    "Org/Inefficiencies": {
+      "SourceRun": "20261011-174814-76501a6a",
+      "Seconds": 49.9600731,
+      "Observed": "2026-10-11T06:49:46.9210571+00:00"
+    },
+    "TE/Capacity": {
+      "SourceRun": "20261019-173509-a939e53c",
+      "Seconds": 43.5650636,
+      "Observed": "2026-10-19T06:35:54.4835329+00:00"
+    }
+  },
+  "Complete": false,
+  "Untimed": [
+    {
+      "Id": "Org/LeaveBalanceReduction",
+      "Predecessors": [
+        "Org/LeaveBalanceStats"
+      ],
+      "Reason": "Unknown duration or start affected by unknown slot occupancy"
+    },
+    {
+      "Id": "Org/LeaveBalanceReporting",
+      "Predecessors": [
+        "Org/LeaveBalanceReduction"
+      ],
+      "Reason": "Unknown duration or start affected by unknown slot occupancy"
+    }
+  ],
+  "TotalSeconds": null
+}

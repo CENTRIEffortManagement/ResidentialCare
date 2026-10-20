@@ -1,0 +1,6 @@
+interface:
+  display_name: "Power Query M"
+  short_description: "Power Query M source editing and review"
+  default_prompt: "Use $power-query-m to inspect, edit, and validate Power Query M source within the approved project scope."
+policy:
+  allow_implicit_invocation: true

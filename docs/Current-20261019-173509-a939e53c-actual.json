@@ -1,0 +1,140 @@
+{
+  "RunId": "20261019-173509-a939e53c",
+  "PeakConcurrency": 3,
+  "ElapsedSeconds": 90.3528516,
+  "Rows": [
+    {
+      "Finish": 44.5084844,
+      "Status": "Completed",
+      "Attempt": 1,
+      "Id": "TE/Capacity",
+      "Start": 0.9434208
+    },
+    {
+      "Finish": 87.1196893,
+      "Status": "Completed",
+      "Attempt": 1,
+      "Id": "TE/Effort",
+      "Start": 44.537532
+    },
+    {
+      "Finish": 45.3279809,
+      "Status": "Completed",
+      "Attempt": 1,
+      "Id": "JH-RY/Capacity",
+      "Start": 1.0190384
+    },
+    {
+      "Finish": 90.342699,
+      "Status": "Completed",
+      "Attempt": 1,
+      "Id": "JH-RY/Effort",
+      "Start": 45.3534008
+    },
+    {
+      "Finish": 44.5164758,
+      "Status": "Completed",
+      "Attempt": 1,
+      "Id": "Org/StaffAll",
+      "Start": 1.0781223
+    }
+  ],
+  "ActiveIntervalSeconds": 89.3992782,
+  "Untimed": [
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "BD/Role:AIN/3",
+        "BD/Role:EN/3",
+        "BD/Role:RN/3",
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/Settings"
+      ],
+      "Id": "BD/Capacity",
+      "Reason": "Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$Capacity-ShiftAvailability.xlsx"
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "BD/Capacity",
+        "BD/Demand",
+        "BD/Allocation",
+        "BD/Distribution",
+        "BD/MultiRole",
+        "BD/Staff",
+        "BD/Settings"
+      ],
+      "Id": "BD/Effort",
+      "Reason": "Prerequisite BD/Capacity did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/StaffAll",
+        "BD/Effort",
+        "TE/Effort",
+        "JH-RY/Effort"
+      ],
+      "Id": "Org/EffortAll",
+      "Reason": "Prerequisite BD/Effort did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ],
+      "Id": "Org/Outcomes",
+      "Reason": "Prerequisite Org/EffortAll did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Outcomes"
+      ],
+      "Id": "Org/Inefficiencies",
+      "Reason": "Prerequisite Org/Outcomes did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ],
+      "Id": "Org/Reporting",
+      "Reason": "Prerequisite Org/Inefficiencies did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/Reporting"
+      ],
+      "Id": "Org/LeaveBalanceStats",
+      "Reason": "Prerequisite Org/Reporting did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/LeaveBalanceStats"
+      ],
+      "Id": "Org/LeaveBalanceReduction",
+      "Reason": "Prerequisite Org/LeaveBalanceStats did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Predecessors": [
+        "Org/LeaveBalanceReduction"
+      ],
+      "Id": "Org/LeaveBalanceReporting",
+      "Reason": "Prerequisite Org/LeaveBalanceReduction did not complete."
+    }
+  ],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Status": "PartialOrFailed",
+  "GapSeconds": 1,
+  "IncompleteAttempts": []
+}

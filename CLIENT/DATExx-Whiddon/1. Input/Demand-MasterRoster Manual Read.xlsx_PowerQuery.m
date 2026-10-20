@@ -1,6 +1,6 @@
 // Power Query from: Demand-MasterRoster Manual Read.xlsx
-// Pathname: CLIENT/DATExx-Whiddon/1. Input/Demand-MasterRoster Manual Read.xlsx
-// Extracted: 2026-10-01T04:24:33.820Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\1. Input\Demand-MasterRoster Manual Read.xlsx
+// Extracted: 2026-10-13T05:42:34.262Z
 
 section Section1;
 
@@ -8,8 +8,7 @@ section Section1;
 // Purpose: Reads the approved, deliberately fixed organisation-level Master Roster source.
 // Output: Buffered workbook navigation snapshot; no business transformation is applied.
 // Notes: The fixed source is temporary while one workbook analyses all facilities.
-shared #"IMPORT Master" =
-let
+shared #"IMPORT Master" = let
     SourcePath = "C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\1. Input\Master Roster.xlsx",
     Workbook = Excel.Workbook(
         Binary.Buffer(File.Contents(SourcePath)),
@@ -20,22 +19,21 @@ in
     Table.Buffer(Workbook);
 
 // Query: EXTRACT Master Combined
-// Purpose: Navigates to the Combined sheet in the imported organisation-level Master Roster without transforming it.
+// Purpose: Navigates to the Roster Templates sheet in the imported organisation-level Master Roster without transforming it.
 // Inputs: IMPORT Master.
-// Output: Raw Combined-sheet rows.
+// Output: Raw Roster Templates-sheet rows for header promotion and typing in Master Source Prepare.
 shared #"EXTRACT Master Combined" =
 let
     Source = #"IMPORT Master",
-    CombinedSheet = Source{[Item = "Combined", Kind = "Sheet"]}[Data]
+    #"Roster Templates_Sheet" = Source{[Item="Roster Templates",Kind="Sheet"]}[Data]
 in
-    CombinedSheet;
+    #"Roster Templates_Sheet";
 
 // Query: Master Source Prepare
 // Purpose: Promotes and types the approved organisation-level Master Roster fields used by the analysis.
 // Inputs: EXTRACT Master Combined.
 // Output: Buffered typed Master Roster rows.
-shared #"Master Source Prepare" =
-let
+shared #"Master Source Prepare" = let
     Source = #"EXTRACT Master Combined",
     #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
     #"Typed Master Rows" = Table.TransformColumnTypes(#"Promoted Headers",{{"Master Template", type text}, {"Template", type text}, {"Location", type text}, {"Department", type text}, {"Role", type text}, {"Area", type text}, {"Employee Code", Int64.Type}, {"Employee Name", type text}, {"Week No", Int64.Type}, {"Week Day", type text}, {"Start Time", type time}, {"End Time", type time}, {"Roster Hours", type number}, {"Cost", type number}, {"MinRosterHours", type number}, {"MaxRosterHours", Int64.Type}, {"Event", type text}, {"Break Length", Int64.Type}, {"Break Start Time", type time}, {"Paid Break Length", Int64.Type}, {"Paid Break Start Time", type time}, {"Shift Definition", type text}, {"Shift Net Length", type number}, {"Shift Type", type text}, {"Non Attended", type logical}})
@@ -433,8 +431,9 @@ let
         {"Facility"},
         {"Facility"}
     ),
-    // Ambiguous or missing source mappings are excluded from allocation and
-    // reported by MW Input Check; no source row is assigned by guesswork.
+    // EXTRACT Units is the location inclusion list: unlisted locations are
+    // excluded with a warning. Ambiguous configured mappings remain errors in
+    // MW Input Check; no source row is assigned by guesswork.
     #"Retained Unique Facility Mapping" = Table.SelectRows(
         #"Expanded Canonical Facility",
         each [FacilityMappingCount] = 1
@@ -1387,7 +1386,7 @@ in
 // Query: MW Input Check
 // Purpose: Validates facility mappings, supplied role mappings, and source/canonical RN and ALL targets.
 // Inputs: Facility mapping staging, roster-role mapping staging, and target staging queries.
-// Output: Error records for invalid required inputs.
+// Output: Errors for invalid required inputs and warnings for unlisted roster Locations excluded from analysis.
 shared #"MW Input Check" =
 let
     // A completely empty target table must fail before its facility columns
@@ -1484,9 +1483,31 @@ let
         each Table.RowCount([FacilityMapping]),
         Int64.Type
     ),
+    // EXTRACT Units is an inclusion list. New organisation-level Locations
+    // outside it are excluded by Master Prepare and must not block publication.
+    ExcludedRosterLocations = Table.SelectRows(
+        RosterLocationMappingCounts,
+        each [MappingCount] = 0
+    ),
+    ExcludedRosterLocationChecks = #"MW Check Table"(
+        List.Transform(Table.ToRecords(ExcludedRosterLocations), each [
+            Check = "Master Roster Location is outside configured Units",
+            Severity = "Warning",
+            Facility = null,
+            MinuteCategory = null,
+            Role = null,
+            Actual = Number.From([MappingCount]),
+            Expected = 0,
+            Message = "Master Roster Location '" &
+                (if [Location] = null then "<blank>" else Text.From([Location])) &
+                "' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+        ])
+    ),
+    // Conflicting configured mappings still fail before allocation; they are
+    // not treated as out-of-scope locations.
     InvalidRosterLocationMappings = Table.SelectRows(
         RosterLocationMappingCounts,
-        each [MappingCount] <> 1
+        each [MappingCount] > 1
     ),
     RosterLocationMappingChecks = #"MW Check Table"(
         List.Transform(Table.ToRecords(InvalidRosterLocationMappings), each [
@@ -1797,6 +1818,7 @@ let
         TargetPresenceChecks,
         LocationMappingChecks,
         SourceCodeMappingChecks,
+        ExcludedRosterLocationChecks,
         RosterLocationMappingChecks,
         TargetFacilityMappingChecks,
         CanonicalTargetMixChecks,

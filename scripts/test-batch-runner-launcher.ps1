@@ -147,9 +147,9 @@ function Invoke-BatchSchedule {
     Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Reporting') 'zero-prefixed O5 selects the intended organisation jobs once'
     $result = Invoke-LauncherFixture -InputLines @('2', '06') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Interpreting batch ID 06 as O6' -and $result.Output -notmatch 'Available Unit IDs:') 'Leave Balance menu selection accepts 06 without a Unit prompt'
-    Assert-LauncherTest ($result.Output.Contains('O6 - Leave Balance Stats [LBStats.xlsx, TableauConnect-LB.xlsx]')) 'menu lists the Leave Balance batch title and ordered files'
+    Assert-LauncherTest ($result.Output.Contains('O6 - Leave Balance Stats [LBStats.xlsx, LBReduction.xlsx, TableauConnect-LB.xlsx]')) 'menu lists the Leave Balance batch title and ordered files'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
-    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/LeaveBalanceStats,Org/LeaveBalanceReporting') 'Leave Balance menu dispatches the two workbooks once in order'
+    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/LeaveBalanceStats,Org/LeaveBalanceReduction,Org/LeaveBalanceReporting') 'Leave Balance menu dispatches the three workbooks once in order'
     $result = Invoke-LauncherFixture -InputLines @('2', 'C1,O1', 'Unit1') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Available Unit IDs:') 'mixed batch selection still asks for Units'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
@@ -157,7 +157,7 @@ function Invoke-BatchSchedule {
     $result = Invoke-LauncherFixture -InputLines @('1') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0' -and $result.Output -match 'Run all .*Leave Balance Stats') 'Run all is labelled with its final batch and keeps the completion result visible'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
-    Assert-LauncherTest ($dispatch.Jobs[-1] -eq 'Org/LeaveBalanceReporting' -and @($dispatch.Jobs | Where-Object { $_ -like 'Org/*' }).Count -eq 10) 'menu option 1 dispatches the complete organisation chain and final Leave Balance batch'
+    Assert-LauncherTest ($dispatch.Jobs[-1] -eq 'Org/LeaveBalanceReporting' -and @($dispatch.Jobs | Where-Object { $_ -like 'Org/*' }).Count -eq 11) 'menu option 1 dispatches the complete organisation chain and final Leave Balance batch'
     $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)
     $result = Invoke-LauncherFixture -InputLines @('7') -ExpectPause
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'File access and selection validation passed') 'successful menu validation stays visible'

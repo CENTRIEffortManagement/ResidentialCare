@@ -1,0 +1,7 @@
+
+Unhandled Exception: System.IO.FileNotFoundException: Could not load file or assembly 'System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51' or one of its dependencies. The system cannot find the file specified.
+   at PQTest.Common.Configuration..ctor(TextWriter output, TextWriter errorOutput, String settingsFilePath)
+   at PQTest.Console.Program.GetConfiguration(CommandLineApplication app)
+   at PQTest.Console.Program.RunQueryEvaluationCommand(CommandLineApplication app, CommandLineApplication command, Func`2 invoke)
+   at Microsoft.Extensions.CommandLineUtils.CommandLineApplication.Execute(String[] args)
+   at PQTest.Console.Program.Main(String[] args)

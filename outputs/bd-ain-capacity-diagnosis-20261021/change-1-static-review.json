@@ -1,0 +1,16 @@
+{
+  "Status": "Passed",
+  "Scope": "Static change review only; native runtime not evaluated",
+  "ChangedQueries": [
+    "IMPORT Reconciled Workers",
+    "ReconciledWorkers_Facility_Prepare",
+    "ReconciledWorkers_Prepare",
+    "ReconciledWorkers_Eligible",
+    "ReconciledWorkers_CHECK"
+  ],
+  "AddedQueries": [
+    "ReconciledWorkerMembership_Prepare"
+  ],
+  "OtherQueriesUnchanged": true,
+  "NewProductionChecks": 0
+}

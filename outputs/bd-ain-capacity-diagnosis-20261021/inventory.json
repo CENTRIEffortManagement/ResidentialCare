@@ -1,0 +1,2821 @@
+[
+  {
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+    "HashBefore": "E40C013A581E123C7EF50BC6AEA47A2DF810BA2B77B708E2384134646FA32820",
+    "Sheets": [
+      {
+        "Name": "Unit1Path",
+        "PackagePath": "xl/worksheets/sheet1.xml",
+        "Tables": [
+          {
+            "Name": "UnitL1PathTABLE",
+            "DisplayName": "UnitL1PathTABLE",
+            "Range": "A3:B9",
+            "Columns": [
+              "Variable Name",
+              "Value"
+            ],
+            "PackagePath": "xl/tables/table1.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResourceContract_CHECK",
+        "PackagePath": "xl/worksheets/sheet2.xml",
+        "Tables": [
+          {
+            "Name": "ResourceContract_CHECK",
+            "DisplayName": "ResourceContract_CHECK",
+            "Range": "A1:D13",
+            "Columns": [
+              "Check",
+              "Status",
+              "Failures",
+              "Details"
+            ],
+            "PackagePath": "xl/tables/table2.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Masterlist_Base",
+        "PackagePath": "xl/worksheets/sheet3.xml",
+        "Tables": [
+          {
+            "Name": "Masterlist_Base",
+            "DisplayName": "Masterlist_Base",
+            "Range": "A1:O130",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "PreferredRole",
+              "EmploymentType",
+              "Contracted FN Hours",
+              "In Allocation",
+              "In Records",
+              "Worker Membership",
+              "Source",
+              "Worker Record Status",
+              "Worker Contract Issue",
+              "Name",
+              "Resource",
+              "Misalignment"
+            ],
+            "PackagePath": "xl/tables/table3.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Misaligned Join",
+        "PackagePath": "xl/worksheets/sheet4.xml",
+        "Tables": [
+          {
+            "Name": "Misaligned_Join",
+            "DisplayName": "Misaligned_Join",
+            "Range": "A1:M25",
+            "Columns": [
+              "EmployeeID",
+              "Name",
+              "Role",
+              "Contracted FN Hours",
+              "Worker Contract Issue",
+              "Worker Record Status",
+              "Source",
+              "Availability-StaffList.Name",
+              "Availability-StaffList.Role",
+              "Custom",
+              "Misaligned-Name",
+              "Misaligned-Role",
+              "Misalignment"
+            ],
+            "PackagePath": "xl/tables/table4.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Masterlist",
+        "PackagePath": "xl/worksheets/sheet5.xml",
+        "Tables": [
+          {
+            "Name": "Table_Masterlist",
+            "DisplayName": "Table_Masterlist",
+            "Range": "A1:Y130",
+            "Columns": [
+              "Name",
+              "Role",
+              "Resource",
+              "Misalignment",
+              "Source",
+              "EmployeeID",
+              "Facility-Abbrev",
+              "EmploymentType",
+              "PreferredRole",
+              "In Allocation",
+              "In Records",
+              "Worker Membership",
+              "Worker Record Status",
+              "Worker Contract Issue",
+              "Contract Source",
+              "Contracted FN Hours",
+              "Roster Start",
+              "Roster End",
+              "Roster Fortnights",
+              "Contracted Roster Hours",
+              "Contracted Shift Equivalent",
+              "Contracted Shifts",
+              "Settings Max Availability",
+              "Effective Shift Cap",
+              "Limit Basis"
+            ],
+            "PackagePath": "xl/tables/table5.xml"
+          }
+        ]
+      }
+    ],
+    "ConnectionRefresh": [
+      {
+        "Name": "Query - AllocationTable_StaffList",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailableStaffList",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - AvailableStaffListInitial",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - FilePath-1Input",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - FilePath-2Calculations",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT AvailabilityDayShiftMATRIXRaw",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT Table_AllocatedStaffList",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Masterlist",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Masterlist Join",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Masterlist_Base",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Misaligned Allocation Availability Names",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Misaligned Join",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResourceContract",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResourceContract_CHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - UnitL1PathTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      }
+    ],
+    "HashAfter": "E40C013A581E123C7EF50BC6AEA47A2DF810BA2B77B708E2384134646FA32820",
+    "FileUnchanged": true
+  },
+  {
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "HashBefore": "4B625CA33BF6DDCB467396246970A13B5F12E55631FCB69F549EE4EC2EC48E20",
+    "Sheets": [
+      {
+        "Name": "UnitL1RolePath",
+        "PackagePath": "xl/worksheets/sheet1.xml",
+        "Tables": [
+          {
+            "Name": "UnitL1PathTABLE",
+            "DisplayName": "UnitL1PathTABLE",
+            "Range": "A3:B10",
+            "Columns": [
+              "Variable Name",
+              "Value"
+            ],
+            "PackagePath": "xl/tables/table1.xml"
+          }
+        ]
+      },
+      {
+        "Name": "AvailabilityRecords",
+        "PackagePath": "xl/worksheets/sheet2.xml",
+        "Tables": [
+          {
+            "Name": "AvailabilityRecords",
+            "DisplayName": "AvailabilityRecords",
+            "Range": "A1:I13593",
+            "Columns": [
+              "Payroll Code",
+              "Facility-Abbrev",
+              "SourceRecord",
+              "OriginalReason",
+              "Start",
+              "End",
+              "RecordKind",
+              "Available",
+              "Issue"
+            ],
+            "PackagePath": "xl/tables/table2.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT Availability Leave Sourc",
+        "PackagePath": "xl/worksheets/sheet3.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Availability_Leave_Source",
+            "DisplayName": "IMPORT_Availability_Leave_Source",
+            "Range": "A1:I13593",
+            "Columns": [
+              "Site Name",
+              "Employee Name",
+              "Payroll Code",
+              "Department",
+              "Date From",
+              "Date To",
+              "Availability or Leave Reason",
+              "Facility-Abbrev",
+              "SourceRecord"
+            ],
+            "PackagePath": "xl/tables/table3.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerContracts_Prepare",
+        "PackagePath": "xl/worksheets/sheet4.xml",
+        "Tables": [
+          {
+            "Name": "WorkerContracts_Prepare",
+            "DisplayName": "WorkerContracts_Prepare",
+            "Range": "A1:C4647",
+            "Columns": [
+              "EmployeeID",
+              "Contracted FN Hours",
+              "Issue"
+            ],
+            "PackagePath": "xl/tables/table4.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT Worker's Report",
+        "PackagePath": "xl/worksheets/sheet5.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Worker_s_Report",
+            "DisplayName": "IMPORT_Worker_s_Report",
+            "Range": "A1:B4648",
+            "Columns": [
+              "Employee Code",
+              "Contracted FN Hours"
+            ],
+            "PackagePath": "xl/tables/table5.xml"
+          }
+        ]
+      },
+      {
+        "Name": "RoleAvailabilityCapped",
+        "PackagePath": "xl/worksheets/sheet6.xml",
+        "Tables": [
+          {
+            "Name": "RoleAvailabilityCapped",
+            "DisplayName": "RoleAvailabilityCapped",
+            "Range": "A1:B4",
+            "Columns": [
+              "Role",
+              "AvailabilityCapped"
+            ],
+            "PackagePath": "xl/tables/table6.xml"
+          }
+        ]
+      },
+      {
+        "Name": "RoleResDayAvailabilityCapped",
+        "PackagePath": "xl/worksheets/sheet7.xml",
+        "Tables": [
+          {
+            "Name": "RoleResDayAvailabilityCapped",
+            "DisplayName": "RoleResDayAvailabilityCapped",
+            "Range": "A1:E124",
+            "Columns": [
+              "Count",
+              "StdRosterDays",
+              "AvailabilityCapped",
+              "Name",
+              "Role"
+            ],
+            "PackagePath": "xl/tables/table7.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerShiftSegments",
+        "PackagePath": "xl/worksheets/sheet8.xml",
+        "Tables": [
+          {
+            "Name": "WorkerShiftSegments",
+            "DisplayName": "WorkerShiftSegments",
+            "Range": "A1:V10837",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "Name",
+              "Date",
+              "Shift",
+              "Week",
+              "Day",
+              "ShiftStart",
+              "ShiftEnd",
+              "SumOfLeaveRecordHours",
+              "DistinctLeaveHours",
+              "LeaveRecordCount",
+              "FullDayLeaveBlocked",
+              "BaselineHours",
+              "LeaveHoursInShift",
+              "UnavailHoursInShift",
+              "CombinedAbsenceHoursInShift",
+              "AvailableHours",
+              "FullShift",
+              "SegmentsValid",
+              "Disjoint"
+            ],
+            "PackagePath": "xl/tables/table8.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerAvailabilityRules",
+        "PackagePath": "xl/worksheets/sheet9.xml",
+        "Tables": [
+          {
+            "Name": "WorkerAvailabilityRules",
+            "DisplayName": "WorkerAvailabilityRules",
+            "Range": "A1:N130",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "BaseName",
+              "EmploymentType",
+              "Contracted FN Hours",
+              "In Allocation",
+              "In Records",
+              "Worker Membership",
+              "Name",
+              "PreferredRole",
+              "AvailableIntervals",
+              "UnavailIntervals",
+              "LeaveIntervals"
+            ],
+            "PackagePath": "xl/tables/table9.xml"
+          }
+        ]
+      },
+      {
+        "Name": "AvailabilityRecords_Invalid",
+        "PackagePath": "xl/worksheets/sheet10.xml",
+        "Tables": [
+          {
+            "Name": "AvailabilityRecords_Invalid",
+            "DisplayName": "AvailabilityRecords_Invalid",
+            "Range": "A1:I2",
+            "Columns": [
+              "Payroll Code",
+              "Facility-Abbrev",
+              "SourceRecord",
+              "OriginalReason",
+              "Start",
+              "End",
+              "RecordKind",
+              "Available",
+              "Issue"
+            ],
+            "PackagePath": "xl/tables/table10.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResDayShift_CHECK",
+        "PackagePath": "xl/worksheets/sheet11.xml",
+        "Tables": [
+          {
+            "Name": "ResDayShift_CHECK",
+            "DisplayName": "ResDayShift_CHECK",
+            "Range": "A1:D17",
+            "Columns": [
+              "Check",
+              "Status",
+              "Failures",
+              "Details"
+            ],
+            "PackagePath": "xl/tables/table11.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ReconciledWorkers_CHECK",
+        "PackagePath": "xl/worksheets/sheet12.xml",
+        "Tables": [
+          {
+            "Name": "ReconciledWorkers_CHECK",
+            "DisplayName": "ReconciledWorkers_CHECK",
+            "Range": "A1:D8",
+            "Columns": [
+              "Check",
+              "Status",
+              "Failures",
+              "Details"
+            ],
+            "PackagePath": "xl/tables/table12.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ReconciledWorkers_Eligible",
+        "PackagePath": "xl/worksheets/sheet13.xml",
+        "Tables": [
+          {
+            "Name": "ReconciledWorkers_Eligible",
+            "DisplayName": "ReconciledWorkers_Eligible",
+            "Range": "A1:K130",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "BaseName",
+              "EmploymentType",
+              "Contracted FN Hours",
+              "In Allocation",
+              "In Records",
+              "Worker Membership",
+              "Name",
+              "PreferredRole"
+            ],
+            "PackagePath": "xl/tables/table13.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ReconciledWorkers_Prepare",
+        "PackagePath": "xl/worksheets/sheet14.xml",
+        "Tables": [
+          {
+            "Name": "ReconciledWorkers_Prepare",
+            "DisplayName": "ReconciledWorkers_Prepare",
+            "Range": "A1:T362",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "SourceRoleKey",
+              "EmploymentType",
+              "In Allocation",
+              "In Records",
+              "SourceRole",
+              "Worker Membership",
+              "MappedRosterRole",
+              "RoleMappingDefinitionRows",
+              "DistinctRoleGroupCount",
+              "MappedRoleGroup",
+              "RoleMappingMatches",
+              "RoleMappingIssue",
+              "RoleMappingStatus",
+              "Role",
+              "Contracted FN Hours",
+              "ContractIssue",
+              "BaseName",
+              "Issue"
+            ],
+            "PackagePath": "xl/tables/table14.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT Reconciled Workers",
+        "PackagePath": "xl/worksheets/sheet15.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Reconciled_Workers",
+            "DisplayName": "IMPORT_Reconciled_Workers",
+            "Range": "A1:H362",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "Employee Roster Name",
+              "EmploymentType",
+              "In Allocation",
+              "In Records",
+              "Worker Membership"
+            ],
+            "PackagePath": "xl/tables/table15.xml"
+          }
+        ]
+      },
+      {
+        "Name": "AvailabilityReasons_DIAGNOSTICS",
+        "PackagePath": "xl/worksheets/sheet16.xml",
+        "Tables": [
+          {
+            "Name": "AvailabilityReasons_DIAGNOSTICS",
+            "DisplayName": "AvailabilityReasons_DIAGNOSTICS",
+            "Range": "A1:G2",
+            "Columns": [
+              "SourceRecord",
+              "Payroll Code",
+              "Facility-Abbrev",
+              "OriginalReason",
+              "Start",
+              "End",
+              "Issue"
+            ],
+            "PackagePath": "xl/tables/table16.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerShiftDayAssessment",
+        "PackagePath": "xl/worksheets/sheet17.xml",
+        "Tables": [
+          {
+            "Name": "WorkerShiftDayAssessment",
+            "DisplayName": "WorkerShiftDayAssessment",
+            "Range": "A1:Y10837",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "BaseName",
+              "EmploymentType",
+              "Contracted FN Hours",
+              "In Allocation",
+              "In Records",
+              "Worker Membership",
+              "Name",
+              "PreferredRole",
+              "AvailableIntervals",
+              "UnavailIntervals",
+              "LeaveIntervals",
+              "Date",
+              "Shift",
+              "Period",
+              "ShiftStart",
+              "ShiftEnd",
+              "Week",
+              "Day",
+              "SumOfLeaveRecordHours",
+              "DistinctLeaveHours",
+              "LeaveRecordCount",
+              "FullDayLeaveBlocked"
+            ],
+            "PackagePath": "xl/tables/table17.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerShiftCalendar",
+        "PackagePath": "xl/worksheets/sheet18.xml",
+        "Tables": [
+          {
+            "Name": "WorkerShiftCalendar",
+            "DisplayName": "WorkerShiftCalendar",
+            "Range": "A1:U10837",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "BaseName",
+              "EmploymentType",
+              "Contracted FN Hours",
+              "In Allocation",
+              "In Records",
+              "Worker Membership",
+              "Name",
+              "PreferredRole",
+              "AvailableIntervals",
+              "UnavailIntervals",
+              "LeaveIntervals",
+              "Date",
+              "Shift",
+              "Period",
+              "ShiftStart",
+              "ShiftEnd",
+              "Week",
+              "Day"
+            ],
+            "PackagePath": "xl/tables/table18.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerShiftRoleCoverage_DIAGNOS",
+        "PackagePath": "xl/worksheets/sheet19.xml",
+        "Tables": [
+          {
+            "Name": "WorkerShiftRoleCoverage_DIAGNOSTICS",
+            "DisplayName": "WorkerShiftRoleCoverage_DIAGNOSTICS",
+            "Range": "A1:F130",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Name",
+              "Role",
+              "ShiftWindowCount",
+              "MissingShiftWindow"
+            ],
+            "PackagePath": "xl/tables/table19.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerLeaveDays",
+        "PackagePath": "xl/worksheets/sheet20.xml",
+        "Tables": [
+          {
+            "Name": "WorkerLeaveDays",
+            "DisplayName": "WorkerLeaveDays",
+            "Range": "A1:G261",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Date",
+              "SumOfLeaveRecordHours",
+              "DistinctLeaveHours",
+              "LeaveRecordCount",
+              "FullDayLeaveBlocked"
+            ],
+            "PackagePath": "xl/tables/table20.xml"
+          }
+        ]
+      },
+      {
+        "Name": "AvailabilityEligibleRecords",
+        "PackagePath": "xl/worksheets/sheet21.xml",
+        "Tables": [
+          {
+            "Name": "AvailabilityEligibleRecords",
+            "DisplayName": "AvailabilityEligibleRecords",
+            "Range": "A1:H3732",
+            "Columns": [
+              "Payroll Code",
+              "Facility-Abbrev",
+              "SourceRecord",
+              "OriginalReason",
+              "Start",
+              "End",
+              "RecordKind",
+              "Issue"
+            ],
+            "PackagePath": "xl/tables/table21.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerIdentityFailures_DIAGNOST",
+        "PackagePath": "xl/worksheets/sheet22.xml",
+        "Tables": [
+          {
+            "Name": "WorkerIdentityFailures_DIAGNOSTICS",
+            "DisplayName": "WorkerIdentityFailures_DIAGNOSTICS",
+            "Range": "A1:F2",
+            "Columns": [
+              "Check",
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Role",
+              "Name",
+              "Details"
+            ],
+            "PackagePath": "xl/tables/table22.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Availability-StaffList",
+        "PackagePath": "xl/worksheets/sheet23.xml",
+        "Tables": [
+          {
+            "Name": "Availability_StaffList",
+            "DisplayName": "Availability_StaffList",
+            "Range": "A1:J130",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Name",
+              "Role",
+              "PreferredRole",
+              "EmploymentType",
+              "Contracted FN Hours",
+              "In Allocation",
+              "In Records",
+              "Worker Membership"
+            ],
+            "PackagePath": "xl/tables/table23.xml"
+          }
+        ]
+      },
+      {
+        "Name": "MultiRoles",
+        "PackagePath": "xl/worksheets/sheet24.xml",
+        "Tables": [
+          {
+            "Name": "MultiRoles",
+            "DisplayName": "MultiRoles",
+            "Range": "A1:D3",
+            "Columns": [
+              "Name",
+              "AINC4HrsAvilPref",
+              "MultiRole",
+              "RoleShare"
+            ],
+            "PackagePath": "xl/tables/table24.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResDayShift",
+        "PackagePath": "xl/worksheets/sheet25.xml",
+        "Tables": [
+          {
+            "Name": "ResDayShift",
+            "DisplayName": "ResDayShift",
+            "Range": "A1:I7220",
+            "Columns": [
+              "Role",
+              "Week",
+              "Day",
+              "Shift",
+              "EffectiveShiftHrs",
+              "Date",
+              "Name",
+              "ID",
+              "Facility-Abbrev"
+            ],
+            "PackagePath": "xl/tables/table25.xml"
+          }
+        ]
+      }
+    ],
+    "ConnectionRefresh": [
+      {
+        "Name": "Query - AvailabilityDayShift Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - AvailabilityEligibleRecords",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailabilityIssuesSummary",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailabilityLeaveReasons",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailabilityReasons_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailabilityRecords",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailabilityRecords_Invalid",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AvailabilityRules_TEST",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Availability-StaffList",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - DayOrder",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - EffectiveShiftHrs",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - FilePath - 1Input",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - FilePath - 2Calculations",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - IMPORT Availability Leave Source",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT AvailabilityDayShiftMATRIXRaw",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT MultiRolesResRolesProportion",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT OrdinaryWorkWk",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - IMPORT Reconciled Workers",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT Table_Min_Date",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - IMPORT Worker's Report",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - MultiRoles",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ReconciledWorkers_CHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ReconciledWorkers_Eligible",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ReconciledWorkers_Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResDayShift",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResDayShift_Calculated",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResDayShift_CHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - RoleAvailabilityCapped",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - RoleResDayAvailabilityCapped",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - StdRosterDays",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - UnitL1PathTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerAvailability_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerAvailabilityRules",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerContracts_Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerIdentityFailures_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerLeaveDays",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerShiftCalendar",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerShiftDayAssessment",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerShiftRoleCoverage_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerShiftSegments",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      }
+    ],
+    "HashAfter": "4B625CA33BF6DDCB467396246970A13B5F12E55631FCB69F549EE4EC2EC48E20",
+    "FileUnchanged": true
+  },
+  {
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+    "HashBefore": "0A27F467E429974E60B8C35F5DBB0C69BE3247467F70540F879BBE6918D0DE86",
+    "Sheets": [
+      {
+        "Name": "UnitPath",
+        "PackagePath": "xl/worksheets/sheet1.xml",
+        "Tables": [
+          {
+            "Name": "PathTABLE",
+            "DisplayName": "PathTABLE",
+            "Range": "A3:B8",
+            "Columns": [
+              "Variable Name",
+              "Value"
+            ],
+            "PackagePath": "xl/tables/table1.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Availabilities-Employees-AVAIL",
+        "PackagePath": "xl/worksheets/sheet2.xml",
+        "Tables": [
+          {
+            "Name": "Availabilities_Employees_AVAIL",
+            "DisplayName": "Availabilities_Employees_AVAIL",
+            "Range": "A1:I2",
+            "Columns": [
+              "Payroll Code",
+              "Employee Name",
+              "Site Name",
+              "Date From",
+              "Date To",
+              "Type",
+              "Availability or Leave Reason",
+              "Facility-Abbrev",
+              "Available"
+            ],
+            "PackagePath": "xl/tables/table2.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Employees-AlignCHECK",
+        "PackagePath": "xl/worksheets/sheet3.xml",
+        "Tables": [
+          {
+            "Name": "Employees_AlignCHECK",
+            "DisplayName": "Employees_AlignCHECK",
+            "Range": "A1:Q1134",
+            "Columns": [
+              "Site Name",
+              "AvailID",
+              "Department",
+              "Location",
+              "Department.1",
+              "Area",
+              "Employee Roster Name",
+              "Employment Type",
+              "RoleX",
+              "RosterID",
+              "Facility-AbbrevX",
+              "AssignedAvailID",
+              "WorkerID",
+              "Position Description",
+              "Employee Status Status Type",
+              "Contracted FN Hours",
+              "Facility-Abbrev.1"
+            ],
+            "PackagePath": "xl/tables/table3.xml"
+          }
+        ]
+      },
+      {
+        "Name": "LeakedTerminatedWorkers_DIAGNOS",
+        "PackagePath": "xl/worksheets/sheet4.xml",
+        "Tables": [
+          {
+            "Name": "LeakedTerminatedWorkers_DIAGNOSTICS",
+            "DisplayName": "LeakedTerminatedWorkers_DIAGNOSTICS",
+            "Range": "A1:X2",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Allocation Employee Name",
+              "Records Employee Name",
+              "Employee Roster Name",
+              "EmploymentType",
+              "Role",
+              "Records Location",
+              "Roster Location",
+              "Availabilities Location",
+              "Leave Balance Location",
+              "In Allocation",
+              "In Records",
+              "In Leave Balances",
+              "Worker Membership",
+              "Current Worker Match Missing",
+              "Current Worker Record Ambiguous",
+              "Current Worker Row Count",
+              "Current Worker Eligible Row Count",
+              "Contracted FN Hours",
+              "Start Date",
+              "Termination Date",
+              "Terminated Before Roster",
+              "Excluded Termination Date"
+            ],
+            "PackagePath": "xl/tables/table4.xml"
+          }
+        ]
+      },
+      {
+        "Name": "InvalidWorkerMembership_DIAGNOS",
+        "PackagePath": "xl/worksheets/sheet5.xml",
+        "Tables": [
+          {
+            "Name": "InvalidWorkerMembership_DIAGNOSTICS",
+            "DisplayName": "InvalidWorkerMembership_DIAGNOSTICS",
+            "Range": "A1:H2",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Employee Roster Name",
+              "Role",
+              "Worker Membership",
+              "In Allocation",
+              "In Records",
+              "In Leave Balances"
+            ],
+            "PackagePath": "xl/tables/table5.xml"
+          }
+        ]
+      },
+      {
+        "Name": "AmbiguousCurrentWorkers_DIAGNOS",
+        "PackagePath": "xl/worksheets/sheet6.xml",
+        "Tables": [
+          {
+            "Name": "AmbiguousCurrentWorkers_DIAGNOSTICS",
+            "DisplayName": "AmbiguousCurrentWorkers_DIAGNOSTICS",
+            "Range": "A1:G2",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Employee Roster Name",
+              "Role",
+              "Worker Membership",
+              "Current Worker Row Count",
+              "Current Worker Eligible Row Count"
+            ],
+            "PackagePath": "xl/tables/table6.xml"
+          }
+        ]
+      },
+      {
+        "Name": "UnmatchedCurrentWorkers_DIAGNOS",
+        "PackagePath": "xl/worksheets/sheet7.xml",
+        "Tables": [
+          {
+            "Name": "UnmatchedCurrentWorkers_DIAGNOSTICS",
+            "DisplayName": "UnmatchedCurrentWorkers_DIAGNOSTICS",
+            "Range": "A1:H2",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Employee Roster Name",
+              "Role",
+              "Worker Membership",
+              "In Allocation",
+              "In Records",
+              "In Leave Balances"
+            ],
+            "PackagePath": "xl/tables/table7.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IncompleteWorkerIdentity_DIAGNO",
+        "PackagePath": "xl/worksheets/sheet8.xml",
+        "Tables": [
+          {
+            "Name": "IncompleteWorkerIdentity_DIAGNOSTICS",
+            "DisplayName": "IncompleteWorkerIdentity_DIAGNOSTICS",
+            "Range": "A1:F2",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Employee Roster Name",
+              "Role",
+              "Worker Membership",
+              "Missing Fields"
+            ],
+            "PackagePath": "xl/tables/table8.xml"
+          }
+        ]
+      },
+      {
+        "Name": "DuplicateWorkers_DIAGNOSTICS",
+        "PackagePath": "xl/worksheets/sheet9.xml",
+        "Tables": [
+          {
+            "Name": "DuplicateWorkers_DIAGNOSTICS",
+            "DisplayName": "DuplicateWorkers_DIAGNOSTICS",
+            "Range": "A1:F2",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Candidate Count",
+              "Employee Roster Name",
+              "Role",
+              "Worker Membership"
+            ],
+            "PackagePath": "xl/tables/table9.xml"
+          }
+        ]
+      },
+      {
+        "Name": "EmployeesTABLE_Prepare",
+        "PackagePath": "xl/worksheets/sheet10.xml",
+        "Tables": [
+          {
+            "Name": "EmployeesTABLE_Prepare",
+            "DisplayName": "EmployeesTABLE_Prepare",
+            "Range": "A1:W387",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Allocation Employee Name",
+              "Records Employee Name",
+              "Employee Roster Name",
+              "EmploymentType",
+              "Role",
+              "Records Location",
+              "Roster Location",
+              "Availabilities Location",
+              "Leave Balance Location",
+              "In Allocation",
+              "In Records",
+              "In Leave Balances",
+              "Worker Membership",
+              "Current Worker Match Missing",
+              "Current Worker Record Ambiguous",
+              "Current Worker Row Count",
+              "Current Worker Eligible Row Count",
+              "Contracted FN Hours",
+              "Start Date",
+              "Termination Date",
+              "Terminated Before Roster"
+            ],
+            "PackagePath": "xl/tables/table10.xml"
+          }
+        ]
+      },
+      {
+        "Name": "CurrentWorkers_Reconciled",
+        "PackagePath": "xl/worksheets/sheet11.xml",
+        "Tables": [
+          {
+            "Name": "CurrentWorkers_Reconciled",
+            "DisplayName": "CurrentWorkers_Reconciled",
+            "Range": "A1:K4331",
+            "Columns": [
+              "Employee Code",
+              "Facility-Abbrev",
+              "Location Description",
+              "Position Description",
+              "Employee Status Description",
+              "Start Date",
+              "Termination Date",
+              "Termination Reason Description",
+              "Contracted FN Hours",
+              "Current Worker Row Count",
+              "Current Worker Eligible Row Count"
+            ],
+            "PackagePath": "xl/tables/table11.xml"
+          }
+        ]
+      },
+      {
+        "Name": "RosterStartDate",
+        "PackagePath": "xl/worksheets/sheet12.xml",
+        "Tables": [
+          {
+            "Name": "RosterStartDate",
+            "DisplayName": "RosterStartDate",
+            "Range": "A1:A2",
+            "Columns": [
+              "RosterStartDate"
+            ],
+            "PackagePath": "xl/tables/table12.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Employees-ALL (3)",
+        "PackagePath": "xl/worksheets/sheet13.xml",
+        "Tables": [
+          {
+            "Name": "Employees_ALL",
+            "DisplayName": "Employees_ALL",
+            "Range": "A1:AJ507",
+            "Columns": [
+              "Payroll Code",
+              "Facility-AbbrevZ",
+              "Records Employee Name",
+              "Availabilities Location",
+              "In Records Source",
+              "Department",
+              "Employee Roster Name",
+              "Employment Type",
+              "Employee Code",
+              "RoleX",
+              "Facility-AbbrevX",
+              "In Allocation Source",
+              "Roster Location",
+              "In Records",
+              "In Allocation",
+              "AssignedAvailID",
+              "Join Facility-Abbrev",
+              "Leave Balance Role",
+              "Leave Balance Location",
+              "In Leave Balances Source",
+              "In Leave Balances",
+              "Worker Membership",
+              "Employee Code.1",
+              "Facility-AbbrevY",
+              "Position Description",
+              "Employee Status Description",
+              "Contracted FN Hours",
+              "Start Date",
+              "Termination Date",
+              "Termination Reason Description",
+              "Current Worker Row Count",
+              "Current Worker Eligible Row Count",
+              "Records Location",
+              "Current Worker Match Missing",
+              "Current Worker Record Ambiguous",
+              "Terminated Before Roster"
+            ],
+            "PackagePath": "xl/tables/table13.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Employees-ALL (2)",
+        "PackagePath": "xl/worksheets/sheet14.xml",
+        "Tables": []
+      },
+      {
+        "Name": "TerminatedWorkers_DIAGNOSTICS",
+        "PackagePath": "xl/worksheets/sheet15.xml",
+        "Tables": [
+          {
+            "Name": "TerminatedWorkers_DIAGNOSTICS",
+            "DisplayName": "TerminatedWorkers_DIAGNOSTICS",
+            "Range": "A1:H84",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Employee Roster Name",
+              "Termination Date",
+              "Termination Reason Description",
+              "In Allocation",
+              "In Records",
+              "Worker Membership"
+            ],
+            "PackagePath": "xl/tables/table14.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerReconciliation_CHECK",
+        "PackagePath": "xl/worksheets/sheet16.xml",
+        "Tables": [
+          {
+            "Name": "WorkerReconciliation_CHECK",
+            "DisplayName": "WorkerReconciliation_CHECK",
+            "Range": "A1:D9",
+            "Columns": [
+              "Check",
+              "Status",
+              "Failures",
+              "Details"
+            ],
+            "PackagePath": "xl/tables/table15.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerSourceAttributes_SUMMARY",
+        "PackagePath": "xl/worksheets/sheet17.xml",
+        "Tables": [
+          {
+            "Name": "WorkerSourceAttributes_SUMMARY",
+            "DisplayName": "WorkerSourceAttributes_SUMMARY",
+            "Range": "A1:D19",
+            "Columns": [
+              "Roster",
+              "Availabilities",
+              "Worker's Report",
+              "Leave Balances"
+            ],
+            "PackagePath": "xl/tables/table16.xml"
+          }
+        ]
+      },
+      {
+        "Name": "WorkerReconciliation_ISSUES",
+        "PackagePath": "xl/worksheets/sheet18.xml",
+        "Tables": []
+      },
+      {
+        "Name": "IMPORT Combined Roster",
+        "PackagePath": "xl/worksheets/sheet19.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Combined_Roster",
+            "DisplayName": "IMPORT_Combined_Roster",
+            "Range": "A1:W18601",
+            "Columns": [
+              "Location",
+              "Pay Company",
+              "Department",
+              "Area",
+              "Employee Roster Name",
+              "Employment Type",
+              "Role",
+              "Employee Code",
+              "Date",
+              "Day Of Week",
+              "Shift Type",
+              "Start Time",
+              "End Time",
+              "Break Length Minutes",
+              "Shift Length",
+              "Shift Net Length",
+              "Rate",
+              "Published",
+              "Published At",
+              "Published By",
+              "Non Attended",
+              "Status",
+              "Employee_Code"
+            ],
+            "PackagePath": "xl/tables/table17.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT Combined Availabilities",
+        "PackagePath": "xl/worksheets/sheet20.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Combined_Availabilities",
+            "DisplayName": "IMPORT_Combined_Availabilities",
+            "Range": "A1:G111511",
+            "Columns": [
+              "Column1",
+              "Column2",
+              "Column3",
+              "Column4",
+              "Column5",
+              "Column6",
+              "Column7"
+            ],
+            "PackagePath": "xl/tables/table18.xml"
+          }
+        ]
+      },
+      {
+        "Name": "EXTRACT Leave Balances = Raw Sa",
+        "PackagePath": "xl/worksheets/sheet21.xml",
+        "Tables": [
+          {
+            "Name": "EXTRACT_Leave_Balances___Raw_Sample",
+            "DisplayName": "EXTRACT_Leave_Balances___Raw_Sample",
+            "Range": "A1:V498",
+            "Columns": [
+              "Employee Code",
+              "Facility",
+              "Position Description",
+              "Employee Status",
+              "Annual Leave Type",
+              "Service Leave Type",
+              "AL Balance Units - 30 Sep 25",
+              "AL $ Liability - 30 Sep 25",
+              "LSL Balance Units - 30 Sep 25",
+              "LSL $ Liability - 30 Sep 25",
+              "Balance Units - 31 Dec 25",
+              "$ Liability - 31 Dec 25",
+              "LSL Balance Units - 31/12/25",
+              "LSL $ Liability - 31/12/2025",
+              "Balance Units - 31 Mar 26",
+              "$ Liability - 31 Mar 26",
+              "LSL Balance Units - 31/03/2026",
+              "LSL $ Liability - 31/03/2026",
+              "Balance Units - 30/06/2026",
+              "$ Liability - 30/06/2026",
+              "LSL Balance Units - 30/06/2026",
+              "LSL $ Liability - 30/06/2026"
+            ],
+            "PackagePath": "xl/tables/table19.xml"
+          }
+        ]
+      },
+      {
+        "Name": "EXTRACT Leave Balances = Ra (2)",
+        "PackagePath": "xl/worksheets/sheet22.xml",
+        "Tables": [
+          {
+            "Name": "EXTRACT_Leave_Balances___Raw_Sample_1",
+            "DisplayName": "EXTRACT_Leave_Balances___Raw_Sample_1",
+            "Range": "A1:V498",
+            "Columns": [
+              "Employee Code",
+              "Facility",
+              "Position Description",
+              "Employee Status",
+              "Annual Leave Type",
+              "Service Leave Type",
+              "AL Balance Units - 30 Sep 25",
+              "AL $ Liability - 30 Sep 25",
+              "LSL Balance Units - 30 Sep 25",
+              "LSL $ Liability - 30 Sep 25",
+              "Balance Units - 31 Dec 25",
+              "$ Liability - 31 Dec 25",
+              "LSL Balance Units - 31/12/25",
+              "LSL $ Liability - 31/12/2025",
+              "Balance Units - 31 Mar 26",
+              "$ Liability - 31 Mar 26",
+              "LSL Balance Units - 31/03/2026",
+              "LSL $ Liability - 31/03/2026",
+              "Balance Units - 30/06/2026",
+              "$ Liability - 30/06/2026",
+              "LSL Balance Units - 30/06/2026",
+              "LSL $ Liability - 30/06/2026"
+            ],
+            "PackagePath": "xl/tables/table20.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT Leave Balances",
+        "PackagePath": "xl/worksheets/sheet23.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Leave_Balances",
+            "DisplayName": "IMPORT_Leave_Balances",
+            "Range": "A1:D3",
+            "Columns": [
+              "Name",
+              "Item",
+              "Kind",
+              "Hidden"
+            ],
+            "PackagePath": "xl/tables/table21.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT Current_Workers",
+        "PackagePath": "xl/worksheets/sheet24.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_Current_Workers",
+            "DisplayName": "IMPORT_Current_Workers",
+            "Range": "A1:L4331",
+            "Columns": [
+              "Employee Code",
+              "Period Description",
+              "Position Description",
+              "Employee Status Description",
+              "Start Date",
+              "Termination Date",
+              "Termination Reason Description",
+              "Age",
+              "Contracted FN Hours",
+              "Location Description",
+              "Site Description",
+              "Department Description"
+            ],
+            "PackagePath": "xl/tables/table22.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Employees-TABLE",
+        "PackagePath": "xl/worksheets/sheet25.xml",
+        "Tables": [
+          {
+            "Name": "Employees_TABLE",
+            "DisplayName": "Employees_TABLE",
+            "Range": "A1:P387",
+            "Columns": [
+              "EmployeeID",
+              "Facility-Abbrev",
+              "Employee Roster Name",
+              "EmploymentType",
+              "Role",
+              "In Roster",
+              "In Availabilities",
+              "In Leave Balances",
+              "Start Date",
+              "Termination Date",
+              "In Records",
+              "Source",
+              "Records Home Location",
+              "Location",
+              "Locations Match",
+              "Contracted FN Hours"
+            ],
+            "PackagePath": "xl/tables/table23.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Availabilities",
+        "PackagePath": "xl/worksheets/sheet26.xml",
+        "Tables": [
+          {
+            "Name": "Availabilities_Prepare",
+            "DisplayName": "Availabilities_Prepare",
+            "Range": "A1:I66885",
+            "Columns": [
+              "Payroll Code",
+              "Employee Name",
+              "Site Name",
+              "Date From",
+              "Date To",
+              "Type",
+              "Availability or Leave Reason",
+              "Facility-Abbrev",
+              "Available"
+            ],
+            "PackagePath": "xl/tables/table24.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Roster Blank AGENCY",
+        "PackagePath": "xl/worksheets/sheet27.xml",
+        "Tables": [
+          {
+            "Name": "Roster_Blank_AGENCY",
+            "DisplayName": "Roster_Blank_AGENCY",
+            "Range": "A1:D2",
+            "Columns": [
+              "Location",
+              "Employment Type",
+              "Role",
+              "Employee Code"
+            ],
+            "PackagePath": "xl/tables/table25.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Sheet1",
+        "PackagePath": "xl/worksheets/sheet28.xml",
+        "Tables": []
+      }
+    ],
+    "ConnectionRefresh": [
+      {
+        "Name": "Query - AmbiguousCurrentWorkers_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Availabilities - Not in Roster",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Availabilities (3)",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Availabilities Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Availabilities-Employees",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Availabilities-Employees-AVAIL",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Availabilities-EmployeesDates",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Availabilities-EmployeesDates1",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Availabilities-EmployeesLIST",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - AvailabilitiesSTATS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - CurrentWorkers_Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - CurrentWorkers_Reconciled",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - DuplicateWorkers_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Employees-ALL",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Employees-ALL(1)",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Employees-MergedAvail+Roster",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - EmployeeSourceMembership",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Employees-TABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - EmployeesTABLE_Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - EXTRACT Leave Balances = Raw Sample",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT Combined Availabilities",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT Combined Roster",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT Current_Workers",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT Leave Balances",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IncompleteWorkerIdentity_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - InvalidWorkerMembership_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - LeakedTerminatedWorkers_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - LeaveBalances_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - LeaveBalances_NotInEmployees_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - LeaveBalances_Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - LeaveBalances_Workers",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PathTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Roster Blank AGENCY",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Roster Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - RosteredEmployeeOnlyShifts",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - RosteredEmployeeShiftsCOUNT",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - RosteredEmployeesTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - RosterStartDate",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - TerminatedWorkers_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - UnmatchedCurrentWorkers_DIAGNOSTICS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerReconciliation_CHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerReconciliation_ISSUES",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - WorkerSourceAttributes_SUMMARY",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      }
+    ],
+    "HashAfter": "0A27F467E429974E60B8C35F5DBB0C69BE3247467F70540F879BBE6918D0DE86",
+    "FileUnchanged": true
+  },
+  {
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+    "HashBefore": "2F25C90DF862D812D50C3C5CEBBBCB231BAB87482FFD1C1054DAE05788C6C87B",
+    "Sheets": [
+      {
+        "Name": "UnitL1Path",
+        "PackagePath": "xl/worksheets/sheet1.xml",
+        "Tables": [
+          {
+            "Name": "RolePathTABLE",
+            "DisplayName": "RolePathTABLE",
+            "Range": "A3:B10",
+            "Columns": [
+              "Variable Name",
+              "Value"
+            ],
+            "PackagePath": "xl/tables/table1.xml"
+          }
+        ]
+      },
+      {
+        "Name": "A1SpareDayChoices_Prepare",
+        "PackagePath": "xl/worksheets/sheet2.xml",
+        "Tables": [
+          {
+            "Name": "A1SpareDayChoices_Prepare",
+            "DisplayName": "A1SpareDayChoices_Prepare",
+            "Range": "A1:I2465",
+            "Columns": [
+              "Resource",
+              "Day",
+              "AllocationWorkday",
+              "SpareDayEligible",
+              "SparePlanningAllowed",
+              "CandidatePeriod",
+              "PlannedCluster",
+              "ExtensionSide",
+              "SpareEligibilityReason"
+            ],
+            "PackagePath": "xl/tables/table2.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResPeriodShiftNWDTABLE",
+        "PackagePath": "xl/worksheets/sheet3.xml",
+        "Tables": [
+          {
+            "Name": "ResPeriodShiftNWDTABLE",
+            "DisplayName": "ResPeriodShiftNWDTABLE",
+            "Range": "A1:G2",
+            "Columns": [
+              "Resource",
+              "Day",
+              "NWDType",
+              "ClusterAllocation",
+              "NWDPriority",
+              "Period",
+              "Shifts"
+            ],
+            "PackagePath": "xl/tables/table3.xml"
+          }
+        ]
+      },
+      {
+        "Name": "CapacityDiagnostics_DETAILS",
+        "PackagePath": "xl/worksheets/sheet4.xml",
+        "Tables": [
+          {
+            "Name": "CapacityDiagnostics_DETAILS",
+            "DisplayName": "CapacityDiagnostics_DETAILS",
+            "Range": "A1:I4328",
+            "Columns": [
+              "Stage",
+              "Check",
+              "Resource",
+              "Role",
+              "Name",
+              "Date",
+              "Period",
+              "Reason",
+              "Action"
+            ],
+            "PackagePath": "xl/tables/table4.xml"
+          }
+        ]
+      },
+      {
+        "Name": "CapacityDiagnostics_SUMMARY",
+        "PackagePath": "xl/worksheets/sheet5.xml",
+        "Tables": [
+          {
+            "Name": "CapacityDiagnostics_SUMMARY",
+            "DisplayName": "CapacityDiagnostics_SUMMARY",
+            "Range": "A1:E41",
+            "Columns": [
+              "Stage",
+              "Check",
+              "Status",
+              "Failures",
+              "Details"
+            ],
+            "PackagePath": "xl/tables/table5.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResPeriodAvailabilityTABLE !!",
+        "PackagePath": "xl/worksheets/sheet6.xml",
+        "Tables": [
+          {
+            "Name": "ResPeriodAvailabilityTABLE",
+            "DisplayName": "ResPeriodAvailabilityTABLE",
+            "Range": "A1:H2",
+            "Columns": [
+              "Role",
+              "Resource",
+              "Period",
+              "OriginalAvailability",
+              "SpareCalculationAllowed",
+              "SpareIssueReason",
+              "HasAllocationEvidence",
+              "Availability"
+            ],
+            "PackagePath": "xl/tables/table6.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResPeriodAllocationTABLE",
+        "PackagePath": "xl/worksheets/sheet7.xml",
+        "Tables": [
+          {
+            "Name": "ResPeriodAllocationTABLE",
+            "DisplayName": "ResPeriodAllocationTABLE",
+            "Range": "A1:E833",
+            "Columns": [
+              "Role",
+              "Resource",
+              "Period",
+              "ShiftNumber",
+              "Allocation"
+            ],
+            "PackagePath": "xl/tables/table7.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResPeriodCapPrioritised",
+        "PackagePath": "xl/worksheets/sheet8.xml",
+        "Tables": [
+          {
+            "Name": "ResPeriodCapPrioritised",
+            "DisplayName": "ResPeriodCapPrioritised",
+            "Range": "A1:M2",
+            "Columns": [
+              "Resource",
+              "Period",
+              "Allocation",
+              "PotentialAvailability",
+              "PRCell",
+              "UnassignedAvail",
+              "ResAv-C'",
+              "PeriodA-CNeg",
+              "C'-D",
+              "C'/D",
+              "ClusterAllocation",
+              "NWDPriority",
+              "NWDType"
+            ],
+            "PackagePath": "xl/tables/table8.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResPeriodWDTABLE",
+        "PackagePath": "xl/worksheets/sheet9.xml",
+        "Tables": [
+          {
+            "Name": "ResPeriodWDTABLE",
+            "DisplayName": "ResPeriodWDTABLE",
+            "Range": "A1:F7393",
+            "Columns": [
+              "Resource",
+              "Day",
+              "PotentialAvailability",
+              "Period",
+              "Availability",
+              "RosteredPeriodStatus"
+            ],
+            "PackagePath": "xl/tables/table9.xml"
+          }
+        ]
+      },
+      {
+        "Name": "ResourcePeriodTABLE-empty",
+        "PackagePath": "xl/worksheets/sheet10.xml",
+        "Tables": [
+          {
+            "Name": "ResourcePeriodTABLE_empty",
+            "DisplayName": "ResourcePeriodTABLE_empty",
+            "Range": "A1:P7393",
+            "Columns": [
+              "Role",
+              "Resource",
+              "Name",
+              "Period",
+              "Shift",
+              "Day",
+              "HasAllocationEvidence",
+              "OriginalAvailability",
+              "AllocationWorkday",
+              "SpareDayEligible",
+              "SpareEligibilityReason",
+              "PlannedCluster",
+              "ExtensionSide",
+              "SpareCalculationAllowed",
+              "SpareIssueReason",
+              "SparePeriodSelected"
+            ],
+            "PackagePath": "xl/tables/table10.xml"
+          }
+        ]
+      },
+      {
+        "Name": "MultiDayPeriod-Remove",
+        "PackagePath": "xl/worksheets/sheet11.xml",
+        "Tables": [
+          {
+            "Name": "MultiDayPeriod_Remove",
+            "DisplayName": "MultiDayPeriod_Remove",
+            "Range": "A1:E2",
+            "Columns": [
+              "Resource",
+              "AvailablePeriod",
+              "C/D",
+              "ShiftBias",
+              "NoAllocationKeep"
+            ],
+            "PackagePath": "xl/tables/table11.xml"
+          }
+        ]
+      },
+      {
+        "Name": "C' ResSingleShiftDayTABLE",
+        "PackagePath": "xl/worksheets/sheet12.xml",
+        "Tables": [
+          {
+            "Name": "C__ResSingleShiftDayTABLE",
+            "DisplayName": "C__ResSingleShiftDayTABLE",
+            "Range": "A1:C2",
+            "Columns": [
+              "Resource",
+              "Period",
+              "Availability"
+            ],
+            "PackagePath": "xl/tables/table12.xml"
+          }
+        ]
+      },
+      {
+        "Name": "IMPORT ResDayShift !!",
+        "PackagePath": "xl/worksheets/sheet13.xml",
+        "Tables": [
+          {
+            "Name": "IMPORT_ResDayShift",
+            "DisplayName": "IMPORT_ResDayShift",
+            "Range": "A1:I4191",
+            "Columns": [
+              "Role",
+              "Week",
+              "Day",
+              "Shift",
+              "EffectiveShiftHrs",
+              "Date",
+              "Name",
+              "ID",
+              "Facility-Abbrev"
+            ],
+            "PackagePath": "xl/tables/table13.xml"
+          }
+        ]
+      },
+      {
+        "Name": "Demand Prepare",
+        "PackagePath": "xl/worksheets/sheet14.xml",
+        "Tables": [
+          {
+            "Name": "Demand_Prepare",
+            "DisplayName": "Demand_Prepare",
+            "Range": "A1:F85",
+            "Columns": [
+              "Shift",
+              "Role",
+              "Facility",
+              "D",
+              "Date",
+              "Period"
+            ],
+            "PackagePath": "xl/tables/table14.xml"
+          }
+        ]
+      }
+    ],
+    "ConnectionRefresh": [
+      {
+        "Name": "Query - A1ClusterLookup_CHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - A1ResourceContract_CHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - A1SpareDayChoices_Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - AllocationCode",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - AppliedAllocation+ActiveDays",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - C' ResSingleShiftDayTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - C' SUM",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - CapacityDiagnostics_DETAILS",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - CapacityDiagnostics_SUMMARY",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ClusterAllocation",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ClusterIDEnd",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ClusterIDStart",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ClusterIDStart+End",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Clusters",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - DayShiftMatchSPLIT",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Demand Prepare",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - EXTRACT Date_From",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - EXTRACT MaxAvailability",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - EXTRACT PermutationDimensions",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - FilePath",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - IMPORT Masterlist !!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT PermutationDimensions !!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - IMPORT ResDayShift !!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT ResourceShiftAllocation - Role!!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - IMPORT ShiftUnitDemandHRS !!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - IMPORTSource Settings Data",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - MaxShiftCluster",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiDayPeriod-Available+Allocation",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiDayPeriod-AvailableAllocatedMatches",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiDayPeriodMatchTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiDayPeriod-Reducibile",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiDayPeriod-Remove",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - MultiPeriodPriority",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiResPeriodPriority",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiResPeriodPriority-Highest",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiShiftAvailDayPeriod -0 Allocation",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultishiftAvailDayPeriod-Index",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiShiftAvilabilityDay",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiShiftDayMatches",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - MultiShiftDayPeriodMatches",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - NotShiftThreshold",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodA-C' Neg(Surfit)",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodAllocated",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodAllocationTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodAvailabilityLIST",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodC'",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodCapacityTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodC'-D",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodC'-DPos (ExcessPot)",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodC'SUM",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodDemandSUM",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - PeriodDemandTABLE !!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - PeriodShiftDay B",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResAv-C'",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResC'",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResDayAllocationTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResDayAvailabilityTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResDayNWDTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResDayPeriodAvailabilityTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResDayPotentialAvailabilityTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResDaysAllocated",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResourcePeriodAvailabilityCappedTABLE (2)",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResourcePeriodTABLE-empty",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResourcePeriodTABLEIndex",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - Resources",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriod(ExcessPot)SpareAvailabilityTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodAllocation-B",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodAllocationCHECK",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResPeriodAllocation-ShiftBias",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodAllocationSUM",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResPeriodAllocationTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodAvailabilitySUM",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResPeriodAvailabilityTABLE !!",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodAvailabilityTABLE !! (2)",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ResPeriodCapPrioritised",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodShiftNWDTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - ResPeriodWDTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - Role",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - RolePath",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - RolePathTABLE",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - SET NWDPriority",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": "1"
+      },
+      {
+        "Name": "Query - SingleShiftDayAvail+MultiAllocation B",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - SingleShiftDay-initial",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - SingleShiftDayPeriodMatch",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - SingleShiftDayPeriods",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - UnavailableAllocated",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - ValidAllocation",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      },
+      {
+        "Name": "Query - WD Type",
+        "RefreshWithRefreshAll": null,
+        "Background": "1",
+        "SaveData": null
+      }
+    ],
+    "HashAfter": "2F25C90DF862D812D50C3C5CEBBBCB231BAB87482FFD1C1054DAE05788C6C87B",
+    "FileUnchanged": true
+  }
+]

@@ -1,6 +1,6 @@
 // Power Query from: Capacity-ShiftAvailability.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Capacity-ShiftAvailability.xlsx
-// Extracted: 2026-10-13T02:49:39.689Z
+// Extracted: 2026-10-20T21:49:20.988Z
 
 section Section1;
 
@@ -105,20 +105,34 @@ shared AvailabilitySubtract = (available as list, excluded as list) as list =>
         Result;
 
 // Query: IMPORT Reconciled Workers
-// Purpose: Read the authoritative worker population from the existing local reconciliation table.
+// Purpose: Read the existing local reconciliation workbook navigation without business transformations.
 shared #"IMPORT Reconciled Workers" = let
     SourcePath = #"FilePath - 1Input" & "\Worker Reconciliation.xlsx",
     SourceBinary = File.Contents(SourcePath),
-    Navigation = Excel.Workbook(SourceBinary, null, true),
+    Navigation = Excel.Workbook(SourceBinary, null, true)
+in
+    Navigation;
+
+// Query: ReconciledWorkerMembership_Prepare
+// Purpose: Adapt the current reconciliation membership fields to the existing availability model.
+// Inputs: Employees_TABLE from IMPORT Reconciled Workers.
+// Output: Every source worker with legacy roster/availability flags, separate HR and leave membership, and normalized identity fields.
+// Notes: Internal In Records continues to mean availability-source membership; In HR Records retains the published HR flag.
+shared ReconciledWorkerMembership_Prepare = let
+    Navigation = #"IMPORT Reconciled Workers",
     EmployeeTable = Navigation{[Item = "Employees_TABLE", Kind = "Table"]}[Data],
     RequiredColumns = {"EmployeeID", "Facility-Abbrev", "Role", "Employee Roster Name", "EmploymentType",
-        "In Allocation", "In Records", "Worker Membership"},
+        "In Roster", "In Availabilities", "In Leave Balances", "In Records"},
     MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(EmployeeTable)),
     Workers = if List.IsEmpty(MissingColumns) then Table.SelectColumns(EmployeeTable, RequiredColumns)
         else error Error.Record("Reconciled worker import", "Employees_TABLE is missing required worker-membership columns.", [MissingColumns = MissingColumns]),
-    TypedMembership = Table.TransformColumnTypes(Workers,
-        {{"In Allocation", type logical}, {"In Records", type logical}}),
-    TextColumns = {"EmployeeID", "Facility-Abbrev", "Role", "Employee Roster Name", "EmploymentType", "Worker Membership"},
+    // Rename the HR flag first so the availability-source flag can retain its established internal name.
+    HRMembership = Table.RenameColumns(Workers, {{"In Records", "In HR Records"}}),
+    AvailabilityMembership = Table.RenameColumns(HRMembership,
+        {{"In Roster", "In Allocation"}, {"In Availabilities", "In Records"}}),
+    TypedMembership = Table.TransformColumnTypes(AvailabilityMembership,
+        {{"In Allocation", type logical}, {"In Records", type logical}, {"In Leave Balances", type logical}, {"In HR Records", type logical}}),
+    TextColumns = {"EmployeeID", "Facility-Abbrev", "Role", "Employee Roster Name", "EmploymentType"},
     TextTransformations = List.Transform(TextColumns,
         each {_, AvailabilityText, type nullable text}),
     Normalized = Table.TransformColumns(TypedMembership, TextTransformations)
@@ -126,11 +140,11 @@ in Normalized;
 
 // Query: ReconciledWorkers_Facility_Prepare
 // Purpose: Align legacy reconciliation facility codes with the canonical unit used by current availability sources.
-// Inputs: IMPORT Reconciled Workers and the folder-derived Unit.
+// Inputs: ReconciledWorkerMembership_Prepare and the folder-derived Unit.
 // Output: Reconciliation rows at source grain with a canonical Facility-Abbrev.
 // Notes: JE is the legacy code for the combined JH-RY unit; unrelated facility values remain unchanged for diagnostics.
 shared ReconciledWorkers_Facility_Prepare = let
-    Source = #"IMPORT Reconciled Workers",
+    Source = ReconciledWorkerMembership_Prepare,
     CanonicalizeFacility = (facility as nullable text) as nullable text =>
         if facility <> null
             and Comparer.OrdinalIgnoreCase(Unit, "JH-RY") = 0
@@ -150,17 +164,11 @@ shared #"IMPORT Worker's Report" = let
     SourcePath = #"FilePath - 1Input" & "\Worker's Report.xlsx",
     SourceBinary = File.Contents(SourcePath),
     Navigation = Excel.Workbook(SourceBinary, null, true),
-    Matches = Table.SelectRows(Navigation, each [Item] = "Table1" and [Kind] = "Table"),
-    MatchCount = Table.RowCount(Matches),
-    ContractTable = if MatchCount = 1 then Matches{0}[Data]
-        else error Error.Record("Worker contract import", "Expected exactly one Table1 table in Worker's Report.xlsx.", [Matches = MatchCount]),
-    RequiredColumns = {"Employee Code", "Contracted FN Hours"},
-    AvailableColumns = Table.ColumnNames(ContractTable),
-    MissingColumns = List.Difference(RequiredColumns, AvailableColumns),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(ContractTable, RequiredColumns)
-        else error Error.Record("Worker contract import", "Worker's Report.xlsx/Table1 is missing required columns.", [MissingColumns = MissingColumns]),
-    Buffered = Table.Buffer(Selected)
-in Buffered;
+    Sheet1_Sheet = Navigation{[Item="Sheet1",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee Code", Int64.Type}, {"Period Description", type text}, {"Position Description", type text}, {"Employee Status Description", type text}, {"Start Date", type date}, {"Termination Date", type date}, {"Termination Reason Description", type text}, {"Age", type number}, {"Contracted FN Hours", type number}, {"Location Description", type text}, {"Site Description", type text}, {"Department Description", type text}})
+in
+    #"Changed Type";
 
 // Query: IMPORT Facilities List
 // Purpose: Read the Whiddon SharePoint facility reference for unit-level source filtering.
@@ -346,21 +354,34 @@ in
     Result;
 
 // Query: IMPORT Availability Leave Source
-// Purpose: Read dated availability and leave for the unit selected by this workbook's folder.
+// Purpose: Land the availability/leave Combined Output sheet unchanged.
 // Inputs: Combined Output sheet in 1. Input/whiddon_availability_leave_extraction.xlsx.
 shared #"IMPORT Availability Leave Source" = let
     SourcePath = #"FilePath - 1Input" & "\whiddon_availability_leave_extraction.xlsx",
     SourceBinary = File.Contents(SourcePath),
     Navigation = Excel.Workbook(SourceBinary, null, true),
-    CombinedOutputSheet = Navigation{[Item = "Combined Output", Kind = "Sheet"]}[Data],
-    PromotedHeaders = Table.PromoteHeaders(CombinedOutputSheet, [PromoteAllScalars = true]),
+    CombinedOutputSheet = Navigation{[Item = "Combined Output", Kind = "Sheet"]}[Data]
+in
+    CombinedOutputSheet;
+
+// Query: AvailabilityLeaveSource_Prepare
+// Purpose: Prepare the current unit's dated source records, retaining Type separately from optional reason comments.
+// Inputs: Unchanged Combined Output sheet from IMPORT Availability Leave Source.
+// Notes: Preserve the existing facility scope and source-record index; dates and Type are required by interval classification.
+shared AvailabilityLeaveSource_Prepare = let
+    Source = #"IMPORT Availability Leave Source",
+    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+    NamedSourceFields = Table.RenameColumns(PromotedHeaders,
+        {{"PayrollCode", "Payroll Code"}, {"DateTimeStart", "Date From"},
+         {"DateTimeEnd", "Date To"}, {"Comments", "Availability or Leave Reason"}}),
     // Use the same source-title to Facility-Abbrev mapping as the unit extraction.
-    JoinedFacilities = Table.NestedJoin(PromotedHeaders, {"Site Name"}, #"LINK Facilities", {"Title"}, "FacilityLookup", JoinKind.LeftOuter),
+    JoinedFacilities = Table.NestedJoin(NamedSourceFields, {"Site Name"}, #"LINK Facilities", {"Title"}, "FacilityLookup", JoinKind.LeftOuter),
     ExpandedFacilities = Table.ExpandTableColumn(JoinedFacilities, "FacilityLookup", {"Facility-Abbrev"}, {"Facility-Abbrev"}),
     AnalysisEnabled = not Table.IsEmpty(FacilityAnalysisTABLE),
     FilteredUnit = Table.SelectRows(ExpandedFacilities, each [#"Facility-Abbrev"] = Unit and AnalysisEnabled),
     SelectedColumns = Table.SelectColumns(FilteredUnit,
-        {"Site Name", "Employee Name", "Payroll Code", "Department", "Date From", "Date To", "Availability or Leave Reason", "Facility-Abbrev"}),
+        {"Site Name", "Employee Name", "Payroll Code", "Type", "Date From", "Date To",
+         "Availability or Leave Reason", "Facility-Abbrev"}),
     NormalizedIdentity = Table.TransformColumns(SelectedColumns,
         {{"Payroll Code", AvailabilityText, type nullable text}, {"Employee Name", AvailabilityText, type nullable text}}),
     IndexedRecords = Table.AddIndexColumn(NormalizedIdentity, "SourceRecord", 1, 1, Int64.Type),
@@ -650,29 +671,40 @@ shared AvailabilityResidualHours = (remainingHours as number, absenceHours as nu
         EffectiveHours;
 
 // Query: AvailabilityRecordKind
-// Purpose: Separate AVAIL, UNAVAIL and recognised leave without interpreting unknown reasons as leave.
+// Purpose: Classify source Type, treating PREFERRED as AVAIL; use reason text only when Type is blank.
+// Notes: Reason comments are optional; rows with neither Type nor reason provide no availability instruction.
 shared AvailabilityRecordKind = let
     LeaveReasons = AvailabilityLeaveReasons[Reason],
     TrimmedLeaveReasons = List.Transform(LeaveReasons, Text.Trim),
     UppercaseLeaveReasons = List.Transform(TrimmedLeaveReasons, Text.Upper),
     LeaveNames = List.Buffer(UppercaseLeaveReasons),
-    ClassifyReason = (reason as any) as text =>
+    ClassifyRecord = (reason as any, optional sourceType as any) as text =>
         let
             Clean = AvailabilityText(reason),
+            CleanType = AvailabilityText(sourceType),
+            UppercaseType = if CleanType = null then null else Text.Upper(CleanType),
+            IsUnavailableType = List.Contains({"UNAVAIL", "UNAVAILABLE"}, UppercaseType),
+            IsAvailableType = List.Contains({"AVAIL", "AVAILABLE", "PREFERRED"}, UppercaseType),
+            IsLeaveType = UppercaseType = "LEAVE",
             ContainsUnavailability = if Clean = null then false else Text.Contains(Clean, "UNAVAIL"),
             ContainsAvailability = if Clean = null then false else Text.Contains(Clean, "AVAIL"),
             UppercaseReason = if Clean = null then null else Text.Upper(Clean),
             IsRecognisedLeave = if UppercaseReason = null then false else List.Contains(LeaveNames, UppercaseReason),
-            // Preserve case-sensitive source AVAIL/UNAVAIL rules, with UNAVAIL taking precedence.
-            RecordKind = if Clean = null then "Unknown"
+            // Type identifies the event independently of optional comments. PREFERRED uses exactly the AVAIL calculation.
+            // Use the legacy reason mapping only when Type is blank; populated unknown types remain unknown.
+            RecordKind = if IsUnavailableType then "UNAVAIL"
+                else if IsAvailableType then "AVAIL"
+                else if IsLeaveType then "Leave"
+                else if CleanType <> null then "Unknown"
                 else if ContainsUnavailability then "UNAVAIL"
                 else if ContainsAvailability then "AVAIL"
                 else if IsRecognisedLeave then "Leave"
+                else if CleanType = null and Clean = null then "None"
                 else "Unknown"
         in
             RecordKind
 in
-    ClassifyReason;
+    ClassifyRecord;
 
 // Query: AvailabilityDailyWindows
 // Purpose: Reset the availability baseline on each calendar day before applying exclusions.
@@ -758,8 +790,8 @@ shared AvailabilityLeaveDayTotals = (intervals as list) as table =>
         Days;
 
 // Query: AvailabilityRecords
-// Purpose: Parse source intervals and retain separate record kinds and traceable validation issues.
-// Notes: Available remains a compatibility flag; only RecordKind = Leave contributes to daily leave hours.
+// Purpose: Parse source event types and intervals while retaining optional comments and traceable validation issues.
+// Notes: Blank Type and reason mean no instruction; only actual events need an interval. Only Leave contributes to daily leave hours.
 shared AvailabilityRecords = let
     ParseAvailabilityRecord = (row as record) as record =>
         let
@@ -768,11 +800,16 @@ shared AvailabilityRecords = let
             Start = if StartAttempt[HasError] then null else StartAttempt[Value],
             End = if EndAttempt[HasError] then null else EndAttempt[Value],
             Reason = AvailabilityText(row[Availability or Leave Reason]),
-            Kind = AvailabilityRecordKind(Reason),
+            SourceType = AvailabilityText(row[Type]),
+            Kind = AvailabilityRecordKind(Reason, SourceType),
+            HasNoInstruction = Kind = "None",
+            TypeDescription = if SourceType = null then "(blank)" else SourceType,
             ReasonDescription = if Reason = null then "(blank)" else Reason,
-            IsAvailable = if Kind = "Unknown" then null else Kind = "AVAIL",
-            Issue = if row[Payroll Code] = null then "Missing or invalid payroll code"
-                else if Kind = "Unknown" then "Unrecognised or missing reason: " & ReasonDescription
+            IsAvailable = if HasNoInstruction or Kind = "Unknown" then null else Kind = "AVAIL",
+            // An empty instruction is neutral. A recognised Type does not require a populated reason comment.
+            Issue = if HasNoInstruction then null
+                else if row[Payroll Code] = null then "Missing or invalid payroll code"
+                else if Kind = "Unknown" then "Unrecognised record type/reason: " & TypeDescription & " / " & ReasonDescription
                 else if Start = null or End = null then "Missing or invalid datetime"
                 else if End <= Start then "End must be later than start"
                 else null,
@@ -780,17 +817,19 @@ shared AvailabilityRecords = let
                 Start = Start,
                 End = End,
                 RecordKind = Kind,
+                OriginalType = SourceType,
                 OriginalReason = Reason,
                 Available = IsAvailable,
                 Issue = Issue
             ]
         in
             Result,
-    Parsed = Table.AddColumn(#"IMPORT Availability Leave Source", "Parsed", ParseAvailabilityRecord),
-    Expanded = Table.ExpandRecordColumn(Parsed, "Parsed", {"Start", "End", "RecordKind", "OriginalReason", "Available", "Issue"}),
+    Parsed = Table.AddColumn(AvailabilityLeaveSource_Prepare, "Parsed", ParseAvailabilityRecord),
+    Expanded = Table.ExpandRecordColumn(Parsed, "Parsed",
+        {"Start", "End", "RecordKind", "OriginalType", "OriginalReason", "Available", "Issue"}),
     // Buffer only scalar fields reused by identity-independent diagnostics and eligible interval staging.
     SelectedScalars = Table.SelectColumns(Expanded,
-        {"Payroll Code", "Facility-Abbrev", "SourceRecord", "OriginalReason", "Start", "End", "RecordKind", "Available", "Issue"}),
+        {"Payroll Code", "Facility-Abbrev", "SourceRecord", "OriginalType", "OriginalReason", "Start", "End", "RecordKind", "Available", "Issue"}),
     BufferedScalars = Table.Buffer(SelectedScalars)
 in
     BufferedScalars;
@@ -806,7 +845,7 @@ shared ReconciledWorkers_Prepare = let
             DistinctValues = List.Distinct(NonNullValues)
         in
             DistinctValues,
-    SourceNames = Table.Group(#"IMPORT Availability Leave Source", {"Payroll Code", "Facility-Abbrev"},
+    SourceNames = Table.Group(AvailabilityLeaveSource_Prepare, {"Payroll Code", "Facility-Abbrev"},
         {{"SourceNames", each DistinctNonNullValues([Employee Name]), type list}}),
     CombineEmploymentTypes = (values as list) as text =>
         let
@@ -831,14 +870,17 @@ shared ReconciledWorkers_Prepare = let
          {"RosterNames", each DistinctNonNullValues([Employee Roster Name]), type list},
          {"EmploymentType", each CombineEmploymentTypes([EmploymentType]), type text},
          {"In Allocation", each List.Contains([In Allocation], true), type logical},
-         {"In Records", each List.Contains([In Records], true), type logical}}),
+         {"In Records", each List.Contains([In Records], true), type logical},
+         {"In Leave Balances", each List.Contains([In Leave Balances], true), type logical}}),
     SourceRoleLabels = Table.AddColumn(WorkerGroups, "SourceRole",
         each CombineSourceRoles([SourceRoles]), type nullable text),
     WorkerMembership = Table.AddColumn(SourceRoleLabels, "Worker Membership", each
         if [In Allocation] and [In Records] then "Both"
         else if [In Allocation] then "Allocation only"
         else if [In Records] then "Records only"
-        else error "A reconciled worker must appear in Allocation, Records, or both.", type text),
+        // Leave-only workers remain in the model and follow the existing role, name, contract and availability rules.
+        else if [In Leave Balances] then "Leave balances only"
+        else error "A reconciled worker must appear in Allocation, availability records, or leave balances.", type text),
     RemovedSourceRoleLists = Table.RemoveColumns(WorkerMembership, {"SourceRoles"}),
     // Join the worker's normalized source role to the authoritative LINK Roles Roster Roles mapping.
     RoleMappingLookup = Table.SelectRows(WorkerRoleMappings_Prepare,
@@ -1033,7 +1075,7 @@ shared ReconciledWorkers_Eligible = let
     Included = Table.SelectRows(ReconciledWorkers_Prepare, each [Issue] = null),
     SelectedWorkers = Table.SelectColumns(Included,
         {"EmployeeID", "Facility-Abbrev", "Role", "BaseName", "EmploymentType", "Contracted FN Hours",
-         "In Allocation", "In Records", "Worker Membership"}),
+         "In Allocation", "In Records", "In Leave Balances", "Worker Membership"}),
     UniqueWorkers = Table.Distinct(SelectedWorkers),
     RoleCounts = Table.Group(UniqueWorkers, {"EmployeeID", "Facility-Abbrev"},
         {{"RoleCount", each
@@ -1143,7 +1185,7 @@ in
 // Purpose: Show excluded reconciliation rows and extraction workers absent from the selected register.
 shared WorkerAvailability_DIAGNOSTICS = let
     Excluded = Table.SelectRows(ReconciledWorkers_Prepare, each [Issue] <> null),
-    SelectedSourceWorkers = Table.SelectColumns(#"IMPORT Availability Leave Source",
+    SelectedSourceWorkers = Table.SelectColumns(AvailabilityLeaveSource_Prepare,
         {"Payroll Code", "Facility-Abbrev"}),
     SourceWorkers = Table.Distinct(SelectedSourceWorkers),
     NotRegistered = Table.NestedJoin(SourceWorkers, {"Payroll Code", "Facility-Abbrev"},
@@ -1169,11 +1211,11 @@ in
     RemovedWorkerMatch;
 
 // Query: AvailabilityReasons_DIAGNOSTICS
-// Purpose: Show unknown source reasons and their record IDs for explicit mapping review.
+// Purpose: Show unrecognised source types/reasons and their record IDs for explicit mapping review.
 shared AvailabilityReasons_DIAGNOSTICS = let
     Unknown = Table.SelectRows(AvailabilityRecords, each [RecordKind] = "Unknown"),
     SelectedDetails = Table.SelectColumns(Unknown,
-        {"SourceRecord", "Payroll Code", "Facility-Abbrev", "OriginalReason", "Start", "End", "Issue"})
+        {"SourceRecord", "Payroll Code", "Facility-Abbrev", "OriginalType", "OriginalReason", "Start", "End", "Issue"})
 in
     SelectedDetails;
 
@@ -1290,7 +1332,7 @@ in
     BufferedResult;
 
 // Query: AvailabilityEligibleRecords
-// Purpose: Keep valid eligible-worker records on complete calendar dates covered by the roster.
+// Purpose: Keep valid eligible-worker events on complete calendar dates covered by the roster.
 // Notes: Unique worker/facility keys prevent multiple roles multiplying the source records.
 shared AvailabilityEligibleRecords = let
     SelectedWorkerKeys = Table.SelectColumns(ReconciledWorkers_Eligible, {"EmployeeID", "Facility-Abbrev"}),
@@ -1308,9 +1350,10 @@ shared AvailabilityEligibleRecords = let
     IsEligibleRecord = (row as record) as logical =>
         let
             HasNoIssue = row[Issue] = null,
+            HasEvent = List.Contains({"AVAIL", "UNAVAIL", "Leave"}, row[RecordKind]),
             StartsBeforeCalendarEnd = row[Start] < CalendarEnd,
             EndsAfterCalendarStart = row[End] > CalendarStart,
-            IsEligible = HasNoIssue and StartsBeforeCalendarEnd and EndsAfterCalendarStart
+            IsEligible = HasNoIssue and HasEvent and StartsBeforeCalendarEnd and EndsAfterCalendarStart
         in
             IsEligible,
     Valid = Table.SelectRows(AvailabilityRecords, IsEligibleRecord),
@@ -1749,8 +1792,8 @@ shared ReconciledWorkers_CHECK = let
     RelevantContractIssues = Table.SelectRows(ReconciledWorkers_Prepare, each
         [#"Facility-Abbrev"] = Unit and [Role] <> null and [ContractIssue] <> null),
     InvalidMembershipRows = Table.SelectRows(Workers, each
-        (not [In Allocation] and not [In Records])
-            or not List.Contains({"Allocation only", "Records only", "Both"}, [Worker Membership])),
+        (not [In Allocation] and not [In Records] and not [In Leave Balances])
+            or not List.Contains({"Allocation only", "Records only", "Both", "Leave balances only"}, [Worker Membership])),
     DuplicateCount = (rows as table, keys as list) as number =>
         let
             RowCount = Table.RowCount(rows),
@@ -1893,6 +1936,12 @@ shared AvailabilityRules_TEST = let
         let
             Unavailability = AvailabilityRecordKind("UNAVAIL - Unpaid Leave"),
             Availability = AvailabilityRecordKind("AVAIL"),
+            AvailableType = AvailabilityRecordKind(null, "AVAILABLE"),
+            PreferredType = AvailabilityRecordKind(null, "PREFERRED"),
+            UnavailableType = AvailabilityRecordKind(null, "UNAVAILABLE"),
+            LeaveType = AvailabilityRecordKind(null, "LEAVE"),
+            BlankTypeWithReason = AvailabilityRecordKind("AVAIL", "   "),
+            UnknownTypeWithReason = AvailabilityRecordKind("AVAIL", "UNMAPPED"),
             Leave = AvailabilityRecordKind("Maternity Lve Unpaid"),
             PaidMaternityLeave = AvailabilityRecordKind("Maternity Lve Paid"),
             UnionRepresentativeLeave = AvailabilityRecordKind("Union Rep. Lve"),
@@ -1900,11 +1949,17 @@ shared AvailabilityRules_TEST = let
             Blank = AvailabilityRecordKind(null),
             Passed = Unavailability = "UNAVAIL"
                 and Availability = "AVAIL"
+                and AvailableType = "AVAIL"
+                and PreferredType = "AVAIL"
+                and UnavailableType = "UNAVAIL"
+                and LeaveType = "Leave"
+                and BlankTypeWithReason = "AVAIL"
+                and UnknownTypeWithReason = "Unknown"
                 and Leave = "Leave"
                 and PaidMaternityLeave = "Leave"
                 and UnionRepresentativeLeave = "Leave"
                 and Unmapped = "Unknown"
-                and Blank = "Unknown",
+                and Blank = "None",
             Failures = if Passed then 0 else 1
         in
             Failures,
@@ -1941,8 +1996,13 @@ in
 // Purpose: Gate shift publication using input checks and materialized scalar measurement checks.
 shared ResDayShift_CHECK = let
     Allowance = #"EXTRACT EffectiveShiftHrs",
-    // Scalar columns only; reuse these rows for every shift check in this evaluation.
-    Calculated = Table.Buffer(ResDayShift_Calculated),
+    // Buffer only the fields consumed by these checks, avoiding unused diagnostic and display columns.
+    SelectedCheckColumns = Table.SelectColumns(ResDayShift_Calculated,
+        {"EmployeeID", "Facility-Abbrev", "Role", "Date", "Shift", "ShiftStart", "ShiftEnd",
+         "AvailableHours", "EffectiveShiftHrs", "FullDayLeaveBlocked", "FullShift", "DistinctLeaveHours",
+         "LeaveHoursInShift", "UnavailHoursInShift", "CombinedAbsenceHoursInShift", "SegmentsValid", "Disjoint"}),
+    // Reuse the narrowed scalar rows for every shift check in this evaluation.
+    Calculated = Table.Buffer(SelectedCheckColumns),
     DuplicateCount = (rows as table, keys as list) as number =>
         let
             RowCount = Table.RowCount(rows),

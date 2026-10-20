@@ -125,7 +125,7 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   as `Date/DemandMaster`, then releases each selected Unit's demand extract.
   `SharedUnitJobs` in the batch settings declares these consumers; Unit1 and
   Unit2 retain their Unit-level masters. Existing declared prerequisites and
-  file-access checks still apply. The default full run now contains 86 files.
+  file-access checks still apply. The default full run now contains 87 files.
 - C1 starts with Worker Reconciliation.xlsx, then Capacity-ShiftAvailability.xlsx
   and StaffListMaster.xlsx.
 - C2.1 through C2.N expand from enabled roles in the saved client profile.
@@ -134,7 +134,8 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   a run. Test folders and unlisted roles are not auto-included.
 - Organisation batches O1 through O5 run once, not once per selected Unit.
 - O6 — Leave Balance Stats is the last batch in both sequence profiles. It
-  waits for O5, then runs `LBStats.xlsx` before `TableauConnect-LB.xlsx`, once
+  waits for O5, then runs `LBStats.xlsx`, `LBReduction.xlsx`, and
+  `TableauConnect-LB.xlsx` in that order, once
   per run. Its named workbook root is configured in `pq.project.json` as
   `../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations`. Targets stay
   inside this root; sibling root configuration cannot escape the projects'

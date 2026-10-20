@@ -1,0 +1,31 @@
+gantt
+    title Current 20261019-173509-a939e53c PartialOrFailed - elapsed 00 01 30 - peak 3
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/U4
+    %% Untimed BD/Capacity; predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    %% Untimed BD/Effort; predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings
+    section TE/U4
+    %% Predecessors: TE/Role:AIN/3, TE/Role:EN/3, TE/Role:RN/3, TE/Demand, TE/Staff, TE/Availability, TE/Settings
+    TE/Capacity attempt 1 Completed :done, task1, 2000-01-01 00:00:00.943, 2000-01-01 00:00:44.508
+    %% Predecessors: TE/Capacity, TE/Demand, TE/Allocation, TE/Distribution, TE/MultiRole, TE/Staff, TE/Settings
+    TE/Effort attempt 1 Completed :done, task2, 2000-01-01 00:00:44.537, 2000-01-01 00:01:27.119
+    section JH-RY/U4
+    %% Predecessors: JH-RY/Role:AIN/3, JH-RY/Role:EN/3, JH-RY/Role:RN/3, JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/Settings
+    JH-RY/Capacity attempt 1 Completed :done, task3, 2000-01-01 00:00:01.019, 2000-01-01 00:00:45.327
+    %% Predecessors: JH-RY/Capacity, JH-RY/Demand, JH-RY/Allocation, JH-RY/Distribution, JH-RY/MultiRole, JH-RY/Staff, JH-RY/Settings
+    JH-RY/Effort attempt 1 Completed :done, task4, 2000-01-01 00:00:45.353, 2000-01-01 00:01:30.342
+    section Org/O1
+    %% Predecessors: BD/Staff, TE/Staff, JH-RY/Staff
+    Org/StaffAll attempt 1 Completed :done, task5, 2000-01-01 00:00:01.078, 2000-01-01 00:00:44.516
+    %% Untimed Org/EffortAll; predecessors: Org/StaffAll, BD/Effort, TE/Effort, JH-RY/Effort
+    section Org/O2
+    %% Untimed Org/Outcomes; predecessors: Org/EffortAll, Org/StaffAll
+    %% Untimed Org/Inefficiencies; predecessors: Org/Outcomes
+    section Org/O5
+    %% Untimed Org/Reporting; predecessors: Org/Cost, Org/HistoryRead, Org/Inefficiencies
+    section Org/O6
+    %% Untimed Org/LeaveBalanceStats; predecessors: Org/Reporting
+    %% Untimed Org/LeaveBalanceReduction; predecessors: Org/LeaveBalanceStats
+    %% Untimed Org/LeaveBalanceReporting; predecessors: Org/LeaveBalanceReduction

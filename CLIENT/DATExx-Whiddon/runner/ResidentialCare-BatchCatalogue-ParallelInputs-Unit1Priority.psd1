@@ -46,12 +46,13 @@
         @{ Id = 'EffortAll'; Batch = 'O1'; Sequence = 2; Depends = @('StaffAll'); UnitDepends = @('Effort'); Inputs = @('2. Calculations/Change/AllocationChange.xlsx') }
         @{ Id = 'Outcomes'; Batch = 'O2'; Sequence = 3; Depends = @('EffortAll', 'StaffAll'); UnitDepends = @() }
         @{ Id = 'Inefficiencies'; Batch = 'O2'; Sequence = 4; Depends = @('Outcomes'); UnitDepends = @() }
-        @{ Id = 'Cost'; Batch = 'O3'; Sequence = 5; Depends = @('Inefficiencies'); UnitDepends = @(); Inputs = @('UNITS/Unit1/2. Calculations/Settings Data.xlsx') }
+        @{ Id = 'Cost'; Batch = 'O3'; Sequence = 5; Depends = @('Inefficiencies'); UnitDepends = @(); Inputs = @('UNITS/BD/2. Calculations/Settings Data.xlsx') }
         @{ Id = 'History'; Batch = 'O4'; Sequence = 6; Depends = @('Outcomes'); UnitDepends = @() }
         @{ Id = 'HistoryRead'; Batch = 'O4'; Sequence = 7; Depends = @('History'); UnitDepends = @(); Inputs = @('2. Calculations/EOW/Grid Thresholds.xlsx') }
         @{ Id = 'Reporting'; Batch = 'O5'; Sequence = 8; Depends = @('Cost', 'HistoryRead', 'Inefficiencies'); UnitDepends = @() }
         # Final ordering only; workbook imports have not been inspected.
         @{ Id = 'LeaveBalanceStats'; Batch = 'O6'; Root = 'LeaveBalanceStats'; Path = 'LBStats.xlsx'; Depends = @('Reporting'); UnitDepends = @(); ReadJobs = @() }
-        @{ Id = 'LeaveBalanceReporting'; Batch = 'O6'; Root = 'LeaveBalanceStats'; Path = 'TableauConnect-LB.xlsx'; Depends = @('LeaveBalanceStats'); UnitDepends = @(); ReadJobs = @() }
+        @{ Id = 'LeaveBalanceReduction'; Batch = 'O6'; Root = 'LeaveBalanceStats'; Path = 'LBReduction.xlsx'; Depends = @('LeaveBalanceStats'); UnitDepends = @(); ReadJobs = @() }
+        @{ Id = 'LeaveBalanceReporting'; Batch = 'O6'; Root = 'LeaveBalanceStats'; Path = 'TableauConnect-LB.xlsx'; Depends = @('LeaveBalanceReduction'); UnitDepends = @(); ReadJobs = @() }
     )
 }

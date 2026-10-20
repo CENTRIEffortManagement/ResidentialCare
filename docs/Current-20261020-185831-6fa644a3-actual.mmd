@@ -1,0 +1,219 @@
+gantt
+    title Current 20261020-185831-6fa644a3 Completed - elapsed 00 22 19 - peak 12
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section Date/D1
+    %% Predecessors: BD/Settings, TE/Settings, JH-RY/Settings
+    Date/DemandMaster attempt 1 Completed :done, task1, 2000-01-01 00:01:42.857, 2000-01-01 00:04:41.214
+    section BD/A1
+    %% Predecessors:
+    BD/AllocationInput attempt 1 Completed :done, task2, 2000-01-01 00:00:03.552, 2000-01-01 00:00:57.434
+    section BD/S1
+    %% Predecessors: BD/AllocationInput
+    BD/Settings attempt 1 Completed :done, task3, 2000-01-01 00:00:57.455, 2000-01-01 00:01:42.835
+    section BD/D1
+    %% Predecessors: Date/DemandMaster, BD/Settings
+    BD/DemandInput attempt 1 Completed :done, task4, 2000-01-01 00:04:41.261, 2000-01-01 00:05:28.273
+    section BD/C1
+    %% Predecessors: BD/AllocationInput, BD/Settings
+    BD/Workers attempt 1 Completed :done, task5, 2000-01-01 00:01:43.052, 2000-01-01 00:03:23.062
+    %% Predecessors: BD/Workers, BD/AllocationInput, BD/Settings
+    BD/Availability attempt 1 Completed :done, task6, 2000-01-01 00:03:23.085, 2000-01-01 00:04:31.197
+    %% Predecessors: BD/Availability, BD/Workers, BD/AllocationInput, BD/Settings
+    BD/Staff attempt 1 Completed :done, task7, 2000-01-01 00:04:31.220, 2000-01-01 00:05:12.882
+    section BD/D2
+    %% Predecessors: BD/AllocationInput, BD/DemandInput, BD/Settings
+    BD/Intervals attempt 1 Completed :done, task8, 2000-01-01 00:05:28.297, 2000-01-01 00:06:10.356
+    %% Predecessors: BD/Intervals, BD/DemandInput, BD/Settings
+    BD/DemandIntervals attempt 1 Completed :done, task9, 2000-01-01 00:06:10.377, 2000-01-01 00:08:21.832
+    %% Predecessors: BD/DemandIntervals, BD/Settings
+    BD/Demand attempt 1 Completed :done, task10, 2000-01-01 00:08:21.895, 2000-01-01 00:09:36.727
+    section BD/A2
+    %% Predecessors: BD/Intervals, BD/AllocationInput, BD/Settings
+    BD/Shifts attempt 1 Completed :done, task11, 2000-01-01 00:06:10.465, 2000-01-01 00:08:22.158
+    %% Predecessors: BD/Shifts, BD/Settings
+    BD/ShiftAverage attempt 1 Completed :done, task12, 2000-01-01 00:08:22.183, 2000-01-01 00:09:25.108
+    section BD/A3
+    %% Predecessors: BD/ShiftAverage, BD/AllocationInput, BD/Settings
+    BD/Allocation attempt 1 Completed :done, task13, 2000-01-01 00:09:25.131, 2000-01-01 00:10:07.217
+    %% Predecessors: BD/Allocation, BD/Settings
+    BD/Distribution attempt 1 Completed :done, task14, 2000-01-01 00:10:07.256, 2000-01-01 00:10:53.038
+    %% Predecessors: BD/Distribution, BD/Settings
+    BD/MultiRole attempt 1 Completed :done, task15, 2000-01-01 00:10:53.086, 2000-01-01 00:11:40.046
+    section BD/C2 AIN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role AIN/1 attempt 1 Completed :done, task16, 2000-01-01 00:09:36.756, 2000-01-01 00:12:26.968
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    BD/Role AIN/2 attempt 1 Completed :done, task17, 2000-01-01 00:12:27.009, 2000-01-01 00:13:27.441
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    BD/Role AIN/3 attempt 1 Completed :done, task18, 2000-01-01 00:13:27.505, 2000-01-01 00:14:43.177
+    section BD/C2 RN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role RN/1 attempt 1 Completed :done, task19, 2000-01-01 00:09:36.846, 2000-01-01 00:11:05.701
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    BD/Role RN/2 attempt 1 Completed :done, task20, 2000-01-01 00:11:05.750, 2000-01-01 00:12:02.618
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    BD/Role RN/3 attempt 1 Completed :done, task21, 2000-01-01 00:12:02.662, 2000-01-01 00:13:03.803
+    section BD/C2 EN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role EN/1 attempt 1 Completed :done, task22, 2000-01-01 00:09:36.960, 2000-01-01 00:11:07.254
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    BD/Role EN/2 attempt 1 Completed :done, task23, 2000-01-01 00:11:07.380, 2000-01-01 00:12:06.247
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    BD/Role EN/3 attempt 1 Completed :done, task24, 2000-01-01 00:12:06.285, 2000-01-01 00:13:03.649
+    section BD/U4
+    %% Predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    BD/Capacity attempt 1 Completed :done, task25, 2000-01-01 00:14:43.223, 2000-01-01 00:15:26.074
+    %% Predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings
+    BD/Effort attempt 1 Completed :done, task26, 2000-01-01 00:15:26.164, 2000-01-01 00:16:11.348
+    section TE/A1
+    %% Predecessors:
+    TE/AllocationInput attempt 1 Completed :done, task27, 2000-01-01 00:00:03.663, 2000-01-01 00:00:54.810
+    section TE/S1
+    %% Predecessors: TE/AllocationInput
+    TE/Settings attempt 1 Completed :done, task28, 2000-01-01 00:00:54.850, 2000-01-01 00:01:40.201
+    section TE/D1
+    %% Predecessors: Date/DemandMaster, TE/Settings
+    TE/DemandInput attempt 1 Completed :done, task29, 2000-01-01 00:04:41.333, 2000-01-01 00:05:30.200
+    section TE/C1
+    %% Predecessors: TE/AllocationInput, TE/Settings
+    TE/Workers attempt 1 Completed :done, task30, 2000-01-01 00:01:40.225, 2000-01-01 00:03:17.866
+    %% Predecessors: TE/Workers, TE/AllocationInput, TE/Settings
+    TE/Availability attempt 1 Completed :done, task31, 2000-01-01 00:03:17.893, 2000-01-01 00:04:23.212
+    %% Predecessors: TE/Availability, TE/Workers, TE/AllocationInput, TE/Settings
+    TE/Staff attempt 1 Completed :done, task32, 2000-01-01 00:04:23.240, 2000-01-01 00:05:05.140
+    section TE/D2
+    %% Predecessors: TE/AllocationInput, TE/DemandInput, TE/Settings
+    TE/Intervals attempt 1 Completed :done, task33, 2000-01-01 00:05:30.223, 2000-01-01 00:06:12.730
+    %% Predecessors: TE/Intervals, TE/DemandInput, TE/Settings
+    TE/DemandIntervals attempt 1 Completed :done, task34, 2000-01-01 00:06:12.754, 2000-01-01 00:09:15.101
+    %% Predecessors: TE/DemandIntervals, TE/Settings
+    TE/Demand attempt 1 Completed :done, task35, 2000-01-01 00:09:15.128, 2000-01-01 00:10:28.013
+    section TE/A2
+    %% Predecessors: TE/Intervals, TE/AllocationInput, TE/Settings
+    TE/Shifts attempt 1 Completed :done, task36, 2000-01-01 00:06:12.823, 2000-01-01 00:07:32.548
+    %% Predecessors: TE/Shifts, TE/Settings
+    TE/ShiftAverage attempt 1 Completed :done, task37, 2000-01-01 00:07:32.590, 2000-01-01 00:08:36.876
+    section TE/A3
+    %% Predecessors: TE/ShiftAverage, TE/AllocationInput, TE/Settings
+    TE/Allocation attempt 1 Completed :done, task38, 2000-01-01 00:08:36.937, 2000-01-01 00:09:19.278
+    %% Predecessors: TE/Allocation, TE/Settings
+    TE/Distribution attempt 1 Completed :done, task39, 2000-01-01 00:09:19.302, 2000-01-01 00:10:03.644
+    %% Predecessors: TE/Distribution, TE/Settings
+    TE/MultiRole attempt 1 Completed :done, task40, 2000-01-01 00:10:03.717, 2000-01-01 00:10:46.581
+    section TE/C2 AIN
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    TE/Role AIN/1 attempt 1 Completed :done, task41, 2000-01-01 00:10:28.045, 2000-01-01 00:12:50.421
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:AIN/1
+    TE/Role AIN/2 attempt 1 Completed :done, task42, 2000-01-01 00:12:50.476, 2000-01-01 00:13:44.178
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:AIN/2
+    TE/Role AIN/3 attempt 1 Completed :done, task43, 2000-01-01 00:13:44.213, 2000-01-01 00:14:41.522
+    section TE/C2 RN
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    TE/Role RN/1 attempt 1 Completed :done, task44, 2000-01-01 00:10:28.135, 2000-01-01 00:12:19.207
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:RN/1
+    TE/Role RN/2 attempt 1 Completed :done, task45, 2000-01-01 00:12:19.243, 2000-01-01 00:13:11.102
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:RN/2
+    TE/Role RN/3 attempt 1 Completed :done, task46, 2000-01-01 00:13:11.132, 2000-01-01 00:14:04.887
+    section TE/C2 EN
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings
+    TE/Role EN/1 attempt 1 Completed :done, task47, 2000-01-01 00:10:28.366, 2000-01-01 00:12:16.209
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:EN/1
+    TE/Role EN/2 attempt 1 Completed :done, task48, 2000-01-01 00:12:16.259, 2000-01-01 00:13:06.927
+    %% Predecessors: TE/Demand, TE/Staff, TE/Availability, TE/ShiftAverage, TE/Settings, TE/Role:EN/2
+    TE/Role EN/3 attempt 1 Completed :done, task49, 2000-01-01 00:13:06.962, 2000-01-01 00:13:58.750
+    section TE/U4
+    %% Predecessors: TE/Role:AIN/3, TE/Role:EN/3, TE/Role:RN/3, TE/Demand, TE/Staff, TE/Availability, TE/Settings
+    TE/Capacity attempt 1 Completed :done, task50, 2000-01-01 00:14:41.548, 2000-01-01 00:15:25.301
+    %% Predecessors: TE/Capacity, TE/Demand, TE/Allocation, TE/Distribution, TE/MultiRole, TE/Staff, TE/Settings
+    TE/Effort attempt 1 Completed :done, task51, 2000-01-01 00:15:25.338, 2000-01-01 00:16:09.201
+    section JH-RY/A1
+    %% Predecessors:
+    JH-RY/AllocationInput attempt 1 Completed :done, task52, 2000-01-01 00:00:03.839, 2000-01-01 00:00:55.561
+    section JH-RY/S1
+    %% Predecessors: JH-RY/AllocationInput
+    JH-RY/Settings attempt 1 Completed :done, task53, 2000-01-01 00:00:55.584, 2000-01-01 00:01:41.563
+    section JH-RY/D1
+    %% Predecessors: Date/DemandMaster, JH-RY/Settings
+    JH-RY/DemandInput attempt 1 Completed :done, task54, 2000-01-01 00:04:41.476, 2000-01-01 00:05:31.414
+    section JH-RY/C1
+    %% Predecessors: JH-RY/AllocationInput, JH-RY/Settings
+    JH-RY/Workers attempt 1 Completed :done, task55, 2000-01-01 00:01:41.641, 2000-01-01 00:03:22.307
+    %% Predecessors: JH-RY/Workers, JH-RY/AllocationInput, JH-RY/Settings
+    JH-RY/Availability attempt 1 Completed :done, task56, 2000-01-01 00:03:22.335, 2000-01-01 00:04:32.076
+    %% Predecessors: JH-RY/Availability, JH-RY/Workers, JH-RY/AllocationInput, JH-RY/Settings
+    JH-RY/Staff attempt 1 Completed :done, task57, 2000-01-01 00:04:32.102, 2000-01-01 00:05:14.989
+    section JH-RY/D2
+    %% Predecessors: JH-RY/AllocationInput, JH-RY/DemandInput, JH-RY/Settings
+    JH-RY/Intervals attempt 1 Completed :done, task58, 2000-01-01 00:05:31.449, 2000-01-01 00:06:13.759
+    %% Predecessors: JH-RY/Intervals, JH-RY/DemandInput, JH-RY/Settings
+    JH-RY/DemandIntervals attempt 1 Completed :done, task59, 2000-01-01 00:06:13.785, 2000-01-01 00:09:18.422
+    %% Predecessors: JH-RY/DemandIntervals, JH-RY/Settings
+    JH-RY/Demand attempt 1 Completed :done, task60, 2000-01-01 00:09:18.451, 2000-01-01 00:10:33.590
+    section JH-RY/A2
+    %% Predecessors: JH-RY/Intervals, JH-RY/AllocationInput, JH-RY/Settings
+    JH-RY/Shifts attempt 1 Completed :done, task61, 2000-01-01 00:06:13.859, 2000-01-01 00:08:00.331
+    %% Predecessors: JH-RY/Shifts, JH-RY/Settings
+    JH-RY/ShiftAverage attempt 1 Completed :done, task62, 2000-01-01 00:08:00.373, 2000-01-01 00:09:06.353
+    section JH-RY/A3
+    %% Predecessors: JH-RY/ShiftAverage, JH-RY/AllocationInput, JH-RY/Settings
+    JH-RY/Allocation attempt 1 Completed :done, task63, 2000-01-01 00:09:06.381, 2000-01-01 00:09:48.063
+    %% Predecessors: JH-RY/Allocation, JH-RY/Settings
+    JH-RY/Distribution attempt 1 Completed :done, task64, 2000-01-01 00:09:48.089, 2000-01-01 00:10:33.335
+    %% Predecessors: JH-RY/Distribution, JH-RY/Settings
+    JH-RY/MultiRole attempt 1 Completed :done, task65, 2000-01-01 00:10:33.376, 2000-01-01 00:11:18.056
+    section JH-RY/C2 AIN
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    JH-RY/Role AIN/1 attempt 1 Completed :done, task66, 2000-01-01 00:10:33.625, 2000-01-01 00:12:37.568
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:AIN/1
+    JH-RY/Role AIN/2 attempt 1 Completed :done, task67, 2000-01-01 00:12:37.612, 2000-01-01 00:13:32.530
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:AIN/2
+    JH-RY/Role AIN/3 attempt 1 Completed :done, task68, 2000-01-01 00:13:32.563, 2000-01-01 00:14:28.616
+    section JH-RY/C2 RN
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    JH-RY/Role RN/1 attempt 1 Completed :done, task69, 2000-01-01 00:10:33.768, 2000-01-01 00:12:23.546
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:RN/1
+    JH-RY/Role RN/2 attempt 1 Completed :done, task70, 2000-01-01 00:12:23.627, 2000-01-01 00:13:15.445
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:RN/2
+    JH-RY/Role RN/3 attempt 1 Completed :done, task71, 2000-01-01 00:13:15.496, 2000-01-01 00:14:07.108
+    section JH-RY/C2 EN
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings
+    JH-RY/Role EN/1 attempt 1 Completed :done, task72, 2000-01-01 00:10:33.908, 2000-01-01 00:12:20.043
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:EN/1
+    JH-RY/Role EN/2 attempt 1 Completed :done, task73, 2000-01-01 00:12:20.126, 2000-01-01 00:13:11.647
+    %% Predecessors: JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/ShiftAverage, JH-RY/Settings, JH-RY/Role:EN/2
+    JH-RY/Role EN/3 attempt 1 Completed :done, task74, 2000-01-01 00:13:11.760, 2000-01-01 00:14:05.147
+    section JH-RY/U4
+    %% Predecessors: JH-RY/Role:AIN/3, JH-RY/Role:EN/3, JH-RY/Role:RN/3, JH-RY/Demand, JH-RY/Staff, JH-RY/Availability, JH-RY/Settings
+    JH-RY/Capacity attempt 1 Completed :done, task75, 2000-01-01 00:14:28.642, 2000-01-01 00:15:10.582
+    %% Predecessors: JH-RY/Capacity, JH-RY/Demand, JH-RY/Allocation, JH-RY/Distribution, JH-RY/MultiRole, JH-RY/Staff, JH-RY/Settings
+    JH-RY/Effort attempt 1 Completed :done, task76, 2000-01-01 00:15:10.610, 2000-01-01 00:15:54.159
+    section Org/O1
+    %% Predecessors: BD/Staff, TE/Staff, JH-RY/Staff
+    Org/StaffAll attempt 1 Completed :done, task77, 2000-01-01 00:05:15.018, 2000-01-01 00:05:56.922
+    %% Predecessors: Org/StaffAll, BD/Effort, TE/Effort, JH-RY/Effort
+    Org/EffortAll attempt 1 Completed :done, task78, 2000-01-01 00:16:11.371, 2000-01-01 00:17:17.115
+    section Org/O2
+    %% Predecessors: Org/EffortAll, Org/StaffAll
+    Org/Outcomes attempt 1 Completed :done, task79, 2000-01-01 00:17:17.135, 2000-01-01 00:17:56.479
+    %% Predecessors: Org/Outcomes
+    Org/Inefficiencies attempt 1 Completed :done, task80, 2000-01-01 00:17:56.498, 2000-01-01 00:18:43.177
+    section Org/O3
+    %% Predecessors: Org/Inefficiencies, BD/Settings
+    Org/Cost attempt 1 Completed :done, task81, 2000-01-01 00:18:43.194, 2000-01-01 00:19:25.904
+    section Org/O4
+    %% Predecessors: Org/Outcomes
+    Org/History attempt 1 Completed :done, task82, 2000-01-01 00:17:56.563, 2000-01-01 00:18:38.234
+    %% Predecessors: Org/History
+    Org/HistoryRead attempt 1 Completed :done, task83, 2000-01-01 00:18:38.252, 2000-01-01 00:19:18.115
+    section Org/O5
+    %% Predecessors: Org/Cost, Org/HistoryRead, Org/Inefficiencies
+    Org/Reporting attempt 1 Completed :done, task84, 2000-01-01 00:19:25.923, 2000-01-01 00:20:06.878
+    section Org/O6
+    %% Predecessors: Org/Reporting
+    Org/LeaveBalanceStats attempt 1 Completed :done, task85, 2000-01-01 00:20:06.895, 2000-01-01 00:20:53.550
+    %% Predecessors: Org/LeaveBalanceStats
+    Org/LeaveBalanceReduction attempt 1 Completed :done, task86, 2000-01-01 00:20:53.575, 2000-01-01 00:21:35.077
+    %% Predecessors: Org/LeaveBalanceReduction
+    Org/LeaveBalanceReporting attempt 1 Completed :done, task87, 2000-01-01 00:21:35.094, 2000-01-01 00:22:19.346

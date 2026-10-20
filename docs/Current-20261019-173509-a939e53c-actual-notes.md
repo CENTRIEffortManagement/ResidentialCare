@@ -1,0 +1,19 @@
+# Actual run: 20261019-173509-a939e53c
+
+Status: PartialOrFailed. Elapsed: 00:01:30. Peak recorded concurrency: 3.
+Union of observed active intervals: 89.399 seconds. Gaps including resume pauses: 1 seconds.
+
+Technical refresh only; business reconciliation not evaluated.
+Comparison baseline: original illustrative 17m 23s. Difference does not establish performance improvement.
+
+## Untimed or incomplete work
+
+- BD/Capacity: Blocked; Excel lock file found: C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\~$Capacity-ShiftAvailability.xlsx
+- BD/Effort: Blocked; Prerequisite BD/Capacity did not complete.
+- Org/EffortAll: Blocked; Prerequisite BD/Effort did not complete.
+- Org/Outcomes: Blocked; Prerequisite Org/EffortAll did not complete.
+- Org/Inefficiencies: Blocked; Prerequisite Org/Outcomes did not complete.
+- Org/Reporting: Blocked; Prerequisite Org/Inefficiencies did not complete.
+- Org/LeaveBalanceStats: Blocked; Prerequisite Org/Reporting did not complete.
+- Org/LeaveBalanceReduction: Blocked; Prerequisite Org/LeaveBalanceStats did not complete.
+- Org/LeaveBalanceReporting: Blocked; Prerequisite Org/LeaveBalanceReduction did not complete.

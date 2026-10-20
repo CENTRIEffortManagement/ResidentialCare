@@ -1,0 +1,179 @@
+{
+  "UnknownAdmission": "",
+  "TotalSeconds": 587.1191248,
+  "Peak": 3,
+  "Durations": {
+    "BD/Workers": {
+      "Seconds": 84.985795,
+      "Observed": "2026-10-20T12:17:23.9314096+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:AIN/3": {
+      "Seconds": 80.2274221,
+      "Observed": "2026-10-20T12:29:01.5634736+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:RN/1": {
+      "Seconds": 98.9597516,
+      "Observed": "2026-10-20T12:25:34.7059373+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:EN/3": {
+      "Seconds": 61.0045363,
+      "Observed": "2026-10-20T12:27:32.1954353+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Availability": {
+      "Seconds": 68.0379685,
+      "Observed": "2026-10-20T12:18:31.9994177+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:AIN/1": {
+      "Seconds": 162.883629,
+      "Observed": "2026-10-20T12:26:38.5445937+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Effort": {
+      "Seconds": 43.7421058,
+      "Observed": "2026-10-20T12:30:28.0672790+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:RN/3": {
+      "Seconds": 62.4713297,
+      "Observed": "2026-10-20T12:27:34.5937416+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:EN/1": {
+      "Seconds": 96.3098098,
+      "Observed": "2026-10-20T12:25:32.1576364+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Capacity": {
+      "Seconds": 42.7051322,
+      "Observed": "2026-10-20T12:29:44.3001230+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:RN/2": {
+      "Seconds": 57.3137291,
+      "Observed": "2026-10-20T12:26:32.0747348+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:AIN/2": {
+      "Seconds": 62.7072307,
+      "Observed": "2026-10-20T12:27:41.2945547+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Staff": {
+      "Seconds": 41.8298415,
+      "Observed": "2026-10-20T12:19:13.8513421+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    },
+    "BD/Role:EN/2": {
+      "Seconds": 58.9263634,
+      "Observed": "2026-10-20T12:26:31.1420270+00:00",
+      "SourceRun": "20261020-231415-90c3e105"
+    }
+  },
+  "Untimed": [],
+  "Rows": [
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Workers",
+      "Finish": 84.985795,
+      "Start": 0.0
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Availability",
+      "Finish": 153.0237635,
+      "Start": 84.985795
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Staff",
+      "Finish": 194.85360500000002,
+      "Start": 153.0237635
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:AIN/1",
+      "Finish": 357.73723400000006,
+      "Start": 194.85360500000002
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:RN/1",
+      "Finish": 293.8133566,
+      "Start": 194.85360500000002
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:EN/1",
+      "Finish": 291.1634148,
+      "Start": 194.85360500000002
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:EN/2",
+      "Finish": 350.0897782,
+      "Start": 291.1634148
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:RN/2",
+      "Finish": 351.1270857,
+      "Start": 293.8133566
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:EN/3",
+      "Finish": 411.0943145,
+      "Start": 350.0897782
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:RN/3",
+      "Finish": 413.5984154,
+      "Start": 351.1270857
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:AIN/2",
+      "Finish": 420.4444647,
+      "Start": 357.73723400000006
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Role:AIN/3",
+      "Finish": 500.67188680000004,
+      "Start": 420.4444647
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Capacity",
+      "Finish": 543.377019,
+      "Start": 500.67188680000004
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Id": "BD/Effort",
+      "Finish": 587.1191248,
+      "Start": 543.377019
+    }
+  ],
+  "Complete": true
+}

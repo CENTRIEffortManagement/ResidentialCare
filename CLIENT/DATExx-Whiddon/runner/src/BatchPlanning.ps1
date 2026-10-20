@@ -142,7 +142,6 @@ function Get-BatchCatalogue {
     } else {
         $legacyUnitNames = @(Get-ChildItem -LiteralPath (Join-Path $dateRoot 'UNITS') -Directory |
             Where-Object Name -match '^Unit[0-9]+$' | Sort-Object { [int] ($_.Name -replace '^Unit', '') } | ForEach-Object Name)
-        if ($legacyUnitNames.Count -eq 0) { throw 'No Unit folders found.' }
         $legacyRoles = @($profile.Roles | Where-Object Enabled | ForEach-Object Folder)
         foreach ($entry in $profile.Roles) {
             if ($entry.Enabled -isnot [bool] -or $entry.Folder -isnot [string] -or [string]::IsNullOrWhiteSpace($entry.Folder)) { throw 'Each role requires a folder name and a boolean Enabled value.' }
@@ -178,6 +177,8 @@ function Get-BatchCatalogue {
             $unitRoles[$unit] = $unitRoleNames
         }
         $unitNames = @($legacyUnitNames) + @($additionalUnitNames)
+        # Configured facilities can run without legacy UnitN folders.
+        if ($unitNames.Count -eq 0) { throw 'No Unit folders found.' }
         $roles = @($legacyRoles + @($additionalUnitNames | ForEach-Object { $unitRoles[$_] }) | Select-Object -Unique)
         $orgUnits = @($settings.OrganisationUnits)
         if ($orgUnits.Count -eq 0) { throw 'Declare organisation consumer Units in the batch settings file.' }
