@@ -193,7 +193,7 @@
             </columns>
           </relation>
           <relation connection='excel-direct.0iqw3v90kon0o714hk5221k9by4f' name='EffortAllMatrixAG1_1D' table='[EffortAllMatrixAG1_1D$]' type='table'>
-            <columns gridOrigin='A1:K757:no:A1:K757:0' header='yes' outcome='2'>
+            <columns gridOrigin='A1:K766:no:A1:K766:0' header='yes' outcome='2'>
               <column datatype='string' name='Facility' ordinal='0' />
               <column datatype='string' name='Role' ordinal='1' />
               <column datatype='string' name='Shift' ordinal='2' />
@@ -320,20 +320,6 @@
               <attribute datatype='integer' name='outcome'>2</attribute>
             </attributes>
           </metadata-record>
-          <metadata-record class='capability'>
-            <remote-name />
-            <remote-type>0</remote-type>
-            <parent-name>[EffortAllMatrixAG1_1D]</parent-name>
-            <remote-alias />
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <attributes>
-              <attribute datatype='integer' name='context'>3</attribute>
-              <attribute datatype='string' name='gridOrigin'>&quot;A1:K757:no:A1:K757:0&quot;</attribute>
-              <attribute datatype='boolean' name='header'>true</attribute>
-              <attribute datatype='integer' name='outcome'>2</attribute>
-            </attributes>
-          </metadata-record>
           <metadata-record class='column'>
             <remote-name>Version</remote-name>
             <remote-type>130</remote-type>
@@ -348,7 +334,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Facility</remote-name>
@@ -364,7 +349,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Level</remote-name>
@@ -380,7 +364,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Date</remote-name>
@@ -395,7 +378,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Role</remote-name>
@@ -411,7 +393,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Role ID</remote-name>
@@ -427,7 +408,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Role Abvrev</remote-name>
@@ -443,7 +423,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Shift</remote-name>
@@ -459,7 +438,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>CapacityMaxHC</remote-name>
@@ -475,7 +453,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>D</remote-name>
@@ -491,7 +468,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>DateX</remote-name>
@@ -507,7 +483,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>DATESHIFT</remote-name>
@@ -520,7 +495,6 @@
             <aggregation>Year</aggregation>
             <contains-null>true</contains-null>
             <collation flag='1' name='LEN_RAU_S2' />
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Cs</remote-name>
@@ -536,7 +510,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>CX</remote-name>
@@ -552,7 +525,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>A</remote-name>
@@ -568,7 +540,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Ability PoN AG</remote-name>
@@ -584,7 +555,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Ability PoX AG</remote-name>
@@ -600,7 +570,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Ability Pl AG</remote-name>
@@ -616,7 +585,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB EXCESS OVER-ALLOCATION</remote-name>
@@ -632,7 +600,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB SPARE STRETCH</remote-name>
@@ -648,7 +615,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB SPARE SLACK</remote-name>
@@ -664,7 +630,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB SPARE STRETCH ALLOCATED</remote-name>
@@ -680,7 +645,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB SPARE SLACK ALLOCATED</remote-name>
@@ -696,7 +660,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB EXCESS STRETCH (ALLOCATED)</remote-name>
@@ -712,7 +675,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB EXCESS ALLOCATED SLACK</remote-name>
@@ -728,7 +690,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB EXCESS STRETCH</remote-name>
@@ -744,7 +705,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB EXCESS SLACK</remote-name>
@@ -760,7 +720,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB POTENTIAL SHORTFALL (OVER-ALLOCATED)</remote-name>
@@ -776,7 +735,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB POTENTIAL SHORTFALL</remote-name>
@@ -792,7 +750,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB WASTED STRETCH</remote-name>
@@ -808,7 +765,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB WASTED SLACK</remote-name>
@@ -824,7 +780,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB ALLOCATED STRETCH</remote-name>
@@ -840,7 +795,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB ALLOCATED SLACK</remote-name>
@@ -856,7 +810,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB UNALLOCATED SLACK</remote-name>
@@ -872,7 +825,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB LATENT</remote-name>
@@ -888,7 +840,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB LATENT.ALLOCATED</remote-name>
@@ -904,7 +855,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB  LATENT.OVERALLOCATED</remote-name>
@@ -920,7 +870,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>AB Potential</remote-name>
@@ -936,7 +885,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Efficiency PoN  AG</remote-name>
@@ -952,7 +900,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Efficiency PoX  AG</remote-name>
@@ -968,7 +915,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Efficiency Pl AG</remote-name>
@@ -984,7 +930,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF EXCESS OVER-ALLOCATION</remote-name>
@@ -1000,7 +945,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF SPARE STRETCH</remote-name>
@@ -1016,7 +960,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF SPARE SLACK</remote-name>
@@ -1032,7 +975,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF SPARE STRETCH ALLOCATED</remote-name>
@@ -1048,7 +990,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF SPARE SLACK ALLOCATED</remote-name>
@@ -1064,7 +1005,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF EXCESS STRETCH (ALLOCATED)</remote-name>
@@ -1080,7 +1020,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF EXCESS ALLOCATED SLACK</remote-name>
@@ -1096,7 +1035,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF EXCESS STRETCH</remote-name>
@@ -1112,7 +1050,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF EXCESS SLACK</remote-name>
@@ -1128,7 +1065,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF POTENTIAL SHORTFALL (OVER-ALLOCATED)</remote-name>
@@ -1144,7 +1080,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF POTENTIAL SHORTFALL</remote-name>
@@ -1160,7 +1095,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF WASTED STRETCH</remote-name>
@@ -1176,7 +1110,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF WASTED SLACK</remote-name>
@@ -1192,7 +1125,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF ALLOCATED STRETCH</remote-name>
@@ -1208,7 +1140,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF ALLOCATED SLACK</remote-name>
@@ -1224,7 +1155,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF UNALLOCATED SLACK</remote-name>
@@ -1239,7 +1169,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF LATENT</remote-name>
@@ -1255,7 +1184,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF LATENT.ALLOCATED</remote-name>
@@ -1271,7 +1199,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF LATENT.OVERALLOCATED</remote-name>
@@ -1287,7 +1214,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>EF Potential</remote-name>
@@ -1303,7 +1229,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Workload PoN  AG</remote-name>
@@ -1319,7 +1244,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Workload PoX AG</remote-name>
@@ -1335,7 +1259,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Workload Pl AG</remote-name>
@@ -1351,7 +1274,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL EXCESS OVER-ALLOCATION</remote-name>
@@ -1367,7 +1289,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL SPARE STRETCH</remote-name>
@@ -1383,7 +1304,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL SPARE SLACK</remote-name>
@@ -1399,7 +1319,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL SPARE STRETCH ALLOCATED</remote-name>
@@ -1415,7 +1334,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL SPARE SLACK ALLOCATED</remote-name>
@@ -1431,7 +1349,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL EXCESS STRETCH (ALLOCATED)</remote-name>
@@ -1447,7 +1364,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL EXCESS ALLOCATED SLACK</remote-name>
@@ -1463,7 +1379,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL EXCESS STRETCH</remote-name>
@@ -1479,7 +1394,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL EXCESS SLACK</remote-name>
@@ -1495,7 +1409,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL POTENTIAL SHORTFALL (OVER-ALLOCATED)</remote-name>
@@ -1511,7 +1424,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL POTENTIAL SHORTFALL</remote-name>
@@ -1527,7 +1439,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL WASTED STRETCH</remote-name>
@@ -1543,7 +1454,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL WASTED SLACK</remote-name>
@@ -1559,7 +1469,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL ALLOCATED STRETCH</remote-name>
@@ -1575,7 +1484,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL ALLOCATED SLACK</remote-name>
@@ -1591,7 +1499,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL UNALLOCATED SLACK</remote-name>
@@ -1606,7 +1513,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL  LATENT</remote-name>
@@ -1621,7 +1527,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL LATENT.ALLOCATED</remote-name>
@@ -1636,7 +1541,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL LATENT.OVERALLOCATED</remote-name>
@@ -1651,7 +1555,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>WL Potential</remote-name>
@@ -1666,7 +1569,20 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[1Pool_AB0E9F2AD9D5485C974FD99CAD9783AA]</object-id>
+          </metadata-record>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[EffortAllMatrixAG1_1D]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>4</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:K766:no:A1:K766:0&quot;</attribute>
+              <attribute datatype='boolean' name='header'>true</attribute>
+              <attribute datatype='integer' name='outcome'>2</attribute>
+            </attributes>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Facility</remote-name>
@@ -1682,7 +1598,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Role</remote-name>
@@ -1698,7 +1613,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Shift</remote-name>
@@ -1714,7 +1628,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Demand</remote-name>
@@ -1730,7 +1643,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Capacity</remote-name>
@@ -1746,7 +1658,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>CapacityMaxHC</remote-name>
@@ -1761,7 +1672,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>CapacityX</remote-name>
@@ -1777,7 +1687,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Allocation</remote-name>
@@ -1793,7 +1702,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>DATESHIFT</remote-name>
@@ -1806,7 +1714,6 @@
             <aggregation>Year</aggregation>
             <contains-null>true</contains-null>
             <collation flag='1' name='LEN_RAU_S2' />
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Date</remote-name>
@@ -1821,7 +1728,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>DateX</remote-name>
@@ -1836,7 +1742,6 @@
             <attributes>
               <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
             </attributes>
-            <object-id>[EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2]</object-id>
           </metadata-record>
         </metadata-records>
       </connection>
@@ -4922,7 +4827,7 @@
           <object caption='EffortAllMatrixAG1_1D' id='EffortAllMatrixAG1!1D_86019405E02F4600AB30055F5D63CFA2'>
             <properties context=''>
               <relation connection='excel-direct.0iqw3v90kon0o714hk5221k9by4f' name='EffortAllMatrixAG1_1D' table='[EffortAllMatrixAG1_1D$]' type='table'>
-                <columns gridOrigin='A1:K757:no:A1:K757:0' header='yes' outcome='2'>
+                <columns gridOrigin='A1:K766:no:A1:K766:0' header='yes' outcome='2'>
                   <column datatype='string' name='Facility' ordinal='0' />
                   <column datatype='string' name='Role' ordinal='1' />
                   <column datatype='string' name='Shift' ordinal='2' />
@@ -24634,7 +24539,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
             <groupfilter function='level-members' level='[none:Calculation_373517350211387393:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]'>
-            <groupfilter function='member' level='[none:Facility:nk]' member='&quot;JH-RY&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter function='member' level='[none:Facility:nk]' member='&quot;BD&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <filter class='categorical' column='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Level:nk]'>
             <groupfilter function='except' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
@@ -32119,8 +32024,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1450' minheight='1450' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1044' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1043' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1046' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1045' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='5714' id='658' mode='dropdown' name='Effort Profiles Tbl' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Shift:nk]' type-v2='filter' values='database' w='11583' x='87750' y='13667'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -32364,8 +32269,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1050' minheight='1050' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1045' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1044' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1047' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1046' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='259' h='12714' id='583' is-fixed='true' name='L1 Profile' w='87937' x='500' y='381'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -32621,8 +32526,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1047' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1046' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1049' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1048' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='2991' id='773' mode='checkdropdown' name='Effort Profiles Tbl' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Role:nk]' type-v2='filter' values='database' w='8983' x='90676' y='23055'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -32907,8 +32812,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1053' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1052' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1055' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1054' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='264' h='8000' id='634' is-fixed='true' name='L1 Profile' w='87937' x='500' y='235'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -33177,8 +33082,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1000' minheight='1000' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1287' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1286' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1289' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1288' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='276' h='35765' id='487' is-fixed='true' name='L1 Profile' w='86669' x='5739' y='0'>
                   <layout-cache cell-count-w='14' minheight='244' non-cell-size-w='141' type-h='scalable' type-w='cell' />
                   <zone-style>
@@ -33433,8 +33338,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1100' minheight='1100' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1301' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1300' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1303' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1302' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='25652' id='990' type-v2='text' w='20915' x='5747' y='2691'>
                   <formatted-text>
                     <run bold='true' fontcolor='#4e79a7' fontsize='36'><![CDATA[<[Parameters].[#Outcome Parameter]>]]></run>
@@ -33656,8 +33561,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='2000' minheight='2000' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1337' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1336' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1339' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1338' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='3801' id='134' type-v2='text' w='51882' x='532' y='941'>
                   <formatted-text>
                     <run bold='true' fontcolor='#898989' fontsize='15'>OPPORTUNITIES - PROFILE  + COMPARISON</run>
@@ -33875,8 +33780,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='800' minheight='800' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1334' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1333' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1336' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1335' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='4386' id='134' type-v2='text' w='65087' x='347' y='5830'>
                   <formatted-text>
                     <run bold='true' fontcolor='#898989' fontsize='28'>OPPORTUNITIES BY </run>
@@ -34013,8 +33918,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='988' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='987' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='990' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='989' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='240' h='27589' id='1' is-fixed='true' name='3ABProf' w='99058' x='471' y='7222'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34216,8 +34121,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1200' minheight='1200' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1254' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1253' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1256' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1255' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='33015' id='162' mode='radiolist' name='L2A Profile' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Territory:nk]' type-v2='filter' values='relevant' w='7770' x='12435' y='34065'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34449,8 +34354,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1275' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1274' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1277' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1276' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='99' h='13303' id='234' is-fixed='true' name='L2DATESmll' w='13548' x='341' y='885'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34613,8 +34518,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='448' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='447' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='450' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='449' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='280' h='98000' id='3' is-fixed='true' name='EM L2A:3 Profile (3)' w='94823' x='471' y='1000'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34778,8 +34683,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='750' minheight='750' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='246' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='245' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='248' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='247' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='2744' id='86' mode='checkdropdown' name='L3 profile-CARER' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='database' w='9830' x='82025' y='96429'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -34959,8 +34864,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='242' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='241' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='244' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='243' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='40691' id='36' mode='dropdown' name='SimpleL2B Carer' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='7698' x='91834' y='5190'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35053,9 +34958,9 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
       </datasource-dependencies>
       <zones>
         <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='96013' id='21' param='horz' type-v2='layout-flow' w='99318' x='341' y='637'>
-            <zone h='96013' id='19' type-v2='layout-basic' w='92762' x='341' y='637'>
-              <zone h='93420' id='12' type-v2='empty' w='2029' x='341' y='3230'>
+          <zone h='96012' id='21' param='horz' type-v2='layout-flow' w='98504' x='748' y='637'>
+            <zone h='96012' id='19' type-v2='layout-basic' w='84098' x='748' y='637'>
+              <zone h='93420' id='12' type-v2='empty' w='1837' x='748' y='3229'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -35063,7 +34968,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='93420' id='14' type-v2='empty' w='1466' x='91637' y='3230'>
+              <zone h='93420' id='14' type-v2='empty' w='1331' x='83515' y='3229'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -35071,7 +34976,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='2593' id='17' type-v2='empty' w='92762' x='341' y='637'>
+              <zone h='2592' id='17' type-v2='empty' w='84098' x='748' y='637'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -35079,7 +34984,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='93420' id='18' name='Role Profile Weighted' w='89267' x='2370' y='3230'>
+              <zone h='93420' id='18' name='Role Profile Weighted' w='80930' x='2585' y='3229'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -35088,8 +34993,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                 </zone-style>
               </zone>
             </zone>
-            <zone fixed-size='154' h='96013' id='20' is-fixed='true' param='vert' type-v2='layout-flow' w='6556' x='93103' y='637'>
-              <zone h='10908' id='43' mode='radiolist' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='6556' x='93103' y='637'>
+            <zone fixed-size='154' h='96012' id='20' is-fixed='true' param='vert' type-v2='layout-flow' w='14406' x='84846' y='637'>
+              <zone h='10908' id='43' mode='radiolist' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='14406' x='84846' y='637'>
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -35099,7 +35004,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
               </zone>
             </zone>
           </zone>
-          <zone h='2713' id='24' type-v2='empty' w='99318' x='341' y='96650'>
+          <zone h='2714' id='24' type-v2='empty' w='98504' x='748' y='96649'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -35119,9 +35024,9 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='131' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98726' id='130' param='vert' type-v2='layout-flow' w='99318' x='341' y='637'>
-                <zone h='10908' id='43' mode='dropdown' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='6556' x='93103' y='637'>
+            <zone h='100000' id='133' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98726' id='132' param='vert' type-v2='layout-flow' w='98504' x='748' y='637'>
+                <zone h='10908' id='43' mode='dropdown' name='Role Profile Weighted' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Facility:nk]' type-v2='filter' values='relevant' w='14406' x='84846' y='637'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -35130,7 +35035,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
                     <format attr='padding' value='0' />
                   </zone-style>
                 </zone>
-                <zone fixed-size='280' h='93420' id='18' is-fixed='true' name='Role Profile Weighted' w='89267' x='2370' y='3230'>
+                <zone fixed-size='280' h='93420' id='18' is-fixed='true' name='Role Profile Weighted' w='80930' x='2585' y='3229'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -35392,8 +35297,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1400' minheight='1400' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1318' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98726' id='1317' param='vert' type-v2='layout-flow' w='99318' x='341' y='637'>
+            <zone h='100000' id='1320' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1319' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='30589' id='990' type-v2='text' w='14036' x='1817' y='2691'>
                   <formatted-text>
                     <run bold='true' fontcolor='#4e79a7' fontsize='36'><![CDATA[<[Parameters].[#Outcome Parameter]>]]></run>
@@ -35566,8 +35471,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='992' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='991' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='994' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='993' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='7555' id='28' type-v2='text' w='99112' x='444' y='889'>
                   <formatted-text>
                     <run bold='true' fontsize='28'>WHOLE WORKFORCE</run>
@@ -35687,8 +35592,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='990' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='989' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='992' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='991' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='244' h='28000' id='1' is-fixed='true' name='3ABProf' w='98858' x='571' y='11667'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -35882,8 +35787,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1250' minheight='1250' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1254' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1253' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1256' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1255' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='34774' id='162' mode='radiolist' name='L2A Profile' param='[federated.18j4fgp148exro1gq71ew1r1q51o].[none:Territory:nk]' type-v2='filter' values='relevant' w='6383' x='9695' y='34637'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -36115,8 +36020,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1275' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1274' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1277' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1276' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='99' h='13381' id='234' is-fixed='true' name='L2DATESmll' w='16190' x='341' y='673'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -36346,8 +36251,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1300' minheight='1300' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1275' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1274' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1277' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1276' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='99' h='13391' id='234' is-fixed='true' name='L2DATESmll' w='16182' x='370' y='637'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -36482,8 +36387,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='900' minheight='900' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='991' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='990' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='993' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='992' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='280' h='32444' id='585' is-fixed='true' name=' Pres L2A:3 Profile Spare colour adjusted' w='99058' x='471' y='889'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -36657,8 +36562,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1400' minheight='1400' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1276' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1275' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1278' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1277' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone fixed-size='280' h='32382' id='487' is-fixed='true' name='L1 Profile' w='100000' x='0' y='0'>
                   <layout-cache cell-count-w='14' minheight='264' non-cell-size-w='141' type-h='scalable' type-w='cell' />
                   <zone-style>
@@ -36845,8 +36750,8 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='1307' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1306' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='1309' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1308' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone forceUpdate='true' h='78470' id='990' type-v2='text' w='16899' x='5747' y='2691'>
                   <formatted-text>
                     <run bold='true' fontcolor='#4e79a7' fontsize='36'><![CDATA[<[Parameters].[#Outcome Parameter]>]]></run>
@@ -36953,7 +36858,7 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='1017' />
+      <active id='-1' />
       <simple-id uuid='{62CA70F2-EB39-44ED-A1BF-7B0FDA8C78A6}' />
     </window>
     <window class='dashboard' maximized='true' name='Effectiveness - Role+ShiftW' tab-color='#17927d'>
@@ -41297,186 +41202,251 @@ Allocation: <[federated.18j4fgp148exro1gq71ew1r1q51o].[sum:A:qk]>]]></run>
     </thumbnail>
     <thumbnail height='192' name='Effectiveness - Role+ShiftW' width='192'>
       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
-      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
-      RU5ErkJggg==
+      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
+      H/5S3a7I67diAAAAAElFTkSuQmCC
     </thumbnail>
     <thumbnail height='192' name='Effectiveness -All Levels' width='192'>
       iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk

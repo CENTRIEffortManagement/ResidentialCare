@@ -1,0 +1,112 @@
+{
+  "GapSeconds": 1,
+  "ElapsedSeconds": 421.8467665,
+  "Untimed": [],
+  "PeakConcurrency": 4,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ActiveIntervalSeconds": 420.685619,
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Start": 1.0081394,
+      "Id": "BD/Capacity",
+      "Finish": 46.184387,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 46.2146554,
+      "Id": "BD/Effort",
+      "Finish": 92.6354831,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1.101315,
+      "Id": "TE/Capacity",
+      "Finish": 45.2418855,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 45.2699619,
+      "Id": "TE/Effort",
+      "Finish": 89.1481571,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1.1536901,
+      "Id": "JH-RY/Capacity",
+      "Finish": 47.7167896,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 47.7400398,
+      "Id": "JH-RY/Effort",
+      "Finish": 92.9664043,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 1.1911057,
+      "Id": "Org/StaffAll",
+      "Finish": 47.9944948,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 92.9881768,
+      "Id": "Org/EffortAll",
+      "Finish": 163.088884,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 163.1073245,
+      "Id": "Org/Outcomes",
+      "Finish": 202.9042747,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 202.926518,
+      "Id": "Org/Inefficiencies",
+      "Finish": 252.5288219,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 252.5484394,
+      "Id": "Org/Reporting",
+      "Finish": 293.5556052,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 293.5737667,
+      "Id": "Org/LeaveBalanceStats",
+      "Finish": 335.446773,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 335.464754,
+      "Id": "Org/LeaveBalanceReduction",
+      "Finish": 377.1652899,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 377.1876372,
+      "Id": "Org/LeaveBalanceReporting",
+      "Finish": 421.834322,
+      "Status": "Completed"
+    }
+  ],
+  "RunId": "20261021-101612-49b4c932",
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "IncompleteAttempts": [],
+  "Status": "Completed"
+}
