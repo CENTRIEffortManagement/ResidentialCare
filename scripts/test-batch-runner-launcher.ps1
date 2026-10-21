@@ -137,20 +137,28 @@ function Invoke-BatchSchedule {
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed; exit 0') 'successful C2 menu keeps the completion result visible'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest ($dispatch.Jobs.Count -eq 9 -and @($dispatch.Jobs | Where-Object { $_ -notlike 'Unit1/Role:*' }).Count -eq 0) 'C2 still dispatches exactly the nine Unit1 role files'
-    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o5') -ExpectPause -CheckGateReleased
+    $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)
+    $result = Invoke-LauncherFixture -InputLines @('2', 'C2,O1,O2,O5,O6', 'Unit1') -ExpectPause
+    Assert-LauncherTest ($result.ExitCode -eq 1 -and $result.Output -match 'Selection skips intermediate workbooks' -and
+        $result.Output.Contains('Unit1/Capacity (U4)') -and $result.Output.Contains('Unit1/Effort (U4)')) 'mixed role/reporting menu stops and names the missing consolidation workbooks'
+    Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore -and [string]::IsNullOrWhiteSpace($result.ErrorText)) 'rejected menu selection never dispatches and keeps its plain-language error visible'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o5') -ExpectPause
+    Assert-LauncherTest ($result.ExitCode -eq 1 -and $result.Output -match 'Selection skips intermediate workbooks' -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu rejects missing intermediates without a Unit prompt'
+    Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore) 'organisation gap never dispatches'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o3,o4,o5') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu selection skips the Unit prompt'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
-    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Reporting') 'organisation-only menu dispatches the selected batches once'
-    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,05') -ExpectPause -CheckGateReleased
+    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Cost,Org/History,Org/HistoryRead,Org/Reporting') 'organisation-only menu dispatches the selected batches once'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o3,o4,05') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Interpreting batch ID 05 as O5' -and $result.Output -notmatch 'Available Unit IDs:') 'zero-prefixed organisation ID is accepted and explained without a Unit prompt'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
-    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Reporting') 'zero-prefixed O5 selects the intended organisation jobs once'
+    Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/StaffAll,Org/EffortAll,Org/Outcomes,Org/Inefficiencies,Org/Cost,Org/History,Org/HistoryRead,Org/Reporting') 'zero-prefixed O5 selects the intended organisation jobs once'
     $result = Invoke-LauncherFixture -InputLines @('2', '06') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Interpreting batch ID 06 as O6' -and $result.Output -notmatch 'Available Unit IDs:') 'Leave Balance menu selection accepts 06 without a Unit prompt'
     Assert-LauncherTest ($result.Output.Contains('O6 - Leave Balance Stats [LBStats.xlsx, LBReduction.xlsx, TableauConnect-LB.xlsx]')) 'menu lists the Leave Balance batch title and ordered files'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest (($dispatch.Jobs -join ',') -eq 'Org/LeaveBalanceStats,Org/LeaveBalanceReduction,Org/LeaveBalanceReporting') 'Leave Balance menu dispatches the three workbooks once in order'
-    $result = Invoke-LauncherFixture -InputLines @('2', 'C1,O1', 'Unit1') -ExpectPause -CheckGateReleased
+    $result = Invoke-LauncherFixture -InputLines @('2', 'U4,O1', 'Unit1') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Available Unit IDs:') 'mixed batch selection still asks for Units'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest (@($dispatch.Jobs | Where-Object { $_ -like 'Unit2/*' }).Count -eq 0 -and @($dispatch.Jobs | Where-Object { $_ -like 'Org/*' }).Count -eq 2) 'mixed selection scopes Unit work and retains organisation work'
@@ -188,6 +196,31 @@ function Invoke-BatchSchedule {
     $result = Invoke-LauncherFixture -Arguments '-Batches O1 -RefreshSelected'
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Organisation consumer Units: Unit1, Unit2') 'organisation run uses configured scope without a separate confirmation gate'
     $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)
+    foreach ($action in @('-RefreshSelected', '-ValidateSelectionOnly', '-ShowPlan')) {
+        $runCount = @(Get-ChildItem -LiteralPath (Join-Path $fixtureDate 'RunLogs/BatchRefresh') -Directory).Count
+        $result = Invoke-LauncherFixture -Arguments "-Units Unit1 -Batches C2,O1,O2,O5,O6 $action"
+        Assert-LauncherTest ($result.ExitCode -eq 1 -and $result.ErrorText -match 'Selection skips intermediate workbooks') "scripted $action rejects the incomplete chain"
+        Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore -and
+            @(Get-ChildItem -LiteralPath (Join-Path $fixtureDate 'RunLogs/BatchRefresh') -Directory).Count -eq $runCount) 'gap rejection precedes dispatch and run-directory creation'
+    }
+    # Reconstruct an old incomplete plan with a current fingerprint to ensure the
+    # selection check, independently of fingerprint invalidation, protects resume.
+    . (Join-Path $fixtureRunner 'src/BatchPlanning.ps1')
+    . (Join-Path $fixtureRunner 'src/BatchScheduling.ps1')
+    . (Join-Path $fixtureRunner 'src/BatchReporting.ps1')
+    $resumeCatalogue = Get-BatchCatalogue $fixtureRepo
+    $incompletePlan = [pscustomobject]@{
+        SchemaVersion = 1; Fingerprint = $resumeCatalogue.Fingerprint; DateRoot = $resumeCatalogue.DateRoot
+        SequenceProfile = $resumeCatalogue.SequenceProfile; Roles = $resumeCatalogue.Roles; OrgUnits = $resumeCatalogue.OrgUnits
+        Jobs = @($resumeCatalogue.Jobs | Where-Object { $_.Id -like 'Unit1/Role:*' -or $_.Batch -eq 'O1' })
+    }
+    $gapResumeDirectory = Join-Path $fixtureDate 'RunLogs/BatchRefresh/gap-resume'
+    [void] [IO.Directory]::CreateDirectory($gapResumeDirectory)
+    Write-BatchJson (Join-Path $gapResumeDirectory 'plan.json') (ConvertTo-PortableBatchPlan $incompletePlan)
+    Write-BatchJson (Join-Path $gapResumeDirectory 'state.json') (New-BatchState $incompletePlan 'gap-resume')
+    $result = Invoke-LauncherFixture -Arguments '-ResumeRun gap-resume -RefreshSelected'
+    Assert-LauncherTest ($result.ExitCode -eq 1 -and $result.ErrorText -match 'Selection skips intermediate workbooks' -and
+        [IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore) 'resume reconstructs and rejects an incomplete saved selection before dispatch'
     $result = Invoke-LauncherFixture -Arguments '-Units Unit1 -Batches C1'
     Assert-LauncherTest ($result.ExitCode -eq 0 -and [IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore) 'selection without an explicit run command still never dispatches'
     $missingPath = Join-Path $fixtureDate 'fixture-missing-input'

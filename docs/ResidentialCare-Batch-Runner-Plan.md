@@ -171,7 +171,16 @@ effects can be declared exclusive and run alone.
 
 Unselected upstream files may be reused after access/lock checks, explicitly
 labelled **existing input - not refreshed this run**. Their presence is not proof
-of freshness. A selected prerequisite that fails cannot fall back to an old saved
+of freshness. A selection must include every intermediate workbook on a dependency
+path between selected jobs. For example, selecting JH-RY role capacity and
+organisation Effort assembly requires JH-RY's U4 workbooks, `Capacity.xlsx` then
+`Effort.xlsx`. Skipped intermediates stop planning before Excel opens, with each
+missing job ID, batch and relative path listed. Add those jobs/batches explicitly
+or use `-IncludeDependencies`; the runner never silently expands the selection.
+This check applies to batches, exact files, ranges and reconstructed resume plans
+in both sequence profiles. Standalone stages can still use saved upstream inputs
+when those inputs have no selected upstream producer in the same run.
+A selected prerequisite that fails cannot fall back to an old saved
 output. Unavailable files block their jobs and descendants; independent work
 continues. Validation-only reports unavailable files with a nonzero exit.
 

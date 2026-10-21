@@ -7,6 +7,17 @@ $repoRoot = Split-Path $PSScriptRoot -Parent
 . (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner/src/RefreshRunGate.ps1')
 $testRoot = Join-Path ([IO.Path]::GetTempPath()) ('rc-batch-' + [guid]::NewGuid().ToString('N'))
 [void] [IO.Directory]::CreateDirectory($testRoot)
+$catalogueRoot = Join-Path $testRoot 'selection-config'
+$catalogueDate = Join-Path $catalogueRoot 'CLIENT/DATExx-Whiddon'
+[void] [IO.Directory]::CreateDirectory((Join-Path $catalogueDate 'runner'))
+# Selection tests need the legacy Units even when production no longer has them.
+# Copy configuration only; never create or copy production workbooks.
+Copy-Item -LiteralPath (Join-Path $repoRoot 'pq.project.json') -Destination $catalogueRoot
+Get-ChildItem -LiteralPath (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner') -Filter '*.psd1' -File |
+    Copy-Item -Destination (Join-Path $catalogueDate 'runner')
+foreach ($unit in @('Unit1','Unit2','BD','TE','JH-RY')) {
+    [void] [IO.Directory]::CreateDirectory((Join-Path $catalogueDate "UNITS/$unit"))
+}
 $script:assertions = 0
 $beforeExcel = @(Get-Process EXCEL -ErrorAction SilentlyContinue | ForEach-Object Id)
 function Assert-True {
@@ -58,7 +69,7 @@ function Invoke-FakeRun {
     return @{ State = $state; Plan = $plan; Events = $sim.Events; Max = $sim.Max; Code = $code; Directory = $directory }
 }
 try {
-    $catalogue = Get-BatchCatalogue $repoRoot
+    $catalogue = Get-BatchCatalogue $catalogueRoot
     $defaultRun = Select-BatchPlan $catalogue -RunAll
     Assert-True ($defaultRun.Jobs.Count -eq 87) 'Run all selects BD, TE, JH-RY, one shared demand master and eleven organisation workbooks'
     Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 87) 'unqualified preview matches Run all scope'
@@ -103,7 +114,7 @@ try {
     Assert-True (($leaveBalanceStats.Dependencies -join ',') -eq 'Org/Reporting' -and ($leaveBalanceReduction.Dependencies -join ',') -eq 'Org/LeaveBalanceStats' -and ($leaveBalanceReporting.Dependencies -join ',') -eq 'Org/LeaveBalanceReduction') 'final batch follows ResidentialCare reporting, stats, reduction and Leave Balance reporting'
     Assert-True ($leaveBalanceStats.Reads.Count -eq 0 -and $leaveBalanceReduction.Reads.Count -eq 0 -and $leaveBalanceReporting.Reads.Count -eq 0) 'ordering does not invent unverified workbook inputs'
     $project = Get-Content -LiteralPath (Join-Path $repoRoot 'pq.project.json') -Raw | ConvertFrom-Json
-    $leaveBalanceRoot = Resolve-BatchWorkbookRoot $repoRoot $project.batchRunner.workbookRoots.LeaveBalanceStats
+    $leaveBalanceRoot = Resolve-BatchWorkbookRoot $catalogueRoot $project.batchRunner.workbookRoots.LeaveBalanceStats
     Assert-True ($leaveBalanceStats.Path -eq (Resolve-BatchPath $leaveBalanceRoot 'LBStats.xlsx') -and $leaveBalanceReduction.Path -eq (Resolve-BatchPath $leaveBalanceRoot 'LBReduction.xlsx') -and $leaveBalanceReporting.Path -eq (Resolve-BatchPath $leaveBalanceRoot 'TableauConnect-LB.xlsx')) 'named root resolves the exact three LeaveBalance targets'
     $savedTitles = $catalogue.BatchTitles
     try {
@@ -112,8 +123,35 @@ try {
     } finally { $catalogue.BatchTitles = $savedTitles }
     $one = Select-BatchPlan $catalogue -RunAll -Units Unit1
     Assert-True ($one.Jobs.Count -eq 26 -and @($one.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'Unit scope excludes org'
-    $subset = Select-BatchPlan $catalogue -Units Unit1 -Batches 'A1,A3'
-    Assert-True ($subset.Jobs.Count -eq 4 -and @($subset.Jobs | Where-Object Batch -notin @('A1','A3')).Count -eq 0) 'disjoint batches do not become ranges'
+    Assert-Throws { Select-BatchPlan $catalogue -Units Unit1 -Batches 'A1,A3' } 'disjoint batches cannot bypass intermediate producers'
+    $subset = Select-BatchPlan $catalogue -Units Unit1 -Batches 'A3,C2'
+    Assert-True ($subset.Jobs.Count -eq 12 -and @($subset.Jobs | Where-Object Batch -notin @('A3','C2.1','C2.2','C2.3')).Count -eq 0) 'independent batch branches remain exact selections'
+    # Regression: the 21 October selection refreshed roles and reporting while
+    # leaving Capacity/Effort (and other reporting intermediates) out of the run.
+    foreach ($sequenceProfile in @('Current', 'ParallelInputs-Unit1Priority')) {
+        $gapCatalogue = Get-BatchCatalogue $catalogueRoot $sequenceProfile
+        $gapMessage = ''
+        try { Select-BatchPlan $gapCatalogue -Units JH-RY -Batches C2,O1,O2,O5,O6 | Out-Null }
+        catch { $gapMessage = $_.Exception.Message }
+        Assert-True ($gapMessage -like '*Selection skips intermediate workbooks*' -and
+            $gapMessage -like '*JH-RY/Capacity (U4)*' -and $gapMessage -like '*JH-RY/Effort (U4)*' -and
+            $gapMessage -like '*Org/Cost (O3)*' -and $gapMessage -like '*Org/History (O4)*' -and
+            $gapMessage -like '*Org/HistoryRead (O4)*') "$sequenceProfile reports every missing intermediate in the failed selection"
+        Assert-True ($gapMessage -like '*IncludeDependencies*' -and $gapMessage -like '*Excel has not been opened*') 'gap error explains the remedy and that execution has not started'
+        Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','Org/EffortAll' } "$sequenceProfile exact-file selection cannot bypass the same chain"
+        Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Capacity','Org/EffortAll' } "$sequenceProfile cannot skip Effort when Capacity is selected"
+        Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','JH-RY/Role:AIN/3' } "$sequenceProfile cannot skip the middle role workbook"
+        $gapFilled = Select-BatchPlan $gapCatalogue -Units JH-RY -Batches C2,U4,O1,O2,O3,O4,O5,O6
+        Assert-True ($gapFilled.Jobs.Count -eq 22 -and
+            'JH-RY/Capacity' -in $gapFilled.Jobs.Id -and 'JH-RY/Effort' -in $gapFilled.Jobs.Id -and
+            @($gapFilled.Jobs | Where-Object { $_.Unit -notin @('JH-RY','Org') }).Count -eq 0) "$sequenceProfile accepts the completed chain without selecting other Units or earlier inputs"
+        $withDependencies = Select-BatchPlan $gapCatalogue -Units JH-RY -Batches C2,O1,O2,O5,O6 -IncludeDependencies
+        Assert-True ('JH-RY/Capacity' -in $withDependencies.Jobs.Id -and 'JH-RY/Effort' -in $withDependencies.Jobs.Id) "$sequenceProfile explicit dependency expansion resolves gaps"
+        Assert-True ((Select-BatchPlan $gapCatalogue -Units JH-RY -Batches U4).Jobs.Count -eq 2) "$sequenceProfile standalone consolidation can use saved upstream inputs"
+        Assert-True ((Select-BatchPlan $gapCatalogue -Batches O1,O2,O3,O4,O5,O6).Jobs.Count -eq 11) "$sequenceProfile complete organisation-only chain can use saved Unit inputs"
+        Assert-True ((Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Effort','Org/EffortAll').Jobs.Count -eq 2) "$sequenceProfile direct selected dependency permits unrelated saved inputs"
+        Assert-True ((Select-BatchPlan $gapCatalogue -Workbooks 'BD/Role:AIN/3','TE/Effort').Jobs.Count -eq 2) "$sequenceProfile independent Units do not create a false gap"
+    }
     $role = Select-BatchPlan $catalogue -Units Unit1 -Batches C2.2
     Assert-True ($role.Jobs.Count -eq 3 -and $role.Jobs[0].Role -eq 'AINC4') 'numbered role mapping'
     Assert-Throws { Select-BatchPlan $catalogue -Units BD -Batches C2.2 } 'AINC4 batch is empty for BD'
@@ -129,8 +167,11 @@ try {
     Assert-True ($role.Jobs.Count -eq 3 -and $role.Jobs[0].BatchKey -eq 'Unit2/C2:RN') 'named role selection'
     $exact = Select-BatchPlan $catalogue -Workbooks 'Unit1/DemandMaster', 'Unit2/Workers'
     Assert-True ($exact.Jobs.Count -eq 2) 'new files selectable without legacy renumbering'
-    $range = Select-BatchPlan $catalogue -StartAtSequence 24 -EndAtSequence 26
-    Assert-True (($range.Jobs.Id | Sort-Object) -join ',' -eq 'Unit1/Effort,Unit2/AllocationInput,Unit2/DemandInput') 'legacy cross-Unit numbers preserved'
+    Assert-Throws { Select-BatchPlan $catalogue -StartAtSequence 24 -EndAtSequence 26 } 'legacy ranges cannot skip newly added intermediate workbooks'
+    $legacyRangeIds = @(foreach ($sequence in 24..26) {
+        (Select-BatchPlan $catalogue -StartAtSequence $sequence -EndAtSequence $sequence).Jobs.Id
+    })
+    Assert-True (($legacyRangeIds | Sort-Object) -join ',' -eq 'Unit1/Effort,Unit2/AllocationInput,Unit2/DemandInput') 'legacy cross-Unit numbers preserved'
     $range = Select-BatchPlan $catalogue -Units Unit2 -StartAtSequence 14 -EndAtSequence 16
     Assert-True ($range.Jobs.Count -eq 3 -and $range.Jobs[0].Unit -eq 'Unit2') 'Unit-local range'
     $range = Select-BatchPlan $catalogue -StartAtWorkbook '2. Calculations/Cost/Cost..xlsx'
@@ -184,7 +225,7 @@ try {
     Assert-True ($savedDemand.Jobs.Count -eq 1 -and $sharedMaster.Path -in $savedDemand.Jobs[0].Reads) 'exact extraction selection validates the shared saved input without silently selecting a refresh'
     $sharedDeps = Select-BatchPlan $catalogue -Units BD -Batches A2 -IncludeDependencies
     Assert-True ('Date/DemandMaster' -in $sharedDeps.Jobs.Id -and 'BD/DemandMaster' -notin $sharedDeps.Jobs.Id) 'dependency expansion follows the relocated producer'
-    $parallelCatalogue = Get-BatchCatalogue $repoRoot 'ParallelInputs-Unit1Priority'
+    $parallelCatalogue = Get-BatchCatalogue $catalogueRoot 'ParallelInputs-Unit1Priority'
     $parallelPlan = Select-BatchPlan $parallelCatalogue -RunAll
     $parallelInput = @($parallelPlan.Jobs | Where-Object Id -eq 'TE/DemandInput')[0]
     Assert-True ('Date/DemandMaster' -in $parallelInput.Dependencies -and $sharedMaster.Path -in $parallelInput.Reads) 'alternate sequence profile redirects explicit read jobs too'

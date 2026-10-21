@@ -462,6 +462,38 @@ function Test-BatchSelectionNeedsUnits {
     return $false
 }
 
+function Assert-BatchSelectionContinuity {
+    param($Catalogue, [hashtable] $SelectedIds)
+    # Saved prerequisites may be reused outside paths between selected jobs.
+    # Reject skipped intermediates without silently expanding refresh scope.
+    $ancestors = @{}; $descendants = @{}
+    foreach ($id in $SelectedIds.Keys) { $ancestors[$id] = $true; $descendants[$id] = $true }
+    do {
+        $changed = $false
+        foreach ($job in $Catalogue.Jobs) {
+            if ($ancestors.ContainsKey($job.Id)) {
+                foreach ($dep in $job.Dependencies) {
+                    if (-not $ancestors.ContainsKey($dep)) { $ancestors[$dep] = $true; $changed = $true }
+                }
+            }
+            if (-not $descendants.ContainsKey($job.Id)) {
+                foreach ($dep in $job.Dependencies) {
+                    if ($descendants.ContainsKey($dep)) {
+                        $descendants[$job.Id] = $true; $changed = $true; break
+                    }
+                }
+            }
+        }
+    } while ($changed)
+    $missing = @($Catalogue.Jobs | Where-Object {
+        -not $SelectedIds.ContainsKey($_.Id) -and $ancestors.ContainsKey($_.Id) -and $descendants.ContainsKey($_.Id)
+    })
+    if ($missing.Count) {
+        $details = ($missing | ForEach-Object { "  $($_.Id) ($($_.Batch)): $($_.RelativePath)" }) -join "`n"
+        throw "Selection skips intermediate workbooks between selected jobs:`n$details`nAdd the listed workbooks/batches to the selection, or use -IncludeDependencies. Excel has not been opened."
+    }
+}
+
 function Select-BatchPlan {
     param($Catalogue, [switch] $RunAll, [string[]] $Units, [string[]] $Batches, [string[]] $Roles,
         [string[]] $Workbooks, [string] $StartAtWorkbook, [int] $StartAtSequence, [int] $EndAtSequence,
@@ -551,6 +583,7 @@ function Select-BatchPlan {
         $unitOnlyNames = @($unitOnlyJobs | Select-Object -ExpandProperty Unit -Unique) -join ', '
         throw "Organisation jobs do not consume $unitOnlyNames yet. Select those Units without organisation batches."
     }
+    Assert-BatchSelectionContinuity $Catalogue $ids
     return [pscustomobject]@{
         SchemaVersion = 1; Fingerprint = $Catalogue.Fingerprint; DateRoot = $Catalogue.DateRoot
         SequenceProfile = $Catalogue.SequenceProfile

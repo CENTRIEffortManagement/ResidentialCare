@@ -87,6 +87,10 @@ while unrelated ready work continues; a nonzero final result reports incomplete
 work. Invalid selectors and graph/configuration errors block execution globally.
 Do not bypass a failed selected producer with its old
 saved output. Unselected saved inputs must be reported as not refreshed this run.
+Selections that skip intermediate workbooks on a dependency path between selected
+jobs are rejected before Excel opens. Report the listed missing job IDs, batches
+and paths; do not silently add workbooks or bypass this check with saved outputs.
+Dependency expansion remains explicit through `-IncludeDependencies`.
 
 Use the same entry point with `-ShowStatus`, `-ResumeRun <RunId> -RefreshSelected`,
 or `-StopMode AfterCurrent|AfterBatch|Now`. Status identifies interrupted owners;
