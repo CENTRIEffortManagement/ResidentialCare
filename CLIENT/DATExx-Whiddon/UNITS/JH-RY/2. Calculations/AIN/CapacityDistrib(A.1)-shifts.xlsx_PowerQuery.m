@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(A.1)-shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(A.1)-shifts.xlsx
-// Extracted: 2026-10-05T07:47:05.241Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\2. Calculations\AIN\CapacityDistrib(A.1)-shifts.xlsx
+// Extracted: 2026-10-22T02:54:44.455Z
 
 section Section1;
 
@@ -493,7 +493,7 @@ in
 
 // Query: A1ResourceSpareIssues_Prepare
 // Purpose: Combine input-scoped issues that exclude Resource spare without depending on published capacity.
-// Notes: A shared parameter issue affects every dependent Resource; an unmatched allocation does not. Existing roster-rule breaches are diagnostic only.
+// Notes: A shared parameter issue affects every dependent Resource; an unmatched allocation does not.
 shared A1ResourceSpareIssues_Prepare = let
     ParameterIssues = if WorkingDayAllocationThreshold_Status[Status] = "Pass" then
             Table.FirstN(A1IdentityIssues_Prepare, 0)
@@ -504,7 +504,7 @@ shared A1ResourceSpareIssues_Prepare = let
         else A1IssueDetails(A1ResourceGrid_Prepare, "Settings roster shift maximum", MaximumStatus[Details],
             "Resource spare not evaluated; allocation evidence retained"),
     Details = Table.Combine({A1IdentityIssues_Prepare, A1AllocationValueIssues_Prepare, A1ContractIssues_Prepare,
-        A1AvailabilityPeriodIssues_Prepare, A1ClusterIssues_Prepare, ParameterIssues, MaximumIssues}),
+        A1AvailabilityPeriodIssues_Prepare, A1ClusterIssues_Prepare, A1AllocatedCalendarIssues_Prepare, ParameterIssues, MaximumIssues}),
     Identifiable = Table.SelectRows(Details, each [Resource] <> null),
     ResourceReasons = Table.Group(Identifiable, {"Resource"},
         {{"SpareIssueReason", each Text.Combine(List.Sort(List.Distinct([Reason])), "; "), type text}})
@@ -1489,8 +1489,8 @@ in
     Table.Buffer(Output);
 
 // Query: A1AllocatedCalendarIssues_Prepare
-// Purpose: Report allocated clusters already above five worked days without excluding compliant spare elsewhere.
-// Notes: Original clusters remain unchanged. Spare cannot extend an overlong cluster or reduce its surrounding rest gaps.
+// Purpose: Report allocated clusters already above five worked days and exclude their Resource's optional spare.
+// Notes: Allocation facts remain available; this check does not deliberately stop other Resources.
 shared A1AllocatedCalendarIssues_Prepare = let
     Breaches = Table.SelectRows(A1AllocatedClusters_Prepare, each [WorkedDays] > MaxShiftCluster),
     CalendarDates = Table.Group(#"PeriodShiftDay B", {"Day"}, {{"Date", each List.Min([Date]), type date}}),
@@ -1499,7 +1499,7 @@ shared A1AllocatedCalendarIssues_Prepare = let
     JoinedNames = Table.NestedJoin(ExpandedDates, {"Resource"}, A1ResourceGrid_Prepare, {"Resource"}, "ResourceNames", JoinKind.LeftOuter),
     ExpandedNames = Table.ExpandTableColumn(JoinedNames, "ResourceNames", {"Role", "Name"}),
     Output = A1IssueDetails(ExpandedNames, "Existing allocated calendar",
-        "Original allocated cluster exceeds five qualifying worked days", "Report existing allocation breach; retain allocations and allow compliant spare elsewhere")
+        "Original allocated cluster exceeds five qualifying worked days", "Allocation evidence retained; Resource spare excluded")
 in
     Output;
 
@@ -1565,7 +1565,7 @@ in
 // Query: A1PlanSpareDays
 // Purpose: Select legal allocated-cluster extensions and spare-only clusters for every usable Resource.
 // Inputs: One row per configured day, one optional shift choice, existing day priorities and Resource spare status.
-// Notes: Original internal breaks stay off. Overlong original clusters cannot grow; new spare must retain two off days from every other cluster.
+// Notes: Original internal breaks stay off. Work across one off day remains one cluster; separate clusters retain two off days.
 shared A1PlanSpareDays = (resourceDays as table) as table =>
 let
     OrderedDays = Table.Sort(resourceDays, {{"Day", Order.Ascending}}),
@@ -1599,7 +1599,7 @@ let
             OtherClusters = List.RemoveRange(state[Clusters], ClusterPosition, 1),
             RestPreserved = List.AllTrue(List.Transform(OtherClusters, each
                 ProposedStart - [EndDay] - 1 >= 2 or [StartDay] - ProposedEnd - 1 >= 2)),
-            Reason = if not ResourceAllowed then "Resource spare excluded by unusable input or calendar metadata"
+            Reason = if not ResourceAllowed then "Resource spare excluded by input or existing calendar issues"
                 else if AlreadySelected then "Day already assigned to an accepted cluster"
                 else if not IsFrontier then "Next adjacent extension day was not selected"
                 else if Cluster[WorkedDays] >= MaxShiftCluster then "Five-worked-day cluster allowance exhausted"
@@ -1651,7 +1651,7 @@ let
                 else List.Transform(state[Clusters], each if [PlannedCluster] = SelectedCluster[PlannedCluster] then SelectedCluster else _),
             AcceptedChoice = [Day = day[Day], PlannedCluster = SelectedCluster[PlannedCluster],
                 ExtensionSide = if GrowingCluster = null then "Spare-only" else GrowingCluster[ExtensionSide]],
-            Reason = if not ResourceAllowed then "Resource spare excluded by unusable input or calendar metadata"
+            Reason = if not ResourceAllowed then "Resource spare excluded by input or existing calendar issues"
                 else if InsideOriginalCluster then "Existing internal one-day break retained"
                 else "Five-worked-day limit or two full off days prevent this spare day",
             NextState = if CanSelect then [Clusters = UpdatedClusters, Accepted = state[Accepted] & {AcceptedChoice}, Rejected = state[Rejected]]

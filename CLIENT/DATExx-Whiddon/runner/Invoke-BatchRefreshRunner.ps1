@@ -5,7 +5,7 @@ param(
     [switch] $RunAll,
     [string[]] $Units, [string[]] $Batches, [string[]] $Roles, [string[]] $Workbooks,
     [string] $StartAtWorkbook, [int] $StartAtSequence, [int] $EndAtSequence,
-    [switch] $IncludeOrg, [switch] $IncludeDependencies,
+    [switch] $IncludeOrg, [switch] $IncludeDependencies, [switch] $UseSavedIntermediates,
     [switch] $RefreshSelected, [switch] $ShowPlan, [switch] $ValidateSelectionOnly,
     [switch] $ShowStatus, [string] $ResumeRun,
     [ValidateSet('AfterCurrent', 'AfterBatch', 'Now')] [string] $StopMode,
@@ -33,6 +33,7 @@ function Show-ResolvedBatchPlan {
     Write-Host "Sequence profile: $($Plan.SequenceProfile)"
     Write-Host "Parallel batches: $MaxParallelBatches (maximum 12); files within each batch are sequential."
     Write-Host "Catalogue fingerprint: $($Catalogue.Fingerprint)"
+    foreach ($line in (Get-BatchSavedIntermediateNotice $Plan)) { Write-Host $line -ForegroundColor Yellow }
     if (@($Plan.Jobs | Where-Object Unit -eq 'Org').Count) {
         Write-Host "Organisation consumer Units: $($Plan.OrgUnits -join ', '). Unit selection does not change workbook filters."
     }
@@ -126,6 +127,7 @@ try {
         } else {
             $state = Read-BatchJson (Join-Path $directory 'state.json') -AsHashtable
             Write-Host "Run $($state.RunId): $($state.Status); maximum observed parallel batches: $($state.MaxObserved)."
+            foreach ($line in (Get-BatchSavedIntermediateNotice ([pscustomobject]$state))) { Write-Host $line -ForegroundColor Yellow }
             if ($state.ContainsKey('CoordinatorError')) { Write-Host "Coordinator error: $($state.CoordinatorError.Message)" }
             if (@(Get-ChildItem -LiteralPath $directory -Filter 'state-recovery-*.json' -File).Count) {
                 Write-Host 'A final recovery snapshot exists: state.json may be stale. Inspect the recovery record before any rerun.'
@@ -160,7 +162,7 @@ try {
     $catalogue = Get-BatchCatalogue $repoRoot $SequenceProfile
     if ($ResumeRun) {
         if ($ResumeRun -notmatch '^[a-zA-Z0-9-]+$') { throw 'Invalid run ID.' }
-        if ($RunAll -or $Units -or $Batches -or $Roles -or $Workbooks -or $StartAtWorkbook -or $StartAtSequence -or $EndAtSequence -or $IncludeOrg -or $IncludeDependencies) { throw 'Resume uses its immutable saved selection; do not supply a new selection.' }
+        if ($RunAll -or $Units -or $Batches -or $Roles -or $Workbooks -or $StartAtWorkbook -or $StartAtSequence -or $EndAtSequence -or $IncludeOrg -or $IncludeDependencies -or $UseSavedIntermediates) { throw 'Resume uses its immutable saved selection; do not supply a new selection.' }
         $runDirectory = Resolve-BatchPath $logRoot $ResumeRun
         if (@(Get-ChildItem -LiteralPath $runDirectory -Filter 'state-recovery-*.json' -File).Count) {
             throw 'Final state publication failed. Inspect the recovery record and original workbooks; do not automatically resume stale state.json.'
@@ -171,13 +173,31 @@ try {
             $plan.Fingerprint -ne $catalogue.Fingerprint -or
             $plan.LocationIdentity -ne (Get-BatchLocationIdentity $catalogue.DateRoot)) { throw 'Configuration, machine or Date root changed: start a fresh run.' }
         # Re-resolve immutable IDs from the current catalogue, not editable saved paths.
-        $reconstructed = Select-BatchPlan -Catalogue $catalogue -Workbooks @($plan.Jobs | ForEach-Object Id)
+        $savedIntermediateChoice = $plan.PSObject.Properties['UseSavedIntermediates'] -and $plan.UseSavedIntermediates -is [bool] -and $plan.UseSavedIntermediates
+        $reconstructed = Select-BatchPlan -Catalogue $catalogue -Workbooks @($plan.Jobs | ForEach-Object Id) -UseSavedIntermediates:$savedIntermediateChoice
         if (($plan.Jobs | ConvertTo-Json -Depth 30 -Compress) -ne ((ConvertTo-PortableBatchPlan $reconstructed).Jobs | ConvertTo-Json -Depth 30 -Compress)) { throw 'Saved plan differs from the current resolved catalogue.' }
+        if ($savedIntermediateChoice -and ($plan.SavedIntermediates | ConvertTo-Json -Depth 10 -Compress) -ne ($reconstructed.SavedIntermediates | ConvertTo-Json -Depth 10 -Compress)) { throw 'Saved intermediate choices differ from the current resolved catalogue.' }
         $plan = $reconstructed
         Reset-BatchResume $plan $state
     } else {
-        $plan = Select-BatchPlan -Catalogue $catalogue -RunAll:$RunAll -Units $Units -Batches $Batches -Roles $Roles -Workbooks $Workbooks `
-            -StartAtWorkbook $StartAtWorkbook -StartAtSequence $StartAtSequence -EndAtSequence $EndAtSequence -IncludeOrg:$IncludeOrg -IncludeDependencies:$IncludeDependencies
+        $selection = @{
+            Catalogue = $catalogue; RunAll = $RunAll; Units = $Units; Batches = $Batches; Roles = $Roles; Workbooks = $Workbooks
+            StartAtWorkbook = $StartAtWorkbook; StartAtSequence = $StartAtSequence; EndAtSequence = $EndAtSequence
+            IncludeOrg = $IncludeOrg; IncludeDependencies = $IncludeDependencies; UseSavedIntermediates = $UseSavedIntermediates
+        }
+        try { $plan = Select-BatchPlan @selection }
+        catch {
+            if (-not $interactiveMenu -or -not $_.Exception.Data.Contains('SelectionGaps')) { throw }
+            Write-Host 'Your selection skips these intermediate files; they will not be refreshed:' -ForegroundColor Yellow
+            Write-Host $_.Exception.Data['SelectionGaps']
+            Write-Host 'Selected upstream changes will not propagate through them. Downstream results may include older data.' -ForegroundColor Yellow
+            Write-Host 'S - Run only my selected files using these saved intermediate outputs'
+            Write-Host '0 - Cancel and revise my selection (blank also cancels)'
+            $choice = (Read-Host 'Saved intermediate outputs: S or 0').Trim()
+            if ($choice -ne 'S') { Write-Host 'Selection cancelled. Excel has not been opened.'; exit 0 }
+            $selection.UseSavedIntermediates = $true
+            $plan = Select-BatchPlan @selection
+        }
     }
     Show-ResolvedBatchPlan $plan $catalogue
     if ($ExportGantt -and ($ShowPlan -or $ValidateSelectionOnly -or (-not $RunAll -and -not $RefreshSelected))) {
@@ -225,6 +245,7 @@ try {
     Write-BatchJson (Join-Path $runDirectory 'state.json') $state
     Write-BatchJson $currentPath @{ RunId = $state.RunId }
     Write-Host "Live log: $([IO.Path]::GetRelativePath($repoRoot, (Join-Path $runDirectory 'coordinator.log')))"
+    foreach ($line in (Get-BatchSavedIntermediateNotice $plan)) { Write-BatchProgress $runDirectory $line }
     $exitCode = Invoke-BatchSchedule -Plan $plan -State $state -RunDirectory $runDirectory -MaxParallelBatches $MaxParallelBatches -Visible $VisibleOverride -TimeoutMinutes $TimeoutMinutesOverride
     try {
         $null = Write-BatchActualReport $plan $state $runDirectory
@@ -234,6 +255,7 @@ try {
         try { Write-BatchJson (Join-Path $runDirectory 'report-error.json') @{ Message = $_.Exception.Message } } catch { Write-Warning 'Could not write report error.' }
     }
     Write-Host "Batch run $($state.RunId): $($state.Status); exit $exitCode. Records: $([IO.Path]::GetRelativePath($repoRoot, $runDirectory))"
+    foreach ($line in (Get-BatchSavedIntermediateNotice $plan)) { Write-Host $line -ForegroundColor Yellow }
     $holdSuccessfulMenuResult = $interactiveMenu -and $exitCode -eq 0
     exit $exitCode
 }

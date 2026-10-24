@@ -277,6 +277,55 @@ $null = Assert-WorksheetQueryRefreshEvidence $mixedWorkbook $mixedBefore -Delete
 $refreshTarget.RefreshDate = Get-Date
 Write-Host 'PASS: missing timestamp confirmation, cancellation, provider failures, asynchronous/unknown state and row overflow.'
 
+# Regression: JH-RY refreshed its base rows but retained a copied BD publication
+# after ResourceContract_CHECK failed. A new connection date alone cannot certify it.
+$checkValues = [Array]::CreateInstance([object], [int[]]@(2,4), [int[]]@(1,1))
+$checkValues[1,1] = 'Valid roster and cap settings'
+$checkValues[1,2] = 'Pass'
+$checkValues[1,3] = 0
+$checkValues[1,4] = 'Settings roster date count must be a whole number of fortnights.'
+$checkValues[2,1] = 'Workers using Settings roster-cap fallback'
+$checkValues[2,2] = 'Warning'
+$checkValues[2,3] = 1
+$checkValues[2,4] = 'Diagnostic fallback is permitted.'
+$requiredTable = [pscustomobject]@{
+    Name = 'ResourceContract_CHECK'; SourceType = 3; QueryTable = $refreshQuery
+    ListColumns = @('Check','Status','Failures','Details' | ForEach-Object { [pscustomobject]@{Name=$_} })
+    DataBodyRange = [pscustomobject]@{Value2=$checkValues}
+}
+$checkSheet = [pscustomobject]@{Name='Checks'; QueryTables=@(); ListObjects=@($requiredTable)}
+$checkedWorkbook = [pscustomobject]@{Worksheets=@($checkSheet); SaveCalls=0}
+$checkedWorkbook | Add-Member ScriptMethod Save { $this.SaveCalls++ }
+Assert-RequiredWorksheetChecks $checkedWorkbook @('ResourceContract_CHECK')
+foreach ($badStatus in @('Fail','Error','', 'Unknown', $null)) {
+    $checkValues[1,2] = $badStatus
+    $before = Get-WorksheetQueryRefreshEvidence $checkedWorkbook
+    $refreshTarget.RefreshDate = $refreshTarget.RefreshDate.AddSeconds(1)
+    $null = Assert-WorksheetQueryRefreshEvidence $checkedWorkbook $before
+    $blocked = $false
+    try { Assert-RequiredWorksheetChecks $checkedWorkbook @('ResourceContract_CHECK'); $checkedWorkbook.Save() }
+    catch { $blocked = $_.Exception.Message -like '*ResourceContract_CHECK/Valid roster and cap settings*Refusing to save*' }
+    Assert-Test ($blocked -and $checkedWorkbook.SaveCalls -eq 0) 'Failed, unknown or unevaluated required checks allowed stale output to be saved despite a fresh connection date.'
+}
+$checkValues[1,2] = 'Pass'
+$checkValues[1,4] = $null
+Assert-RequiredWorksheetChecks $checkedWorkbook @('ResourceContract_CHECK')
+$checkedWorkbook.Save()
+Assert-Test ($checkedWorkbook.SaveCalls -eq 1) 'Passing required checks, including a permitted diagnostic warning, did not release the save.'
+foreach ($case in @('MissingTable','MissingStatus','EmptyResults')) {
+    $testTable = $requiredTable.PSObject.Copy()
+    if ($case -eq 'MissingTable') { $testTable.Name = 'Different_CHECK' }
+    if ($case -eq 'MissingStatus') { $testTable.ListColumns = @([pscustomobject]@{Name='Check'}) }
+    if ($case -eq 'EmptyResults') { $testTable.DataBodyRange = $null }
+    $invalidWorkbook = [pscustomobject]@{Worksheets=@([pscustomobject]@{Name='Checks';ListObjects=@($testTable)})}
+    $blocked = $false
+    try { Assert-RequiredWorksheetChecks $invalidWorkbook @('ResourceContract_CHECK') } catch { $blocked=$true }
+    Assert-Test $blocked "Required check gate accepted $case."
+}
+$checkValues[1,2] = 'Fail'
+Assert-RequiredWorksheetChecks $checkedWorkbook @()
+Write-Host 'PASS: required StaffListMaster checks block failed or unevaluated publication before save, even with fresh refresh dates; diagnostic warnings remain permitted.'
+
 $testConnection = [pscustomobject] @{ Name = 'Connection'; Type = 1; OLEDBConnection = [pscustomobject] @{ Refreshing = $false } }
 $testQuery = [pscustomobject] @{ Name = 'Table'; Refreshing = $true }
 $testWorkbook = [pscustomobject] @{ Connections = @($testConnection); Worksheets = @([pscustomobject] @{ Name = 'Sheet'; QueryTables = @($testQuery) }) }

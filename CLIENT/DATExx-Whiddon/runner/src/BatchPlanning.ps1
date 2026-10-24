@@ -462,10 +462,10 @@ function Test-BatchSelectionNeedsUnits {
     return $false
 }
 
-function Assert-BatchSelectionContinuity {
+function Get-BatchSelectionGaps {
     param($Catalogue, [hashtable] $SelectedIds)
-    # Saved prerequisites may be reused outside paths between selected jobs.
-    # Reject skipped intermediates without silently expanding refresh scope.
+    # Saved prerequisites outside paths between selected jobs are ordinary inputs.
+    # Intermediates on those paths need a deliberate saved-output choice.
     $ancestors = @{}; $descendants = @{}
     foreach ($id in $SelectedIds.Keys) { $ancestors[$id] = $true; $descendants[$id] = $true }
     do {
@@ -488,16 +488,22 @@ function Assert-BatchSelectionContinuity {
     $missing = @($Catalogue.Jobs | Where-Object {
         -not $SelectedIds.ContainsKey($_.Id) -and $ancestors.ContainsKey($_.Id) -and $descendants.ContainsKey($_.Id)
     })
-    if ($missing.Count) {
-        $details = ($missing | ForEach-Object { "  $($_.Id) ($($_.Batch)): $($_.RelativePath)" }) -join "`n"
-        throw "Selection skips intermediate workbooks between selected jobs:`n$details`nAdd the listed workbooks/batches to the selection, or use -IncludeDependencies. Excel has not been opened."
+    return $missing
+}
+
+function Get-BatchSavedIntermediateNotice {
+    param($Plan)
+    if ($Plan.PSObject.Properties['SavedIntermediates'] -and $null -ne $Plan.SavedIntermediates -and @($Plan.SavedIntermediates).Count) {
+        'Saved intermediate outputs explicitly reused; these files are not refreshed this run:'
+        foreach ($job in $Plan.SavedIntermediates) { "  $($job.Id) ($($job.Batch)): $($job.RelativePath)" }
+        'Selected upstream changes will not propagate through these files. Downstream results may include older data.'
     }
 }
 
 function Select-BatchPlan {
     param($Catalogue, [switch] $RunAll, [string[]] $Units, [string[]] $Batches, [string[]] $Roles,
         [string[]] $Workbooks, [string] $StartAtWorkbook, [int] $StartAtSequence, [int] $EndAtSequence,
-        [switch] $IncludeOrg, [switch] $IncludeDependencies)
+        [switch] $IncludeOrg, [switch] $IncludeDependencies, [switch] $UseSavedIntermediates)
     $Units = @(Expand-BatchArguments $Units); $Batches = @(Expand-BatchArguments $Batches)
     $Batches = @($Batches | ForEach-Object {
         if ($_ -match '^0([1-6])$') {
@@ -583,11 +589,41 @@ function Select-BatchPlan {
         $unitOnlyNames = @($unitOnlyJobs | Select-Object -ExpandProperty Unit -Unique) -join ', '
         throw "Organisation jobs do not consume $unitOnlyNames yet. Select those Units without organisation batches."
     }
-    Assert-BatchSelectionContinuity $Catalogue $ids
+    $gaps = @(Get-BatchSelectionGaps $Catalogue $ids)
+    if ($gaps.Count -and -not $UseSavedIntermediates) {
+        $details = ($gaps | ForEach-Object { "  $($_.Id) ($($_.Batch)): $($_.RelativePath)" }) -join "`n"
+        $gapError = [InvalidOperationException]::new("Selection skips intermediate workbooks between selected jobs:`n$details`nSelected upstream changes will not propagate through these files.`nAdd the listed workbooks/batches, use -IncludeDependencies, or explicitly reuse their saved outputs with -UseSavedIntermediates. Excel has not been opened.")
+        $gapError.Data['SelectionGaps'] = $details
+        throw $gapError
+    }
+    if ($gaps.Count) {
+        # Project ordering through skipped jobs onto the selected graph. A failed
+        # selected ancestor must still block its selected descendants. Work on
+        # copies so a saved-input plan cannot mutate the catalogue or later plans.
+        $byId = @{}; foreach ($job in $Catalogue.Jobs) { $byId[$job.Id] = $job }
+        $selected = @(foreach ($job in $selected) {
+            $copy = $job.PSObject.Copy()
+            $pending = [Collections.Generic.Queue[string]]::new()
+            foreach ($dep in $job.Dependencies) { $pending.Enqueue($dep) }
+            $visited = @{}; $predecessors = @{}
+            while ($pending.Count) {
+                $dep = $pending.Dequeue()
+                if ($visited.ContainsKey($dep)) { continue }; $visited[$dep] = $true
+                if ($ids.ContainsKey($dep)) { $predecessors[$dep] = $true }
+                else { foreach ($ancestor in $byId[$dep].Dependencies) { $pending.Enqueue($ancestor) } }
+            }
+            $copy.Dependencies = @(($job.Dependencies + @($Catalogue.Jobs | Where-Object { $predecessors.ContainsKey($_.Id) } | ForEach-Object Id)) | Select-Object -Unique)
+            $copy
+        })
+    }
     return [pscustomobject]@{
         SchemaVersion = 1; Fingerprint = $Catalogue.Fingerprint; DateRoot = $Catalogue.DateRoot
         SequenceProfile = $Catalogue.SequenceProfile
         Roles = $Catalogue.Roles; OrgUnits = $Catalogue.OrgUnits; Jobs = $selected
+        UseSavedIntermediates = [bool] ($UseSavedIntermediates -and $gaps.Count)
+        SavedIntermediates = @(foreach ($job in $gaps) {
+            [pscustomobject]@{ Id = $job.Id; Batch = $job.Batch; RelativePath = $job.RelativePath }
+        })
     }
 }
 

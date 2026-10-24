@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
-// Extracted: 2026-10-05T07:55:23.444Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
+// Extracted: 2026-10-22T02:54:49.540Z
 
 section Section1;
 
@@ -45,63 +45,27 @@ shared BAllocatedSlotTotals_Prepare = let
 in
     Table.Buffer(ResourceTotals);
 
-// Query: BOriginalWorkCalendar_Prepare
-// Purpose: Retain immutable allocated workday anchors before any availability filter or Resource spare mask.
-// Inputs: Complete raw A.2 handoff; unavailable allocated days remain part of the original calendar.
-// Notes: Missing or malformed metadata remains blocked by the existing input and saved-plan checks.
-shared BOriginalWorkCalendar_Prepare = let
-    Snapshot = BCappedAvailabilityInput_RESULT,
-    Raw = if Snapshot[HasError] then #table({}, {}) else Snapshot[Value],
-    Required = {"Resource", "Role", "Day", "PlannedCluster", "AllocationWorkday"},
-    HasSchema = Table.HasColumns(Raw, Required),
-    OriginalRows = if not HasSchema then #table({"Resource", "Day", "PlannedCluster"}, {}) else
-        Table.SelectRows(Raw, each try [Role] = Role and [AllocationWorkday] = true
-            and fnBFiniteNumber([Resource]) and fnBFiniteNumber([Day]) and [Day] > 0 and [Day] = Number.RoundDown([Day])
-            and fnBFiniteNumber([PlannedCluster]) and [PlannedCluster] > 0 and [PlannedCluster] = Number.RoundDown([PlannedCluster])
-            otherwise false),
-    Calendar = Table.Distinct(Table.SelectColumns(OriginalRows, {"Resource", "Day", "PlannedCluster"}))
-in
-    Table.Buffer(Calendar);
-
 // Query: fnBCalendarIssues
-// Purpose: Report unchanged original-roster breaches while blocking breaches introduced or worsened by spare.
-// Inputs: Distinct Resource/Day/PlannedCluster workdays and BOriginalWorkCalendar_Prepare's immutable allocated anchors.
-// Notes: Original overlong clusters cannot gain spare. A short original gap is report-only only when both facing boundaries remain unchanged.
+// Purpose: Check stable planned clusters for five worked days and two full off days between clusters.
+// Inputs: Distinct Resource/Day/PlannedCluster workday anchors plus retained optional days.
 shared fnBCalendarIssues = (calendar as table, checkName as text) as table => let
-    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text, Day = nullable number, PlannedCluster = nullable number, WorkedDays = nullable number, OffDays = nullable number, Origin = text, BlocksSpare = logical],
-    MakeIssue = (resource as number, cluster as number, day as number, worked as number, off as nullable number, reason as text, originalOnly as logical) as record =>
+    DetailType = type table [Stage = text, Check = text, Status = text, Resource = nullable number, Role = nullable text, Name = nullable text, Date = nullable date, Period = nullable number, Reason = text, Action = text, Day = nullable number, PlannedCluster = nullable number, WorkedDays = nullable number, OffDays = nullable number],
+    MakeIssue = (resource as number, cluster as number, day as number, worked as number, off as nullable number, reason as text) as record =>
         [Stage = "B", Check = checkName, Status = "Fail", Resource = resource, Role = Role, Name = null, Date = null, Period = null, Reason = reason,
-         Action = if originalOnly then "Report existing allocation breach; retain allocations and allow compliant spare elsewhere"
-             else "Retain allocation evidence; exclude unsafe Resource spare",
-         Day = day, PlannedCluster = cluster, WorkedDays = worked, OffDays = off,
-         Origin = if originalOnly then "Preexisting allocation" else "Optional spare or invalid plan", BlocksSpare = not originalOnly],
-    // Always include raw original anchors, even if their capacity was unavailable or filtered out downstream.
-    OriginalCalendar = BOriginalWorkCalendar_Prepare,
-    UniqueDays = Table.Distinct(Table.Combine({OriginalCalendar, Table.SelectColumns(calendar, {"Resource", "Day", "PlannedCluster"})})),
+         Action = "Retain allocation evidence; exclude affected Resource spare", Day = day, PlannedCluster = cluster, WorkedDays = worked, OffDays = off],
+    UniqueDays = Table.Distinct(Table.SelectColumns(calendar, {"Resource", "Day", "PlannedCluster"})),
     Clusters = Table.Group(UniqueDays, {"Resource", "PlannedCluster"}, {{"Days", each List.Sort(List.Distinct([Day])), type list}}),
     WithStart = Table.AddColumn(Clusters, "StartDay", each List.Min([Days]), type number),
     WithEnd = Table.AddColumn(WithStart, "EndDay", each List.Max([Days]), type number),
     WithCount = Table.AddColumn(WithEnd, "WorkedDays", each List.Count([Days]), Int64.Type),
-    OriginalClusters = Table.Group(OriginalCalendar, {"Resource", "PlannedCluster"}, {{"OriginalDays", each List.Sort(List.Distinct([Day])), type list}}),
-    JoinedOriginal = Table.NestedJoin(WithCount, {"Resource", "PlannedCluster"}, OriginalClusters,
-        {"Resource", "PlannedCluster"}, "OriginalCluster", JoinKind.LeftOuter),
-    ExpandedOriginal = Table.ExpandTableColumn(JoinedOriginal, "OriginalCluster", {"OriginalDays"}),
-    WithOriginalDays = Table.TransformColumns(ExpandedOriginal, {{"OriginalDays", each if _ = null then {} else _, type list}}),
     // Reuse compact cluster facts for the internal and between-cluster checks.
-    ClusterFacts = Table.Buffer(WithOriginalDays),
+    ClusterFacts = Table.Buffer(WithCount),
     ClusterRows = Table.ToRecords(ClusterFacts),
     InternalIssues = List.Combine(List.Transform(ClusterRows, (cluster) =>
         let
             BrokenInside = List.AnyTrue(List.Transform(List.Skip(List.Positions(cluster[Days])), (position) => cluster[Days]{position} - cluster[Days]{position - 1} > 2)),
-            UnchangedOriginal = List.Count(cluster[OriginalDays]) > 5 and cluster[Days] = cluster[OriginalDays],
-            SizeIssues = if cluster[WorkedDays] > 5 then
-                {MakeIssue(cluster[Resource], cluster[PlannedCluster], cluster[StartDay], cluster[WorkedDays], null,
-                    "Cluster exceeds five worked days", UnchangedOriginal)} else {},
-            // A split planned cluster is a lineage/reduction defect, not a roster-rule exemption.
-            SplitIssues = if BrokenInside then
-                {MakeIssue(cluster[Resource], cluster[PlannedCluster], cluster[StartDay], cluster[WorkedDays], null,
-                    "A retained planned cluster was split by reduction", false)} else {}
-        in SizeIssues & SplitIssues)),
+            Reasons = (if cluster[WorkedDays] > 5 then {"Cluster exceeds five worked days"} else {}) & (if BrokenInside then {"A retained planned cluster was split by reduction"} else {})
+        in List.Transform(Reasons, each MakeIssue(cluster[Resource], cluster[PlannedCluster], cluster[StartDay], cluster[WorkedDays], null, _)))),
     IndexedClusters = Table.AddIndexColumn(ClusterFacts, "ClusterOrder", 0, 1, Int64.Type),
     // Group once instead of filtering every Resource against all clusters; retain the original diagnostic order.
     ResourceClusters = Table.Group(IndexedClusters, {"Resource"}, {
@@ -114,15 +78,7 @@ shared fnBCalendarIssues = (calendar as table, checkName as text) as table => le
             Ordered = resource[OrderedClusters],
             Pairs = List.Skip(List.Positions(Ordered)),
             BadPairs = List.Select(Pairs, each Ordered{_}[StartDay] - Ordered{_ - 1}[EndDay] - 1 < 2)
-        in List.Transform(BadPairs, (position) =>
-            let
-                Current = Ordered{position},
-                Previous = Ordered{position - 1},
-                OffDays = Current[StartDay] - Previous[EndDay] - 1,
-                OriginalFacingBoundaries = not List.IsEmpty(Current[OriginalDays]) and not List.IsEmpty(Previous[OriginalDays])
-                    and Current[StartDay] = List.First(Current[OriginalDays]) and Previous[EndDay] = List.Last(Previous[OriginalDays])
-            in MakeIssue(resource[Resource], Current[PlannedCluster], Current[StartDay], Current[WorkedDays], OffDays,
-                "Fewer than two full off days between planned clusters", OriginalFacingBoundaries)))),
+        in List.Transform(BadPairs, (position) => MakeIssue(resource[Resource], Ordered{position}[PlannedCluster], Ordered{position}[StartDay], Ordered{position}[WorkedDays], Ordered{position}[StartDay] - Ordered{position - 1}[EndDay] - 1, "Fewer than two full off days between planned clusters")))),
     Issues = Table.FromRecords(InternalIssues & GapIssues, DetailType)
 in
     Table.Buffer(Issues);
@@ -531,12 +487,11 @@ in
 
 // Query: BResourceSpareEligibility
 // Purpose: Combine upstream permission and B-local issues at Resource grain before any spare calculation.
-// Notes: Unchanged original-roster breaches remain diagnostic only. All input, identity and unsafe-spare issues still block their existing scope.
+// Notes: Diagnostics depend only on captured inputs; this view never reads C## or C### and cannot form an output cycle.
 shared BResourceSpareEligibility = let
     Resources = Table.Distinct(Table.Combine({Table.SelectColumns(BOriginalAvailability_Prepare, {"Resource"}), Table.SelectColumns(BCappedAvailability_Prepare, {"Resource"}), Table.SelectColumns(BAllocation_CalculationTABLE, {"Resource"})})),
-    BlockingIssues = Table.SelectRows(BPreCalculationIssues_DETAILS, each Record.FieldOrDefault(_, "BlocksSpare", null) <> false),
-    GlobalIssues = Table.SelectRows(BlockingIssues, each [Resource] = null and [Action] <> "Allocation skipped; evidence retained; other Resources continue"),
-    ResourceIssues = Table.SelectRows(BlockingIssues, each [Resource] <> null),
+    GlobalIssues = Table.SelectRows(BPreCalculationIssues_DETAILS, each [Resource] = null and [Action] <> "Allocation skipped; evidence retained; other Resources continue"),
+    ResourceIssues = Table.SelectRows(BPreCalculationIssues_DETAILS, each [Resource] <> null),
     JoinedIssues = Table.NestedJoin(Resources, {"Resource"}, ResourceIssues, {"Resource"}, "ResourceIssues", JoinKind.LeftOuter),
     WithPermission = Table.AddColumn(JoinedIssues, "SpareCalculationAllowed", each Table.IsEmpty(GlobalIssues) and Table.IsEmpty([ResourceIssues]), type logical),
     WithReason = Table.AddColumn(WithPermission, "SpareIssueReason", each if [SpareCalculationAllowed] then null else Text.Combine(List.Distinct(GlobalIssues[Reason] & [ResourceIssues][Reason]), "; "), type nullable text),
@@ -650,13 +605,11 @@ shared BCapTotals_Redistributed = fnBResourceCapTotals(BRedistributedCapacity_Pr
 
 // Query: fnBWorkCalendar
 // Purpose: Preserve original flagged workday anchors and add only retained optional workdays.
-// Notes: Read original anchors from the complete raw handoff so unavailable allocated cells cannot disappear from reduction safety checks.
 shared fnBWorkCalendar = (cells as table, amountColumn as text) as table => let
     WorkedRows = Table.SelectRows(cells, each fnBFiniteNumber([Day]) and [Day] > 0 and [Day] = Number.RoundDown([Day])
         and fnBFiniteNumber([PlannedCluster]) and [PlannedCluster] > 0 and [PlannedCluster] = Number.RoundDown([PlannedCluster]) and ([AllocationWorkday] = true
         or (not [HasAllocationEvidence] and Record.Field(_, amountColumn) <> null and Record.Field(_, amountColumn) > 0))),
-    Calendar = Table.Distinct(Table.Combine({BOriginalWorkCalendar_Prepare,
-        Table.SelectColumns(WorkedRows, {"Resource", "Day", "PlannedCluster"})}))
+    Calendar = Table.Distinct(Table.SelectColumns(WorkedRows, {"Resource", "Day", "PlannedCluster"}))
 in
     Table.Buffer(Calendar);
 
@@ -1598,10 +1551,9 @@ in
 
 // Query: BPublicationResourceIssues_Prepare
 // Purpose: Prepare publication exclusions and ordered reasons once per Resource for the final capacity join.
-// Notes: Unchanged original-roster breaches remain report-only; unsafe spare and unresolved cap excess still exclude Resource spare.
+// Notes: A null Resource retains its diagnostic reasons but does not become a Resource-local exclusion.
 shared BPublicationResourceIssues_Prepare = let
-    BlockingCalendarIssues = Table.SelectRows(BFinalCalendarIssues_DETAILS, each Record.FieldOrDefault(_, "BlocksSpare", null) <> false),
-    PublicationIssues = Table.Combine({BlockingCalendarIssues, BFinalCapReconciliationIssues_DETAILS}),
+    PublicationIssues = Table.Combine({BFinalCalendarIssues_DETAILS, BFinalCapReconciliationIssues_DETAILS}),
     IndexedIssues = Table.AddIndexColumn(PublicationIssues, "PublicationIssueOrder", 0, 1, Int64.Type),
     GroupedIssues = Table.Group(IndexedIssues, {"Resource"}, {
         {"PublicationReasons", each let

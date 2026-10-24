@@ -1,0 +1,63 @@
+{
+  "status": "Source repairs validated; workbook synchronization and refresh pending explicit authorization",
+  "diagnosis": {
+    "run": "20261022-121419-d2d39cdc",
+    "availabilityActuallyRan": true,
+    "JHRYAvailabilityWorkers": 36,
+    "JHRYRosterDays": 29,
+    "failedGate": "Settings roster date count must be a whole number of fortnights.",
+    "stalePublishedStaffWorkers": 113,
+    "consequence": "StaffListMaster retained the BD publication; downstream role workers did not match JH-RY availability.",
+    "runnerIssue": "The refresh/save receipt did not enforce loaded staff output checks."
+  },
+  "sourceRepair": {
+    "units": ["BD", "TE", "JH-RY"],
+    "workbookWithinEachUnit": "2. Calculations/StaffListMaster.xlsx",
+    "sourceWithinEachUnit": "2. Calculations/StaffListMaster.xlsx_PowerQuery.m",
+    "verifiedAgainstEachExactSavedWorkbook": true,
+    "querySectionsIdenticalAcrossUnits": true,
+    "changeRelativeToVerifiedWorkbook": "Remove only the whole-fortnight calendar-length restriction and add explanatory comments.",
+    "behaviour": "Keep Settings dates unchanged; use actual contiguous roster day count divided by 14 for contract proration. Preserve casual full-roster caps, shift rounding and Settings maximum.",
+    "retainedFailures": ["Missing Date column", "Blank dates", "Empty calendar", "Noncontiguous dates"],
+    "interfacesAndPathsUnchanged": true,
+    "memoryReview": "No added query, buffer, join, expansion, repeated scan or row-grain change. Partial fortnights use the existing scalar proration calculation.",
+    "TEBaseline": "Preserved the old adjacent source, then aligned the approved edit target to its own verified current workbook before applying the same repair."
+  },
+  "runnerRepair": {
+    "loadedQueryEvidence": "Require refreshed loaded worksheet-query evidence for every selected workbook before save.",
+    "staffPublication": "Require an evaluated ResourceContract_CHECK table containing only Pass or diagnostic Warning; missing, empty, failed or unknown results block save and downstream jobs.",
+    "otherRoleDiagnostics": "Existing reporting policy retained.",
+    "savedIntermediateChoice": "Retain explicit menu S / -UseSavedIntermediates; preserve ordering and failure blocking through skipped intermediate jobs. Never substitute saved output for a failed selected producer."
+  },
+  "validation": {
+    "nativePowerQuery": {"passed": 45, "failed": 0, "externalDataSources": 0, "evidence": "native-tests/summary.json"},
+    "batchRunner": {"status": "Passed", "assertions": 292},
+    "launcher": {"status": "Passed", "checks": 133},
+    "recovery": {"status": "Passed", "checks": 55},
+    "excelRefreshSafetyMocks": "Passed, including failed required checks despite fresh refresh dates",
+    "parallelRoleHarness": "Passed with seven mock lanes",
+    "powerShellSyntax": "Passed",
+    "gitDiffCheck": "Passed",
+    "sourceBoundary": "source-boundary-validation.json",
+    "liveSelection": {
+      "files": 50,
+      "status": "Blocked before Excel startup",
+      "exitCode": 1,
+      "unitFiles": "All 42 selected unit files passed after the user closed JH-RY Capacity.xlsx.",
+      "blockers": [
+        "Tableau holds 2. Calculations/E-O-I/Effort-All.xlsx.",
+        "Tableau holds 2. Calculations/Tableau Connection.xlsx."
+      ],
+      "evidence": "selection-validation.txt"
+    },
+    "legacySmoke": "Status entry point passed. Unit1 RN launcher is absent and global narrow validation cannot discover UnitN folders; existing layout limitation."
+  },
+  "workbooksChangedByThisRepair": false,
+  "excelOpenedByThisRepair": false,
+  "refreshPerformed": false,
+  "pending": [
+    "Explicit authorization to sync each BD/TE/JH-RY StaffListMaster.xlsx_PowerQuery.m into its adjacent StaffListMaster.xlsx, save and close, then re-extract and verify.",
+    "A separate refresh instruction after relevant workbook and Tableau locks are released.",
+    "Full remaining capacity-source comparison still requires exact current extracts for Capacity.xlsx and EN/RN/CS A.1/A.2/B; existing extracts with BD/AIN headers are not verified substitutes."
+  ]
+}

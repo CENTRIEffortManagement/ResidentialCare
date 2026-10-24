@@ -1,0 +1,93 @@
+[
+  {
+    "label": "RN-A1",
+    "source": "CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\RN\\CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+    "embedded": "outputs\\bd-rn-resource75-20261021\\RN-A1.embedded.m",
+    "exact_section_match": false,
+    "source_queries": 137,
+    "embedded_queries": 137,
+    "only_in_source": [],
+    "only_in_workbook": [],
+    "different_queries": [
+      "A1AllocatedCalendarIssues_Prepare",
+      "A1PlanSpareDays",
+      "A1ResourceSpareIssues_Prepare"
+    ],
+    "diff_lines": 53
+  },
+  {
+    "label": "RN-A2",
+    "source": "CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\RN\\CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+    "embedded": "outputs\\bd-rn-resource75-20261021\\RN-A2.embedded.m",
+    "exact_section_match": false,
+    "source_queries": 64,
+    "embedded_queries": 64,
+    "only_in_source": [],
+    "only_in_workbook": [],
+    "different_queries": [
+      "A2CalendarRuleIssues",
+      "A2OriginalCalendarIssues_Prepare",
+      "A2OriginalDaySchedule_Prepare",
+      "A2PlannedCalendarIssues_Prepare",
+      "A2PreReductionResourcePeriods_Prepare",
+      "A2PublishedCalendarIssues_Prepare",
+      "CapacityDiagnostics_DETAILS"
+    ],
+    "diff_lines": 180
+  },
+  {
+    "label": "RN-B",
+    "source": "CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\RN\\CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+    "embedded": "outputs\\bd-rn-resource75-20261021\\RN-B.embedded.m",
+    "exact_section_match": false,
+    "source_queries": 130,
+    "embedded_queries": 129,
+    "only_in_source": [
+      "BOriginalWorkCalendar_Prepare"
+    ],
+    "only_in_workbook": [],
+    "different_queries": [
+      "BPublicationResourceIssues_Prepare",
+      "BResourceSpareEligibility",
+      "fnBCalendarIssues",
+      "fnBWorkCalendar"
+    ],
+    "diff_lines": 126
+  },
+  {
+    "label": "StaffListMaster",
+    "source": "CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx_PowerQuery.m",
+    "embedded": "outputs\\bd-rn-resource75-20261021\\StaffListMaster.embedded.m",
+    "exact_section_match": true,
+    "source_queries": 27,
+    "embedded_queries": 27,
+    "only_in_source": [],
+    "only_in_workbook": [],
+    "different_queries": [],
+    "diff_lines": 0
+  },
+  {
+    "label": "Settings",
+    "source": "CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx_PowerQuery.m",
+    "embedded": "outputs\\bd-rn-resource75-20261021\\Settings.embedded.m",
+    "exact_section_match": true,
+    "source_queries": 19,
+    "embedded_queries": 19,
+    "only_in_source": [],
+    "only_in_workbook": [],
+    "different_queries": [],
+    "diff_lines": 0
+  },
+  {
+    "label": "Allocation",
+    "source": "CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx_PowerQuery.m",
+    "embedded": "outputs\\bd-rn-resource75-20261021\\Allocation.embedded.m",
+    "exact_section_match": true,
+    "source_queries": 19,
+    "embedded_queries": 19,
+    "only_in_source": [],
+    "only_in_workbook": [],
+    "different_queries": [],
+    "diff_lines": 0
+  }
+]

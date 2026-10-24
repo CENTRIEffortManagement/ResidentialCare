@@ -1,0 +1,137 @@
+[
+  {
+    "ActivityId": "427f8eba-f44a-4a29-81ad-72a869c8eac1",
+    "DataSourceAnalysis": [],
+    "Details": "FacilityMappingTests()",
+    "EndTime": "2026-10-22T04:12:51.7641972+00:00",
+    "Method": "PQTest.RunTest",
+    "Name": "fixtures.query.pq",
+    "StartTime": "2026-10-22T04:12:50.8722763+00:00",
+    "Output": [
+      {
+        "Case": "NR maps to JH-RY",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JE maps to JH-RY",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Already canonical code retained",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD preserved",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE preserved",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Original NR code remains visible",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unmapped value remains diagnostic",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Null facility remains diagnostic",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Worker row grain preserved",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Duplicate TE mappings do not multiply lookup",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Lookup keys unique",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Case and whitespace normalized",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Reference-driven alias without code edits",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "NR and JE availability included",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "NR and JE source identities join to workers",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Both sites allocation grouped once",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD unit scope preserved",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE duplicates do not multiply events or hours",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Disabled analysis remains excluded",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Legacy field_1 projection supported",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "LINK lands full list unchanged",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Conflicting alias blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing FacilityShort is explicit error",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing canonical facility blocked",
+        "Passed": true,
+        "Details": null
+      }
+    ],
+    "DiagnosticEvents": {},
+    "RowCount": 24,
+    "Status": "Passed",
+    "Type": "PQTest.Expression"
+  }
+]

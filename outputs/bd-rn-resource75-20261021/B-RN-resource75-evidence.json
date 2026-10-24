@@ -1,0 +1,1603 @@
+{
+  "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+  "sha256_before": "82d9399c863f48140e304b9f98da73c7c933f64cf4b4a7f01fee603c1f1262f9",
+  "last_write_utc": "2026-10-20T22:56:53.288706+00:00",
+  "tables": [
+    {
+      "name": "MaxAvailability",
+      "sheet": "Settings",
+      "ref": "A1:A2",
+      "columns": [
+        "MaxAvailability"
+      ],
+      "rows": 1,
+      "resource75": [],
+      "data": [
+        {
+          "MaxAvailability": 10
+        }
+      ]
+    },
+    {
+      "name": "C__TABLE",
+      "sheet": "C##TABLE",
+      "ref": "A1:D1597",
+      "columns": [
+        "Resource",
+        "Period",
+        "Role",
+        "C##"
+      ],
+      "rows": 1596,
+      "resource75": [
+        {
+          "excel_row": 590,
+          "Resource": 75,
+          "Period": 1,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 591,
+          "Resource": 75,
+          "Period": 2,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 592,
+          "Resource": 75,
+          "Period": 3,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 593,
+          "Resource": 75,
+          "Period": 4,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 594,
+          "Resource": 75,
+          "Period": 5,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 595,
+          "Resource": 75,
+          "Period": 6,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 596,
+          "Resource": 75,
+          "Period": 7,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 597,
+          "Resource": 75,
+          "Period": 8,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 598,
+          "Resource": 75,
+          "Period": 9,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 599,
+          "Resource": 75,
+          "Period": 10,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 600,
+          "Resource": 75,
+          "Period": 11,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 601,
+          "Resource": 75,
+          "Period": 12,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 602,
+          "Resource": 75,
+          "Period": 13,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 603,
+          "Resource": 75,
+          "Period": 14,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 604,
+          "Resource": 75,
+          "Period": 15,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 605,
+          "Resource": 75,
+          "Period": 16,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 606,
+          "Resource": 75,
+          "Period": 17,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 607,
+          "Resource": 75,
+          "Period": 18,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 608,
+          "Resource": 75,
+          "Period": 19,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 609,
+          "Resource": 75,
+          "Period": 20,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 610,
+          "Resource": 75,
+          "Period": 21,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 611,
+          "Resource": 75,
+          "Period": 22,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 612,
+          "Resource": 75,
+          "Period": 23,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 613,
+          "Resource": 75,
+          "Period": 24,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 614,
+          "Resource": 75,
+          "Period": 25,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 615,
+          "Resource": 75,
+          "Period": 26,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 616,
+          "Resource": 75,
+          "Period": 27,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 617,
+          "Resource": 75,
+          "Period": 28,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 618,
+          "Resource": 75,
+          "Period": 29,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 619,
+          "Resource": 75,
+          "Period": 30,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 620,
+          "Resource": 75,
+          "Period": 31,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 621,
+          "Resource": 75,
+          "Period": 32,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 622,
+          "Resource": 75,
+          "Period": 33,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 623,
+          "Resource": 75,
+          "Period": 34,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 624,
+          "Resource": 75,
+          "Period": 35,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 625,
+          "Resource": 75,
+          "Period": 36,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 626,
+          "Resource": 75,
+          "Period": 37,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 627,
+          "Resource": 75,
+          "Period": 38,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 628,
+          "Resource": 75,
+          "Period": 39,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 629,
+          "Resource": 75,
+          "Period": 40,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 630,
+          "Resource": 75,
+          "Period": 41,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 631,
+          "Resource": 75,
+          "Period": 42,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 632,
+          "Resource": 75,
+          "Period": 43,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 633,
+          "Resource": 75,
+          "Period": 44,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 634,
+          "Resource": 75,
+          "Period": 45,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 635,
+          "Resource": 75,
+          "Period": 46,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 636,
+          "Resource": 75,
+          "Period": 47,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 637,
+          "Resource": 75,
+          "Period": 48,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 638,
+          "Resource": 75,
+          "Period": 49,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 639,
+          "Resource": 75,
+          "Period": 50,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 640,
+          "Resource": 75,
+          "Period": 51,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 641,
+          "Resource": 75,
+          "Period": 52,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 642,
+          "Resource": 75,
+          "Period": 53,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 643,
+          "Resource": 75,
+          "Period": 54,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 644,
+          "Resource": 75,
+          "Period": 55,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 645,
+          "Resource": 75,
+          "Period": 56,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 646,
+          "Resource": 75,
+          "Period": 57,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 647,
+          "Resource": 75,
+          "Period": 58,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 648,
+          "Resource": 75,
+          "Period": 59,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 649,
+          "Resource": 75,
+          "Period": 60,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 650,
+          "Resource": 75,
+          "Period": 61,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 651,
+          "Resource": 75,
+          "Period": 62,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 652,
+          "Resource": 75,
+          "Period": 63,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 653,
+          "Resource": 75,
+          "Period": 64,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 654,
+          "Resource": 75,
+          "Period": 65,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 655,
+          "Resource": 75,
+          "Period": 66,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 656,
+          "Resource": 75,
+          "Period": 67,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 657,
+          "Resource": 75,
+          "Period": 68,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 658,
+          "Resource": 75,
+          "Period": 69,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 659,
+          "Resource": 75,
+          "Period": 70,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 660,
+          "Resource": 75,
+          "Period": 71,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 661,
+          "Resource": 75,
+          "Period": 72,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 662,
+          "Resource": 75,
+          "Period": 73,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 663,
+          "Resource": 75,
+          "Period": 74,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 664,
+          "Resource": 75,
+          "Period": 75,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 665,
+          "Resource": 75,
+          "Period": 76,
+          "Role": "RN",
+          "C##": null
+        },
+        {
+          "excel_row": 666,
+          "Resource": 75,
+          "Period": 77,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 667,
+          "Resource": 75,
+          "Period": 78,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 668,
+          "Resource": 75,
+          "Period": 79,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 669,
+          "Resource": 75,
+          "Period": 80,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 670,
+          "Resource": 75,
+          "Period": 81,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 671,
+          "Resource": 75,
+          "Period": 82,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 672,
+          "Resource": 75,
+          "Period": 83,
+          "Role": "RN",
+          "C##": 1
+        },
+        {
+          "excel_row": 673,
+          "Resource": 75,
+          "Period": 84,
+          "Role": "RN",
+          "C##": 1
+        }
+      ],
+      "sum": 35,
+      "positive_periods": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
+      ],
+      "audit_values": {}
+    },
+    {
+      "name": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+      "sheet": "CapacityDistribB_AVAILABILITY_L",
+      "ref": "A1:S2",
+      "columns": [
+        "Role",
+        "Resource",
+        "Period",
+        "Day",
+        "OriginalAvailability",
+        "SpareDayEligible",
+        "SparePeriodSelected",
+        "SpareEligibilityReason",
+        "PlannedCluster",
+        "ExtensionSide",
+        "AllocationWorkday",
+        "A2Stage1MetadataStatus",
+        "A2EligibilityMetadataStatus",
+        "A2EligibilityDayStatus",
+        "HasAllocationEvidence",
+        "SpareCalculationAllowed",
+        "SpareIssueReason",
+        "C#",
+        "LineageIssue"
+      ],
+      "rows": 1,
+      "resource75": [],
+      "data": []
+    },
+    {
+      "name": "C___TABLE_B",
+      "sheet": "C###TABLE",
+      "ref": "A1:F1597",
+      "columns": [
+        "Resource",
+        "Period",
+        "Role",
+        "C###",
+        "ResAvailability",
+        "ResMaxAvail"
+      ],
+      "rows": 1596,
+      "resource75": [
+        {
+          "excel_row": 590,
+          "Resource": 75,
+          "Period": 1,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 591,
+          "Resource": 75,
+          "Period": 2,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 592,
+          "Resource": 75,
+          "Period": 3,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 593,
+          "Resource": 75,
+          "Period": 4,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 594,
+          "Resource": 75,
+          "Period": 5,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 595,
+          "Resource": 75,
+          "Period": 6,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 596,
+          "Resource": 75,
+          "Period": 7,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 597,
+          "Resource": 75,
+          "Period": 8,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 598,
+          "Resource": 75,
+          "Period": 9,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 599,
+          "Resource": 75,
+          "Period": 10,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 600,
+          "Resource": 75,
+          "Period": 11,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 601,
+          "Resource": 75,
+          "Period": 12,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 602,
+          "Resource": 75,
+          "Period": 13,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 603,
+          "Resource": 75,
+          "Period": 14,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 604,
+          "Resource": 75,
+          "Period": 15,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 605,
+          "Resource": 75,
+          "Period": 16,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 606,
+          "Resource": 75,
+          "Period": 17,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 607,
+          "Resource": 75,
+          "Period": 18,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 608,
+          "Resource": 75,
+          "Period": 19,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 609,
+          "Resource": 75,
+          "Period": 20,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 610,
+          "Resource": 75,
+          "Period": 21,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 611,
+          "Resource": 75,
+          "Period": 22,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 612,
+          "Resource": 75,
+          "Period": 23,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 613,
+          "Resource": 75,
+          "Period": 24,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 614,
+          "Resource": 75,
+          "Period": 25,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 615,
+          "Resource": 75,
+          "Period": 26,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 616,
+          "Resource": 75,
+          "Period": 27,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 617,
+          "Resource": 75,
+          "Period": 28,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 618,
+          "Resource": 75,
+          "Period": 29,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 619,
+          "Resource": 75,
+          "Period": 30,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 620,
+          "Resource": 75,
+          "Period": 31,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 621,
+          "Resource": 75,
+          "Period": 32,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 622,
+          "Resource": 75,
+          "Period": 33,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 623,
+          "Resource": 75,
+          "Period": 34,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 624,
+          "Resource": 75,
+          "Period": 35,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 625,
+          "Resource": 75,
+          "Period": 36,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 626,
+          "Resource": 75,
+          "Period": 37,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 627,
+          "Resource": 75,
+          "Period": 38,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 628,
+          "Resource": 75,
+          "Period": 39,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 629,
+          "Resource": 75,
+          "Period": 40,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 630,
+          "Resource": 75,
+          "Period": 41,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 631,
+          "Resource": 75,
+          "Period": 42,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 632,
+          "Resource": 75,
+          "Period": 43,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 633,
+          "Resource": 75,
+          "Period": 44,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 634,
+          "Resource": 75,
+          "Period": 45,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 635,
+          "Resource": 75,
+          "Period": 46,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 636,
+          "Resource": 75,
+          "Period": 47,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 637,
+          "Resource": 75,
+          "Period": 48,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 638,
+          "Resource": 75,
+          "Period": 49,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 639,
+          "Resource": 75,
+          "Period": 50,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 640,
+          "Resource": 75,
+          "Period": 51,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 641,
+          "Resource": 75,
+          "Period": 52,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 642,
+          "Resource": 75,
+          "Period": 53,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 643,
+          "Resource": 75,
+          "Period": 54,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 644,
+          "Resource": 75,
+          "Period": 55,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 645,
+          "Resource": 75,
+          "Period": 56,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 646,
+          "Resource": 75,
+          "Period": 57,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 647,
+          "Resource": 75,
+          "Period": 58,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 648,
+          "Resource": 75,
+          "Period": 59,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 649,
+          "Resource": 75,
+          "Period": 60,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 650,
+          "Resource": 75,
+          "Period": 61,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 651,
+          "Resource": 75,
+          "Period": 62,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 652,
+          "Resource": 75,
+          "Period": 63,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 653,
+          "Resource": 75,
+          "Period": 64,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 654,
+          "Resource": 75,
+          "Period": 65,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 655,
+          "Resource": 75,
+          "Period": 66,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 656,
+          "Resource": 75,
+          "Period": 67,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 657,
+          "Resource": 75,
+          "Period": 68,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 658,
+          "Resource": 75,
+          "Period": 69,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 659,
+          "Resource": 75,
+          "Period": 70,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 660,
+          "Resource": 75,
+          "Period": 71,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 661,
+          "Resource": 75,
+          "Period": 72,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 662,
+          "Resource": 75,
+          "Period": 73,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 663,
+          "Resource": 75,
+          "Period": 74,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 664,
+          "Resource": 75,
+          "Period": 75,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 665,
+          "Resource": 75,
+          "Period": 76,
+          "Role": "RN",
+          "C###": null,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 666,
+          "Resource": 75,
+          "Period": 77,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 667,
+          "Resource": 75,
+          "Period": 78,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 668,
+          "Resource": 75,
+          "Period": 79,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 669,
+          "Resource": 75,
+          "Period": 80,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 670,
+          "Resource": 75,
+          "Period": 81,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 671,
+          "Resource": 75,
+          "Period": 82,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 672,
+          "Resource": 75,
+          "Period": 83,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        },
+        {
+          "excel_row": 673,
+          "Resource": 75,
+          "Period": 84,
+          "Role": "RN",
+          "C###": 1,
+          "ResAvailability": 84,
+          "ResMaxAvail": 12
+        }
+      ],
+      "sum": 35,
+      "positive_periods": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
+      ],
+      "audit_values": {
+        "ResAvailability": [
+          84
+        ],
+        "ResMaxAvail": [
+          12
+        ]
+      }
+    }
+  ],
+  "sheets": [
+    {
+      "name": "Settings",
+      "dimension": "A1:A2"
+    },
+    {
+      "name": "UnitL1Path",
+      "dimension": "A1:D30"
+    },
+    {
+      "name": "PeriodLIST",
+      "dimension": "A1:E85"
+    },
+    {
+      "name": "C##TABLE",
+      "dimension": "A1:D1597"
+    },
+    {
+      "name": "CapacityDistribB_AVAILABILITY_L",
+      "dimension": "A1:S1"
+    },
+    {
+      "name": "Sheet1",
+      "dimension": "A3:B5",
+      "cells": [
+        {
+          "address": "A3",
+          "value": "Sum of C###",
+          "kind": "s",
+          "formula": null
+        },
+        {
+          "address": "B3",
+          "value": "Column Labels",
+          "kind": "s",
+          "formula": null
+        },
+        {
+          "address": "A4",
+          "value": "Row Labels",
+          "kind": "s",
+          "formula": null
+        },
+        {
+          "address": "B4",
+          "value": "Grand Total",
+          "kind": "s",
+          "formula": null
+        },
+        {
+          "address": "A5",
+          "value": "Grand Total",
+          "kind": "s",
+          "formula": null
+        },
+        {
+          "address": "B5",
+          "value": null,
+          "kind": null,
+          "formula": null
+        }
+      ]
+    },
+    {
+      "name": "C###TABLE",
+      "dimension": "A1:F1597"
+    }
+  ],
+  "core_properties_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<cp:coreProperties xmlns:cp=\"http://schemas.openxmlformats.org/package/2006/metadata/core-properties\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:dcmitype=\"http://purl.org/dc/dcmitype/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><dc:creator>Alex James</dc:creator><cp:lastModifiedBy>Alex James</cp:lastModifiedBy><dcterms:created xsi:type=\"dcterms:W3CDTF\">2023-08-18T04:10:36Z</dcterms:created><dcterms:modified xsi:type=\"dcterms:W3CDTF\">2026-10-20T22:56:53Z</dcterms:modified></cp:coreProperties>",
+  "query_table_metadata": [
+    {
+      "part": "xl/queryTables/queryTable2.xml",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<queryTable xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"xr16\" xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\" name=\"ExternalData_18\" connectionId=\"32\" xr16:uid=\"{7E1F5E7B-EAA9-4340-ABF1-CC9A7BF029FC}\" autoFormatId=\"16\" applyNumberFormats=\"0\" applyBorderFormats=\"0\" applyFontFormats=\"0\" applyPatternFormats=\"0\" applyAlignmentFormats=\"0\" applyWidthHeightFormats=\"0\"><queryTableRefresh nextId=\"12\"><queryTableFields count=\"5\"><queryTableField id=\"2\" name=\"Shift\" tableColumnId=\"2\"/><queryTableField id=\"3\" name=\"Role\" tableColumnId=\"3\"/><queryTableField id=\"4\" name=\"Facility\" tableColumnId=\"4\"/><queryTableField id=\"5\" name=\"Date\" tableColumnId=\"5\"/><queryTableField id=\"1\" name=\"Period\" tableColumnId=\"1\"/></queryTableFields></queryTableRefresh></queryTable>"
+    },
+    {
+      "part": "xl/queryTables/queryTable3.xml",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<queryTable xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"xr16\" xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\" name=\"ExternalData_18\" connectionId=\"8\" xr16:uid=\"{7E534B6F-1E1D-43C0-BA58-A08D1C20E089}\" autoFormatId=\"16\" applyNumberFormats=\"0\" applyBorderFormats=\"0\" applyFontFormats=\"0\" applyPatternFormats=\"0\" applyAlignmentFormats=\"0\" applyWidthHeightFormats=\"0\"><queryTableRefresh nextId=\"29\"><queryTableFields count=\"4\"><queryTableField id=\"2\" name=\"Resource\" tableColumnId=\"2\"/><queryTableField id=\"3\" name=\"Period\" tableColumnId=\"3\"/><queryTableField id=\"1\" name=\"Role\" tableColumnId=\"1\"/><queryTableField id=\"4\" name=\"C##\" tableColumnId=\"4\"/></queryTableFields></queryTableRefresh></queryTable>"
+    },
+    {
+      "part": "xl/queryTables/queryTable4.xml",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<queryTable xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"xr16\" xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\" name=\"ExternalData_18\" connectionId=\"9\" xr16:uid=\"{20EF8484-75DB-4168-8929-8FAE5CBBD5DC}\" autoFormatId=\"16\" applyNumberFormats=\"0\" applyBorderFormats=\"0\" applyFontFormats=\"0\" applyPatternFormats=\"0\" applyAlignmentFormats=\"0\" applyWidthHeightFormats=\"0\"><queryTableRefresh nextId=\"34\"><queryTableFields count=\"19\"><queryTableField id=\"1\" name=\"Role\" tableColumnId=\"1\"/><queryTableField id=\"2\" name=\"Resource\" tableColumnId=\"2\"/><queryTableField id=\"3\" name=\"Period\" tableColumnId=\"3\"/><queryTableField id=\"14\" name=\"Day\" tableColumnId=\"10\"/><queryTableField id=\"6\" name=\"OriginalAvailability\" tableColumnId=\"6\"/><queryTableField id=\"15\" name=\"SpareDayEligible\" tableColumnId=\"11\"/><queryTableField id=\"16\" name=\"SparePeriodSelected\" tableColumnId=\"12\"/><queryTableField id=\"17\" name=\"SpareEligibilityReason\" tableColumnId=\"13\"/><queryTableField id=\"18\" name=\"PlannedCluster\" tableColumnId=\"14\"/><queryTableField id=\"19\" name=\"ExtensionSide\" tableColumnId=\"15\"/><queryTableField id=\"20\" name=\"AllocationWorkday\" tableColumnId=\"16\"/><queryTableField id=\"21\" name=\"A2Stage1MetadataStatus\" tableColumnId=\"17\"/><queryTableField id=\"22\" name=\"A2EligibilityMetadataStatus\" tableColumnId=\"18\"/><queryTableField id=\"23\" name=\"A2EligibilityDayStatus\" tableColumnId=\"19\"/><queryTableField id=\"7\" name=\"HasAllocationEvidence\" tableColumnId=\"7\"/><queryTableField id=\"8\" name=\"SpareCalculationAllowed\" tableColumnId=\"8\"/><queryTableField id=\"9\" name=\"SpareIssueReason\" tableColumnId=\"9\"/><queryTableField id=\"4\" name=\"C#\" tableColumnId=\"4\"/><queryTableField id=\"5\" name=\"LineageIssue\" tableColumnId=\"5\"/></queryTableFields></queryTableRefresh></queryTable>"
+    },
+    {
+      "part": "xl/queryTables/queryTable5.xml",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<queryTable xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"xr16\" xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\" name=\"ExternalData_17\" connectionId=\"5\" xr16:uid=\"{2B7E3A24-0312-463D-B765-495190525B96}\" autoFormatId=\"16\" applyNumberFormats=\"0\" applyBorderFormats=\"0\" applyFontFormats=\"0\" applyPatternFormats=\"0\" applyAlignmentFormats=\"0\" applyWidthHeightFormats=\"0\"><queryTableRefresh nextId=\"33\"><queryTableFields count=\"6\"><queryTableField id=\"1\" name=\"Resource\" tableColumnId=\"1\"/><queryTableField id=\"2\" name=\"Period\" tableColumnId=\"2\"/><queryTableField id=\"4\" name=\"Role\" tableColumnId=\"4\"/><queryTableField id=\"3\" name=\"C###\" tableColumnId=\"3\"/><queryTableField id=\"6\" name=\"ResAvailability\" tableColumnId=\"5\"/><queryTableField id=\"7\" name=\"ResMaxAvail\" tableColumnId=\"6\"/></queryTableFields></queryTableRefresh></queryTable>"
+    },
+    {
+      "part": "xl/queryTables/queryTable1.xml",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<queryTable xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"xr16\" xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\" name=\"ExternalData_1\" connectionId=\"65\" xr16:uid=\"{7B58FCCC-B67C-47F8-BB18-CC543DE8E282}\" autoFormatId=\"16\" applyNumberFormats=\"0\" applyBorderFormats=\"0\" applyFontFormats=\"0\" applyPatternFormats=\"0\" applyAlignmentFormats=\"0\" applyWidthHeightFormats=\"0\"><queryTableRefresh nextId=\"3\"><queryTableFields count=\"2\"><queryTableField id=\"1\" name=\"Variable Name\" tableColumnId=\"1\"/><queryTableField id=\"2\" name=\"Value\" tableColumnId=\"2\"/></queryTableFields></queryTableRefresh></queryTable>"
+    }
+  ],
+  "sha256_after": "82d9399c863f48140e304b9f98da73c7c933f64cf4b4a7f01fee603c1f1262f9",
+  "unchanged": true
+}

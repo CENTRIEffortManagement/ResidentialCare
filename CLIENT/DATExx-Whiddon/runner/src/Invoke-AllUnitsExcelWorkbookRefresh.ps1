@@ -333,10 +333,10 @@ try {
     $preExistingExcelIds = @(Get-Process -Name EXCEL -ErrorAction SilentlyContinue | ForEach-Object { $_.Id })
     $fileSnapshot = New-RefreshFileSnapshot -Path $resolvedWorkbookPath -InputSnapshotPath $InputSnapshotPath
     $script:RefreshState.fileSnapshot = $fileSnapshot
-    $verifyDemandOutputs = $WorkbookName -match '(^|/)(DemandIntervals|Demand)$'
-    $deletedWorksheetQueries = if ($verifyDemandOutputs) {
-        Get-DeletedWorksheetQueryMetadata -Path $resolvedWorkbookPath
-    } else { @{} }
+    $deletedWorksheetQueries = Get-DeletedWorksheetQueryMetadata -Path $resolvedWorkbookPath
+    $requiredCheckTables = @(if ([IO.Path]::GetFileNameWithoutExtension($resolvedWorkbookPath) -eq 'StaffListMaster') {
+        'ResourceContract_CHECK'
+    })
     Set-RefreshPhase 'CreatingExcel'
     Write-Log "Starting a clean Excel instance."
     $excel = New-Object -ComObject Excel.Application
@@ -358,9 +358,7 @@ try {
     $refreshStart = Get-Date
     Set-RefreshPhase 'PreparingSynchronousRefresh'
     $backgroundRefreshSettings = @(Disable-WorkbookBackgroundRefresh -Workbook $workbook)
-    $queryRefreshBefore = if ($verifyDemandOutputs) {
-        Get-WorksheetQueryRefreshEvidence $workbook -DeletedQueries $deletedWorksheetQueries
-    } else { $null }
+    $queryRefreshBefore = Get-WorksheetQueryRefreshEvidence $workbook -DeletedQueries $deletedWorksheetQueries
     Set-RefreshPhase 'Refreshing'
     Write-Log "Starting workbook refresh."
     $workbook.RefreshAll()
@@ -368,13 +366,12 @@ try {
 
     # SkipAsyncWait is retained for CLI compatibility; it cannot bypass the readiness gate.
     Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
-    if ($verifyDemandOutputs) {
-        Set-RefreshPhase 'VerifyingQueryRefresh'
-        $confirmedSynchronously = Assert-WorksheetQueryRefreshEvidence $workbook $queryRefreshBefore -DeletedQueries $deletedWorksheetQueries -ConfirmMissingDates
-        if ($confirmedSynchronously) {
-            Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
-        }
+    Set-RefreshPhase 'VerifyingQueryRefresh'
+    $confirmedSynchronously = Assert-WorksheetQueryRefreshEvidence $workbook $queryRefreshBefore -DeletedQueries $deletedWorksheetQueries -ConfirmMissingDates
+    if ($confirmedSynchronously) {
+        Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
     }
+    Assert-RequiredWorksheetChecks -Workbook $workbook -TableNames $requiredCheckTables
 
     Assert-NotStopNowRequested
 

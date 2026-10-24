@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(A.2)-shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(A.2)-shifts.xlsx
-// Extracted: 2026-10-05T07:55:20.402Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\2. Calculations\AIN\CapacityDistrib(A.2)-shifts.xlsx
+// Extracted: 2026-10-22T02:54:47.350Z
 
 section Section1;
 
@@ -244,67 +244,19 @@ in
 // Purpose: Assess the imported eligibility calendar independently before C# publication.
 shared A2PlannedClusterSchedule_Prepare = A2ClusterSchedule(A2PlannedDaySchedule_Prepare);
 
-
-// Query: A2OriginalDaySchedule_Prepare
-// Purpose: Isolate the original allocation workdays without counting optional capacity as allocation work.
-// Notes: Read the complete pre-reduction plan, including unavailable allocated days. This baseline cannot depend on C# publication.
-shared A2OriginalDaySchedule_Prepare = let
-    Source = A2PlannedDaySchedule_Prepare,
-    OriginalFlags = Table.TransformColumns(Source, {{"OptionalSpareWorkday", each false, type logical}}),
-    RemovedPublishedWorkday = Table.RemoveColumns(OriginalFlags, {"Workday"}),
-    WithOriginalWorkday = Table.AddColumn(RemovedPublishedWorkday, "Workday", each [AllocationWorkday], type logical)
-in
-    WithOriginalWorkday;
-
-// Query: A2OriginalClusterSchedule_Prepare
-// Purpose: Expose the allocation-only cluster calendar for separate preexisting-breach diagnostics.
-shared A2OriginalClusterSchedule_Prepare = A2ClusterSchedule(A2OriginalDaySchedule_Prepare);
-
-// Query: A2CalendarRuleIssues
-// Purpose: Report calendar breaches and identify whether spare introduced or worsened each breach.
-// Inputs: Planned or published cluster facts and the immutable allocation-only cluster calendar.
-// Notes: An overlong original cluster is report-only only when it contains no spare. A short original gap is report-only only with the same facing boundaries and adjacent cluster IDs.
-shared A2CalendarRuleIssues = (clusters as table, originalClusters as table) as table =>
-let
-    OversizedClusters = Table.SelectRows(clusters, each [WorkedDays] > 5),
-    ShortRestGaps = Table.SelectRows(clusters, each [OffDays] <> null and [OffDays] < 2),
-    ClusterChecks = Table.AddColumn(OversizedClusters, "Check", each "Maximum five worked days per planned cluster", type text),
-    ClusterReasons = Table.AddColumn(ClusterChecks, "Reason", each "Planned cluster " & Number.ToText([PlannedCluster])
-        & " has " & Number.ToText([WorkedDays]) & " worked days; maximum is 5", type text),
-    GapChecks = Table.AddColumn(ShortRestGaps, "Check", each "Minimum two full off days between planned clusters", type text),
-    GapReasons = Table.AddColumn(GapChecks, "Reason", each "Planned clusters " & Number.ToText([PreviousCluster])
-        & " and " & Number.ToText([PlannedCluster]) & " have " & Number.ToText([OffDays])
-        & " full off days between them; minimum is 2", type text),
-    Issues = Table.Combine({ClusterReasons, GapReasons}),
-    JoinedOriginalCluster = Table.NestedJoin(Issues, {"Resource", "Role", "PlannedCluster"},
-        originalClusters, {"Resource", "Role", "PlannedCluster"}, "OriginalCluster", JoinKind.LeftOuter),
-    ExpandedOriginalCluster = Table.ExpandTableColumn(JoinedOriginalCluster, "OriginalCluster",
-        {"StartDay", "EndDay", "WorkedDays"}, {"OriginalStartDay", "OriginalEndDay", "BaselineWorkedDays"}),
-    JoinedOriginalGap = Table.NestedJoin(ExpandedOriginalCluster, {"Resource", "Role", "PreviousCluster", "PlannedCluster"},
-        originalClusters, {"Resource", "Role", "PreviousCluster", "PlannedCluster"}, "OriginalGap", JoinKind.LeftOuter),
-    ExpandedOriginalGap = Table.ExpandTableColumn(JoinedOriginalGap, "OriginalGap",
-        {"PreviousEndDay", "OffDays"}, {"OriginalPreviousEndDay", "OriginalOffDays"}),
-    WithOrigin = Table.AddColumn(ExpandedOriginalGap, "Origin", each
-        if [Check] = "Maximum five worked days per planned cluster"
-            and [BaselineWorkedDays] <> null and [BaselineWorkedDays] > 5 and [OptionalSpareDays] = 0
-            and [WorkedDays] = [BaselineWorkedDays] and [StartDay] = [OriginalStartDay] and [EndDay] = [OriginalEndDay]
-        then "Preexisting allocation"
-        else if [Check] = "Minimum two full off days between planned clusters"
-            and [OriginalOffDays] <> null and [OriginalOffDays] < 2
-            and [StartDay] = [OriginalStartDay] and [PreviousEndDay] = [OriginalPreviousEndDay]
-        then "Preexisting allocation"
-        else "Optional spare", type text),
-    WithBlockingDecision = Table.AddColumn(WithOrigin, "BlocksSpare", each [Origin] <> "Preexisting allocation", type logical)
-in
-    WithBlockingDecision;
-
 // Query: A2PlannedCalendarIssues_Prepare
-// Purpose: Distinguish unchanged original-roster breaches from unsafe spare in the saved eligibility plan.
-// Notes: Only spare-induced breaches exclude Resource spare. Original allocation anchors and cap arithmetic remain unchanged.
+// Purpose: Exclude Resource spare when a saved eligibility plan exceeds five worked days or leaves fewer than two full off days.
+// Notes: Existing allocation breaches are reported and retained; these checks do not alter work flags or cap arithmetic.
 shared A2PlannedCalendarIssues_Prepare = let
-    Issues = A2CalendarRuleIssues(A2PlannedClusterSchedule_Prepare, A2OriginalClusterSchedule_Prepare)
+    Source = A2PlannedClusterSchedule_Prepare,
+    OversizedClusters = Table.SelectRows(Source, each [WorkedDays] > 5),
+    ShortRestGaps = Table.SelectRows(Source, each [OffDays] <> null and [OffDays] < 2),
+    OversizedReasons = Table.AddColumn(OversizedClusters, "Reason", each "Saved eligibility cluster has " & Number.ToText([WorkedDays]) & " worked days; maximum is 5", type text),
+    GapReasons = Table.AddColumn(ShortRestGaps, "Reason", each "Saved eligibility clusters have " & Number.ToText([OffDays]) & " full off days between them; minimum is 2", type text),
+    IssueRows = Table.Combine({OversizedReasons, GapReasons}),
+    Output = Table.SelectColumns(IssueRows, {"Resource", "Role", "PlannedCluster", "StartDay", "EndDay", "WorkedDays", "OffDays", "Reason"})
 in
-    Table.Buffer(Issues);
+    Table.Buffer(Output);
 
 // Query: A2PreReductionResourcePeriods_Prepare
 // Purpose: Apply upstream eligibility and independent input exclusions before the joint reduction calculation.
@@ -337,8 +289,7 @@ shared A2PreReductionResourcePeriods_Prepare = let
     MetadataIssueResources = List.Buffer(List.Distinct(MetadataIssueRows[Resource])),
     EligibilityIssueDays = Table.SelectRows(A2EligibilityDay_CHECK, each [A2EligibilityDayStatus] <> "Available"),
     EligibilityIssueResources = List.Buffer(List.Distinct(EligibilityIssueDays[Resource])),
-    BlockingCalendarIssues = Table.SelectRows(A2PlannedCalendarIssues_Prepare, each [BlocksSpare]),
-    CalendarIssueResources = List.Buffer(List.Distinct(BlockingCalendarIssues[Resource])),
+    CalendarIssueResources = List.Buffer(List.Distinct(A2PlannedCalendarIssues_Prepare[Resource])),
     JoinedEligibilityDay = Table.NestedJoin(WithMetadataStatus, {"Resource", "Day"}, A2EligibilityDay_CHECK,
         {"Resource", "Day"}, "EligibilityDay", JoinKind.LeftOuter),
     ExpandedEligibilityDay = Table.ExpandTableColumn(JoinedEligibilityDay, "EligibilityDay",
@@ -359,7 +310,7 @@ shared A2PreReductionResourcePeriods_Prepare = let
                 if Value.Is(UpstreamReason, type text) and Text.Trim(UpstreamReason) <> "" then UpstreamReason else null,
                 if List.Contains(MetadataIssueResources, [Resource]) then "upstream Stage1 diagnostics unavailable for this Resource" else null,
                 if List.Contains(EligibilityIssueResources, [Resource]) then "upstream spare eligibility is unavailable or inconsistent for this Resource" else null,
-                if List.Contains(CalendarIssueResources, [Resource]) then "upstream spare plan introduces or worsens a worked-day or full-off-day breach for this Resource" else null,
+                if List.Contains(CalendarIssueResources, [Resource]) then "upstream eligibility plan breaks the worked-day or full-off-day rule for this Resource" else null,
                 if List.Contains(UpstreamExcludedResources, [Resource]) and UpstreamReason = null then "upstream Stage1 excludes optional spare for this Resource" else null,
                 if HasGlobalOptionalIssue then "A.2 optional input issue cannot be assigned to a Resource" else null,
                 if List.Contains(OptionalIssueResources, [Resource]) then "A.2 optional input issue affects this Resource" else null
@@ -844,20 +795,62 @@ in
 // Purpose: Calculate worked-day totals and chronological gaps from actual C# plus original allocation flags.
 shared A2PublishedClusterSchedule_Prepare = A2ClusterSchedule(A2PublishedDaySchedule_Prepare);
 
+// Query: A2OriginalDaySchedule_Prepare
+// Purpose: Isolate the original allocation workdays without counting optional capacity as allocation work.
+// Notes: Reuse the buffered published-day table; the subsequent cluster aggregation buffers its smaller result.
+shared A2OriginalDaySchedule_Prepare = let
+    Source = A2PublishedDaySchedule_Prepare,
+    OriginalFlags = Table.TransformColumns(Source, {{"OptionalSpareWorkday", each false, type logical}}),
+    RemovedPublishedWorkday = Table.RemoveColumns(OriginalFlags, {"Workday"}),
+    WithOriginalWorkday = Table.AddColumn(RemovedPublishedWorkday, "Workday", each [AllocationWorkday], type logical)
+in
+    WithOriginalWorkday;
+
+// Query: A2OriginalClusterSchedule_Prepare
+// Purpose: Expose the allocation-only cluster calendar for separate preexisting-breach diagnostics.
+shared A2OriginalClusterSchedule_Prepare = A2ClusterSchedule(A2OriginalDaySchedule_Prepare);
+
+// Query: A2CalendarRuleIssues
+// Purpose: Return one issue per breached worked-day or full-off-day rule on an already prepared cluster calendar.
+// Notes: This helper reports failures; it does not raise errors, choose spare days or change availability.
+// Notes: The callers buffer their final issues after adding Origin, avoiding another intermediate issue-table buffer.
+shared A2CalendarRuleIssues = (clusters as table) as table =>
+let
+    OversizedClusters = Table.SelectRows(clusters, each [WorkedDays] > 5),
+    ShortRestGaps = Table.SelectRows(clusters, each [OffDays] <> null and [OffDays] < 2),
+    ClusterChecks = Table.AddColumn(OversizedClusters, "Check", each "Maximum five worked days per planned cluster", type text),
+    ClusterReasons = Table.AddColumn(ClusterChecks, "Reason", each "Planned cluster " & Number.ToText([PlannedCluster])
+        & " has " & Number.ToText([WorkedDays]) & " worked days; maximum is 5", type text),
+    GapChecks = Table.AddColumn(ShortRestGaps, "Check", each "Minimum two full off days between planned clusters", type text),
+    GapReasons = Table.AddColumn(GapChecks, "Reason", each "Planned clusters " & Number.ToText([PreviousCluster])
+        & " and " & Number.ToText([PlannedCluster]) & " have " & Number.ToText([OffDays])
+        & " full off days between them; minimum is 2", type text),
+    Issues = Table.Combine({ClusterReasons, GapReasons})
+in
+    Issues;
+
 // Query: A2OriginalCalendarIssues_Prepare
 // Purpose: Report preexisting allocation-only breaches separately from any optional-spare publication failure.
 shared A2OriginalCalendarIssues_Prepare = let
-    Issues = A2CalendarRuleIssues(A2OriginalClusterSchedule_Prepare, A2OriginalClusterSchedule_Prepare)
+    Source = A2CalendarRuleIssues(A2OriginalClusterSchedule_Prepare),
+    WithOrigin = Table.AddColumn(Source, "Origin", each "Preexisting allocation", type text)
 in
-    Table.Buffer(Issues);
+    Table.Buffer(WithOrigin);
 
 // Query: A2PublishedCalendarIssues_Prepare
-// Purpose: Report actual C# calendar breaches using the same original-versus-spare test as the pre-reduction plan.
-// Notes: Extra spare in an already overlong cluster, or a shortened original gap, must never be labelled allocation-only.
+// Purpose: Report actual C# calendar breaches and identify whether the same breach exists in the allocation-only calendar.
+// Notes: Plan IDs may interleave chronologically; gap comparison uses adjacent dates and both actual plan IDs.
 shared A2PublishedCalendarIssues_Prepare = let
-    Issues = A2CalendarRuleIssues(A2PublishedClusterSchedule_Prepare, A2OriginalClusterSchedule_Prepare)
+    Source = A2CalendarRuleIssues(A2PublishedClusterSchedule_Prepare),
+    JoinedOriginalCalendar = Table.NestedJoin(Source, {"Resource", "Role", "PreviousCluster", "PlannedCluster"},
+        A2OriginalClusterSchedule_Prepare, {"Resource", "Role", "PreviousCluster", "PlannedCluster"}, "OriginalCalendar", JoinKind.LeftOuter),
+    ExpandedOriginalCalendar = Table.ExpandTableColumn(JoinedOriginalCalendar, "OriginalCalendar", {"OffDays"}, {"OriginalOffDays"}),
+    WithOrigin = Table.AddColumn(ExpandedOriginalCalendar, "Origin", each
+        if [Check] = "Maximum five worked days per planned cluster" and [OriginalWorkedDays] > 5 then "Preexisting allocation"
+        else if [Check] = "Minimum two full off days between planned clusters" and [OriginalOffDays] <> null and [OriginalOffDays] < 2 then "Preexisting allocation"
+        else "Published optional spare", type text)
 in
-    Table.Buffer(Issues);
+    Table.Buffer(WithOrigin);
 
 // Query: A2SparePublicationIssues_Prepare
 // Purpose: Expose any positive optional C# cell retained despite its Resource exclusion or eligibility flags.
@@ -1230,10 +1223,8 @@ shared CapacityDiagnostics_DETAILS = let
     } else List.Transform(Table.ToRecords(PlannedCalendarAttempt[Value]), each
         [Stage = "A.2", Check = "Saved eligibility plan calendar", Resource = [Resource], Role = [Role], Name = null, Date = null, Period = null,
          Day = [StartDay], PlannedCluster = [PlannedCluster], WorkedDays = [WorkedDays], OffDays = [OffDays],
-         Origin = [Origin],
          Reason = [Reason] & "; cluster day range " & Number.ToText([StartDay]) & " to " & Number.ToText([EndDay]),
-         Action = if [BlocksSpare] then "Exclude unsafe optional spare for this Resource before C#; retain allocation evidence."
-             else "Report existing allocation breach; retain allocations and allow compliant spare elsewhere."]),
+         Action = "Exclude all optional spare for this Resource before C#; retain allocation evidence."]),
     ReductionCandidateAttempt = try let
         Rows = Table.Buffer(A2ReductionCandidateIssues_Prepare),
         ErrorRows = Table.SelectRowsWithErrors(Rows),
@@ -1340,7 +1331,7 @@ shared CapacityDiagnostics_DETAILS = let
              Day = issue[StartDay], PlannedCluster = issue[PlannedCluster], PreviousCluster = issue[PreviousCluster],
              WorkedDays = issue[WorkedDays], OffDays = issue[OffDays], Origin = issue[Origin],
              Reason = issue[Reason] & "; cluster day range " & Number.ToText(issue[StartDay]) & " to " & Number.ToText(issue[EndDay]),
-              Action = if issue[Origin] = "Preexisting allocation" then "Report existing allocation breach; retain allocations and allow compliant spare elsewhere."
+             Action = if issue[Origin] = "Preexisting allocation" then "Retain allocation evidence and review this preexisting breach; optional spare is excluded."
                  else "Review the published optional-spare breach; diagnostics do not remove allocation evidence or stop other computable results."]))),
     AllIssueRows = List.Combine({OptionalIssueRows, SchemaIssueRows, EligibilitySchemaRows, EligibilityDayRows,
         PlannedCalendarRows, ReductionCandidateRows, JointDecisionRows, JointBudgetRows, WholeCellRows,

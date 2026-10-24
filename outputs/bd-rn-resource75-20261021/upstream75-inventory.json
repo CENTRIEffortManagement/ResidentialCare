@@ -1,0 +1,440 @@
+[
+  {
+    "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+    "sha256": "d97a91ef28f5136eea5887bda2f78f8ca61eb503a7dc705bc865e52d4ddc8b5a",
+    "tables": [
+      {
+        "name": "UnitL1PathTABLE",
+        "sheet": "Unit1Path",
+        "ref": "A3:B9",
+        "columns": [
+          "Variable Name",
+          "Value"
+        ],
+        "rows": 6
+      },
+      {
+        "name": "ResourceContract_CHECK",
+        "sheet": "ResourceContract_CHECK",
+        "ref": "A1:D13",
+        "columns": [
+          "Check",
+          "Status",
+          "Failures",
+          "Details"
+        ],
+        "rows": 12
+      },
+      {
+        "name": "Masterlist_Base",
+        "sheet": "Masterlist_Base",
+        "ref": "A1:O130",
+        "columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Role",
+          "PreferredRole",
+          "EmploymentType",
+          "Contracted FN Hours",
+          "In Allocation",
+          "In Records",
+          "Worker Membership",
+          "Source",
+          "Worker Record Status",
+          "Worker Contract Issue",
+          "Name",
+          "Resource",
+          "Misalignment"
+        ],
+        "rows": 129
+      },
+      {
+        "name": "Misaligned_Join",
+        "sheet": "Misaligned Join",
+        "ref": "A1:M25",
+        "columns": [
+          "EmployeeID",
+          "Name",
+          "Role",
+          "Contracted FN Hours",
+          "Worker Contract Issue",
+          "Worker Record Status",
+          "Source",
+          "Availability-StaffList.Name",
+          "Availability-StaffList.Role",
+          "Custom",
+          "Misaligned-Name",
+          "Misaligned-Role",
+          "Misalignment"
+        ],
+        "rows": 24
+      },
+      {
+        "name": "Table_Masterlist",
+        "sheet": "Masterlist",
+        "ref": "A1:Y130",
+        "columns": [
+          "Name",
+          "Role",
+          "Resource",
+          "Misalignment",
+          "Source",
+          "EmployeeID",
+          "Facility-Abbrev",
+          "EmploymentType",
+          "PreferredRole",
+          "In Allocation",
+          "In Records",
+          "Worker Membership",
+          "Worker Record Status",
+          "Worker Contract Issue",
+          "Contract Source",
+          "Contracted FN Hours",
+          "Roster Start",
+          "Roster End",
+          "Roster Fortnights",
+          "Contracted Roster Hours",
+          "Contracted Shift Equivalent",
+          "Contracted Shifts",
+          "Settings Max Availability",
+          "Effective Shift Cap",
+          "Limit Basis"
+        ],
+        "rows": 129
+      }
+    ],
+    "unchanged": true
+  },
+  {
+    "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Settings Data.xlsx",
+    "sha256": "8014182d8bf922346415853c020bdce0e7ae753cd52efb3b9a58697a4fef2781",
+    "tables": [
+      {
+        "name": "UnitL1PathTABLE",
+        "sheet": "Unit1Path",
+        "ref": "A3:B9",
+        "columns": [
+          "Variable Name",
+          "Value"
+        ],
+        "rows": 6
+      },
+      {
+        "name": "MaxCapacity",
+        "sheet": "MaxCapacity",
+        "ref": "A1:A2",
+        "columns": [
+          "MaxCapacityFactor"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "MaxAvailability",
+        "sheet": "MaxCapacity",
+        "ref": "A8:A9",
+        "columns": [
+          "MaxAvailability"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "ShiftDuration",
+        "sheet": "ShiftHours",
+        "ref": "A8:C9",
+        "columns": [
+          "StdWeekDays",
+          "ShiftDuration",
+          "Column1"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "Meals",
+        "sheet": "ShiftHours",
+        "ref": "A11:B12",
+        "columns": [
+          "MealBreakTime",
+          "MealBreakstart"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "ShiftStart",
+        "sheet": "ShiftHours",
+        "ref": "A15:C17",
+        "columns": [
+          "StartAM",
+          "StartPM",
+          "StartNIGHT"
+        ],
+        "rows": 2
+      },
+      {
+        "name": "ShiftLent",
+        "sheet": "ShiftHours",
+        "ref": "A20:E22",
+        "columns": [
+          "MinHrs",
+          "ShortHrs",
+          "StdHrs",
+          "1.5OT",
+          "2.0OT"
+        ],
+        "rows": 2
+      },
+      {
+        "name": "ShiftGap",
+        "sheet": "ShiftHours",
+        "ref": "A25:A26",
+        "columns": [
+          "MinGap"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "ShiftPeriod",
+        "sheet": "ShiftHours",
+        "ref": "A30:G42",
+        "columns": [
+          "Role",
+          "ShiftPeriod",
+          "StartTime",
+          "StartDay",
+          "DurationOfShifts",
+          "EndDay",
+          "EndTimeCheck"
+        ],
+        "rows": 12
+      },
+      {
+        "name": "Table13",
+        "sheet": "ShiftHours",
+        "ref": "A50:C51",
+        "columns": [
+          "OrdinaryHrsWk-Week",
+          "OrdinaryHrsFn",
+          "OrdinaryHrs28d"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "MaxCapacityFactor",
+        "sheet": "ShiftHours",
+        "ref": "H9:H10",
+        "columns": [
+          "MaxCapacityFactor"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "PermutationDimensions",
+        "sheet": "DimensionPermutations",
+        "ref": "A1:E253",
+        "columns": [
+          "Date",
+          "Day",
+          "Shifts",
+          "Period",
+          "RolesList"
+        ],
+        "rows": 252
+      },
+      {
+        "name": "Shifts",
+        "sheet": "Metadata",
+        "ref": "A1:A4",
+        "columns": [
+          "Shifts"
+        ],
+        "rows": 3
+      },
+      {
+        "name": "Unit",
+        "sheet": "Metadata",
+        "ref": "C1:C4",
+        "columns": [
+          "UNITS"
+        ],
+        "rows": 3
+      },
+      {
+        "name": "Roles",
+        "sheet": "Metadata",
+        "ref": "E1:E4",
+        "columns": [
+          "ROLES"
+        ],
+        "rows": 3
+      },
+      {
+        "name": "Table_DateList",
+        "sheet": "Metadata",
+        "ref": "G1:H29",
+        "columns": [
+          "Date",
+          "Day"
+        ],
+        "rows": 28
+      },
+      {
+        "name": "Table_Min_Date",
+        "sheet": "Metadata",
+        "ref": "K3:K4",
+        "columns": [
+          "Min Date"
+        ],
+        "rows": 1
+      },
+      {
+        "name": "DateFrom",
+        "sheet": "Metadata",
+        "ref": "L8:L9",
+        "columns": [
+          "DateFrom"
+        ],
+        "rows": 1
+      }
+    ],
+    "unchanged": true
+  },
+  {
+    "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+    "sha256": "dbf30341ff87ec364e94837dbd56a69f81fecf7c200514002785c54c6a62ded0",
+    "tables": [
+      {
+        "name": "UnitL1PathTABLE",
+        "sheet": "Unit1Path",
+        "ref": "A3:B9",
+        "columns": [
+          "Variable Name",
+          "Value"
+        ],
+        "rows": 6
+      },
+      {
+        "name": "EXTRACT_NAMES_INTERVALSLIST",
+        "sheet": "EXTRACT NAMES_INTERVALSLIST",
+        "ref": "A1:R29455",
+        "columns": [
+          "DayDate",
+          "Name",
+          "TimeType",
+          "AllocatedIntervals",
+          "IntervalID.1",
+          "ShiftPeriod",
+          "Role",
+          "TimeDate",
+          "IntervalDurationTemp",
+          "Double Shift",
+          "RealDuration",
+          "Effective Duration",
+          "IntervalAssociatedShift",
+          "Attribute",
+          "ShiftType",
+          "ShiftDate",
+          "Role1",
+          "StaffCount"
+        ],
+        "rows": 29454
+      },
+      {
+        "name": "IMPORT_Shifts",
+        "sheet": "IMPORT Shifts",
+        "ref": "A1:D25",
+        "columns": [
+          "Name",
+          "Item",
+          "Kind",
+          "Hidden"
+        ],
+        "rows": 24
+      },
+      {
+        "name": "ResourceShiftAllocation___less_Intervals",
+        "sheet": "ResourceShiftAllocation - less ",
+        "ref": "A1:E1570",
+        "columns": [
+          "ShiftPeriod",
+          "Name",
+          "Role",
+          "TimeDate",
+          "ResShiftFTE"
+        ],
+        "rows": 1569
+      },
+      {
+        "name": "RoleShiftsDayTime",
+        "sheet": "RoleShiftsDayTime",
+        "ref": "A1:D127",
+        "columns": [
+          "DateTime",
+          "Shift",
+          "DayDate",
+          "Roles.Role"
+        ],
+        "rows": 126
+      },
+      {
+        "name": "ResourceShiftAllocationY",
+        "sheet": "ResourceIntervalAllocation",
+        "ref": "A1:S29455",
+        "columns": [
+          "DayDate",
+          "Name",
+          "AllocatedIntervals",
+          "IntervalID.1",
+          "ShiftPeriod",
+          "Role",
+          "TimeDate",
+          "IntervalDuration",
+          "Double Shift",
+          "RealDuration",
+          "Effective Duration",
+          "IntervalAssociatedShift",
+          "Attribute",
+          "ShiftType",
+          "ShiftDate",
+          "Role1",
+          "StaffCount",
+          "ResEffectiveRatio-FTE",
+          "ResEffectiveIntervalEffort"
+        ],
+        "rows": 29454
+      },
+      {
+        "name": "ResourceShiftAllocation",
+        "sheet": "ResourceShiftAllocation",
+        "ref": "A1:J4900",
+        "columns": [
+          "ShiftDate",
+          "ShiftPeriod",
+          "IntervalAssociatedShift",
+          "Name",
+          "Role",
+          "TimeDate",
+          "Attribute",
+          "ResShiftEffort",
+          "ResShiftEffectiveRatio",
+          "ResShiftFTE"
+        ],
+        "rows": 4899
+      },
+      {
+        "name": "Table_RoleShiftIntervalAllocation",
+        "sheet": "RoleShiftAllocation",
+        "ref": "A1:G225",
+        "columns": [
+          "ShiftDate",
+          "ShiftPeriod",
+          "Role",
+          "Attribute",
+          "RoleShiftEffort",
+          "DurationOfShifts",
+          "RoleShiftFTE"
+        ],
+        "rows": 224
+      }
+    ],
+    "unchanged": true
+  }
+]

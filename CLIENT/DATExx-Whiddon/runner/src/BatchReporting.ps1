@@ -148,6 +148,8 @@ function Write-BatchForecastReport {
         '', 'Historical coordinator timings include process overhead. Input sizes and concurrency may change actual durations.',
         '', 'Original 17m 23s chart retained separately as an unverified illustrative baseline.', '', '## Untimed work', '')
     foreach ($item in $forecast.Untimed) { $notes += "- $($item.Id) — predecessors: $($item.Predecessors -join ', '); $($item.Reason)." }
+    $savedInputNotice = @(Get-BatchSavedIntermediateNotice $Plan)
+    if ($savedInputNotice.Count) { $notes += @('', '## Saved intermediate outputs', '') + $savedInputNotice }
     if ($notes[-1] -eq '') { $notes = @($notes | Select-Object -SkipLast 1) }
     [IO.File]::WriteAllLines((Join-Path $Directory 'planned-notes.md'), $notes)
     return $forecast
@@ -192,6 +194,7 @@ function Write-BatchActualReport {
         ElapsedSeconds = $elapsed; ActiveIntervalSeconds = $busy; GapSeconds = [Math]::Max(0,$elapsed-$busy)
         PeakConcurrency = $peak; OriginalIllustrativeBaselineSeconds = 1043
         Comparison = 'Historical illustrative baseline only; not evidence of performance improvement.' }
+    if ($Plan.PSObject.Properties['SavedIntermediates']) { $summary.SavedIntermediates = @($Plan.SavedIntermediates) }
     Write-BatchJson (Join-Path $Directory 'actual.json') $summary
     $label = ([timespan]::FromSeconds($elapsed)).ToString('hh\:mm\:ss')
     Write-BatchGantt $Plan $rows (Join-Path $Directory 'actual.mmd') "$($Plan.SequenceProfile) $($State.RunId) $($State.Status) - elapsed $label - peak $peak"
@@ -201,6 +204,8 @@ function Write-BatchActualReport {
         'Comparison baseline: original illustrative 17m 23s. Difference does not establish performance improvement.',
         '', '## Untimed or incomplete work', '')
     foreach ($item in @($untimed) + @($incomplete)) { $notes += "- $($item.Id): $($item.Status); $($item.Reason)" }
+    $savedInputNotice = @(Get-BatchSavedIntermediateNotice $Plan)
+    if ($savedInputNotice.Count) { $notes += @('', '## Saved intermediate outputs', '') + $savedInputNotice }
     if ($notes[-1] -eq '') { $notes = @($notes | Select-Object -SkipLast 1) }
     [IO.File]::WriteAllLines((Join-Path $Directory 'actual-notes.md'), $notes)
     return $summary

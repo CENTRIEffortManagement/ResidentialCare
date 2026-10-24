@@ -1,6 +1,6 @@
 // Power Query from: Capacity-ShiftAvailability.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Capacity-ShiftAvailability.xlsx
-// Extracted: 2026-10-20T21:49:20.988Z
+// Extracted: 2026-10-21T07:14:26.972Z
 
 section Section1;
 
@@ -2178,7 +2178,7 @@ in
     Sorted;
 
 // Query: RoleResDayAvailabilityCapped
-// Purpose: Apply the existing shift-count cap using unrounded allocation shares for multi-role employees.
+// Purpose: Apply the worker's resolved roster cap using unrounded allocation shares for multi-role employees.
 // Notes: Join by employee and facility rather than name; workers absent from allocation retain a full single-role cap.
 shared RoleResDayAvailabilityCapped = let
     Failures = Table.SelectRows(AllocationRoleShares_CHECK, each [Status] <> "Pass"),
@@ -2187,7 +2187,15 @@ shared RoleResDayAvailabilityCapped = let
     ShiftCounts = Table.Group(ResDayShift, {"ID", "Facility-Abbrev", "Role", "Name"},
         {{"Count", each Table.RowCount(_), Int64.Type}}),
     SettingsMaximum = #"EXTRACT MaxAvailability",
-    WithMaximum = Table.AddColumn(ShiftCounts, "StdRosterDays", each SettingsMaximum, Int64.Type),
+    WorkerCaps = Table.SelectColumns(#"Availability-StaffList",
+        {"EmployeeID", "Facility-Abbrev", "AppliedCasualRosterShiftCap"}),
+    JoinedWorkerCaps = Table.NestedJoin(ShiftCounts, {"ID", "Facility-Abbrev"},
+        WorkerCaps, {"EmployeeID", "Facility-Abbrev"}, "WorkerCap", JoinKind.LeftOuter),
+    ExpandedWorkerCaps = Table.ExpandTableColumn(JoinedWorkerCaps, "WorkerCap",
+        {"AppliedCasualRosterShiftCap"}, {"AppliedCasualRosterShiftCap"}),
+    WithMaximum = Table.AddColumn(ExpandedWorkerCaps, "StdRosterDays", each
+        if [AppliedCasualRosterShiftCap] = null then SettingsMaximum
+        else [AppliedCasualRosterShiftCap], Int64.Type),
     SelectedAllocationRoleCounts = Table.SelectColumns(ValidatedShares,
         {"EmployeeID", "Facility-Abbrev", "RoleCount"}),
     AllocationRoleCounts = Table.Distinct(SelectedAllocationRoleCounts),
@@ -2222,7 +2230,7 @@ shared RoleResDayAvailabilityCapped = let
             RoleShare,
     RoleShares = Table.AddColumn(ValidatedMatches, "RoleShare", each
         ResolveRoleShare([AllocationShare]), type number),
-    // Preserve the prior cap rule: only counts above the Settings maximum are apportioned by role share.
+    // Preserve the prior arithmetic: only counts above the worker maximum are apportioned by role share.
     CalculateAvailabilityCap = (row as record) as number =>
         let
             Count = Number.From(row[Count]),
@@ -2252,9 +2260,71 @@ shared RoleAvailabilityCapped = let
 in
     GroupedByRole;
 
+// Query: CasualRosterShiftCapsByEmployee
+// Purpose: Resolve the supplied full-roster caps to one employee-ID lookup without reducing its facility scope.
+// Output: One row per EmployeeID with a numeric source cap, reported values and any unusable-cap reason.
+// Notes: Identical caps collapse; a blank, invalid or conflicting record makes the ID use the Settings fallback.
+shared CasualRosterShiftCapsByEmployee = let
+    SourceColumns = Table.SelectColumns(#"IMPORT CasualRosterShiftCaps", {"Employee Code", "RosterShiftCap"}),
+    NormalizedEmployee = Table.TransformColumns(SourceColumns,
+        {{"Employee Code", AvailabilityText, type nullable text}}),
+    RenamedEmployee = Table.RenameColumns(NormalizedEmployee, {{"Employee Code", "EmployeeID"}}),
+    IdentifiedRows = Table.SelectRows(RenamedEmployee, each [EmployeeID] <> null),
+    ParseCap = (row as record) as record =>
+        let
+            RawAttempt = try row[RosterShiftCap],
+            RawValue = if RawAttempt[HasError] then null else RawAttempt[Value],
+            RawText = if RawAttempt[HasError] then
+                "(error: " & (try Text.From(RawAttempt[Error][Message]) otherwise "unreadable cap") & ")"
+                else AvailabilityText(RawValue),
+            IsBlank = not RawAttempt[HasError] and RawText = null,
+            NumberAttempt = if RawAttempt[HasError] or IsBlank then null else try Number.From(RawValue),
+            ParseError = if RawAttempt[HasError] then true else if IsBlank then false else NumberAttempt[HasError],
+            ParsedValue = if ParseError or IsBlank then null else NumberAttempt[Value],
+            IsFinite = if ParsedValue = null then false
+                else not Number.IsNaN(ParsedValue) and Number.Abs(ParsedValue) <> #infinity,
+            NumericCap = if IsFinite then ParsedValue else null,
+            Issue = if ParseError then "Unreadable or non-numeric RosterShiftCap"
+                else if IsBlank then "Blank RosterShiftCap"
+                else if not IsFinite then "Non-finite RosterShiftCap"
+                else if NumericCap <= 0 then "RosterShiftCap must be positive"
+                else if NumericCap <> Number.RoundDown(NumericCap) then "RosterShiftCap must be a whole number"
+                else null
+        in
+            [NumericCap = NumericCap, RawCapText = RawText, RowIssue = Issue],
+    ParsedCaps = Table.AddColumn(IdentifiedRows, "ParsedCap", ParseCap,
+        type [NumericCap = nullable number, RawCapText = nullable text, RowIssue = nullable text]),
+    ExpandedCaps = Table.ExpandRecordColumn(ParsedCaps, "ParsedCap", {"NumericCap", "RawCapText", "RowIssue"}),
+    // Group before joining to workers so repeated history cannot multiply a worker's capacity.
+    GroupedCaps = Table.Group(ExpandedCaps, {"EmployeeID"}, {
+        {"Caps", each List.Distinct(List.RemoveNulls([NumericCap])), type list},
+        {"ReportedCaps", each List.Distinct(List.Transform([RawCapText],
+            each if _ = null then "(blank)" else _)), type list},
+        {"Issues", each List.Distinct(List.RemoveNulls([RowIssue])), type list}
+    }),
+    ResolveCap = (row as record) as record =>
+        let
+            CapCount = List.Count(row[Caps]),
+            SourceCap = if CapCount = 1 then row[Caps]{0} else null,
+            Reasons = if CapCount > 1 then List.Combine({{"Conflicting RosterShiftCap values"}, row[Issues]})
+                else row[Issues],
+            Issue = if List.IsEmpty(Reasons) then null else Text.Combine(Reasons, "; "),
+            Reported = Text.Combine(row[ReportedCaps], "; ")
+        in
+            [RosterShiftCap = SourceCap, ReportedRosterShiftCap = Reported, CapLookupIssue = Issue],
+    ResolvedCaps = Table.AddColumn(GroupedCaps, "ResolvedCap", ResolveCap,
+        type [RosterShiftCap = nullable number, ReportedRosterShiftCap = nullable text, CapLookupIssue = nullable text]),
+    ExpandedResolution = Table.ExpandRecordColumn(ResolvedCaps, "ResolvedCap",
+        {"RosterShiftCap", "ReportedRosterShiftCap", "CapLookupIssue"}),
+    Output = Table.SelectColumns(ExpandedResolution,
+        {"EmployeeID", "RosterShiftCap", "ReportedRosterShiftCap", "CapLookupIssue"})
+in
+    Table.Buffer(Output);
+
 // Query: Availability-StaffList
-// Purpose: Publish eligible staff identity and fortnightly contract fields, including workers with no available shifts.
-// Output: One row per reconciled preferred employee/resource with facility, employment type and Contracted FN Hours.
+// Purpose: Publish eligible staff identity, existing contract hours and ID-matched full-roster capacity caps.
+// Output: One row per reconciled preferred employee/resource, including workers with no available shifts.
+// Notes: Positive contract hours take precedence regardless of employment type; no fortnight conversion applies to RosterShiftCap.
 shared #"Availability-StaffList" = let
     Failures = Table.SelectRows(ReconciledWorkers_CHECK, each [Status] <> "Pass"),
     FailureNames = Text.Combine(Failures[Check], "; "),
@@ -2263,14 +2333,58 @@ shared #"Availability-StaffList" = let
     Workers = if Table.IsEmpty(Failures) then ReconciledWorkers_Eligible
         else error Error.Record("Availability staff validation",
             FailureMessage, Failures),
-    SelectedOutput = Table.SelectColumns(Workers,
+    SelectedWorkers = Table.SelectColumns(Workers,
         {"EmployeeID", "Facility-Abbrev", "Name", "Role", "PreferredRole", "EmploymentType", "Contracted FN Hours",
          "In Allocation", "In Records", "Worker Membership"}),
+    NormalizedWorkers = Table.TransformColumns(SelectedWorkers, {{"EmployeeID", AvailabilityText, type nullable text}}),
+    JoinedCaps = Table.NestedJoin(NormalizedWorkers, {"EmployeeID"},
+        CasualRosterShiftCapsByEmployee, {"EmployeeID"}, "RosterCap", JoinKind.LeftOuter),
+    ExpandedCaps = Table.ExpandTableColumn(JoinedCaps, "RosterCap",
+        {"RosterShiftCap", "CapLookupIssue"}, {"RosterShiftCap", "CapLookupIssue"}),
+    SettingsMaximum = #"EXTRACT MaxAvailability",
+    ResolveWorkerCap = (row as record) as record =>
+        let
+            HoursAttempt = try row[Contracted FN Hours],
+            // Invalid existing hours are not reclassified as absent; the contract checks retain responsibility for them.
+            HasNoContract = if HoursAttempt[HasError] then false
+                else HoursAttempt[Value] = null or HoursAttempt[Value] = 0,
+            Issue = if not HasNoContract then null
+                else if row[CapLookupIssue] <> null then row[CapLookupIssue]
+                else if row[RosterShiftCap] = null then "No matching RosterShiftCap for EmployeeID"
+                else null,
+            AppliedCap = if not HasNoContract then null
+                else if Issue <> null then SettingsMaximum
+                else List.Min({row[RosterShiftCap], SettingsMaximum})
+        in
+            [AppliedCasualRosterShiftCap = AppliedCap, CasualCapIssue = Issue],
+    ResolvedWorkerCaps = Table.AddColumn(ExpandedCaps, "WorkerCap", ResolveWorkerCap,
+        type [AppliedCasualRosterShiftCap = nullable number, CasualCapIssue = nullable text]),
+    ExpandedWorkerCaps = Table.ExpandRecordColumn(ResolvedWorkerCaps, "WorkerCap",
+        {"AppliedCasualRosterShiftCap", "CasualCapIssue"}),
+    SelectedOutput = Table.SelectColumns(ExpandedWorkerCaps,
+        {"EmployeeID", "Facility-Abbrev", "Name", "Role", "PreferredRole", "EmploymentType", "Contracted FN Hours",
+         "In Allocation", "In Records", "Worker Membership", "RosterShiftCap", "AppliedCasualRosterShiftCap", "CasualCapIssue"}),
     Output = Table.Distinct(SelectedOutput),
     Sorted = Table.Sort(Output,
         {{"Facility-Abbrev", Order.Ascending}, {"PreferredRole", Order.Ascending}, {"Name", Order.Ascending}})
 in
     Sorted;
+
+// Query: CasualRosterShiftCapExceptions
+// Purpose: List IDs using the Settings maximum because their full-roster source cap is missing or unusable.
+// Output: One row per affected employee/unit with the reported cap, applied cap and non-blocking reason.
+shared CasualRosterShiftCapExceptions = let
+    Exceptions = Table.SelectRows(#"Availability-StaffList", each [CasualCapIssue] <> null),
+    WorkerDetails = Table.SelectColumns(Exceptions,
+        {"EmployeeID", "Facility-Abbrev", "Name", "AppliedCasualRosterShiftCap", "CasualCapIssue"}),
+    JoinedReportedCaps = Table.NestedJoin(WorkerDetails, {"EmployeeID"}, CasualRosterShiftCapsByEmployee,
+        {"EmployeeID"}, "ReportedCap", JoinKind.LeftOuter),
+    ExpandedReportedCaps = Table.ExpandTableColumn(JoinedReportedCaps, "ReportedCap",
+        {"ReportedRosterShiftCap"}, {"ReportedRosterShiftCap"}),
+    Output = Table.SelectColumns(ExpandedReportedCaps,
+        {"EmployeeID", "Facility-Abbrev", "Name", "ReportedRosterShiftCap", "AppliedCasualRosterShiftCap", "CasualCapIssue"})
+in
+    Table.Sort(Output, {{"Facility-Abbrev", Order.Ascending}, {"EmployeeID", Order.Ascending}});
 
 // Query: IMPORT CentriSyncPaths
 // Purpose: Read the fixed public-machine path mapping used by the workbook resolver.
@@ -2446,3 +2560,13 @@ let
     InputPath = UnitRoot & "\1. Input"
 in
     InputPath;
+
+// Query: IMPORT CasualRosterShiftCaps
+// Purpose: Read and type the supplied analysis-facility roster caps from WorkforceContracts.
+// Notes: The approved import typing is retained; cap resolution and exception handling occur downstream.
+shared #"IMPORT CasualRosterShiftCaps" = let
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\Workforce\WorkforceContracts.xlsx"), null, true),
+    CasualRosterShiftCaps_Table = Source{[Item="CasualRosterShiftCaps",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(CasualRosterShiftCaps_Table,{{"Employee Code", Int64.Type}, {"Employment Type", type text}, {"Unit", type text}, {"DaysAve", Int64.Type}, {"DaysMax", Int64.Type}, {"HrsAve", type number}, {"HrsMax", type number}, {"ShiftsMonth", Int64.Type}, {"RosterShiftCap", Int64.Type}})
+in
+    #"Changed Type";

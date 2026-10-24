@@ -171,15 +171,39 @@ effects can be declared exclusive and run alone.
 
 Unselected upstream files may be reused after access/lock checks, explicitly
 labelled **existing input - not refreshed this run**. Their presence is not proof
-of freshness. A selection must include every intermediate workbook on a dependency
-path between selected jobs. For example, selecting JH-RY role capacity and
-organisation Effort assembly requires JH-RY's U4 workbooks, `Capacity.xlsx` then
-`Effort.xlsx`. Skipped intermediates stop planning before Excel opens, with each
-missing job ID, batch and relative path listed. Add those jobs/batches explicitly
-or use `-IncludeDependencies`; the runner never silently expands the selection.
-This check applies to batches, exact files, ranges and reconstructed resume plans
-in both sequence profiles. Standalone stages can still use saved upstream inputs
-when those inputs have no selected upstream producer in the same run.
+of freshness. A selection that skips intermediate workbooks on a dependency path
+between selected jobs requires an explicit saved-output choice. For example,
+selecting JH-RY role capacity and organisation Effort assembly while omitting U4
+leaves `Capacity.xlsx` and `Effort.xlsx` unrefreshed. The new role results cannot
+propagate through those saved files into organisation Effort. This was the
+21 October failure: the selected refreshes completed technically, but the omitted
+consolidation files prevented the intended data update. The initial blanket
+rejection also blocked deliberate reuse of saved Cost and History outputs.
+
+The menu now lists each skipped job ID, batch and relative path and explains this
+limitation before Excel opens. Choose `S` to run only the selected files using
+those saved outputs; blank or `0` cancels so the selection can be revised. Scripted
+calls remain blocked unless `-UseSavedIntermediates` is explicit. For example:
+
+```powershell
+./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -Batches C1,C2,U4,O1,O2,O5,O6 -UseSavedIntermediates -RefreshSelected
+```
+
+This runs exactly those batches, reusing the saved O3/O4 outputs. It does not
+establish that Cost or History reflects the refreshed O2 data. To propagate new
+results through every intermediate, add the listed jobs/batches or explicitly use
+`-IncludeDependencies` (which expands all upstream prerequisites). Neither the
+menu saved-output choice nor its flag adds jobs. The choice and skipped-file list
+are preserved in the saved plan and shown in previews, status, coordinator logs,
+completion output and forecast/actual reports. Resume reconstructs the same choice
+and checks its skipped-file list. Selected ancestors still control ordering,
+failure blocking and resume invalidation across skipped files; the flag cannot
+fall back to the saved output of a failed selected producer. Access/lock,
+input-metadata and verified-save checks remain enforced.
+
+This applies to batches, exact files, ranges and reconstructed resume plans in both
+sequence profiles. Standalone stages can still use saved upstream inputs without
+this extra choice when those inputs have no selected upstream producer in the run.
 A selected prerequisite that fails cannot fall back to an old saved
 output. Unavailable files block their jobs and descendants; independent work
 continues. Validation-only reports unavailable files with a nonzero exit.
@@ -215,13 +239,19 @@ timeouts, verified saves and the twelve-batch maximum remain enforced. Configura
 profile, manifest and relevant engine changes still invalidate the identity used
 for resume; this fingerprint is no longer a live-approval signature.
 
-For `DemandIntervals` and `Demand`, the worker verifies loaded-query refresh
-evidence before saving. A legacy worksheet QueryTable with no live connection
+For every selected workbook, the worker verifies loaded-query refresh evidence
+before saving. A legacy worksheet QueryTable with no live connection
 is omitted only when that exact sheet/query maps to a saved connection explicitly
 marked deleted. The worker reads this metadata from the original target before
 opening Excel, within the existing file-snapshot checks, and logs each omission.
 Loaded ListObject tables, unknown missing connections and reconnected queries
 remain subject to the normal checks; at least one active loaded query is required.
+For `StaffListMaster.xlsx`, the loaded `ResourceContract_CHECK` table is also
+required. Every result must be `Pass` or a permitted diagnostic `Warning`;
+missing, empty, failed or unknown results block saving and downstream jobs.
+This prevents a failed Masterlist publication from releasing an old saved staff
+list even when Excel reports a new connection refresh date. Other role diagnostic
+tables keep their existing reporting policy.
 When Excel supplies no connection refresh timestamp after Refresh All, the worker
 confirms that active output with `QueryTable.Refresh(false)`. Background refresh
 must be disabled, the call must return Boolean true, and the query must report

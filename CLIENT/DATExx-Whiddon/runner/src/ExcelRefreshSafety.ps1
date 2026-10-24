@@ -585,6 +585,68 @@ function Assert-WorksheetQueryRefreshEvidence {
     if ($ConfirmMissingDates) { return (@($after.Values | Where-Object ConfirmedSynchronously).Count -gt 0) }
 }
 
+function Assert-RequiredWorksheetChecks {
+    param($Workbook, [string[]] $TableNames)
+    if ($null -eq $TableNames -or $TableNames.Count -eq 0) { return }
+    $found = @{}
+    $worksheets = $Workbook.Worksheets
+    try {
+        for ($sheetIndex = 1; $sheetIndex -le [int] $worksheets.Count; $sheetIndex++) {
+            $sheet = if ([Runtime.InteropServices.Marshal]::IsComObject($worksheets)) { $worksheets.Item($sheetIndex) } else { $worksheets[$sheetIndex - 1] }
+            $tables = $null
+            try {
+                $tables = $sheet.ListObjects
+                for ($tableIndex = 1; $tableIndex -le [int] $tables.Count; $tableIndex++) {
+                    $table = if ([Runtime.InteropServices.Marshal]::IsComObject($tables)) { $tables.Item($tableIndex) } else { $tables[$tableIndex - 1] }
+                    $columns = $null; $body = $null
+                    try {
+                        $name = [string] $table.Name
+                        if ($name -notin $TableNames) { continue }
+                        Assert-NotStopNowRequested
+                        if ($found.ContainsKey($name)) { throw "Required check table '$name' is duplicated." }
+                        $found[$name] = $true
+                        $columns = $table.ListColumns
+                        $indexes = @{}
+                        for ($columnIndex = 1; $columnIndex -le [int] $columns.Count; $columnIndex++) {
+                            $column = if ([Runtime.InteropServices.Marshal]::IsComObject($columns)) { $columns.Item($columnIndex) } else { $columns[$columnIndex - 1] }
+                            try { $indexes[[string] $column.Name] = $columnIndex - 1 }
+                            finally { Release-ExcelComReference $column }
+                        }
+                        if (-not $indexes.ContainsKey('Status')) { throw "Required check table '$name' has no Status column." }
+                        $body = $table.DataBodyRange
+                        if ($null -eq $body) { throw "Required check table '$name' has no result rows." }
+                        $values = $body.Value2
+                        if ($null -eq $values) { throw "Required check table '$name' has no result values." }
+                        $matrix = $values -is [Array] -and $values.Rank -eq 2
+                        $rowCount = if ($matrix) { $values.GetLength(0) } else { 1 }
+                        if ($rowCount -eq 0 -or ($matrix -and $values.GetLength(1) -ne $columns.Count)) { throw "Required check table '$name' returned empty or invalid result data." }
+                        if (-not $matrix -and $columns.Count -ne 1) { throw "Required check table '$name' returned invalid result data." }
+                        $readCell = {
+                            param([int] $Row, [int] $Column)
+                            if ($matrix) { return $values.GetValue($Row + $values.GetLowerBound(0), $Column + $values.GetLowerBound(1)) }
+                            return $values
+                        }
+                        for ($rowIndex = 0; $rowIndex -lt $rowCount; $rowIndex++) {
+                            $status = [string] (& $readCell $rowIndex $indexes['Status'])
+                            if ($status -in @('Pass', 'Warning')) { continue }
+                            $check = if ($indexes.ContainsKey('Check')) { [string] (& $readCell $rowIndex $indexes['Check']) } else { "row $($rowIndex + 1)" }
+                            $details = if ($indexes.ContainsKey('Details')) { [string] (& $readCell $rowIndex $indexes['Details']) } else { '' }
+                            throw "Required check '$name/$check' did not pass (Status='$status'). $details Refusing to save or release downstream jobs."
+                        }
+                        Write-Log "Verified required check table '$name': $rowCount evaluated result rows."
+                    }
+                    finally { Release-ExcelComReference $body; Release-ExcelComReference $columns; Release-ExcelComReference $table }
+                }
+            }
+            finally { Release-ExcelComReference $tables; Release-ExcelComReference $sheet }
+        }
+    }
+    finally { Release-ExcelComReference $worksheets }
+    foreach ($name in $TableNames) {
+        if (-not $found.ContainsKey($name)) { throw "Required check table '$name' is missing. Refusing to save unverified results." }
+    }
+}
+
 function Write-RefreshWorkerState {
     $script:RefreshState.updatedAt = (Get-Date).ToString('o')
     Write-RefreshJson $WorkerStatePath $script:RefreshState -Depth 5

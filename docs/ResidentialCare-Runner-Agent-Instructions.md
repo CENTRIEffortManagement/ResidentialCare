@@ -88,9 +88,16 @@ work. Invalid selectors and graph/configuration errors block execution globally.
 Do not bypass a failed selected producer with its old
 saved output. Unselected saved inputs must be reported as not refreshed this run.
 Selections that skip intermediate workbooks on a dependency path between selected
-jobs are rejected before Excel opens. Report the listed missing job IDs, batches
-and paths; do not silently add workbooks or bypass this check with saved outputs.
-Dependency expansion remains explicit through `-IncludeDependencies`.
+jobs require a deliberate choice before Excel opens. Report the listed missing
+job IDs, batches and paths, and explain that selected upstream changes cannot
+propagate through unrefreshed intermediates. The menu offers `S` to run exactly
+the selected files using those saved outputs; blank or `0` cancels. Command-line
+runs require `-UseSavedIntermediates` for the same choice. Do not infer that choice
+from a partial selection alone. Preserve it on resume and report it in the plan,
+status, log and reports. Selected ancestors still control downstream ordering and
+failure blocking across skipped files. Access/lock and verified-save checks remain
+enforced. Dependency expansion remains explicit through `-IncludeDependencies`;
+neither choice silently adds jobs.
 
 Use the same entry point with `-ShowStatus`, `-ResumeRun <RunId> -RefreshSelected`,
 or `-StopMode AfterCurrent|AfterBatch|Now`. Status identifies interrupted owners;
@@ -142,6 +149,13 @@ workers have the target check; input checks require an explicit input snapshot.
 These are metadata checks, not workbook-content comparison or atomic protection
 against arbitrary external writers. Keep workbook-changing Git operations out of
 an active run.
+
+Before saving, every workbook must provide current loaded-query refresh evidence.
+`StaffListMaster.xlsx` must also have an evaluated `ResourceContract_CHECK` table
+containing only `Pass` or diagnostic `Warning` results. A failed, missing, empty
+or unknown required check blocks saving and downstream jobs; do not bypass it
+with the previous saved Masterlist. This requirement does not change the reporting
+policy of other role diagnostic tables.
 
 Batch pre-dispatch allows 15 seconds; validation-only remains read-only and
 immediate. Exact workbook identity may settle for up to 15 seconds, but a wrong

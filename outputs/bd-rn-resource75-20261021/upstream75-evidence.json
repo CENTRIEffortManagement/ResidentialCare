@@ -1,0 +1,1439 @@
+{
+  "scope": "Read-only saved values from three exact BD upstream workbooks; no Excel, refresh, recalculation, save or workbook write.",
+  "files": [
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+      "sha256_before": "d97a91ef28f5136eea5887bda2f78f8ca61eb503a7dc705bc865e52d4ddc8b5a",
+      "sha256_after": "d97a91ef28f5136eea5887bda2f78f8ca61eb503a7dc705bc865e52d4ddc8b5a",
+      "unchanged_after_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Settings Data.xlsx",
+      "sha256_before": "8014182d8bf922346415853c020bdce0e7ae753cd52efb3b9a58697a4fef2781",
+      "sha256_after": "8014182d8bf922346415853c020bdce0e7ae753cd52efb3b9a58697a4fef2781",
+      "unchanged_after_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "sha256_before": "dbf30341ff87ec364e94837dbd56a69f81fecf7c200514002785c54c6a62ded0",
+      "sha256_after": "dbf30341ff87ec364e94837dbd56a69f81fecf7c200514002785c54c6a62ded0",
+      "unchanged_after_read": true
+    }
+  ],
+  "master": {
+    "table": "Table_Masterlist",
+    "sheet": "Masterlist",
+    "range": "A1:Y130",
+    "resource75_rows": [
+      {
+        "excel_row": 76,
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "Resource": 75,
+        "Misalignment": null,
+        "Source": "Availability",
+        "EmployeeID": "23839",
+        "Facility-Abbrev": "BD",
+        "EmploymentType": "Part-Time",
+        "PreferredRole": "RN",
+        "In Allocation": true,
+        "In Records": true,
+        "Worker Membership": "Both",
+        "Worker Record Status": "Found",
+        "Worker Contract Issue": null,
+        "Contract Source": "Worker record",
+        "Contracted FN Hours": 48,
+        "Roster Start": 46223,
+        "Roster End": 46250,
+        "Roster Fortnights": 2,
+        "Contracted Roster Hours": 96,
+        "Contracted Shift Equivalent": 12.631578947368421,
+        "Contracted Shifts": 12,
+        "Settings Max Availability": 20,
+        "Effective Shift Cap": 12,
+        "Limit Basis": "Contracted shifts"
+      }
+    ],
+    "derived_cap_for_current_settings_window": [
+      {
+        "Resource": 75,
+        "current_window_days_inclusive": 28,
+        "current_window_fortnights": 2.0,
+        "contracted_roster_hours": 96.0,
+        "shift_hours": 7.6,
+        "contracted_shift_equivalent": 12.631578947368421,
+        "contracted_whole_shifts": 12,
+        "effective_cap": 12
+      }
+    ],
+    "roster_dates": [
+      {
+        "Resource": 75,
+        "start": "2026-07-20T00:00:00",
+        "end": "2026-08-16T00:00:00"
+      }
+    ],
+    "contract_checks": {
+      "name": "ResourceContract_CHECK",
+      "sheet": "ResourceContract_CHECK",
+      "ref": "A1:D13",
+      "columns": [
+        "Check",
+        "Status",
+        "Failures",
+        "Details"
+      ],
+      "rows": 12,
+      "data": [
+        {
+          "Check": "Valid roster and cap settings",
+          "Status": "Pass",
+          "Failures": 0,
+          "Details": null
+        },
+        {
+          "Check": "Unique Resource rows",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Populated Resource identifiers",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Unique availability employee and facility input",
+          "Status": "Pass",
+          "Failures": 0,
+          "Details": null
+        },
+        {
+          "Check": "Unique availability names",
+          "Status": "Pass",
+          "Failures": 0,
+          "Details": null
+        },
+        {
+          "Check": "Unique preferred employee and facility resources",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Complete availability employee mapping",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Reconciliation is the only worker source",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Positive contracts for every worker",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Settings fallback supplies maximum fortnightly hours",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Calculated resource contract caps",
+          "Status": "Fail",
+          "Failures": null,
+          "Details": "Expected exactly one Table1 table in Worker's Report.xlsx."
+        },
+        {
+          "Check": "Workers using Settings contract fallback",
+          "Status": null,
+          "Failures": null,
+          "Details": "Filter Table_Masterlist where Contract Source = Settings maximum fallback."
+        }
+      ]
+    }
+  },
+  "settings": [
+    {
+      "name": "MaxAvailability",
+      "sheet": "MaxCapacity",
+      "ref": "A8:A9",
+      "columns": [
+        "MaxAvailability"
+      ],
+      "rows": 1,
+      "data": [
+        {
+          "excel_row": 9,
+          "MaxAvailability": 20
+        }
+      ]
+    },
+    {
+      "name": "ShiftDuration",
+      "sheet": "ShiftHours",
+      "ref": "A8:C9",
+      "columns": [
+        "StdWeekDays",
+        "ShiftDuration",
+        "Column1"
+      ],
+      "rows": 1,
+      "data": [
+        {
+          "excel_row": 9,
+          "StdWeekDays": 5,
+          "ShiftDuration": 7.6,
+          "Column1": "NO.  Varies"
+        }
+      ]
+    },
+    {
+      "name": "PermutationDimensions",
+      "sheet": "DimensionPermutations",
+      "ref": "A1:E253",
+      "columns": [
+        "Date",
+        "Day",
+        "Shifts",
+        "Period",
+        "RolesList"
+      ],
+      "rows": 252,
+      "roles": [
+        "AIN",
+        "EN",
+        "RN"
+      ],
+      "shifts": [
+        "AM",
+        "NIGHT",
+        "PM"
+      ],
+      "min_date": "2026-09-28T00:00:00",
+      "max_date": "2026-10-25T00:00:00",
+      "days": 28,
+      "rn_period_rows": 84
+    },
+    {
+      "name": "Table_DateList",
+      "sheet": "Metadata",
+      "ref": "G1:H29",
+      "columns": [
+        "Date",
+        "Day"
+      ],
+      "rows": 28,
+      "data": [
+        {
+          "excel_row": 2,
+          "Date": 46293,
+          "Day": 1
+        },
+        {
+          "excel_row": 3,
+          "Date": 46294,
+          "Day": 2
+        },
+        {
+          "excel_row": 4,
+          "Date": 46295,
+          "Day": 3
+        },
+        {
+          "excel_row": 5,
+          "Date": 46296,
+          "Day": 4
+        },
+        {
+          "excel_row": 6,
+          "Date": 46297,
+          "Day": 5
+        },
+        {
+          "excel_row": 7,
+          "Date": 46298,
+          "Day": 6
+        },
+        {
+          "excel_row": 8,
+          "Date": 46299,
+          "Day": 7
+        },
+        {
+          "excel_row": 9,
+          "Date": 46300,
+          "Day": 8
+        },
+        {
+          "excel_row": 10,
+          "Date": 46301,
+          "Day": 9
+        },
+        {
+          "excel_row": 11,
+          "Date": 46302,
+          "Day": 10
+        },
+        {
+          "excel_row": 12,
+          "Date": 46303,
+          "Day": 11
+        },
+        {
+          "excel_row": 13,
+          "Date": 46304,
+          "Day": 12
+        },
+        {
+          "excel_row": 14,
+          "Date": 46305,
+          "Day": 13
+        },
+        {
+          "excel_row": 15,
+          "Date": 46306,
+          "Day": 14
+        },
+        {
+          "excel_row": 16,
+          "Date": 46307,
+          "Day": 15
+        },
+        {
+          "excel_row": 17,
+          "Date": 46308,
+          "Day": 16
+        },
+        {
+          "excel_row": 18,
+          "Date": 46309,
+          "Day": 17
+        },
+        {
+          "excel_row": 19,
+          "Date": 46310,
+          "Day": 18
+        },
+        {
+          "excel_row": 20,
+          "Date": 46311,
+          "Day": 19
+        },
+        {
+          "excel_row": 21,
+          "Date": 46312,
+          "Day": 20
+        },
+        {
+          "excel_row": 22,
+          "Date": 46313,
+          "Day": 21
+        },
+        {
+          "excel_row": 23,
+          "Date": 46314,
+          "Day": 22
+        },
+        {
+          "excel_row": 24,
+          "Date": 46315,
+          "Day": 23
+        },
+        {
+          "excel_row": 25,
+          "Date": 46316,
+          "Day": 24
+        },
+        {
+          "excel_row": 26,
+          "Date": 46317,
+          "Day": 25
+        },
+        {
+          "excel_row": 27,
+          "Date": 46318,
+          "Day": 26
+        },
+        {
+          "excel_row": 28,
+          "Date": 46319,
+          "Day": 27
+        },
+        {
+          "excel_row": 29,
+          "Date": 46320,
+          "Day": 28
+        }
+      ]
+    },
+    {
+      "name": "Table_Min_Date",
+      "sheet": "Metadata",
+      "ref": "K3:K4",
+      "columns": [
+        "Min Date"
+      ],
+      "rows": 1,
+      "data": [
+        {
+          "excel_row": 4,
+          "Min Date": 46293
+        }
+      ]
+    },
+    {
+      "name": "DateFrom",
+      "sheet": "Metadata",
+      "ref": "L8:L9",
+      "columns": [
+        "DateFrom"
+      ],
+      "rows": 1,
+      "data": [
+        {
+          "excel_row": 9,
+          "DateFrom": 46293
+        }
+      ]
+    }
+  ],
+  "allocation": {
+    "table": "ResourceShiftAllocation",
+    "sheet": "ResourceShiftAllocation",
+    "range": "A1:J4900",
+    "worker_match": "Exact Name and Role=RN from Resource75's saved master row",
+    "matching_rows": 40,
+    "positive_rows": 40,
+    "positive_shift_date_keys": 36,
+    "sum_positive_ResShiftFTE": 12.631578947368421,
+    "positive_below_0_5_rows": 28,
+    "sum_positive_below_0_5": 1.4860681114551084,
+    "current_settings_window": {
+      "start_date": "2026-09-28T00:00:00",
+      "end_date": "2026-10-25T00:00:00",
+      "raw_positive_rows": 39,
+      "positive_shift_date_keys": 35,
+      "sum_positive_ResShiftFTE": 12.56965944272446,
+      "raw_positive_rows_below_0_5": 27,
+      "grouped_positive_keys_below_0_5": 23,
+      "positive_periods": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
+      ],
+      "positive_period_runs_inclusive": [
+        [
+          11,
+          19
+        ],
+        [
+          35,
+          43
+        ],
+        [
+          53,
+          61
+        ],
+        [
+          77,
+          84
+        ]
+      ],
+      "ShiftPeriod_vs_IntervalAssociatedShift_mismatches": 0,
+      "by_shift": [
+        {
+          "ShiftPeriod": "AM",
+          "positive_shift_date_keys": 11,
+          "sum_positive_ResShiftFTE": 0.6811145510835913
+        },
+        {
+          "ShiftPeriod": "NIGHT",
+          "positive_shift_date_keys": 12,
+          "sum_positive_ResShiftFTE": 11.145510835913313
+        },
+        {
+          "ShiftPeriod": "PM",
+          "positive_shift_date_keys": 12,
+          "sum_positive_ResShiftFTE": 0.7430340557275542
+        }
+      ],
+      "out_of_window_keys": [
+        {
+          "ShiftDate": 46321,
+          "date_iso": "2026-10-26T00:00:00",
+          "ShiftPeriod": "AM",
+          "positive_rows": 1,
+          "sum_ResShiftFTE": 0.06191950464396285,
+          "excel_rows": [
+            4900
+          ],
+          "Period": null
+        }
+      ]
+    },
+    "positive_grouped_by_shift_date": [
+      {
+        "ShiftDate": 46296,
+        "date_iso": "2026-10-01T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          780
+        ],
+        "Period": 12
+      },
+      {
+        "ShiftDate": 46296,
+        "date_iso": "2026-10-01T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          772
+        ],
+        "Period": 11
+      },
+      {
+        "ShiftDate": 46297,
+        "date_iso": "2026-10-02T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          792
+        ],
+        "Period": 13
+      },
+      {
+        "ShiftDate": 46297,
+        "date_iso": "2026-10-02T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          963
+        ],
+        "Period": 15
+      },
+      {
+        "ShiftDate": 46297,
+        "date_iso": "2026-10-02T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          955
+        ],
+        "Period": 14
+      },
+      {
+        "ShiftDate": 46298,
+        "date_iso": "2026-10-03T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          980
+        ],
+        "Period": 16
+      },
+      {
+        "ShiftDate": 46298,
+        "date_iso": "2026-10-03T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          1077
+        ],
+        "Period": 18
+      },
+      {
+        "ShiftDate": 46298,
+        "date_iso": "2026-10-03T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          1066
+        ],
+        "Period": 17
+      },
+      {
+        "ShiftDate": 46299,
+        "date_iso": "2026-10-04T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          1085
+        ],
+        "Period": 19
+      },
+      {
+        "ShiftDate": 46304,
+        "date_iso": "2026-10-09T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          2047
+        ],
+        "Period": 36
+      },
+      {
+        "ShiftDate": 46304,
+        "date_iso": "2026-10-09T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          2039
+        ],
+        "Period": 35
+      },
+      {
+        "ShiftDate": 46305,
+        "date_iso": "2026-10-10T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          2053
+        ],
+        "Period": 37
+      },
+      {
+        "ShiftDate": 46305,
+        "date_iso": "2026-10-10T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          2190
+        ],
+        "Period": 39
+      },
+      {
+        "ShiftDate": 46305,
+        "date_iso": "2026-10-10T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          2186
+        ],
+        "Period": 38
+      },
+      {
+        "ShiftDate": 46306,
+        "date_iso": "2026-10-11T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          2196
+        ],
+        "Period": 40
+      },
+      {
+        "ShiftDate": 46306,
+        "date_iso": "2026-10-11T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          2305
+        ],
+        "Period": 42
+      },
+      {
+        "ShiftDate": 46306,
+        "date_iso": "2026-10-11T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          2299
+        ],
+        "Period": 41
+      },
+      {
+        "ShiftDate": 46307,
+        "date_iso": "2026-10-12T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          2323
+        ],
+        "Period": 43
+      },
+      {
+        "ShiftDate": 46310,
+        "date_iso": "2026-10-15T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          3110
+        ],
+        "Period": 54
+      },
+      {
+        "ShiftDate": 46310,
+        "date_iso": "2026-10-15T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 2,
+        "sum_ResShiftFTE": 0.061919504643962855,
+        "excel_rows": [
+          3096,
+          3106
+        ],
+        "Period": 53
+      },
+      {
+        "ShiftDate": 46311,
+        "date_iso": "2026-10-16T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          3133
+        ],
+        "Period": 55
+      },
+      {
+        "ShiftDate": 46311,
+        "date_iso": "2026-10-16T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          3303
+        ],
+        "Period": 57
+      },
+      {
+        "ShiftDate": 46311,
+        "date_iso": "2026-10-16T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 2,
+        "sum_ResShiftFTE": 0.061919504643962855,
+        "excel_rows": [
+          3283,
+          3295
+        ],
+        "Period": 56
+      },
+      {
+        "ShiftDate": 46312,
+        "date_iso": "2026-10-17T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          3309
+        ],
+        "Period": 58
+      },
+      {
+        "ShiftDate": 46312,
+        "date_iso": "2026-10-17T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          3465
+        ],
+        "Period": 60
+      },
+      {
+        "ShiftDate": 46312,
+        "date_iso": "2026-10-17T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 2,
+        "sum_ResShiftFTE": 0.061919504643962855,
+        "excel_rows": [
+          3445,
+          3452
+        ],
+        "Period": 59
+      },
+      {
+        "ShiftDate": 46313,
+        "date_iso": "2026-10-18T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          3476
+        ],
+        "Period": 61
+      },
+      {
+        "ShiftDate": 46318,
+        "date_iso": "2026-10-23T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          4678
+        ],
+        "Period": 78
+      },
+      {
+        "ShiftDate": 46318,
+        "date_iso": "2026-10-23T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 2,
+        "sum_ResShiftFTE": 0.061919504643962855,
+        "excel_rows": [
+          4664,
+          4670
+        ],
+        "Period": 77
+      },
+      {
+        "ShiftDate": 46319,
+        "date_iso": "2026-10-24T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          4693
+        ],
+        "Period": 79
+      },
+      {
+        "ShiftDate": 46319,
+        "date_iso": "2026-10-24T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          4777
+        ],
+        "Period": 81
+      },
+      {
+        "ShiftDate": 46319,
+        "date_iso": "2026-10-24T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          4773
+        ],
+        "Period": 80
+      },
+      {
+        "ShiftDate": 46320,
+        "date_iso": "2026-10-25T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          4780
+        ],
+        "Period": 82
+      },
+      {
+        "ShiftDate": 46320,
+        "date_iso": "2026-10-25T00:00:00",
+        "ShiftPeriod": "NIGHT",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.9287925696594428,
+        "excel_rows": [
+          4896
+        ],
+        "Period": 84
+      },
+      {
+        "ShiftDate": 46320,
+        "date_iso": "2026-10-25T00:00:00",
+        "ShiftPeriod": "PM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          4892
+        ],
+        "Period": 83
+      },
+      {
+        "ShiftDate": 46321,
+        "date_iso": "2026-10-26T00:00:00",
+        "ShiftPeriod": "AM",
+        "positive_rows": 1,
+        "sum_ResShiftFTE": 0.06191950464396285,
+        "excel_rows": [
+          4900
+        ],
+        "Period": null
+      }
+    ],
+    "matching_rows_data": [
+      {
+        "excel_row": 772,
+        "ShiftDate": 46296,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46296.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 780,
+        "ShiftDate": 46296,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46296.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 792,
+        "ShiftDate": 46297,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46297.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 955,
+        "ShiftDate": 46297,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46297.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 963,
+        "ShiftDate": 46297,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46297.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 980,
+        "ShiftDate": 46298,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46298.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 1066,
+        "ShiftDate": 46298,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46298.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 1077,
+        "ShiftDate": 46298,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46298.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 1085,
+        "ShiftDate": 46299,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46299.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 2039,
+        "ShiftDate": 46304,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46304.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 2047,
+        "ShiftDate": 46304,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46304.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 2053,
+        "ShiftDate": 46305,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46305.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 2186,
+        "ShiftDate": 46305,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46305.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 2190,
+        "ShiftDate": 46305,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46305.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 2196,
+        "ShiftDate": 46306,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46306.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 2299,
+        "ShiftDate": 46306,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46306.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 2305,
+        "ShiftDate": 46306,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46306.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 2323,
+        "ShiftDate": 46307,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46307.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 3096,
+        "ShiftDate": 46310,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46310.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0032679738562091504,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.010319917440660475
+      },
+      {
+        "excel_row": 3106,
+        "ShiftDate": 46310,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46310.92013888889,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.016339869281045753,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.051599587203302384
+      },
+      {
+        "excel_row": 3110,
+        "ShiftDate": 46310,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46310.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 3133,
+        "ShiftDate": 46311,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46311.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 3283,
+        "ShiftDate": 46311,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46311.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0032679738562091504,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.010319917440660475
+      },
+      {
+        "excel_row": 3295,
+        "ShiftDate": 46311,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46311.92013888889,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.016339869281045753,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.051599587203302384
+      },
+      {
+        "excel_row": 3303,
+        "ShiftDate": 46311,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46311.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 3309,
+        "ShiftDate": 46312,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46312.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 3445,
+        "ShiftDate": 46312,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46312.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0032679738562091504,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.010319917440660475
+      },
+      {
+        "excel_row": 3452,
+        "ShiftDate": 46312,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46312.92013888889,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.016339869281045753,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.051599587203302384
+      },
+      {
+        "excel_row": 3465,
+        "ShiftDate": 46312,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46312.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 3476,
+        "ShiftDate": 46313,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46313.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 4664,
+        "ShiftDate": 46318,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46318.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0032679738562091504,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.010319917440660475
+      },
+      {
+        "excel_row": 4670,
+        "ShiftDate": 46318,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46318.92013888889,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.016339869281045753,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.051599587203302384
+      },
+      {
+        "excel_row": 4678,
+        "ShiftDate": 46318,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46318.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 4693,
+        "ShiftDate": 46319,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46319.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 4773,
+        "ShiftDate": 46319,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46319.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 4777,
+        "ShiftDate": 46319,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46319.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 4780,
+        "ShiftDate": 46320,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46320.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 4892,
+        "ShiftDate": 46320,
+        "ShiftPeriod": "PM",
+        "IntervalAssociatedShift": "PM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46320.916666666664,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      },
+      {
+        "excel_row": 4896,
+        "ShiftDate": 46320,
+        "ShiftPeriod": "NIGHT",
+        "IntervalAssociatedShift": "NIGHT",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46320.9375,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.29411764705882354,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.9287925696594428
+      },
+      {
+        "excel_row": 4900,
+        "ShiftDate": 46321,
+        "ShiftPeriod": "AM",
+        "IntervalAssociatedShift": "AM",
+        "Name": "Lisa Swagerman",
+        "Role": "RN",
+        "TimeDate": 46321.25,
+        "Attribute": "IntervalStart",
+        "ResShiftEffort": 0.0196078431372549,
+        "ResShiftEffectiveRatio": 0.3137254901960785,
+        "ResShiftFTE": 0.06191950464396285
+      }
+    ]
+  }
+}

@@ -56,6 +56,7 @@ function New-BatchState {
         SchemaVersion = 1; RunId = $RunId; Fingerprint = $Plan.Fingerprint; Status = 'Pending'
         Started = [datetime]::UtcNow.ToString('o'); Updated = ''; Jobs = $records; Batches = @{}
         MaxObserved = 0; ExitCode = $null; BusinessReconciliation = 'Not evaluated'
+        SavedIntermediates = @(if ($Plan.PSObject.Properties['SavedIntermediates']) { $Plan.SavedIntermediates })
     }
 }
 

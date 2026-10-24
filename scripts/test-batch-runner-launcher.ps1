@@ -138,13 +138,29 @@ function Invoke-BatchSchedule {
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
     Assert-LauncherTest ($dispatch.Jobs.Count -eq 9 -and @($dispatch.Jobs | Where-Object { $_ -notlike 'Unit1/Role:*' }).Count -eq 0) 'C2 still dispatches exactly the nine Unit1 role files'
     $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)
-    $result = Invoke-LauncherFixture -InputLines @('2', 'C2,O1,O2,O5,O6', 'Unit1') -ExpectPause
-    Assert-LauncherTest ($result.ExitCode -eq 1 -and $result.Output -match 'Selection skips intermediate workbooks' -and
+    $result = Invoke-LauncherFixture -InputLines @('2', 'C2,O1,O2,O5,O6', 'Unit1', '0') -ExpectPause
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Selection cancelled' -and
         $result.Output.Contains('Unit1/Capacity (U4)') -and $result.Output.Contains('Unit1/Effort (U4)')) 'mixed role/reporting menu stops and names the missing consolidation workbooks'
     Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore -and [string]::IsNullOrWhiteSpace($result.ErrorText)) 'rejected menu selection never dispatches and keeps its plain-language error visible'
-    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o5') -ExpectPause
-    Assert-LauncherTest ($result.ExitCode -eq 1 -and $result.Output -match 'Selection skips intermediate workbooks' -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu rejects missing intermediates without a Unit prompt'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o5', '') -ExpectPause
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Selection cancelled' -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu blank choice cancels without a Unit prompt'
     Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore) 'organisation gap never dispatches'
+    $result = Invoke-LauncherFixture -InputLines @('2', 'C1,C2,U4,01,02,05,06', 'Unit1', 'S') -ExpectPause -CheckGateReleased
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Saved intermediate outputs explicitly reused' -and
+        $result.Output -match 'will not propagate') 'reported menu selection can explicitly use saved O3/O4 outputs with a visible limitation'
+    $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
+    Assert-LauncherTest ($dispatch.Jobs.Count -eq 22 -and 'Org/Cost' -notin $dispatch.Jobs -and 'Org/History' -notin $dispatch.Jobs -and
+        'Org/HistoryRead' -notin $dispatch.Jobs) 'saved-input menu dispatches exactly the requested batches'
+    $savedCurrent = Get-Content -LiteralPath (Join-Path $fixtureDate 'RunLogs/BatchRefresh/current.json') -Raw | ConvertFrom-Json
+    $savedDirectory = Join-Path $fixtureDate "RunLogs/BatchRefresh/$($savedCurrent.RunId)"
+    $savedPlan = Get-Content -LiteralPath (Join-Path $savedDirectory 'plan.json') -Raw | ConvertFrom-Json
+    Assert-LauncherTest ($savedPlan.UseSavedIntermediates -and $savedPlan.SavedIntermediates.Count -eq 3 -and
+        [IO.File]::ReadAllText((Join-Path $savedDirectory 'coordinator.log')).Contains('Saved intermediate outputs explicitly reused') -and
+        [IO.File]::ReadAllText((Join-Path $savedDirectory 'planned-notes.md')).Contains('will not propagate')) 'saved-input choice is durable in the plan, log and forecast'
+    $result = Invoke-LauncherFixture -Arguments '-ShowStatus'
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Saved intermediate outputs explicitly reused') 'status keeps the saved-output limitation visible'
+    $result = Invoke-LauncherFixture -Arguments "-ResumeRun $($savedCurrent.RunId) -RefreshSelected"
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Saved intermediate outputs explicitly reused') 'resume preserves the exact saved-output choice without asking again'
     $result = Invoke-LauncherFixture -InputLines @('2', 'o1,o2,o3,o4,o5') -ExpectPause -CheckGateReleased
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -notmatch 'Available Unit IDs:') 'organisation-only menu selection skips the Unit prompt'
     $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
@@ -170,7 +186,7 @@ function Invoke-BatchSchedule {
     $result = Invoke-LauncherFixture -InputLines @('7') -ExpectPause
     Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'File access and selection validation passed') 'successful menu validation stays visible'
     $result = Invoke-LauncherFixture -InputLines @('8') -ExpectPause
-    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed') 'menu status stays visible'
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Completed' -and $result.Output -notmatch 'Saved intermediate outputs explicitly reused') 'menu status stays visible without a false saved-intermediate warning for a full run'
     Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore) 'validation and status menus never dispatch'
 
     $failPath = Join-Path $fixtureDate 'fixture-fail-run'
@@ -203,6 +219,17 @@ function Invoke-BatchSchedule {
         Assert-LauncherTest ([IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore -and
             @(Get-ChildItem -LiteralPath (Join-Path $fixtureDate 'RunLogs/BatchRefresh') -Directory).Count -eq $runCount) 'gap rejection precedes dispatch and run-directory creation'
     }
+    foreach ($action in @('-ValidateSelectionOnly', '-ShowPlan')) {
+        $result = Invoke-LauncherFixture -Arguments "-Units Unit1 -Batches C2,O1,O2,O5,O6 -UseSavedIntermediates $action"
+        Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'Saved intermediate outputs explicitly reused' -and
+            $result.Output -notmatch 'Saved intermediate outputs: S or 0|Press any key' -and
+            [IO.File]::ReadAllText($dispatchPath) -eq $dispatchBefore) "explicit saved-output $action stays read-only and never prompts"
+    }
+    $result = Invoke-LauncherFixture -Arguments '-Units Unit1 -Batches C2,O1,O2,O5,O6 -UseSavedIntermediates -RefreshSelected'
+    Assert-LauncherTest ($result.ExitCode -eq 0 -and $result.Output -match 'will not propagate' -and $result.Output -notmatch 'Press any key') 'scripted saved-output run requires no menu confirmation'
+    $dispatch = Get-Content -LiteralPath $dispatchPath -Raw | ConvertFrom-Json
+    Assert-LauncherTest ($dispatch.Jobs.Count -eq 17 -and 'Unit1/Capacity' -notin $dispatch.Jobs -and 'Unit1/Effort' -notin $dispatch.Jobs) 'scripted saved-output run keeps the exact requested scope'
+    $dispatchBefore = [IO.File]::ReadAllText($dispatchPath)
     # Reconstruct an old incomplete plan with a current fingerprint to ensure the
     # selection check, independently of fingerprint invalidation, protects resume.
     . (Join-Path $fixtureRunner 'src/BatchPlanning.ps1')

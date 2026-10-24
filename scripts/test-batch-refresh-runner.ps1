@@ -4,6 +4,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path $PSScriptRoot -Parent
 . (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner/src/BatchPlanning.ps1')
 . (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner/src/BatchScheduling.ps1')
+. (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner/src/BatchReporting.ps1')
 . (Join-Path $repoRoot 'CLIENT/DATExx-Whiddon/runner/src/RefreshRunGate.ps1')
 $testRoot = Join-Path ([IO.Path]::GetTempPath()) ('rc-batch-' + [guid]::NewGuid().ToString('N'))
 [void] [IO.Directory]::CreateDirectory($testRoot)
@@ -31,7 +32,7 @@ function Assert-Throws {
 }
 function New-FakeJob {
     param([string] $Id, [string] $Batch = $Id, [string[]] $Depends = @(), [string[]] $Reads = @())
-    $path = Join-Path $testRoot ($Id.Replace('/', '-') + '.data')
+    $path = Join-Path $testRoot (($Id -replace '[^A-Za-z0-9_.-]', '-') + '.data')
     [IO.File]::WriteAllText($path, 'original')
     return [pscustomobject]@{ Id = $Id; BatchKey = $Batch; Batch = $Batch; Path = $path; Reads = $Reads; Dependencies = $Depends; Exclusive = $false }
 }
@@ -151,6 +152,53 @@ try {
         Assert-True ((Select-BatchPlan $gapCatalogue -Batches O1,O2,O3,O4,O5,O6).Jobs.Count -eq 11) "$sequenceProfile complete organisation-only chain can use saved Unit inputs"
         Assert-True ((Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Effort','Org/EffortAll').Jobs.Count -eq 2) "$sequenceProfile direct selected dependency permits unrelated saved inputs"
         Assert-True ((Select-BatchPlan $gapCatalogue -Workbooks 'BD/Role:AIN/3','TE/Effort').Jobs.Count -eq 2) "$sequenceProfile independent Units do not create a false gap"
+
+        $manualPlan = Select-BatchPlan $gapCatalogue -Units BD,TE,JH-RY -Batches 'C1,C2,U4,01,02,05,06' -UseSavedIntermediates
+        Assert-True ($manualPlan.Jobs.Count -eq 50 -and $manualPlan.UseSavedIntermediates -and
+            ($manualPlan.SavedIntermediates.Id -join ',') -eq 'Org/Cost,Org/History,Org/HistoryRead' -and
+            @($manualPlan.Jobs | Where-Object Batch -in @('O3','O4')).Count -eq 0) "$sequenceProfile exact reported selection deliberately reuses O3/O4 without refreshing them"
+        $savedGap = Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','Org/EffortAll' -UseSavedIntermediates
+        $savedConsumer = @($savedGap.Jobs | Where-Object Id -eq 'Org/EffortAll')[0]
+        Assert-True ('JH-RY/Role:AIN/1' -in $savedConsumer.Dependencies -and $savedGap.Jobs.Count -eq 2) "$sequenceProfile selected ancestor still controls ordering through saved intermediates"
+        Assert-True ('JH-RY/Role:AIN/1' -notin @($gapCatalogue.Jobs | Where-Object Id -eq 'Org/EffortAll')[0].Dependencies) 'saved-input selection does not mutate the catalogue'
+        Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','Org/EffortAll' } 'a previous saved-input choice does not weaken the next selection'
+        $portableGap = ConvertTo-PortableBatchPlan $savedGap
+        $gapRoundtrip = $portableGap | ConvertTo-Json -Depth 40 | ConvertFrom-Json
+        $gapReconstructed = Select-BatchPlan $gapCatalogue -Workbooks @($gapRoundtrip.Jobs.Id) -UseSavedIntermediates:$gapRoundtrip.UseSavedIntermediates
+        Assert-True (($portableGap | ConvertTo-Json -Depth 40 -Compress) -eq ((ConvertTo-PortableBatchPlan $gapReconstructed) | ConvertTo-Json -Depth 40 -Compress)) 'saved-input policy, files and projected ordering survive portable resume reconstruction'
+        $oneGap = Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','JH-RY/Role:AIN/3' -UseSavedIntermediates
+        $oneGapState = New-BatchState $oneGap 'one-gap'
+        Assert-True ($oneGap.SavedIntermediates.Count -eq 1 -and $oneGapState.SavedIntermediates.Count -eq 1 -and
+            @(Get-BatchSavedIntermediateNotice ([pscustomobject]$oneGapState)).Count -eq 3) 'a single skipped file remains an array in status records'
+        $standalone = Select-BatchPlan $gapCatalogue -Units JH-RY -Batches U4 -UseSavedIntermediates
+        Assert-True (-not $standalone.UseSavedIntermediates -and $standalone.SavedIntermediates.Count -eq 0 -and
+            @(Get-BatchSavedIntermediateNotice ([pscustomobject](New-BatchState $standalone 'no-gap'))).Count -eq 0) 'ordinary saved upstream inputs do not produce a false intermediate warning'
+
+        $syntheticGapJobs = @(foreach ($job in $savedGap.Jobs) { New-FakeJob $job.Id $job.BatchKey $job.Dependencies })
+        foreach ($limit in @(1,12)) {
+            $savedRun = Invoke-FakeRun $syntheticGapJobs -Max $limit -Slow 'JH-RY/Role:AIN/1'
+            Assert-True ($savedRun.Code -eq 0 -and $savedRun.Events.IndexOf('end:JH-RY/Role:AIN/1') -lt $savedRun.Events.IndexOf('start:Org/EffortAll')) 'saved gap cannot let a downstream file overtake its selected producer'
+            $savedFailure = Invoke-FakeRun $syntheticGapJobs -Max $limit -Fail 'JH-RY/Role:AIN/1'
+            Assert-True ($savedFailure.Code -eq 1 -and $savedFailure.State.Jobs['Org/EffortAll'].Status -eq 'Blocked' -and
+                'start:Org/EffortAll' -notin $savedFailure.Events) 'saved intermediates cannot bypass a failed selected ancestor'
+        }
+        [IO.File]::WriteAllText($syntheticGapJobs[0].Path, 'changed selected producer')
+        Reset-BatchResume $savedRun.Plan $savedRun.State
+        Assert-True ($savedRun.State.Jobs['Org/EffortAll'].Status -eq 'Pending') 'resume invalidates the selected descendant across a saved gap'
+        $missingSavedInput = Join-Path $testRoot 'missing-saved-intermediate.data'
+        $syntheticGapJobs[-1].Reads = @($missingSavedInput)
+        Assert-True (@(Test-BatchPlan ([pscustomobject]@{ Jobs = $syntheticGapJobs })).Count -gt 0) 'saved-output choice retains file-access validation'
+
+        $savedNotice = @(Get-BatchSavedIntermediateNotice $savedGap)
+        Assert-True (($savedNotice -join ' ') -like '*JH-RY/Capacity*' -and ($savedNotice -join ' ') -like '*will not propagate*') 'saved-output notice explains the original stale-capacity failure'
+        $reportDirectory = Join-Path $testRoot ("saved-gap-report-" + $sequenceProfile)
+        [void] [IO.Directory]::CreateDirectory($reportDirectory)
+        $savedRun.Plan | Add-Member SequenceProfile $sequenceProfile -Force
+        $savedRun.Plan | Add-Member SavedIntermediates $savedGap.SavedIntermediates -Force
+        $savedRun.State.Updated = [datetime]::UtcNow.ToString('o')
+        $summary = Write-BatchActualReport $savedRun.Plan $savedRun.State $reportDirectory
+        Assert-True ($summary.SavedIntermediates.Count -eq $savedGap.SavedIntermediates.Count -and
+            [IO.File]::ReadAllText((Join-Path $reportDirectory 'actual-notes.md')).Contains('Selected upstream changes will not propagate')) 'actual report preserves the saved-output limitation'
     }
     $role = Select-BatchPlan $catalogue -Units Unit1 -Batches C2.2
     Assert-True ($role.Jobs.Count -eq 3 -and $role.Jobs[0].Role -eq 'AINC4') 'numbered role mapping'

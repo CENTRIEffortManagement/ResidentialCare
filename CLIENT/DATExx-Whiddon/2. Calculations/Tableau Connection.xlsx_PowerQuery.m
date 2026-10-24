@@ -1,6 +1,6 @@
 // Power Query from: Tableau Connection.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\Tableau Connection.xlsx
-// Extracted: 2026-10-05T04:33:22.653Z
+// Extracted: 2026-10-21T01:18:36.386Z
 
 section Section1;
 
@@ -141,7 +141,7 @@ in
 ;
 
 shared #"IMPORT Table_Masterlist" = let
-    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\Unit1\2. Calculations\StaffListMaster.xlsx"), null, true),
+    Source = Excel.Workbook(File.Contents("C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\StafMasterList-All.xlsx"), null, true),
     Table_Masterlist_Table = Source{[Item="Table_Masterlist",Kind="Table"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(Table_Masterlist_Table,{{"Role", type text}, {"Name", type text}, {"Resource", Int64.Type}, {"Misalignment", type text}})
 in

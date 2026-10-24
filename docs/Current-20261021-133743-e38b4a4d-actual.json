@@ -1,0 +1,70 @@
+{
+  "PeakConcurrency": 1,
+  "ElapsedSeconds": 370.0387895,
+  "RunId": "20261021-133743-e38b4a4d",
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "GapSeconds": 1,
+  "Status": "Completed",
+  "Untimed": [],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ActiveIntervalSeconds": 368.64619130000005,
+  "Rows": [
+    {
+      "Finish": 44.3916451,
+      "Start": 1.242252,
+      "Id": "Org/StaffAll",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 113.4186507,
+      "Start": 44.4189137,
+      "Id": "Org/EffortAll",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 153.0392912,
+      "Start": 113.4450289,
+      "Id": "Org/Outcomes",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 201.6068997,
+      "Start": 153.0580193,
+      "Id": "Org/Inefficiencies",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 242.8623413,
+      "Start": 201.6262724,
+      "Id": "Org/Reporting",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 284.143068,
+      "Start": 242.8781874,
+      "Id": "Org/LeaveBalanceStats",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 326.3786033,
+      "Start": 284.1591851,
+      "Id": "Org/LeaveBalanceReduction",
+      "Status": "Completed",
+      "Attempt": 1
+    },
+    {
+      "Finish": 370.0293899,
+      "Start": 326.3958391,
+      "Id": "Org/LeaveBalanceReporting",
+      "Status": "Completed",
+      "Attempt": 1
+    }
+  ],
+  "IncompleteAttempts": []
+}

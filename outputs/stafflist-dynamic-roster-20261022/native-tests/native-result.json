@@ -1,0 +1,242 @@
+[
+  {
+    "ActivityId": "bbb057f4-74e3-4f2d-8615-3e5cd97f424a",
+    "DataSourceAnalysis": [],
+    "Details": "StaffListDynamicRosterTests()",
+    "EndTime": "2026-10-22T03:18:52.9621784+00:00",
+    "Method": "PQTest.RunTest",
+    "Name": "fixtures.query.pq",
+    "StartTime": "2026-10-22T03:18:52.0333141+00:00",
+    "Output": [
+      {
+        "Case": "BD contract 7 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD contract 14 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD contract 21 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD contract 28 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD contract 29 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD contract 35 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD contract 42 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD casual full-roster cap 28",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD casual full-roster cap 29",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD duplicate dates",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD shift duration and Settings cap",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD gap blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD empty calendar blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD blank date blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "BD missing Date column blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 7 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 14 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 21 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 28 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 29 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 35 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE contract 42 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE casual full-roster cap 28",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE casual full-roster cap 29",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE duplicate dates",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE shift duration and Settings cap",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE gap blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE empty calendar blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE blank date blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "TE missing Date column blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 7 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 14 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 21 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 28 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 29 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 35 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY contract 42 days",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY casual full-roster cap 28",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY casual full-roster cap 29",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY duplicate dates",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY shift duration and Settings cap",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY gap blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY empty calendar blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY blank date blocked",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "JH-RY missing Date column blocked",
+        "Passed": true,
+        "Details": null
+      }
+    ],
+    "DiagnosticEvents": {},
+    "RowCount": 45,
+    "Status": "Passed",
+    "Type": "PQTest.Expression"
+  }
+]

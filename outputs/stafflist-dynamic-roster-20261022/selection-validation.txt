@@ -1,0 +1,282 @@
+Selected: 50 files in 19 batches.
+Sequence profile: Current
+Parallel batches: 12 (maximum 12); files within each batch are sequential.
+Catalogue fingerprint: 3EF99C92D4F3B004D8A558E84973952E2B884ECCF0C4ECE6A926FA3A0219B525
+Saved intermediate outputs explicitly reused; these files are not refreshed this run:
+  Org/Cost (O3): 2. Calculations/Cost/Cost..xlsx
+  Org/History (O4): 2. Calculations/EOW/EffortOutcomeLogXY.xlsx
+  Org/HistoryRead (O4): 2. Calculations/EOW/2DRead.xlsx
+Selected upstream changes will not propagate through these files. Downstream results may include older data.
+Organisation consumer Units: BD, TE, JH-RY. Unit selection does not change workbook filters.
+
+BD/C1 [C1]
+  BD/Workers | UNITS/BD/1. Input/Worker Reconciliation.xlsx
+    Existing input - not refreshed this run: UNITS\BD\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Availability | UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx
+    After: BD/Workers
+    Existing input - not refreshed this run: UNITS\BD\1. Input\whiddon_availability_leave_extraction.xlsx
+    Existing input - not refreshed this run: UNITS\BD\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Staff | UNITS/BD/2. Calculations/StaffListMaster.xlsx
+    After: BD/Availability, BD/Workers
+    Existing input - not refreshed this run: UNITS\BD\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+
+BD/C2:AIN [C2.1]
+  BD/Role:AIN/1 | UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx
+    After: BD/Staff, BD/Availability
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Role:AIN/2 | UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx
+    After: BD/Staff, BD/Availability, BD/Role:AIN/1
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Role:AIN/3 | UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx
+    After: BD/Staff, BD/Availability, BD/Role:AIN/2
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+
+BD/C2:RN [C2.3]
+  BD/Role:RN/1 | UNITS/BD/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx
+    After: BD/Staff, BD/Availability
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Role:RN/2 | UNITS/BD/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx
+    After: BD/Staff, BD/Availability, BD/Role:RN/1
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Role:RN/3 | UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx
+    After: BD/Staff, BD/Availability, BD/Role:RN/2
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+
+BD/C2:EN [C2.4]
+  BD/Role:EN/1 | UNITS/BD/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx
+    After: BD/Staff, BD/Availability
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Role:EN/2 | UNITS/BD/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx
+    After: BD/Staff, BD/Availability, BD/Role:EN/1
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Role:EN/3 | UNITS/BD/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx
+    After: BD/Staff, BD/Availability, BD/Role:EN/2
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+
+BD/U4 [U4]
+  BD/Capacity | UNITS/BD/2. Calculations/Capacity.xlsx
+    After: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Staff, BD/Availability
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+  BD/Effort | UNITS/BD/2. Calculations/Effort.xlsx
+    After: BD/Capacity, BD/Staff
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Allocation.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Shift-StaffDistribution.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\MutliRoleCheck.xlsx
+    Existing input - not refreshed this run: UNITS\BD\2. Calculations\Settings Data.xlsx
+
+TE/C1 [C1]
+  TE/Workers | UNITS/TE/1. Input/Worker Reconciliation.xlsx
+    Existing input - not refreshed this run: UNITS\TE\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Availability | UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx
+    After: TE/Workers
+    Existing input - not refreshed this run: UNITS\TE\1. Input\whiddon_availability_leave_extraction.xlsx
+    Existing input - not refreshed this run: UNITS\TE\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Staff | UNITS/TE/2. Calculations/StaffListMaster.xlsx
+    After: TE/Availability, TE/Workers
+    Existing input - not refreshed this run: UNITS\TE\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+
+TE/C2:AIN [C2.1]
+  TE/Role:AIN/1 | UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx
+    After: TE/Staff, TE/Availability
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Role:AIN/2 | UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx
+    After: TE/Staff, TE/Availability, TE/Role:AIN/1
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Role:AIN/3 | UNITS/TE/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx
+    After: TE/Staff, TE/Availability, TE/Role:AIN/2
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+
+TE/C2:RN [C2.3]
+  TE/Role:RN/1 | UNITS/TE/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx
+    After: TE/Staff, TE/Availability
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Role:RN/2 | UNITS/TE/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx
+    After: TE/Staff, TE/Availability, TE/Role:RN/1
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Role:RN/3 | UNITS/TE/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx
+    After: TE/Staff, TE/Availability, TE/Role:RN/2
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+
+TE/C2:EN [C2.4]
+  TE/Role:EN/1 | UNITS/TE/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx
+    After: TE/Staff, TE/Availability
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Role:EN/2 | UNITS/TE/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx
+    After: TE/Staff, TE/Availability, TE/Role:EN/1
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Role:EN/3 | UNITS/TE/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx
+    After: TE/Staff, TE/Availability, TE/Role:EN/2
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+
+TE/U4 [U4]
+  TE/Capacity | UNITS/TE/2. Calculations/Capacity.xlsx
+    After: TE/Role:AIN/3, TE/Role:EN/3, TE/Role:RN/3, TE/Staff, TE/Availability
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+  TE/Effort | UNITS/TE/2. Calculations/Effort.xlsx
+    After: TE/Capacity, TE/Staff
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Allocation.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Shift-StaffDistribution.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\MutliRoleCheck.xlsx
+    Existing input - not refreshed this run: UNITS\TE\2. Calculations\Settings Data.xlsx
+
+JH-RY/C1 [C1]
+  JH-RY/Workers | UNITS/JH-RY/1. Input/Worker Reconciliation.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Availability | UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx
+    After: JH-RY/Workers
+    Existing input - not refreshed this run: UNITS\JH-RY\1. Input\whiddon_availability_leave_extraction.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Staff | UNITS/JH-RY/2. Calculations/StaffListMaster.xlsx
+    After: JH-RY/Availability, JH-RY/Workers
+    Existing input - not refreshed this run: UNITS\JH-RY\1. Input\1-AllocationExtracted.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+
+JH-RY/C2:AIN [C2.1]
+  JH-RY/Role:AIN/1 | UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Role:AIN/2 | UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability, JH-RY/Role:AIN/1
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Role:AIN/3 | UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability, JH-RY/Role:AIN/2
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+
+JH-RY/C2:RN [C2.3]
+  JH-RY/Role:RN/1 | UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Role:RN/2 | UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability, JH-RY/Role:RN/1
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Role:RN/3 | UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability, JH-RY/Role:RN/2
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+
+JH-RY/C2:EN [C2.4]
+  JH-RY/Role:EN/1 | UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Role:EN/2 | UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability, JH-RY/Role:EN/1
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Role:EN/3 | UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx
+    After: JH-RY/Staff, JH-RY/Availability, JH-RY/Role:EN/2
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\AllocationByShiftAverage.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+
+JH-RY/U4 [U4]
+  JH-RY/Capacity | UNITS/JH-RY/2. Calculations/Capacity.xlsx
+    After: JH-RY/Role:AIN/3, JH-RY/Role:EN/3, JH-RY/Role:RN/3, JH-RY/Staff, JH-RY/Availability
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+  JH-RY/Effort | UNITS/JH-RY/2. Calculations/Effort.xlsx
+    After: JH-RY/Capacity, JH-RY/Staff
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Demand.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Allocation.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Shift-StaffDistribution.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\MutliRoleCheck.xlsx
+    Existing input - not refreshed this run: UNITS\JH-RY\2. Calculations\Settings Data.xlsx
+
+Org/O1 [O1]
+  Org/StaffAll | 2. Calculations/E-O-I/StafMasterList-All.xlsx
+    After: BD/Staff, TE/Staff, JH-RY/Staff
+  Org/EffortAll | 2. Calculations/E-O-I/Effort-All.xlsx
+    After: Org/StaffAll, BD/Effort, TE/Effort, JH-RY/Effort
+    Existing input - not refreshed this run: 2. Calculations\Change\AllocationChange.xlsx
+
+Org/O2 [O2]
+  Org/Outcomes | 2. Calculations/E-O-I/EffortOutcomes.xlsx
+    After: Org/EffortAll, Org/StaffAll
+  Org/Inefficiencies | 2. Calculations/E-O-I/Inefficiencies.xlsx
+    After: Org/Outcomes
+
+Org/O5 [O5]
+  Org/Reporting | 2. Calculations/Tableau Connection.xlsx
+    After: Org/Inefficiencies, Org/Outcomes
+    Existing input - not refreshed this run: 2. Calculations\Cost\Cost..xlsx
+    Existing input - not refreshed this run: 2. Calculations\EOW\2DRead.xlsx
+
+Org/O6 [O6]
+  Org/LeaveBalanceStats | ../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx
+    After: Org/Reporting
+  Org/LeaveBalanceReduction | ../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx
+    After: Org/LeaveBalanceStats
+  Org/LeaveBalanceReporting | ../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx
+    After: Org/LeaveBalanceReduction
+
+Technical refresh only; business reconciliation is not evaluated.
+FILE USER: {"Pid":21528,"Application":"Tableau","Started":"2026-10-22T02:51:56.1678320Z","Executable":"C:\\Program Files\\Tableau\\Tableau 2026.2\\bin\\tabprotosrv.exe","Command":"[\"C:\\\\Program\",\"Files\\\\Tableau\\\\Tableau\",\"2026.2\\\\bin\\\\tabprotosrv.exe\",\"-s\",\"tab.pipe://./pipe/{45C97D86-99B9-496A-9788-C230A736D3D3}\",\"-c\",\"tab.pipe://./pipe/{3DBC6F4C-DF72-4704-84C9-73CCB5C7AD3F}=<redacted>\",\"-rpath\",\"C:\\\\Users\\\\Alex\\\\OneDrive - Resrodel\\\\18-19\\\\Documents\\\\My Tableau Repository\",\"-drivers\",\"C:\\\\Program Files\\\\Tableau\\\\Drivers\",\"-rlang\",\"en_US\",\"-max_logfiles\",\"1024\",\"-e\",\"1\",\"-DWebDatasourceDir=C:\\\\Program Files\\\\Tableau\\\\Tableau 2026.2\\\\WebDatasources\",\"-DLogLevel=info\",\"-lc\",\"en_US\",\"-pubkey\",\"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQRLHyIaa8mcv4lyL02LjbChzE+pg\\ndrYr+kUQCY2FTVsMhAuEZdRWNhQgNwnPju/Y8wCkZdNc3WXsWZ0ub/xgFQ==\\n-----END PUBLIC KEY-----\\n\"]","ParentPid":47040,"ParentApplication":"tableau.exe","Allowed":false,"Reason":"Not a recognised installed Git executable.","Target":"C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\Effort-All.xlsx"}
+FILE USER: {"Pid":81292,"Application":"Tableau","Started":"2026-10-22T02:51:55.0878500Z","Executable":"C:\\Program Files\\Tableau\\Tableau 2026.2\\bin\\tabprotosrv.exe","Command":"[\"C:\\\\Program\",\"Files\\\\Tableau\\\\Tableau\",\"2026.2\\\\bin\\\\tabprotosrv.exe\",\"-s\",\"tab.pipe://./pipe/{F7775181-E091-4094-94B8-6CE44D60043E}\",\"-c\",\"tab.pipe://./pipe/{22703888-1D1E-4BFC-A2C4-AB4BD96B3D77}=<redacted>\",\"-rpath\",\"C:\\\\Users\\\\Alex\\\\OneDrive - Resrodel\\\\18-19\\\\Documents\\\\My Tableau Repository\",\"-drivers\",\"C:\\\\Program Files\\\\Tableau\\\\Drivers\",\"-rlang\",\"en_US\",\"-max_logfiles\",\"1024\",\"-e\",\"1\",\"-DWebDatasourceDir=C:\\\\Program Files\\\\Tableau\\\\Tableau 2026.2\\\\WebDatasources\",\"-DLogLevel=info\",\"-lc\",\"en_US\",\"-pubkey\",\"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQRLHyIaa8mcv4lyL02LjbChzE+pg\\ndrYr+kUQCY2FTVsMhAuEZdRWNhQgNwnPju/Y8wCkZdNc3WXsWZ0ub/xgFQ==\\n-----END PUBLIC KEY-----\\n\"]","ParentPid":47040,"ParentApplication":"tableau.exe","Allowed":false,"Reason":"Not a recognised installed Git executable.","Target":"C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\Tableau Connection.xlsx"}
+VALIDATION: Org/EffortAll: External-user policy blocked access: Tableau (PID 21528) after waiting 0 second(s). No save attempted by this check; this is not an Excel save error. Close/disconnect those applications before retrying: C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\E-O-I\Effort-All.xlsx
+VALIDATION: Org/Reporting: External-user policy blocked access: Tableau (PID 81292) after waiting 0 second(s). No save attempted by this check; this is not an Excel save error. Close/disconnect those applications before retrying: C:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\2. Calculations\Tableau Connection.xlsx
+Exception: 
+Line |
+   2 |  & CLIENT/DATExx-Whiddon/runner/Invoke-BatchRefreshRunner.ps1 -Units B …
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Validation failed for 2 file checks. Excel was not started.

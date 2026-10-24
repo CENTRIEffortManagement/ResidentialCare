@@ -1,0 +1,25 @@
+{
+  "Status": "Passed",
+  "Source": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+  "SourceSHA256": "D8EE76BAC3C3F887C5D69003728C2F92E2C1A517928B3F41EE32FCD557079E67",
+  "ChangedQueries": [
+    "ReconciledWorkers_Facility_Prepare",
+    "LINK Facilities",
+    "AvailabilityLeaveSource_Prepare",
+    "AllocationRoleHours_Prepare"
+  ],
+  "AddedQueries": [
+    "FacilityMappings_Prepare"
+  ],
+  "QueryCountBefore": 70,
+  "QueryCountAfter": 71,
+  "BDAndTEUnchanged": true,
+  "ExternalAccessUnchanged": true,
+  "FacilityMappingUsesNoUnitSpecificConstant": true,
+  "MemoryReview": "Three-column reference reduced to a unique two-column scalar lookup before buffering; alias expansion is limited to the small Facilities list, and validated unique keys preserve worker/event row grain. No worker or event buffer was widened.",
+  "UserAuthorization": "Use existing JH-RY M source; user will test",
+  "Prerequisite": "Raw Facilities list must expose FacilityShort, Title and either Facility-Abbrev or the existing field_1; missing fields and conflicting mappings fail explicitly.",
+  "WorkbookInspected": false,
+  "Synced": false,
+  "Refreshed": false
+}

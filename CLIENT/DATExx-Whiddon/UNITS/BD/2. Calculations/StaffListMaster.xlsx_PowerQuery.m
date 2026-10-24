@@ -157,8 +157,9 @@ in
     #"Sorted Rows";
 
 // Query: ResourceContract
-// Purpose: Resolve every reconciled worker to positive fortnightly contract hours and an effective shift cap.
-// Notes: Missing or zero reported hours use the Settings maximum; invalid negative values remain blocking failures.
+// Purpose: Retain reported contracts and apply the upstream roster cap when contract hours are missing or zero.
+// Notes: RosterShiftCap already covers the full roster. No contract hours are inferred from that cap.
+// Notes: Reported fortnightly hours are prorated by the actual Settings roster-day count, including partial fortnights.
 shared ResourceContract = let
     Source = Masterlist_Base,
     RosterDates = #"EXTRACT StaffList RosterDates",
@@ -168,44 +169,55 @@ shared ResourceContract = let
     RosterFortnights = Number.From(RosterDateCount) / 14,
     ShiftDuration = #"EXTRACT StaffList ShiftDuration",
     SettingsMaximum = #"EXTRACT StaffList MaxAvailability",
-    FallbackContractedFNHours = SettingsMaximum * ShiftDuration / RosterFortnights,
+    HasPositiveContractHours = (hours as nullable number) as logical =>
+        if hours = null then false
+        else not Number.IsNaN(hours) and Number.Abs(hours) <> #infinity and hours > 0,
     WithContractSource = Table.AddColumn(Source, "Contract Source", each
-        if [Contracted FN Hours] = null then "Settings maximum fallback"
-        else if [Contracted FN Hours] = 0 then "Settings maximum fallback"
+        if [Contracted FN Hours] = null then "Casual roster cap"
+        else if [Contracted FN Hours] = 0 then "Casual roster cap"
         else "Worker record", type text),
+    // Missing and zero hours mean no contract; invalid reported hours remain available to the blocking check.
     ResolvedContractHours = Table.TransformColumns(WithContractSource, {{"Contracted FN Hours", each
-        if _ = null then FallbackContractedFNHours
-        else if _ = 0 then FallbackContractedFNHours
+        if _ = null then null
+        else if _ = 0 then null
         else _, type nullable number}}),
     WithRosterStart = Table.AddColumn(ResolvedContractHours, "Roster Start", each RosterStart, type date),
     WithRosterEnd = Table.AddColumn(WithRosterStart, "Roster End", each RosterEnd, type date),
     WithRosterFortnights = Table.AddColumn(WithRosterEnd, "Roster Fortnights", each RosterFortnights, type number),
     WithContractRosterHours = Table.AddColumn(WithRosterFortnights, "Contracted Roster Hours", each
-        if [Contracted FN Hours] = null then null else [Contracted FN Hours] * RosterFortnights, type nullable number),
+        if HasPositiveContractHours([Contracted FN Hours]) then [Contracted FN Hours] * RosterFortnights
+        else null, type nullable number),
     WithShiftEquivalent = Table.AddColumn(WithContractRosterHours, "Contracted Shift Equivalent", each
         if [Contracted Roster Hours] = null then null else [Contracted Roster Hours] / ShiftDuration, type nullable number),
     WithContractedShifts = Table.AddColumn(WithShiftEquivalent, "Contracted Shifts", each
         if [Contracted Shift Equivalent] = null then null else Int64.From(Number.RoundDown([Contracted Shift Equivalent])), Int64.Type),
     WithSettingsMaximum = Table.AddColumn(WithContractedShifts, "Settings Max Availability", each SettingsMaximum, Int64.Type),
     WithEffectiveCap = Table.AddColumn(WithSettingsMaximum, "Effective Shift Cap", each
-        if [Contracted Shifts] = null or [Contracted Shifts] <= 0 then null
+        if [Contract Source] = "Casual roster cap" then [AppliedCasualRosterShiftCap]
+        else if [Contracted Shifts] = null or [Contracted Shifts] <= 0 then null
         else List.Min({[Settings Max Availability], [Contracted Shifts]}), type nullable number),
     WithLimitBasis = Table.AddColumn(WithEffectiveCap, "Limit Basis", each
-        if [Contract Source] = "Settings maximum fallback" then "Settings maximum fallback"
+        // Effort recognises the Casual fallback prefix as having no exact contract-hours overage test.
+        if [Contract Source] = "Casual roster cap" then
+            if [CasualCapIssue] = null then "Casual fallback - RosterShiftCap"
+            else "Casual fallback - Settings maximum"
         else if [Contracted Shifts] = null or [Contracted Shifts] <= 0 then "Invalid or missing contract"
         else if [Contracted Shifts] < [Settings Max Availability] then "Contracted shifts"
         else "Settings maximum", type text)
 in Table.Buffer(WithLimitBasis);
 
 // Query: ResourceContract_CHECK
-// Purpose: Validate authoritative worker coverage, membership, contract fallback and one-row-per-Resource output.
+// Purpose: Validate authoritative worker coverage, reported contracts, roster caps and one-row-per-Resource output.
 shared ResourceContract_CHECK = let
     Contracts = ResourceContract,
     AvailabilityInput = #"EXTRACT Availability Staff List",
     AvailabilityResources = Table.SelectRows(Contracts, each [Source] = "Availability"),
-    FallbackRows = Table.SelectRows(Contracts, each [Contract Source] = "Settings maximum fallback"),
-    FallbackContractedFNHours = #"EXTRACT StaffList MaxAvailability" * #"EXTRACT StaffList ShiftDuration"
-        / (Number.From(Table.RowCount(#"EXTRACT StaffList RosterDates")) / 14),
+    FallbackRows = Table.SelectRows(Contracts, each [Contract Source] = "Casual roster cap" and [CasualCapIssue] <> null),
+    IsPositiveFiniteNumber = (value as any) as logical =>
+        if not Value.Is(value, type number) then false
+        else not Number.IsNaN(value) and Number.Abs(value) <> #infinity and value > 0,
+    IsPositiveWholeNumber = (value as any) as logical =>
+        if not IsPositiveFiniteNumber(value) then false else value = Number.RoundDown(value),
     BlockingChecks = {
         StaffListCheckResult("Valid roster and cap settings", () =>
             if Table.RowCount(#"EXTRACT StaffList RosterDates") > 0
@@ -227,31 +239,43 @@ shared ResourceContract_CHECK = let
             or not List.Contains({"Allocation only", "Records only", "Both"}, [Worker Membership])))),
         StaffListCheckResult("Reconciliation is the only worker source", () =>
             Table.RowCount(Contracts) - Table.RowCount(AvailabilityResources)),
-        StaffListCheckResult("Positive contracts for every worker", () => Table.RowCount(Table.SelectRows(Contracts, each
-            let
-                Hours = [Contracted FN Hours],
-                InvalidHours = if Hours = null then true
-                    else Hours <= 0 or Number.IsNaN(Hours) or Number.Abs(Hours) = #infinity
-            in InvalidHours
-                or not List.Contains({"Worker record", "Settings maximum fallback"}, [Contract Source])))),
-        StaffListCheckResult("Settings fallback supplies maximum fortnightly hours", () => Table.RowCount(Table.SelectRows(FallbackRows, each
-            Number.Abs([Contracted FN Hours] - FallbackContractedFNHours) > 0.00000001))),
+        StaffListCheckResult("Valid reported contract hours or roster cap basis", () => Table.RowCount(Table.SelectRows(Contracts, each
+            if [Contracted FN Hours] = null then [Contract Source] <> "Casual roster cap"
+            else not IsPositiveFiniteNumber([Contracted FN Hours]) or [Contract Source] <> "Worker record"))),
         StaffListCheckResult("Calculated resource contract caps", () => Table.RowCount(Table.SelectRows(AvailabilityResources, each
-            let
-                ExpectedRosterHours = [Contracted FN Hours] * [Roster Fortnights],
-                ExpectedEquivalent = ExpectedRosterHours / #"EXTRACT StaffList ShiftDuration",
-                ExpectedShifts = Number.RoundDown(ExpectedEquivalent),
-                ExpectedCap = if ExpectedShifts <= 0 then null
-                    else List.Min({[Settings Max Availability], ExpectedShifts})
-            in Number.Abs([Contracted Roster Hours] - ExpectedRosterHours) > 0.00000001
-                or Number.Abs([Contracted Shift Equivalent] - ExpectedEquivalent) > 0.00000001
-                or [Contracted Shifts] <> ExpectedShifts
-                or [Effective Shift Cap] <> ExpectedCap
-                or [Effective Shift Cap] = null)))
+            if [Contract Source] = "Casual roster cap" then
+                let
+                    RawCap = [RosterShiftCap],
+                    AppliedCap = [AppliedCasualRosterShiftCap],
+                    ExpectedCap = if [CasualCapIssue] <> null then [Settings Max Availability]
+                        else if IsPositiveWholeNumber(RawCap) then List.Min({RawCap, [Settings Max Availability]})
+                        else null,
+                    ExpectedBasis = if [CasualCapIssue] = null then "Casual fallback - RosterShiftCap"
+                        else "Casual fallback - Settings maximum",
+                    HasUsableAppliedCap = if not IsPositiveWholeNumber(AppliedCap) then false
+                        else AppliedCap <= [Settings Max Availability]
+                in [Contracted FN Hours] <> null or [Contracted Roster Hours] <> null
+                    or [Contracted Shift Equivalent] <> null or [Contracted Shifts] <> null
+                    or not HasUsableAppliedCap or ExpectedCap = null or AppliedCap <> ExpectedCap
+                    or [Effective Shift Cap] <> ExpectedCap or [Limit Basis] <> ExpectedBasis
+            else if not IsPositiveFiniteNumber([Contracted FN Hours]) then true
+            else
+                let
+                    ExpectedRosterHours = [Contracted FN Hours] * [Roster Fortnights],
+                    ExpectedEquivalent = ExpectedRosterHours / #"EXTRACT StaffList ShiftDuration",
+                    ExpectedShifts = Number.RoundDown(ExpectedEquivalent),
+                    ExpectedCap = if ExpectedShifts <= 0 then null
+                        else List.Min({[Settings Max Availability], ExpectedShifts})
+                in Number.Abs([Contracted Roster Hours] - ExpectedRosterHours) > 0.00000001
+                    or Number.Abs([Contracted Shift Equivalent] - ExpectedEquivalent) > 0.00000001
+                    or [Contracted Shifts] <> ExpectedShifts
+                    or [AppliedCasualRosterShiftCap] <> null
+                    or [Effective Shift Cap] <> ExpectedCap
+                    or [Effective Shift Cap] = null)))
     },
     DiagnosticChecks = {
-        [Check = "Workers using Settings contract fallback", Status = if Table.IsEmpty(FallbackRows) then "Pass" else "Warning",
-            Failures = Table.RowCount(FallbackRows), Details = "Filter Table_Masterlist where Contract Source = Settings maximum fallback."]
+        [Check = "Workers using Settings roster-cap fallback", Status = if Table.IsEmpty(FallbackRows) then "Pass" else "Warning",
+            Failures = Table.RowCount(FallbackRows), Details = "Inspect CasualRosterShiftCapExceptions in Capacity-ShiftAvailability for the worker-level reasons."]
     },
     Checks = BlockingChecks & DiagnosticChecks
 in Table.Buffer(Table.FromRecords(Checks, type table [Check = text, Status = text, Failures = nullable number, Details = nullable text]));
@@ -306,24 +330,30 @@ in
     #"Removed Columns1";
 
 // Query: IMPORT StaffList Worker's Report
-// Purpose: Read employee contract rows retained by the allocation misalignment diagnostic branch.
-// Inputs: Table1 in 1. Input/Worker's Report.xlsx.
+// Purpose: Read the raw worker-report worksheet used by the allocation misalignment diagnostic branch.
+// Inputs: Sheet1 in the current unit's 1. Input/Worker's Report.xlsx, matching the Availability reader.
+// Notes: Inspect SourcePath and Navigation to identify the file and its available worksheet/table objects.
 shared #"IMPORT StaffList Worker's Report" = let
-    Navigation = Excel.Workbook(File.Contents(#"FilePath-1Input" & "\Worker's Report.xlsx"), null, true),
-    Matches = Table.SelectRows(Navigation, each [Item] = "Table1" and [Kind] = "Table"),
-    ContractTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("StaffList worker contract import", "Expected exactly one Table1 table in Worker's Report.xlsx.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"Employee Code", "Contracted FN Hours"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ContractTable)),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(ContractTable, RequiredColumns)
-        else error Error.Record("StaffList worker contract import", "Worker's Report.xlsx/Table1 is missing required columns.", [MissingColumns = MissingColumns])
-in Table.Buffer(Selected);
+    SourcePath = #"FilePath-1Input" & "\Worker's Report.xlsx",
+    SourceBinary = File.Contents(SourcePath),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    ReportSheet = Navigation{[Item = "Sheet1", Kind = "Sheet"]}[Data]
+in
+    ReportSheet;
 
 // Query: StaffList WorkerContracts
 // Purpose: Resolve Worker's Report to one auditable contract row per employee for allocation-only matching.
 // Notes: Identical duplicate values are allowed; conflicting, negative, non-numeric and non-finite values remain explicit issues.
 shared #"StaffList WorkerContracts" = let
-    NormalizedEmployee = Table.TransformColumns(#"IMPORT StaffList Worker's Report",
+    Source = #"IMPORT StaffList Worker's Report",
+    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+    RequiredColumns = {"Employee Code", "Contracted FN Hours"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(PromotedHeaders)),
+    SelectedColumns = if List.IsEmpty(MissingColumns) then Table.SelectColumns(PromotedHeaders, RequiredColumns)
+        else error Error.Record("StaffList worker contract columns",
+            "Worker's Report.xlsx/Sheet1 is missing required contract columns. Inspect StaffList WorkerContracts at PromotedHeaders.",
+            [Query = "StaffList WorkerContracts", Step = "SelectedColumns", MissingColumns = MissingColumns]),
+    NormalizedEmployee = Table.TransformColumns(SelectedColumns,
         {{"Employee Code", StaffListText, type nullable text}}),
     ParsedContract = Table.AddColumn(NormalizedEmployee, "ContractParse", each
         let
@@ -358,8 +388,11 @@ shared #"StaffList WorkerContracts" = let
             ContractHours = if List.Count(Values) = 1 and Issue = null then Values{0} else null
         in [Contracted FN Hours = ContractHours, Worker Contract Issue = Issue],
         type [Contracted FN Hours = nullable number, Worker Contract Issue = nullable text]),
-    ExpandedResolution = Table.ExpandRecordColumn(Resolved, "ContractResolution", {"Contracted FN Hours", "Worker Contract Issue"})
-in Table.Buffer(Table.SelectColumns(ExpandedResolution, {"EmployeeID", "Contracted FN Hours", "Worker Contract Issue"}));
+    ExpandedResolution = Table.ExpandRecordColumn(Resolved, "ContractResolution", {"Contracted FN Hours", "Worker Contract Issue"}),
+    Output = Table.SelectColumns(ExpandedResolution, {"EmployeeID", "Contracted FN Hours", "Worker Contract Issue"}),
+    BufferedOutput = Table.Buffer(Output)
+in
+    BufferedOutput;
 
 // Query: IMPORT Allocation Extracted
 // Purpose: Import the Unit1 allocation workbook once for its allocated staff list.
@@ -407,7 +440,7 @@ in Table.Buffer(WorkbookNavigation);
 
 // Query: EXTRACT Availability Staff List
 // Purpose: Select and validate the employee-grain Availability-StaffList output produced in Step 1.
-// Output: One preferred-role row per reconciled employee and facility, including Allocation/Records membership.
+// Output: One preferred-role row per reconciled employee and facility, including contract and applied roster-cap fields.
 shared #"EXTRACT Availability Staff List" = let
     Matches = Table.SelectRows(#"IMPORT Capacity Shift Availability", each
         [Item] = "Availability-StaffList" and [Kind] = "Sheet"),
@@ -415,14 +448,15 @@ shared #"EXTRACT Availability Staff List" = let
         else error Error.Record("Availability staff import", "Expected exactly one Availability-StaffList sheet.", [Matches = Table.RowCount(Matches)]),
     PromotedHeaders = Table.PromoteHeaders(RawSheet, [PromoteAllScalars = true]),
     RequiredColumns = {"EmployeeID", "Facility-Abbrev", "Name", "Role", "PreferredRole", "EmploymentType", "Contracted FN Hours",
-        "In Allocation", "In Records", "Worker Membership"},
+        "In Allocation", "In Records", "Worker Membership", "RosterShiftCap", "AppliedCasualRosterShiftCap", "CasualCapIssue"},
     MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(PromotedHeaders)),
     Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(PromotedHeaders, RequiredColumns)
         else error Error.Record("Availability staff import", "Availability-StaffList is missing required Step 1 columns.", [MissingColumns = MissingColumns]),
     Typed = Table.TransformColumnTypes(Selected,
         {{"EmployeeID", type text}, {"Facility-Abbrev", type text}, {"Name", type text}, {"Role", type text},
          {"PreferredRole", type text}, {"EmploymentType", type text}, {"Contracted FN Hours", type nullable number},
-         {"In Allocation", type logical}, {"In Records", type logical}, {"Worker Membership", type text}}),
+         {"In Allocation", type logical}, {"In Records", type logical}, {"Worker Membership", type text},
+         {"RosterShiftCap", type nullable number}, {"AppliedCasualRosterShiftCap", type nullable number}, {"CasualCapIssue", type nullable text}}),
     Normalized = Table.TransformColumns(Typed, List.Transform(
         {"EmployeeID", "Facility-Abbrev", "Name", "Role", "PreferredRole", "EmploymentType", "Worker Membership"},
         each {_, StaffListText, type nullable text})),
@@ -454,6 +488,7 @@ in Validated;
 
 // Query: EXTRACT StaffList RosterDates
 // Purpose: Validate and expose the distinct contiguous roster dates from Settings PermutationDimensions.
+// Notes: Any nonempty contiguous roster length is valid; ResourceContract derives its fortnight equivalent from the actual day count.
 shared #"EXTRACT StaffList RosterDates" = let
     Matches = Table.SelectRows(#"IMPORT StaffList Settings", each [Item] = "PermutationDimensions" and [Kind] = "Table"),
     SettingsTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
@@ -468,7 +503,6 @@ shared #"EXTRACT StaffList RosterDates" = let
     Validated = if MissingDates > 0 then error "PermutationDimensions contains blank roster dates."
         else if DateCount = 0 then error "PermutationDimensions contains no roster dates."
         else if DateCount <> SpanDays then error "Settings roster dates must be contiguous."
-        else if Number.Mod(DateCount, 14) <> 0 then error "Settings roster date count must be a whole number of fortnights."
         else DistinctDates
 in Table.Buffer(Validated);
 
