@@ -232,12 +232,14 @@ foreach ($evidenceWorkbook in @($refreshWorkbook, $listWorkbook)) {
     $refreshTarget.RefreshDate = $null
     $baselineWithoutDate = Get-WorksheetQueryRefreshEvidence $evidenceWorkbook
     $callsBefore = $refreshQuery.RefreshCalls
-    $confirmed = Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $baselineWithoutDate -ConfirmMissingDates
-    Assert-Test ($confirmed -eq $true -and $refreshQuery.RefreshCalls -eq $callsBefore + 1) 'A missing timestamp was not verified by a successful foreground refresh.'
+    $completed = Get-WorksheetQueryRefreshEvidence $evidenceWorkbook -RefreshLoadedQueries
+    Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $baselineWithoutDate -CompletedRefreshes $completed
+    Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $baselineWithoutDate -CompletedRefreshes $completed
+    Assert-Test ($refreshQuery.RefreshCalls -eq $callsBefore + 1) 'Missing timestamps or repeated verification caused a duplicate refresh.'
     foreach ($badResult in @($false, $null, 'True')) {
         $refreshQuery.RefreshResult = $badResult
         $rejected = $false
-        try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $baselineWithoutDate -ConfirmMissingDates | Out-Null }
+        try { Get-WorksheetQueryRefreshEvidence $evidenceWorkbook -RefreshLoadedQueries | Out-Null }
         catch { $rejected = $_.Exception.Message -like '*did not confirm successful foreground refresh*' }
         Assert-Test $rejected 'A cancelled or unknown foreground refresh result was accepted.'
     }
@@ -246,7 +248,7 @@ foreach ($evidenceWorkbook in @($refreshWorkbook, $listWorkbook)) {
         foreach ($badValue in @($true, $null)) {
             $refreshQuery.$badProperty = $badValue
             $rejected = $false
-            try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $baselineWithoutDate -ConfirmMissingDates | Out-Null }
+            try { Get-WorksheetQueryRefreshEvidence $evidenceWorkbook -RefreshLoadedQueries | Out-Null }
             catch { $rejected = $_.Exception.Message -like '*foreground refresh*' }
             Assert-Test $rejected "Unknown or true $badProperty was accepted as a completed foreground refresh."
         }
@@ -254,7 +256,7 @@ foreach ($evidenceWorkbook in @($refreshWorkbook, $listWorkbook)) {
     }
     $refreshQuery.RefreshError = 'Synthetic provider failure'
     $providerRejected = $false
-    try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $baselineWithoutDate -ConfirmMissingDates | Out-Null }
+    try { Get-WorksheetQueryRefreshEvidence $evidenceWorkbook -RefreshLoadedQueries | Out-Null }
     catch { $providerRejected = $_.Exception.Message -like '*foreground refresh*Synthetic provider failure*' }
     Assert-Test $providerRejected 'A provider failure was swallowed or lost its query context.'
     $refreshQuery.RefreshError = ''
@@ -262,20 +264,155 @@ foreach ($evidenceWorkbook in @($refreshWorkbook, $listWorkbook)) {
     $datedBefore = Get-WorksheetQueryRefreshEvidence $evidenceWorkbook
     $callsBefore = $refreshQuery.RefreshCalls
     $staleRejected = $false
-    try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $datedBefore -ConfirmMissingDates | Out-Null }
+    try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $datedBefore | Out-Null }
     catch { $staleRejected = $_.Exception.Message -like '*did not report a new connection refresh date*' }
-    Assert-Test ($staleRejected -and $refreshQuery.RefreshCalls -eq $callsBefore) 'Foreground fallback bypassed a known stale timestamp.'
-    $refreshTarget.RefreshDate = $refreshTarget.RefreshDate.AddSeconds(1)
-    $confirmed = Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $datedBefore -ConfirmMissingDates
-    Assert-Test ($confirmed -eq $false -and $refreshQuery.RefreshCalls -eq $callsBefore) 'A current timestamp unnecessarily triggered another refresh.'
+    Assert-Test ($staleRejected -and $refreshQuery.RefreshCalls -eq $callsBefore) 'Verification refreshed a query without current completion evidence.'
+    $completed = Get-WorksheetQueryRefreshEvidence $evidenceWorkbook -RefreshLoadedQueries
+    Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $datedBefore -CompletedRefreshes $completed
+    Assert-Test ($refreshQuery.RefreshCalls -eq $callsBefore + 1) 'An unchanged timestamp caused a duplicate refresh despite successful foreground completion.'
+    $incomplete = @{} + $completed
+    $label = @($incomplete.Keys)[0]
+    $incomplete[$label] = $completed[$label].PSObject.Copy()
+    $incomplete[$label].ConfirmedSynchronously = $false
+    $rejected = $false
+    try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $datedBefore -CompletedRefreshes $incomplete }
+    catch { $rejected = $_.Exception.Message -like '*no matching successful foreground refresh*' }
+    Assert-Test $rejected 'An unsuccessful foreground receipt was accepted.'
+    $incomplete[$label] = $completed[$label].PSObject.Copy()
+    $incomplete[$label].CapturedAt = $datedBefore[$label].CapturedAt.AddSeconds(-1)
+    $rejected = $false
+    try { Assert-WorksheetQueryRefreshEvidence $evidenceWorkbook $datedBefore -CompletedRefreshes $incomplete }
+    catch { $rejected = $_.Exception.Message -like '*no matching successful foreground refresh*' }
+    Assert-Test $rejected 'A foreground receipt from an earlier attempt was accepted.'
 }
 $refreshTarget.RefreshDate = $null
 $mixedBefore = Get-WorksheetQueryRefreshEvidence $mixedWorkbook -DeletedQueries $deletedQueries
-$null = Assert-WorksheetQueryRefreshEvidence $mixedWorkbook $mixedBefore -DeletedQueries $deletedQueries -ConfirmMissingDates
+$mixedCompleted = Get-WorksheetQueryRefreshEvidence $mixedWorkbook -DeletedQueries $deletedQueries -RefreshLoadedQueries
+Assert-WorksheetQueryRefreshEvidence $mixedWorkbook $mixedBefore -DeletedQueries $deletedQueries -CompletedRefreshes $mixedCompleted
 # The deleted object has no Refresh method, so the preceding check also proves
 # that foreground confirmation never attempts to refresh deleted connections.
 $refreshTarget.RefreshDate = Get-Date
-Write-Host 'PASS: missing timestamp confirmation, cancellation, provider failures, asynchronous/unknown state and row overflow.'
+Write-Host 'PASS: one foreground refresh, read-only verification, current-attempt receipts, cancellation, provider failures, asynchronous/unknown state and row overflow.'
+
+# The same query can be exposed through both collections under different names.
+# Two distinct tables sharing a connection must still each refresh once.
+$secondQuery = $refreshQuery.PSObject.Copy()
+$secondQuery.Name = 'SecondOutput'
+$secondQuery.RefreshCalls = 0
+$dualWorkbook = [pscustomobject] @{
+    Connections = @($refreshConnection)
+    Worksheets = @([pscustomobject] @{
+        Name = 'Demand'; QueryTables = @($refreshQuery)
+        ListObjects = @(
+            [pscustomobject] @{ Name = 'DifferentTableName'; SourceType = 3; QueryTable = $refreshQuery }
+            [pscustomobject] @{ Name = 'SecondTable'; SourceType = 3; QueryTable = $secondQuery }
+        )
+    })
+    RefreshAllCalls = 0; RefreshAllError = ''; IncludedLoadedConnection = $false
+}
+$dualWorkbook | Add-Member ScriptMethod RefreshAll {
+    $this.RefreshAllCalls++
+    $this.IncludedLoadedConnection = $this.Connections[0].RefreshWithRefreshAll
+    if ($this.RefreshAllError) { throw $this.RefreshAllError }
+    if ($this.IncludedLoadedConnection) { $this.Worksheets[0].QueryTables[0].Refresh($false) | Out-Null }
+}
+$refreshTarget.RefreshDate = $null
+$dualBefore = Get-WorksheetQueryRefreshEvidence $dualWorkbook
+$callsBefore = $refreshQuery.RefreshCalls
+$dualCompleted = Get-WorksheetQueryRefreshEvidence $dualWorkbook -RefreshLoadedQueries
+Invoke-RefreshAllExceptLoadedQueries $dualWorkbook $dualCompleted
+Assert-WorksheetQueryRefreshEvidence $dualWorkbook $dualBefore -CompletedRefreshes $dualCompleted
+Assert-Test ($dualCompleted.Count -eq 2 -and $refreshQuery.RefreshCalls -eq $callsBefore + 1 -and $secondQuery.RefreshCalls -eq 1) 'Duplicate collection views refreshed twice, or distinct tables sharing a connection were skipped.'
+Assert-Test ($dualWorkbook.RefreshAllCalls -eq 1 -and -not $dualWorkbook.IncludedLoadedConnection -and $refreshConnection.RefreshWithRefreshAll) 'Remaining Refresh All work was skipped, duplicated a loaded query, or left connection settings changed.'
+$dualWorkbook.RefreshAllError = 'Synthetic Refresh All failure'
+$rejected = $false
+try { Invoke-RefreshAllExceptLoadedQueries $dualWorkbook $dualCompleted }
+catch { $rejected = $_.Exception.Message -like '*Synthetic Refresh All failure*' }
+Assert-Test ($rejected -and $refreshConnection.RefreshWithRefreshAll) 'Refresh All failure was swallowed or its temporary settings were not restored.'
+$dualWorkbook.RefreshAllError = ''
+$savedQueryName = $secondQuery.Name
+$secondQuery.Name = ''
+$blankNameEvidence = Get-WorksheetQueryRefreshEvidence $dualWorkbook
+Assert-Test ($blankNameEvidence.Count -eq 2 -and $blankNameEvidence.ContainsKey('Demand/SecondTable')) 'A named loaded table was rejected because its query name was blank.'
+$secondQuery.Name = $savedQueryName
+$refreshTarget.RefreshDate = Get-Date
+Write-Host 'PASS: dual collection deduplication, distinct loaded tables, remaining Refresh All work and connection-setting restoration.'
+
+# Regression: run 20261025-124313-e68b1fa6 failed before refreshing because Excel
+# returned no QueryTable.Name for the named ListObject UnitPath/PathTABLE.
+# Query identity must come from the object, and publication identity from the
+# ListObject. No query-name read is needed when both collections expose it.
+foreach ($nameCase in @('Blank', 'Null', 'Unreadable', 'Absent')) {
+    $pathQuery = $refreshQuery.PSObject.Copy()
+    $pathQuery.RefreshCalls = 0
+    if ($nameCase -eq 'Blank') { $pathQuery.Name = '' }
+    if ($nameCase -eq 'Null') { $pathQuery.Name = $null }
+    if ($nameCase -eq 'Unreadable') { $pathQuery | Add-Member ScriptProperty Name { throw 'Query name unavailable.' } -Force }
+    if ($nameCase -eq 'Absent') { $pathQuery.PSObject.Properties.Remove('Name') }
+    foreach ($bothViews in @($false, $true)) {
+        $pathWorkbook = [pscustomobject] @{
+            Worksheets = @([pscustomobject] @{
+                Name = 'UnitPath'; QueryTables = @()
+                ListObjects = @([pscustomobject] @{ Name = 'PathTABLE'; SourceType = 3; QueryTable = $pathQuery })
+            })
+        }
+        if ($bothViews) { $pathWorkbook.Worksheets[0].QueryTables = @($pathQuery) }
+        $refreshTarget.RefreshDate = $null
+        $pathBefore = Get-WorksheetQueryRefreshEvidence $pathWorkbook
+        $pathCallsBefore = $pathQuery.RefreshCalls
+        $pathCompleted = Get-WorksheetQueryRefreshEvidence $pathWorkbook -RefreshLoadedQueries
+        Assert-WorksheetQueryRefreshEvidence $pathWorkbook $pathBefore -CompletedRefreshes $pathCompleted
+        Assert-Test ($pathCompleted.Count -eq 1 -and $pathCompleted.ContainsKey('UnitPath/PathTABLE') -and $pathQuery.RefreshCalls -eq $pathCallsBefore + 1) "A $nameCase query name caused failure, duplicate refresh or unverifiable publication (both views: $bothViews)."
+    }
+}
+$secondPathQuery = $pathQuery.PSObject.Copy()
+$secondPathQuery.RefreshCalls = 0
+$pathWorkbook.Worksheets[0].QueryTables = @($pathQuery, $secondPathQuery)
+$pathWorkbook.Worksheets[0].ListObjects += [pscustomobject] @{ Name = 'SecondPathTABLE'; SourceType = 3; QueryTable = $secondPathQuery }
+$pathCallsBefore = $pathQuery.RefreshCalls
+$pathCompleted = Get-WorksheetQueryRefreshEvidence $pathWorkbook -RefreshLoadedQueries
+Assert-Test ($pathCompleted.Count -eq 2 -and $pathQuery.RefreshCalls -eq $pathCallsBefore + 1 -and $secondPathQuery.RefreshCalls -eq 1) 'Distinct unnamed queries sharing a connection were conflated.'
+$pathWorkbook.Worksheets[0].ListObjects[0].Name = ''
+$rejected = $false
+try { Get-WorksheetQueryRefreshEvidence $pathWorkbook | Out-Null } catch { $rejected = $_.Exception.Message -like '*unnamed external table*' }
+Assert-Test $rejected 'An unnamed ListObject was accepted as a stable output identity.'
+$pathWorkbook.Worksheets[0].ListObjects[0].Name = 'PathTABLE'
+$pathWorkbook.Worksheets[0].ListObjects[1].Name = 'PathTABLE'
+$rejected = $false
+try { Get-WorksheetQueryRefreshEvidence $pathWorkbook | Out-Null } catch { $rejected = $_.Exception.Message -like '*conflicting query identities*' }
+Assert-Test $rejected 'Distinct query objects with a colliding publication name were deduplicated.'
+$unnamedStandalone = $refreshQuery.PSObject.Copy()
+$unnamedStandalone.Name = ''
+$rejected = $false
+try { Get-WorksheetQueryRefreshEvidence ([pscustomobject] @{ Worksheets = @([pscustomobject] @{ Name = 'UnitPath'; QueryTables = @($unnamedStandalone) }) }) | Out-Null }
+catch { $rejected = $_.Exception.Message -like '*unnamed query table*' }
+Assert-Test $rejected 'An unnamed standalone query with no named ListObject identity was accepted.'
+$refreshTarget.RefreshDate = Get-Date
+Write-Host 'PASS: PathTABLE blank/null/unreadable/absent query names, both collection views, distinct unnamed outputs and unnamed standalone rejection.'
+
+# Exercise real COM identity without Excel: separate RCWs for the same in-memory
+# Scripting.Dictionary must compare equal, and distinct native objects must not.
+if ($IsWindows) {
+    $comQuery = $null; $comAlias = $null; $otherComQuery = $null
+    try {
+        $comQuery = New-Object -ComObject Scripting.Dictionary
+        $otherComQuery = New-Object -ComObject Scripting.Dictionary
+        $unknown = [Runtime.InteropServices.Marshal]::GetIUnknownForObject($comQuery)
+        try { $comAlias = [Runtime.InteropServices.Marshal]::GetUniqueObjectForIUnknown($unknown) }
+        finally { [void] [Runtime.InteropServices.Marshal]::Release($unknown) }
+        Assert-Test (-not [object]::ReferenceEquals($comQuery, $comAlias)) 'COM fixture did not produce distinct wrappers.'
+        Assert-Test ((Get-WorksheetQueryObjectIdentity $comQuery) -eq (Get-WorksheetQueryObjectIdentity $comAlias)) 'Different wrappers for one COM object produced different query identities.'
+        Assert-Test ((Get-WorksheetQueryObjectIdentity $comQuery) -ne (Get-WorksheetQueryObjectIdentity $otherComQuery)) 'Different native COM objects produced the same query identity.'
+        $comQuery.Add('stillUsable', $true)
+        Assert-Test ($comAlias.Exists('stillUsable')) 'Identity probing released a COM object still in use.'
+    }
+    finally {
+        Release-ExcelComReference $comAlias
+        Release-ExcelComReference $comQuery
+        Release-ExcelComReference $otherComQuery
+    }
+    Write-Host 'PASS: real COM identity across distinct wrappers and balanced identity probing; no Excel used.'
+}
 
 # Regression: JH-RY refreshed its base rows but retained a copied BD publication
 # after ResourceContract_CHECK failed. A new connection date alone cannot certify it.
@@ -300,8 +437,8 @@ Assert-RequiredWorksheetChecks $checkedWorkbook @('ResourceContract_CHECK')
 foreach ($badStatus in @('Fail','Error','', 'Unknown', $null)) {
     $checkValues[1,2] = $badStatus
     $before = Get-WorksheetQueryRefreshEvidence $checkedWorkbook
-    $refreshTarget.RefreshDate = $refreshTarget.RefreshDate.AddSeconds(1)
-    $null = Assert-WorksheetQueryRefreshEvidence $checkedWorkbook $before
+    $completed = Get-WorksheetQueryRefreshEvidence $checkedWorkbook -RefreshLoadedQueries
+    Assert-WorksheetQueryRefreshEvidence $checkedWorkbook $before -CompletedRefreshes $completed
     $blocked = $false
     try { Assert-RequiredWorksheetChecks $checkedWorkbook @('ResourceContract_CHECK'); $checkedWorkbook.Save() }
     catch { $blocked = $_.Exception.Message -like '*ResourceContract_CHECK/Valid roster and cap settings*Refusing to save*' }
@@ -345,14 +482,14 @@ function Start-ResponsiveSleep {
     param($Seconds)
     $script:pollSleeps++
     $script:sleepDurations.Add([int] $Seconds)
-    # The async drain runs first; a query table and calculation must still block final readiness.
+    # A query table and calculation must block readiness until their states clear.
     if ($script:pollSleeps -eq 2) { $testQuery.Refreshing = $false; $testExcel.CalculationState = 0 }
-    if ($script:pollSleeps -eq 6) { $testExcel.CalculationState = 0 }
+    if ($script:pollSleeps -eq 4) { $testExcel.CalculationState = 0 }
 }
 Wait-ExcelReadyToSave $testExcel $testWorkbook
 Assert-Test ($script:asyncCalls -eq 0 -and $script:calculateCalls -eq 1) 'Unsafe async drain was called or calculation was bypassed.'
-Assert-Test ($script:pollSleeps -eq 8) 'Connection and calculation readiness gates did not wait for completion.'
-Assert-Test ($script:sleepDurations[0] -eq 15) 'The pre-drain Power Query settling interval was omitted.'
+Assert-Test ($script:pollSleeps -eq 4) 'Connection and calculation readiness gates did not wait only while busy.'
+Assert-Test (@($script:sleepDurations | Where-Object { $_ -ne 1 }).Count -eq 0) 'Readiness used an unconditional settling delay.'
 Assert-Test ([string]::IsNullOrWhiteSpace([string] $script:RefreshState.detail)) 'Successful readiness left a stale COM probe detail.'
 $originalActivityFunction = ${function:Get-ExcelActivity}
 $script:transientReads = 1
@@ -363,10 +500,162 @@ function Get-ExcelActivity {
 }
 $script:pollSleeps = 0
 Wait-ExcelQuietPolls $testExcel $testWorkbook -RequireCalculationDone
-Assert-Test ($script:pollSleeps -eq 3) 'Transient read counted as quiet or was not retried.'
+Assert-Test ($script:pollSleeps -eq 1) 'Transient unreadable state was accepted or caused unnecessary idle waits.'
 $nullConnectionRejected = $false
 try { Get-ExcelActivity $testExcel ([pscustomobject] @{ Connections = @($null); Worksheets = @() }) | Out-Null } catch { $nullConnectionRejected = $true }
 Assert-Test $nullConnectionRejected 'A null connection was treated as completed.'
+
+# Once idle, readiness must return immediately. Unknown state stays bounded and
+# never becomes an idle result by PowerShell's null-to-zero/false conversions.
+function Start-ResponsiveSleep {
+    param($Seconds)
+    $script:pollSleeps++
+    $script:sleepDurations.Add([int] $Seconds)
+}
+$testExcel | Add-Member NoteProperty BusyCalculations 0
+$testExcel | Add-Member NoteProperty CalculationError ''
+$testExcel | Add-Member ScriptMethod Calculate {
+    $script:calculateCalls++
+    if ($this.BusyCalculations -gt 0) {
+        $this.BusyCalculations--
+        throw [Runtime.InteropServices.COMException]::new('Synthetic Excel busy rejection.', -2147418111)
+    }
+    if ($this.CalculationError) { throw $this.CalculationError }
+    $this.CalculationState = 0
+} -Force
+$script:pollSleeps = 0
+Wait-ExcelReadyToSave $testExcel $testWorkbook
+Assert-Test ($script:pollSleeps -eq 0) 'An already-idle workbook slept unconditionally.'
+$testExcel.BusyCalculations = 2
+Wait-ExcelReadyToSave $testExcel $testWorkbook
+Assert-Test ($script:pollSleeps -eq 2 -and $testExcel.BusyCalculations -eq 0) 'Transient Calculate busy rejections did not retry exactly as needed.'
+$testExcel.BusyCalculations = 61
+$script:pollSleeps = 0
+$rejected = $false
+try { Wait-ExcelReadyToSave $testExcel $testWorkbook } catch { $rejected = $true }
+Assert-Test ($rejected -and $script:pollSleeps -eq 59) 'Persistent Calculate busy rejections were unbounded or accepted.'
+$testExcel.BusyCalculations = 0
+$testExcel.CalculationError = 'Synthetic calculation failure'
+$script:pollSleeps = 0
+$rejected = $false
+try { Wait-ExcelReadyToSave $testExcel $testWorkbook } catch { $rejected = $_.Exception.Message -like '*Synthetic calculation failure*' }
+Assert-Test ($rejected -and $script:pollSleeps -eq 0) 'A calculation failure was hidden or retried as a busy rejection.'
+$testExcel.CalculationError = ''
+foreach ($case in @('ConnectionState', 'QueryState', 'ListObjectState', 'CalculationState', 'BooleanCalculationState', 'MissingTarget')) {
+    if ($case -eq 'ConnectionState') { $testConnection.OLEDBConnection.Refreshing = $null }
+    if ($case -eq 'QueryState') { $testQuery.Refreshing = $null }
+    if ($case -eq 'ListObjectState') { $listActivityQuery.Refreshing = $null }
+    if ($case -eq 'CalculationState') { $testExcel.CalculationState = $null }
+    if ($case -eq 'BooleanCalculationState') { $testExcel.CalculationState = $false }
+    if ($case -eq 'MissingTarget') { $testConnection.OLEDBConnection = $null }
+    $rejected = $false
+    try { Get-ExcelActivity $testExcel $(if ($case -eq 'ListObjectState') { $listActivityWorkbook } else { $testWorkbook }) | Out-Null }
+    catch { $rejected = $true }
+    Assert-Test $rejected "Unknown $case was accepted as idle."
+    $testConnection.OLEDBConnection = [pscustomobject] @{ Refreshing = $false }
+    $testQuery.Refreshing = $false
+    $listActivityQuery.Refreshing = $false
+    $testExcel.CalculationState = 0
+}
+foreach ($case in @('Busy', 'Unreadable')) {
+    $testQuery.Refreshing = $case -eq 'Busy'
+    $script:transientReads = if ($case -eq 'Unreadable') { 100 } else { 0 }
+    $script:pollSleeps = 0
+    $rejected = $false
+    try { Wait-ExcelQuietPolls $testExcel $testWorkbook -RequireCalculationDone -MaxAttempts 3 }
+    catch { $rejected = $_.Exception.Message -like '*readiness could not be confirmed*Refusing to save*' }
+    Assert-Test ($rejected -and $script:pollSleeps -eq 2) "Persistent $case readiness was not bounded or was accepted."
+}
+$script:transientReads = 0
+function Get-ExcelActivity {
+    param($Excel, $Workbook)
+    Start-Sleep -Milliseconds 10
+    & $originalActivityFunction $Excel $Workbook
+}
+$testQuery.Refreshing = $true
+$script:pollSleeps = 0
+$rejected = $false
+try { Wait-ExcelQuietPolls $testExcel $testWorkbook -RequireCalculationDone -TimeoutSeconds 0.001 }
+catch { $rejected = $_.Exception.Message -like '*readiness could not be confirmed*' }
+Assert-Test ($rejected -and $script:pollSleeps -eq 0) 'Readiness ignored its elapsed-time deadline.'
+${function:Get-ExcelActivity} = $originalActivityFunction
+$testQuery.Refreshing = $false
+Set-Content $script:testStopPath 'mode=Now'
+$rejected = $false
+try { Wait-ExcelQuietPolls $testExcel $testWorkbook -RequireCalculationDone } catch { $rejected = $_.Exception.Message -like '*Stop requested*' }
+Assert-Test $rejected 'Idle readiness bypassed a stop request.'
+Set-Content $script:testStopPath 'mode=None'
+Write-Host 'PASS: immediate idle readiness, transient busy calculation, hard calculation failures, unknown states, retry/deadline bounds and stop handling.'
+
+# Execute the actual worker's refresh-through-required-check block using fake
+# Excel objects. This tests the save barrier without starting the worker/COM.
+$workerPath = Join-Path $PSScriptRoot '../CLIENT/DATExx-Whiddon/runner/src/Invoke-AllUnitsExcelWorkbookRefresh.ps1'
+$workerAst = [Management.Automation.Language.Parser]::ParseFile($workerPath, [ref] $null, [ref] $null)
+$workerTry = @($workerAst.EndBlock.Statements | Where-Object { $_ -is [Management.Automation.Language.TryStatementAst] })[0]
+$startStatement = @($workerTry.Body.Statements | Where-Object { $_.Extent.Text -eq '$refreshStart = Get-Date' })[0]
+$endStatement = @($workerTry.Body.Statements | Where-Object { $_.Extent.Text -like 'Assert-RequiredWorksheetChecks *' })[0]
+$refreshBlock = [scriptblock]::Create((@($workerTry.Body.Statements | Where-Object {
+    $_.Extent.StartOffset -ge $startStatement.Extent.StartOffset -and $_.Extent.EndOffset -le $endStatement.Extent.EndOffset
+} | ForEach-Object { $_.Extent.Text }) -join "`n"))
+$refreshTarget | Add-Member NoteProperty BackgroundQuery $false
+$refreshTarget | Add-Member NoteProperty Refreshing $false
+$remainingTarget = [pscustomobject] @{ BackgroundQuery = $false; Refreshing = $false }
+$remainingConnection = [pscustomobject] @{ Name = 'ConnectionOnly'; Type = 1; RefreshWithRefreshAll = $true; OLEDBConnection = $remainingTarget }
+$pipelineWorkbook = [pscustomobject] @{
+    Connections = @($refreshConnection, $remainingConnection)
+    Worksheets = @([pscustomobject] @{ Name = 'Checks'; QueryTables = @($refreshQuery); ListObjects = @($requiredTable) })
+    SaveCalls = 0; RefreshAllCalls = 0; RefreshAllError = ''; IncludedLoadedConnection = $false; RemainingRefreshCalls = 0
+}
+$pipelinePathQuery = $refreshQuery.PSObject.Copy()
+$pipelinePathQuery.Name = ''
+$pipelinePathQuery.RefreshCalls = 0
+$pipelineWorkbook.Worksheets += [pscustomobject] @{
+    Name = 'UnitPath'; QueryTables = @($pipelinePathQuery)
+    ListObjects = @([pscustomobject] @{ Name = 'PathTABLE'; SourceType = 3; QueryTable = $pipelinePathQuery })
+}
+$pipelineWorkbook | Add-Member ScriptMethod RefreshAll {
+    $this.RefreshAllCalls++
+    $this.IncludedLoadedConnection = $this.Connections[0].RefreshWithRefreshAll
+    if ($this.IncludedLoadedConnection) { $this.Worksheets[0].QueryTables[0].Refresh($false) | Out-Null }
+    if ($this.Connections[1].RefreshWithRefreshAll) { $this.RemainingRefreshCalls++ }
+    if ($this.RefreshAllError) { throw $this.RefreshAllError }
+}
+$pipelineWorkbook | Add-Member ScriptMethod Save { $this.SaveCalls++ }
+function Invoke-WorkerRefreshFixture {
+    param($Workbook, $Excel)
+    $backgroundRefreshSettings = @()
+    $deletedWorksheetQueries = @{}
+    $requiredCheckTables = @('ResourceContract_CHECK')
+    try {
+        . $refreshBlock
+        $Workbook.Save()
+    }
+    finally { Restore-WorkbookBackgroundRefresh $backgroundRefreshSettings }
+}
+$checkValues[1,2] = 'Pass'
+$refreshTarget.RefreshDate = $null
+$callsBefore = $refreshQuery.RefreshCalls
+Invoke-WorkerRefreshFixture $pipelineWorkbook $testExcel
+Assert-Test ($pipelineWorkbook.SaveCalls -eq 1 -and $refreshQuery.RefreshCalls -eq $callsBefore + 1 -and $pipelineWorkbook.RemainingRefreshCalls -eq 1 -and -not $pipelineWorkbook.IncludedLoadedConnection) 'The worker did not refresh each loaded table once, retain remaining refresh work and release a verified save.'
+Assert-Test ($pipelinePathQuery.RefreshCalls -eq 1) 'The worker rejected or refreshed PathTABLE twice because its query name was blank.'
+foreach ($case in @('ProviderFailure', 'Cancelled', 'UnknownCompletion', 'RowOverflow', 'RequiredCheck', 'RefreshAllFailure', 'Stop')) {
+    $pipelineWorkbook.SaveCalls = 0
+    if ($case -eq 'ProviderFailure') { $refreshQuery.RefreshError = 'Synthetic provider failure' }
+    if ($case -eq 'Cancelled') { $refreshQuery.RefreshResult = $false }
+    if ($case -eq 'UnknownCompletion') { $refreshQuery.Refreshing = $null }
+    if ($case -eq 'RowOverflow') { $refreshQuery.FetchedRowOverflow = $true }
+    if ($case -eq 'RequiredCheck') { $checkValues[1,2] = 'Fail' }
+    if ($case -eq 'RefreshAllFailure') { $pipelineWorkbook.RefreshAllError = 'Synthetic Refresh All failure' }
+    if ($case -eq 'Stop') { Set-Content $script:testStopPath 'mode=Now' }
+    $rejected = $false
+    try { Invoke-WorkerRefreshFixture $pipelineWorkbook $testExcel } catch { $rejected = $true }
+    Assert-Test ($rejected -and $pipelineWorkbook.SaveCalls -eq 0) "The worker allowed a save after $case."
+    Assert-Test ($refreshConnection.RefreshWithRefreshAll -and $remainingConnection.RefreshWithRefreshAll) "The worker left Refresh All flags changed after $case."
+    $refreshQuery.RefreshError = ''; $refreshQuery.RefreshResult = $true; $refreshQuery.Refreshing = $false; $refreshQuery.FetchedRowOverflow = $false
+    $checkValues[1,2] = 'Pass'; $pipelineWorkbook.RefreshAllError = ''
+    Set-Content $script:testStopPath 'mode=None'
+}
+Write-Host 'PASS: actual worker refresh block performs one loaded refresh, retains other connections, and blocks save on provider/cancellation/incomplete/overflow/check/RefreshAll/stop failures.'
 
 $identity = Get-RefreshProcessIdentity (Get-Process -Id $PID)
 Assert-Test ($null -ne (Get-MatchingRefreshProcess $identity)) 'Matching process was not recognized.'

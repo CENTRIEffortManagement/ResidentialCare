@@ -35,7 +35,6 @@ $DefaultTimeoutMinutes = 30
 $DefaultSkipAsyncWait = $true
 $DefaultCleanupGhostExcelProcesses = $false
 $DefaultForceCloseExcelProcesses = $false
-$DefaultOpenSettleSeconds = 5
 
 $script:LogFile = $null
 $script:StatusFile = $null
@@ -305,7 +304,7 @@ try {
     Write-CurrentStatus -State "RUNNING" -Message "Starting workbook refresh."
     Write-Log "Starting Excel refresh automation."
     Write-Log "Workbook path input: $WorkbookPath"
-    Write-Log "Mode: $(if ($visible) { 'displayed' } else { 'hidden' }); timeout: $timeoutMinutes minute(s); supervised settle/connection/calculation readiness gate: enabled."
+    Write-Log "Mode: $(if ($visible) { 'displayed' } else { 'hidden' }); timeout: $timeoutMinutes minute(s); supervised connection/calculation readiness gate: enabled."
 
     if ([string]::IsNullOrWhiteSpace($WorkbookPath)) {
         throw "Workbook path is missing."
@@ -350,8 +349,9 @@ try {
     $workbook = $excel.Workbooks.Open($resolvedWorkbookPath)
     Wait-RefreshWorkbookIdentity -Workbook $workbook -ExpectedPath $resolvedWorkbookPath
     Assert-RefreshFileSnapshot $fileSnapshot
-    Write-Log "Workbook opened. Waiting $DefaultOpenSettleSeconds second(s) for Excel to settle."
-    Start-ResponsiveSleep -Seconds $DefaultOpenSettleSeconds
+    Write-Log 'Workbook opened. Checking Excel readiness before refresh.'
+    Wait-ExcelQuietPolls -Excel $excel -Workbook $workbook -RequireCalculationDone
+    Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'OpenedBeforeRefresh'
 
     Assert-NotStopNowRequested
 
@@ -360,17 +360,14 @@ try {
     $backgroundRefreshSettings = @(Disable-WorkbookBackgroundRefresh -Workbook $workbook)
     $queryRefreshBefore = Get-WorksheetQueryRefreshEvidence $workbook -DeletedQueries $deletedWorksheetQueries
     Set-RefreshPhase 'Refreshing'
-    Write-Log "Starting workbook refresh."
-    $workbook.RefreshAll()
-    Write-Log "Refresh command accepted by Excel."
+    Write-Log 'Starting one foreground refresh per loaded worksheet query.'
+    $completedQueryRefreshes = Get-WorksheetQueryRefreshEvidence $workbook -DeletedQueries $deletedWorksheetQueries -RefreshLoadedQueries
+    Invoke-RefreshAllExceptLoadedQueries -Workbook $workbook -LoadedQueries $completedQueryRefreshes
 
     # SkipAsyncWait is retained for CLI compatibility; it cannot bypass the readiness gate.
     Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
     Set-RefreshPhase 'VerifyingQueryRefresh'
-    $confirmedSynchronously = Assert-WorksheetQueryRefreshEvidence $workbook $queryRefreshBefore -DeletedQueries $deletedWorksheetQueries -ConfirmMissingDates
-    if ($confirmedSynchronously) {
-        Wait-ExcelReadyToSave -Excel $excel -Workbook $workbook
-    }
+    Assert-WorksheetQueryRefreshEvidence $workbook $queryRefreshBefore -DeletedQueries $deletedWorksheetQueries -CompletedRefreshes $completedQueryRefreshes
     Assert-RequiredWorksheetChecks -Workbook $workbook -TableNames $requiredCheckTables
 
     Assert-NotStopNowRequested
@@ -381,17 +378,41 @@ try {
     }
 
     Write-Log ("Refresh monitoring complete after {0:n2} minute(s)." -f $elapsedMinutes)
+    Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'BeforeRestoringBackgroundRefresh'
     Restore-WorkbookBackgroundRefresh -Settings $backgroundRefreshSettings
     $backgroundRefreshSettings = @()
+    Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'AfterRestoringBackgroundRefresh'
     if ($workbook.ReadOnly) { throw 'Workbook became read-only before save.' }
     Set-RefreshPhase 'WaitingToSave'
     Wait-RefreshFileAccess -Path $resolvedWorkbookPath -AllowedProcessId ([int] $script:RefreshState.excel.id)
     Assert-RefreshFileSnapshot $fileSnapshot
     Set-RefreshPhase 'Saving'
+    Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'BeforeSave'
     Write-Log "Saving workbook."
-    $workbook.Save()
+    $saveTimer = [Diagnostics.Stopwatch]::StartNew()
+    try { $workbook.Save() }
+    catch {
+        Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'SaveThrew' -SaveElapsedSeconds $saveTimer.Elapsed.TotalSeconds
+        throw
+    }
     Assert-NotStopNowRequested
-    if (-not $workbook.Saved) { throw 'Excel returned from Save without confirming the workbook is saved.' }
+    try { $savedAfterSave = $workbook.Saved }
+    catch {
+        Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'SavedReadFailed' -SaveElapsedSeconds $saveTimer.Elapsed.TotalSeconds
+        throw
+    }
+    Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point 'AfterSave' `
+        -ObservedSaved $savedAfterSave -UseObservedSaved -SaveElapsedSeconds $saveTimer.Elapsed.TotalSeconds
+    if (-not $savedAfterSave) {
+        # Observe only after a failed confirmation. Never retry the save or
+        # reinterpret a later clean flag as success for this diagnostic attempt.
+        foreach ($observation in 1..2) {
+            Start-ResponsiveSleep -Seconds 1
+            Write-ExcelSaveDiagnostic -Excel $excel -Workbook $workbook -Path $resolvedWorkbookPath -Point "UnconfirmedSave+${observation}s" `
+                -SaveElapsedSeconds $saveTimer.Elapsed.TotalSeconds
+        }
+        throw 'Excel returned from Save without confirming the workbook is saved.'
+    }
     Assert-RefreshFileSnapshot $fileSnapshot -AfterSave
     Wait-RefreshWorkbookIdentity -Workbook $workbook -ExpectedPath $resolvedWorkbookPath
     $script:RefreshState.saved = $true

@@ -425,7 +425,7 @@ function Confirm-WorksheetQueryForegroundRefresh {
     # Refresh(false) waits for data to reach the worksheet. A true return in
     # background mode would only prove that the query started, not that it loaded.
     # https://learn.microsoft.com/en-us/office/vba/api/excel.querytable.refresh
-    Write-Log "Worksheet query '$Label' supplied no refresh date; confirming with foreground refresh."
+    Write-Log "Refreshing worksheet query '$Label' in the foreground."
     try { $success = $QueryTable.Refresh($false) }
     catch { throw "Required worksheet query '$Label' failed foreground refresh: $($_.Exception.Message)" }
     Assert-NotStopNowRequested
@@ -445,12 +445,13 @@ function Confirm-WorksheetQueryForegroundRefresh {
         }
     }
     finally { Release-ExcelComReference $connection }
-    Write-Log "Verified worksheet query '$Label' through successful foreground refresh; timestamp unavailable."
+    Write-Log "Verified worksheet query '$Label' through successful foreground refresh."
 }
 
 function Add-WorksheetQueryRefreshEvidence {
-    param($QueryTable, [string] $Label, [hashtable] $Evidence, [hashtable] $DeletedQueries = @{},
-        [switch] $ConfirmMissingDates)
+    param($QueryTable, [string] $Label, [hashtable] $Evidence, [Parameter(Mandatory)] [object] $QueryIdentity,
+        [hashtable] $DeletedQueries = @{},
+        [switch] $RefreshLoadedQueries)
     $connection = $null; $target = $null
     try {
         if ($null -eq $QueryTable) { throw "Excel returned a null query table for '$Label'." }
@@ -472,6 +473,19 @@ function Add-WorksheetQueryRefreshEvidence {
             default { throw "Required worksheet query '$Label' has no supported refresh-date connection." }
         }
         if ($null -eq $target) { throw "Required worksheet query '$Label' has no refresh-date connection." }
+        # A loaded table can appear in both QueryTables and ListObjects, with
+        # different names (or no query name). The caller maps both views to the
+        # named ListObject using the query object's identity within this pass.
+        if ($Evidence.ContainsKey($Label)) {
+            if ($Evidence[$Label].Connection -ne [string] $connection.Name -or
+                -not [object]::Equals($Evidence[$Label].QueryIdentity, $QueryIdentity)) {
+                throw "Required worksheet query '$Label' has conflicting query identities or workbook connections."
+            }
+            return
+        }
+        if ($RefreshLoadedQueries) {
+            Confirm-WorksheetQueryForegroundRefresh $QueryTable $Label ([string] $connection.Name)
+        }
         $capturedAt = Get-Date
         $rawRefreshDate = $target.RefreshDate
         # Excel may have no previous timestamp. Preserve that unknown baseline
@@ -482,16 +496,12 @@ function Add-WorksheetQueryRefreshEvidence {
             try { $refreshDate = [datetime] $rawRefreshDate }
             catch { throw "Required worksheet query '$Label' returned an invalid connection refresh date: $($_.Exception.Message)" }
         }
-        $confirmedSynchronously = $false
-        if ($ConfirmMissingDates -and $null -eq $refreshDate) {
-            Confirm-WorksheetQueryForegroundRefresh $QueryTable $Label ([string] $connection.Name)
-            $confirmedSynchronously = $true
-        }
         $Evidence[$Label] = [pscustomobject] @{
             Connection = [string] $connection.Name
+            QueryIdentity = $QueryIdentity
             RefreshDate = $refreshDate
             CapturedAt = $capturedAt
-            ConfirmedSynchronously = $confirmedSynchronously
+            ConfirmedSynchronously = [bool] $RefreshLoadedQueries
         }
     }
     finally {
@@ -500,8 +510,23 @@ function Add-WorksheetQueryRefreshEvidence {
     }
 }
 
+function Get-WorksheetQueryObjectIdentity {
+    param([Parameter(Mandatory)] $QueryTable)
+    # COM identity, not a display name or connection, distinguishes loaded
+    # tables. Balance the temporary IUnknown reference immediately; never retain
+    # this pointer as refresh evidence across attempts.
+    if ([Runtime.InteropServices.Marshal]::IsComObject($QueryTable)) {
+        $unknown = [Runtime.InteropServices.Marshal]::GetIUnknownForObject($QueryTable)
+        try { return "COM:$($unknown.ToInt64())" }
+        finally { [void] [Runtime.InteropServices.Marshal]::Release($unknown) }
+    }
+    # Mock objects use managed reference identity. Do not unwrap BaseObject:
+    # PSCustomObjects can share that marker despite representing distinct tables.
+    return ,$QueryTable
+}
+
 function Get-WorksheetQueryRefreshEvidence {
-    param($Workbook, [hashtable] $DeletedQueries = @{}, [switch] $ConfirmMissingDates)
+    param($Workbook, [hashtable] $DeletedQueries = @{}, [switch] $RefreshLoadedQueries)
     $evidence = @{}
     $worksheets = $Workbook.Worksheets
     try {
@@ -511,17 +536,9 @@ function Get-WorksheetQueryRefreshEvidence {
             try {
                 if ($null -eq $sheet) { throw 'Excel returned a null worksheet while checking query refresh evidence.' }
                 $sheetName = [string] $sheet.Name
-                $queryTables = $sheet.QueryTables
-                for ($queryIndex = 1; $queryIndex -le [int] $queryTables.Count; $queryIndex++) {
-                    $queryTable = if ([Runtime.InteropServices.Marshal]::IsComObject($queryTables)) { $queryTables.Item($queryIndex) } else { $queryTables[$queryIndex - 1] }
-                    try {
-                        if ($null -eq $queryTable) { throw "Excel returned a null query table on '$sheetName'." }
-                        $label = "$sheetName/$($queryTable.Name)"
-                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence -DeletedQueries $DeletedQueries -ConfirmMissingDates:$ConfirmMissingDates
-                    }
-                    finally { Release-ExcelComReference $queryTable }
-                }
-                # Excel can expose Power Query output as a ListObject rather than Worksheet.QueryTables.
+                $queryLabels = [Collections.Generic.Dictionary[object, string]]::new()
+                # Prefer named loaded tables. Excel can return a blank or
+                # unreadable QueryTable.Name while ListObject.Name is usable.
                 $listObjects = @()
                 if ([Runtime.InteropServices.Marshal]::IsComObject($sheet) -or
                     $sheet.PSObject.Properties['ListObjects']) { $listObjects = $sheet.ListObjects }
@@ -531,15 +548,39 @@ function Get-WorksheetQueryRefreshEvidence {
                     try {
                         if ($null -eq $listObject) { throw "Excel returned a null table on '$sheetName'." }
                         if ([int] $listObject.SourceType -notin @(0, 3)) { continue }
-                        $label = "$sheetName/$($listObject.Name)"
-                        if ($evidence.ContainsKey($label)) { continue }
+                        $tableName = [string] $listObject.Name
+                        if ([string]::IsNullOrWhiteSpace($tableName)) { throw "Excel returned an unnamed external table on '$sheetName'." }
                         $queryTable = $listObject.QueryTable
-                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence -ConfirmMissingDates:$ConfirmMissingDates
+                        if ($null -eq $queryTable) { throw "External table '$sheetName/$tableName' has no query table." }
+                        $identity = Get-WorksheetQueryObjectIdentity $queryTable
+                        $label = "$sheetName/$tableName"
+                        if ($queryLabels.ContainsKey($identity) -and $queryLabels[$identity] -ne $label) {
+                            throw "Query object on '$sheetName' is linked to conflicting loaded table names."
+                        }
+                        $queryLabels[$identity] = $label
+                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence -QueryIdentity $identity -RefreshLoadedQueries:$RefreshLoadedQueries
                     }
                     finally {
                         Release-ExcelComReference $queryTable
                         Release-ExcelComReference $listObject
                     }
+                }
+                $queryTables = $sheet.QueryTables
+                for ($queryIndex = 1; $queryIndex -le [int] $queryTables.Count; $queryIndex++) {
+                    $queryTable = if ([Runtime.InteropServices.Marshal]::IsComObject($queryTables)) { $queryTables.Item($queryIndex) } else { $queryTables[$queryIndex - 1] }
+                    try {
+                        if ($null -eq $queryTable) { throw "Excel returned a null query table on '$sheetName'." }
+                        $identity = Get-WorksheetQueryObjectIdentity $queryTable
+                        if ($queryLabels.ContainsKey($identity)) { $label = $queryLabels[$identity] }
+                        else {
+                            $queryName = [string] $queryTable.Name
+                            if ([string]::IsNullOrWhiteSpace($queryName)) { throw "Excel returned an unnamed query table on '$sheetName'." }
+                            $label = "$sheetName/$queryName"
+                            $queryLabels[$identity] = $label
+                        }
+                        Add-WorksheetQueryRefreshEvidence $queryTable $label $evidence -QueryIdentity $identity -DeletedQueries $DeletedQueries -RefreshLoadedQueries:$RefreshLoadedQueries
+                    }
+                    finally { Release-ExcelComReference $queryTable }
                 }
             }
             finally {
@@ -555,14 +596,26 @@ function Get-WorksheetQueryRefreshEvidence {
 }
 
 function Assert-WorksheetQueryRefreshEvidence {
-    param($Workbook, [hashtable] $Before, [hashtable] $DeletedQueries = @{}, [switch] $ConfirmMissingDates)
-    $after = Get-WorksheetQueryRefreshEvidence $Workbook -DeletedQueries $DeletedQueries -ConfirmMissingDates:$ConfirmMissingDates
+    param($Workbook, [hashtable] $Before, [hashtable] $DeletedQueries = @{}, [hashtable] $CompletedRefreshes)
+    # Verification is read-only. Only a receipt from this attempt's successful
+    # foreground pass can replace timestamp evidence; never refresh here.
+    $after = Get-WorksheetQueryRefreshEvidence $Workbook -DeletedQueries $DeletedQueries
     foreach ($label in $Before.Keys) {
         if (-not $after.ContainsKey($label)) { throw "Required worksheet query '$label' disappeared during refresh." }
         if ($after[$label].Connection -ne $Before[$label].Connection) {
             throw "Required worksheet query '$label' changed workbook connection during refresh."
         }
-        if ($after[$label].ConfirmedSynchronously) { continue }
+        if ($null -ne $CompletedRefreshes) {
+            if (-not $CompletedRefreshes.ContainsKey($label) -or
+                $CompletedRefreshes[$label].ConfirmedSynchronously -isnot [bool] -or
+                -not $CompletedRefreshes[$label].ConfirmedSynchronously -or
+                $CompletedRefreshes[$label].Connection -ne $after[$label].Connection -or
+                $CompletedRefreshes[$label].CapturedAt -lt $Before[$label].CapturedAt) {
+                throw "Required worksheet query '$label' has no matching successful foreground refresh. Refusing to save unverified results."
+            }
+            Write-Log "Verified worksheet query '$label' against this attempt's foreground refresh receipt."
+            continue
+        }
         if ($null -eq $after[$label].RefreshDate) {
             throw "Required worksheet query '$label' reported no refresh date after refresh. Refusing to save unverified results."
         }
@@ -580,9 +633,60 @@ function Assert-WorksheetQueryRefreshEvidence {
         }
         Write-Log "Verified worksheet query '$label' refreshed through '$($after[$label].Connection)' at $($after[$label].RefreshDate.ToString('o'))."
     }
-    # The caller must settle connections and recalculate again after any extra
-    # foreground refresh, before restoring settings or attempting a save.
-    if ($ConfirmMissingDates) { return (@($after.Values | Where-Object ConfirmedSynchronously).Count -gt 0) }
+    if ($after.Count -ne $Before.Count -or
+        ($null -ne $CompletedRefreshes -and $CompletedRefreshes.Count -ne $Before.Count)) {
+        throw 'Loaded worksheet query set changed during refresh. Refusing to save unverified results.'
+    }
+}
+
+function Invoke-RefreshAllExceptLoadedQueries {
+    param($Workbook, [hashtable] $LoadedQueries)
+    # Keep RefreshAll for other connections and PivotTables. Loaded worksheet
+    # connections have already refreshed explicitly; temporarily exclude them
+    # so RefreshAll cannot perform the same work again. Restore before saving.
+    $requiredConnections = @{}
+    foreach ($entry in $LoadedQueries.Values) { $requiredConnections[$entry.Connection] = $true }
+    $settings = [Collections.Generic.List[object]]::new()
+    $connections = $Workbook.Connections
+    try {
+        for ($index = 1; $index -le [int] $connections.Count; $index++) {
+            Assert-NotStopNowRequested
+            $connection = if ([Runtime.InteropServices.Marshal]::IsComObject($connections)) { $connections.Item($index) } else { $connections[$index - 1] }
+            try {
+                if ($null -eq $connection) { throw 'Excel returned a null connection while excluding loaded queries from Refresh All.' }
+                $name = [string] $connection.Name
+                if (-not $requiredConnections.ContainsKey($name)) { continue }
+                $original = $connection.RefreshWithRefreshAll
+                if ($original -isnot [bool] -or -not $original) { throw "Loaded query connection '$name' has an unexpected Refresh All setting." }
+                $settings.Add([pscustomobject] @{ Target = $connection; Original = $original })
+                $connection = $null # Settings owns the reference until restoration.
+            }
+            finally { Release-ExcelComReference $connection }
+        }
+        if ($settings.Count -ne $requiredConnections.Count) { throw 'A loaded query connection is missing or duplicated in Refresh All.' }
+        foreach ($setting in $settings) {
+            $setting.Target.RefreshWithRefreshAll = $false
+            $excluded = $setting.Target.RefreshWithRefreshAll
+            if ($excluded -isnot [bool] -or $excluded) { throw 'Excel did not exclude a loaded query connection from Refresh All.' }
+        }
+        Assert-NotStopNowRequested
+        Write-Log "Refreshing remaining workbook connections and PivotTables; excluding $($settings.Count) already-refreshed worksheet connection(s)."
+        $Workbook.RefreshAll()
+    }
+    finally {
+        $restoreError = $null
+        foreach ($setting in $settings) {
+            try {
+                $setting.Target.RefreshWithRefreshAll = $setting.Original
+                $restored = $setting.Target.RefreshWithRefreshAll
+                if ($restored -isnot [bool] -or $restored -ne $setting.Original) { throw 'Excel did not restore a loaded query connection Refresh All setting.' }
+            }
+            catch { if ($null -eq $restoreError) { $restoreError = $_ } }
+            finally { Release-ExcelComReference $setting.Target }
+        }
+        Release-ExcelComReference $connections
+        if ($null -ne $restoreError) { throw $restoreError }
+    }
 }
 
 function Assert-RequiredWorksheetChecks {
@@ -897,7 +1001,12 @@ function Get-ExcelActivity {
                     1 { $target = $connection.OLEDBConnection }
                     2 { $target = $connection.ODBCConnection }
                 }
-                if ($null -ne $target -and $target.Refreshing) { $active += $connectionName }
+                if ($connectionType -in @(1, 2)) {
+                    if ($null -eq $target) { throw "Excel returned a null refresh target for '$connectionName'." }
+                    $refreshing = $target.Refreshing
+                    if ($refreshing -isnot [bool]) { throw "Excel returned an unknown refresh state for '$connectionName'." }
+                    if ($refreshing) { $active += $connectionName }
+                }
             }
             finally {
                 Release-ExcelComReference $target
@@ -921,7 +1030,9 @@ function Get-ExcelActivity {
                     try {
                         if ($null -eq $queryTable) { throw 'Excel returned a null query table while checking readiness.' }
                         $queryTableName = [string] $queryTable.Name
-                        if ($queryTable.Refreshing) { $active += "$sheetName/$queryTableName" }
+                        $refreshing = $queryTable.Refreshing
+                        if ($refreshing -isnot [bool]) { throw "Excel returned an unknown refresh state for '$sheetName/$queryTableName'." }
+                        if ($refreshing) { $active += "$sheetName/$queryTableName" }
                     }
                     finally { Release-ExcelComReference $queryTable }
                 }
@@ -936,7 +1047,9 @@ function Get-ExcelActivity {
                         if ([int] $listObject.SourceType -notin @(0, 3)) { continue }
                         $queryTable = $listObject.QueryTable
                         if ($null -eq $queryTable) { throw "External table '$sheetName/$($listObject.Name)' has no query table." }
-                        if ($queryTable.Refreshing) { $active += "$sheetName/$($listObject.Name)" }
+                        $refreshing = $queryTable.Refreshing
+                        if ($refreshing -isnot [bool]) { throw "Excel returned an unknown refresh state for '$sheetName/$($listObject.Name)'." }
+                        if ($refreshing) { $active += "$sheetName/$($listObject.Name)" }
                     }
                     finally {
                         Release-ExcelComReference $queryTable
@@ -952,48 +1065,115 @@ function Get-ExcelActivity {
         }
     }
     finally { Release-ExcelComReference $worksheets }
-    $calculationState = [int] $Excel.CalculationState
+    $rawCalculationState = $Excel.CalculationState
+    if ($null -eq $rawCalculationState -or $rawCalculationState -isnot [ValueType] -or
+        $rawCalculationState -is [bool] -or $rawCalculationState -notin @(0, 1, 2)) {
+        throw 'Excel returned an unknown calculation state.'
+    }
+    $calculationState = [int] $rawCalculationState
     return [pscustomobject] @{ Active = $active; CalculationState = $calculationState }
+}
+
+function Write-ExcelSaveDiagnostic {
+    param($Excel, $Workbook, [string] $Path, [string] $Point,
+        [object] $ObservedSaved, [switch] $UseObservedSaved,
+        [double] $SaveElapsedSeconds = -1)
+    # Read-only probes. A diagnostic must neither call Save/Calculate/Refresh nor
+    # set Saved; only the worker's existing confirmation decides success.
+    $snapshot = [ordered] @{
+        Point = $Point; CapturedAt = (Get-Date).ToString('o')
+        Saved = $null; SavedType = $null; SaveElapsedSeconds = $SaveElapsedSeconds
+        Errors = [ordered] @{}
+    }
+    try {
+        $savedValue = if ($UseObservedSaved) { $ObservedSaved } else { $Workbook.Saved }
+        $snapshot.Saved = $savedValue
+        if ($null -ne $savedValue) { $snapshot.SavedType = $savedValue.GetType().FullName }
+    }
+    catch { $snapshot.Errors['Saved'] = $_.Exception.Message }
+    $probes = [ordered] @{
+        ReadOnly = { $Workbook.ReadOnly }
+        FullName = { $Workbook.FullName }
+        ExcelReady = { $Excel.Ready }
+        CalculationState = { $Excel.CalculationState }
+        CalculationMode = { $Excel.Calculation }
+        CalculateBeforeSave = { $Excel.CalculateBeforeSave }
+        EnableEvents = { $Excel.EnableEvents }
+        FileStamp = { Get-RefreshTargetStamp $Path }
+    }
+    foreach ($name in $probes.Keys) {
+        try {
+            $snapshot[$name] = & $probes[$name]
+            if ($null -eq $snapshot[$name]) { $snapshot.Errors[$name] = 'No value returned by property probe.' }
+        }
+        catch { $snapshot.Errors[$name] = $_.Exception.Message }
+    }
+    try {
+        $activity = Get-ExcelActivity $Excel $Workbook
+        $snapshot['ActiveRefreshes'] = @($activity.Active)
+    }
+    catch { $snapshot.Errors['ActiveRefreshes'] = $_.Exception.Message }
+    # Keep evidence in both the readable log and the worker's original receipt.
+    if (-not $script:RefreshState.ContainsKey('saveDiagnostics')) { $script:RefreshState.saveDiagnostics = @() }
+    $script:RefreshState.saveDiagnostics += [pscustomobject] $snapshot
+    Write-RefreshWorkerState
+    Write-Log ('Save diagnostic: ' + ($snapshot | ConvertTo-Json -Depth 5 -Compress))
 }
 
 function Wait-ExcelReadyToSave {
     param($Excel, $Workbook)
-    # Give Power Query the same minimum 15-second launch/settle interval that the
-    # former three-poll gate provided, without touching connection COM objects
-    # while they can be invalidated as refresh work starts or completes.
-    Set-RefreshPhase 'SettlingAfterRefresh'
-    Start-ResponsiveSleep -Seconds 15
-    Assert-NotStopNowRequested
     # CalculateUntilAsyncQueriesDone can spin indefinitely for some Power Query
-    # workbooks under /automation. Poll the supported connection/query-table
-    # refresh flags after the untouched settling interval instead.
+    # workbooks under /automation. Foreground refresh receipts plus readable,
+    # idle connection/query-table and calculation states replace fixed settling.
     Set-RefreshPhase 'WaitingForConnections'
     # Excel can report all connections idle while its calculation state is still
     # pending. Calling Calculate in that state intermittently fails through COM.
-    Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook -RequireCalculationDone -RequiredQuietPolls 1
+    Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook -RequireCalculationDone
     Set-RefreshPhase 'Calculating'
-    $Excel.Calculate()
+    for ($attempt = 1; $attempt -le 60; $attempt++) {
+        Assert-NotStopNowRequested
+        try { $Excel.Calculate(); break }
+        catch {
+            # Retry only Excel/RPC busy rejections, not calculation failures.
+            $busy = $false
+            for ($exception = $_.Exception; $null -ne $exception; $exception = $exception.InnerException) {
+                if ($exception.HResult -in @(-2147418111, -2147417846, -2146777998)) { $busy = $true; break }
+            }
+            if (-not $busy -or $attempt -eq 60) { throw }
+            Write-Log "Excel is busy calculating; retrying ($attempt/60): $($_.Exception.Message)" 'WARN'
+            Start-ResponsiveSleep -Seconds 1
+            Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook -RequireCalculationDone
+        }
+    }
     Set-RefreshPhase 'CheckingReadiness'
     # The external supervisor bounds every COM readiness read.
     Wait-ExcelQuietPolls -Excel $Excel -Workbook $Workbook -RequireCalculationDone
 }
 
 function Wait-ExcelQuietPolls {
-    param($Excel, $Workbook, [switch] $RequireCalculationDone, [ValidateRange(1, 10)] [int] $RequiredQuietPolls = 3)
-    $quietPolls = 0
-    do {
+    param($Excel, $Workbook, [switch] $RequireCalculationDone,
+        [ValidateRange(1, 1800)] [int] $MaxAttempts = 1800,
+        [ValidateRange(0.001, 1800)] [double] $TimeoutSeconds = 1800)
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
         Assert-NotStopNowRequested
-        try { $activity = Get-ExcelActivity $Excel $Workbook }
+        try {
+            $activity = Get-ExcelActivity $Excel $Workbook
+            if ($activity.Active.Count -eq 0 -and (-not $RequireCalculationDone -or $activity.CalculationState -eq 0)) {
+                Write-Log 'Readiness confirmed: connections and worksheet queries idle; required calculation complete.'
+                return
+            }
+            $detail = "$($activity.Active.Count) active query/connection(s); calculation state $($activity.CalculationState). $($activity.Active -join ', ')"
+        }
         catch {
             # Excel can briefly invalidate connection entries as background loads finish.
-            # Unknown state resets confirmation; only subsequent successful reads count.
-            $quietPolls = 0
-            Write-Log "Readiness unavailable; waiting and rechecking: $($_.Exception.Message)" 'WARN'
-            Start-ResponsiveSleep -Seconds 5
-            continue
+            # Unknown state never counts as completed.
+            $detail = "Readiness unavailable: $($_.Exception.Message)"
         }
-        if ($activity.Active.Count -eq 0 -and (-not $RequireCalculationDone -or $activity.CalculationState -eq 0)) { $quietPolls++ } else { $quietPolls = 0 }
-        Write-Log "Readiness: $($activity.Active.Count) active query/connection(s); calculation state $($activity.CalculationState); quiet polls $quietPolls/$RequiredQuietPolls. $($activity.Active -join ', ')"
-        if ($quietPolls -lt $RequiredQuietPolls) { Start-ResponsiveSleep -Seconds 5 }
-    } while ($quietPolls -lt $RequiredQuietPolls)
+        if ($attempt -eq $MaxAttempts -or $timer.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+            throw "Excel readiness could not be confirmed within $attempt poll(s) / $TimeoutSeconds second(s). $detail Refusing to save unverified results."
+        }
+        Write-Log "Waiting for Excel readiness ($attempt/$MaxAttempts): $detail"
+        Start-ResponsiveSleep -Seconds 1
+    }
 }
