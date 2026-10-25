@@ -1,6 +1,6 @@
 @{
     SchemaVersion = 1
-    # Sequence references resolve paths from the unchanged legacy manifests.
+    # Sequence references retain their legacy IDs; retired slots remain unused.
     BatchOrder = @('A1', 'S1', 'D1', 'C1', 'D2', 'A2', 'A3', 'C2', 'U4', 'O1', 'O2', 'O3', 'O4', 'O5', 'O6')
     BatchTitles = @{
         A1 = 'Allocation transformation'
@@ -34,9 +34,8 @@
         @{ Id = 'ShiftAverage'; Batch = 'A2'; Sequence = 10; Depends = @('Shifts', 'Settings') }
         @{ Id = 'Allocation'; Batch = 'A3'; Sequence = 11; Depends = @('ShiftAverage', 'AllocationInput', 'Settings') }
         @{ Id = 'Distribution'; Batch = 'A3'; Sequence = 12; Depends = @('Allocation', 'Settings') }
-        @{ Id = 'MultiRole'; Batch = 'A3'; Sequence = 13; Depends = @('Distribution', 'Settings') }
         @{ Id = 'Capacity'; Batch = 'U4'; Sequence = 23; Depends = @('RoleOutputs', 'Demand', 'Staff', 'Availability', 'Settings') }
-        @{ Id = 'Effort'; Batch = 'U4'; Sequence = 24; Depends = @('Capacity', 'Demand', 'Allocation', 'Distribution', 'MultiRole', 'Staff', 'Settings') }
+        @{ Id = 'Effort'; Batch = 'U4'; Sequence = 24; Depends = @('Capacity', 'Demand', 'Allocation', 'Distribution', 'Staff', 'Settings') }
     )
     RoleDependencies = @('Demand', 'Staff', 'Availability', 'ShiftAverage', 'Settings')
     OrgJobs = @(

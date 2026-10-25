@@ -72,14 +72,14 @@ function Invoke-FakeRun {
 try {
     $catalogue = Get-BatchCatalogue $catalogueRoot
     $defaultRun = Select-BatchPlan $catalogue -RunAll
-    Assert-True ($defaultRun.Jobs.Count -eq 87) 'Run all selects BD, TE, JH-RY, one shared demand master and eleven organisation workbooks'
-    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 87) 'unqualified preview matches Run all scope'
+    Assert-True ($defaultRun.Jobs.Count -eq 84) 'Run all selects BD, TE, JH-RY, one shared demand master and eleven organisation workbooks'
+    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 84) 'unqualified preview matches Run all scope'
     Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 40) 'default run resolves three Unit batch sets, one shared input batch and six organisation batches'
     Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2')).Count -eq 0 -and @($defaultRun.Jobs | Where-Object Unit -eq 'Org').Count -eq 11) 'Run all excludes legacy Units and includes the complete organisation release chain'
     Assert-True ($defaultRun.Jobs[-1].Id -eq 'Org/LeaveBalanceReporting' -and (Split-Path $defaultRun.Jobs[-1].Path -Leaf) -eq 'TableauConnect-LB.xlsx') 'Run all ends at the Leave Balance reporting workbook'
     Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and $catalogue.RunAllIncludeOrg) 'saved default scope includes organisation work'
     $all = Select-BatchPlan $catalogue -RunAll -Units Unit1,Unit2
-    Assert-True ($all.Jobs.Count -eq 52 -and @($all.Jobs | Group-Object BatchKey).Count -eq 22) 'explicit legacy Unit selection remains available without organisation work'
+    Assert-True ($all.Jobs.Count -eq 50 -and @($all.Jobs | Group-Object BatchKey).Count -eq 22) 'explicit legacy Unit selection remains available without organisation work'
     Assert-True ($all.Jobs[0].Id -eq 'Unit1/AllocationInput') 'numeric Unit and catalogue order'
     Assert-True (@($all.Jobs | Where-Object RelativePath -match 'TestRole').Count -eq 0) 'test roles excluded'
     Assert-True (-not $catalogue.Settings.ContainsKey('Approved')) 'operational settings do not require approval metadata'
@@ -123,14 +123,44 @@ try {
         Assert-True ('A1 [1-AllocationExtracted.xlsx]' -in @(Get-BatchPickList $catalogue)) 'untitled batches still show their ID and files'
     } finally { $catalogue.BatchTitles = $savedTitles }
     $one = Select-BatchPlan $catalogue -RunAll -Units Unit1
-    Assert-True ($one.Jobs.Count -eq 26 -and @($one.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'Unit scope excludes org'
+    Assert-True ($one.Jobs.Count -eq 25 -and @($one.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'Unit scope excludes org'
     Assert-Throws { Select-BatchPlan $catalogue -Units Unit1 -Batches 'A1,A3' } 'disjoint batches cannot bypass intermediate producers'
     $subset = Select-BatchPlan $catalogue -Units Unit1 -Batches 'A3,C2'
-    Assert-True ($subset.Jobs.Count -eq 12 -and @($subset.Jobs | Where-Object Batch -notin @('A3','C2.1','C2.2','C2.3')).Count -eq 0) 'independent batch branches remain exact selections'
+    Assert-True ($subset.Jobs.Count -eq 11 -and @($subset.Jobs | Where-Object Batch -notin @('A3','C2.1','C2.2','C2.3')).Count -eq 0) 'independent batch branches remain exact selections'
     # Regression: the 21 October selection refreshed roles and reporting while
     # leaving Capacity/Effort (and other reporting intermediates) out of the run.
     foreach ($sequenceProfile in @('Current', 'ParallelInputs-Unit1Priority')) {
         $gapCatalogue = Get-BatchCatalogue $catalogueRoot $sequenceProfile
+        Assert-True (@($gapCatalogue.Jobs | Where-Object { $_.Id -match '/MultiRole$' -or $_.RelativePath -match 'MutliRole|MultiRole' }).Count -eq 0) "$sequenceProfile has no MultiRole job or target"
+        Assert-True (@($gapCatalogue.Jobs | ForEach-Object Reads | Where-Object { $_ -match 'MutliRole|MultiRole' }).Count -eq 0) "$sequenceProfile never requires a MultiRole file as an input"
+        Assert-True (@($gapCatalogue.Jobs | ForEach-Object Dependencies | Where-Object { $_ -match '/MultiRole$' }).Count -eq 0) "$sequenceProfile has no dangling MultiRole prerequisite"
+        $profileEffort = @($gapCatalogue.Jobs | Where-Object Id -eq 'BD/Effort')[0]
+        $expectedEffortPrerequisites = @('BD/Capacity','BD/Demand','BD/Allocation','BD/Distribution','BD/Staff','BD/Settings')
+        Assert-True ((($profileEffort.Dependencies | Sort-Object) -join ',') -eq (($expectedEffortPrerequisites | Sort-Object) -join ',')) "$sequenceProfile preserves every remaining Effort prerequisite"
+        # Stand in for the real retained producers with successful metadata receipts.
+        # The actual catalogue's Effort edges must allow completion without a MultiRole file or job.
+        $effortProducers = @(foreach ($dependency in $profileEffort.Dependencies) {
+            $producer = @($gapCatalogue.Jobs | Where-Object Id -eq $dependency)[0]
+            New-FakeJob $producer.Id $producer.BatchKey
+        })
+        $syntheticEffort = New-FakeJob $profileEffort.Id $profileEffort.BatchKey $profileEffort.Dependencies @($effortProducers.Path)
+        $effortRun = Invoke-FakeRun @($effortProducers + $syntheticEffort)
+        Assert-True ($effortRun.Code -eq 0 -and $effortRun.State.Jobs[$syntheticEffort.Id].Status -eq 'Completed' -and
+            @($effortProducers | Where-Object { $effortRun.Events.IndexOf("end:$($_.Id)") -gt $effortRun.Events.IndexOf("start:$($syntheticEffort.Id)") }).Count -eq 0) "$sequenceProfile completes Effort after all retained producers without MultiRole"
+        # Retain the catalogue's selected edges through every reporting branch;
+        # other facility prerequisites are represented by already saved external inputs.
+        $downstreamIds = @('Org/StaffAll','Org/EffortAll','Org/Outcomes','Org/Inefficiencies','Org/Cost','Org/History','Org/HistoryRead','Org/Reporting')
+        $selectedIds = @($effortProducers.Id) + $syntheticEffort.Id + $downstreamIds
+        $downstreamJobs = @(foreach ($producer in @($gapCatalogue.Jobs | Where-Object Id -in $downstreamIds)) {
+            New-FakeJob $producer.Id $producer.BatchKey @($producer.Dependencies | Where-Object { $_ -in $selectedIds })
+        })
+        $effortFailure = Invoke-FakeRun @($effortProducers + $syntheticEffort + $downstreamJobs) -Fail 'BD/Capacity'
+        $affectedIds = @($syntheticEffort.Id) + @($downstreamIds | Where-Object { $_ -ne 'Org/StaffAll' })
+        Assert-True ($effortFailure.Code -eq 1 -and @($affectedIds | Where-Object {
+            $effortFailure.State.Jobs[$_].Status -ne 'Blocked' -or "start:$_" -in $effortFailure.Events }).Count -eq 0) "$sequenceProfile blocks the entire affected Effort-to-reporting chain before any descendant starts"
+        Assert-True (@($effortProducers | Where-Object { $_.Id -ne 'BD/Capacity' -and
+            $effortFailure.State.Jobs[$_.Id].Status -ne 'Completed' }).Count -eq 0 -and
+            $effortFailure.State.Jobs['Org/StaffAll'].Status -eq 'Completed') "$sequenceProfile lets independent retained producers finish after the affected chain stops"
         $gapMessage = ''
         try { Select-BatchPlan $gapCatalogue -Units JH-RY -Batches C2,O1,O2,O5,O6 | Out-Null }
         catch { $gapMessage = $_.Exception.Message }
@@ -206,9 +236,9 @@ try {
     $bdRole = Select-BatchPlan $catalogue -Units BD -Batches C2.4
     Assert-True ($bdRole.Jobs.Count -eq 3 -and $bdRole.Jobs[0].Role -eq 'EN') 'BD EN role uses the dedicated C2.4 batch'
     $bdUnit = Select-BatchPlan $catalogue -RunAll -Units BD
-    Assert-True ($bdUnit.Jobs.Count -eq 26 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work'
+    Assert-True ($bdUnit.Jobs.Count -eq 25 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work'
     $everyUnit = Select-BatchPlan $catalogue -RunAll -Units All
-    Assert-True ($everyUnit.Jobs.Count -eq 128 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit and the shared master once without organisation jobs'
+    Assert-True ($everyUnit.Jobs.Count -eq 123 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit and the shared master once without organisation jobs'
     $bdCapacity = @($bdUnit.Jobs | Where-Object Id -eq 'BD/Capacity')[0]
     Assert-True ('BD/Role:EN/3' -in $bdCapacity.Dependencies -and 'BD/Role:AINC4/3' -notin $bdCapacity.Dependencies) 'BD consolidation waits for EN rather than AINC4'
     $role = Select-BatchPlan $catalogue -Units Unit2 -Roles RN
@@ -220,6 +250,7 @@ try {
         (Select-BatchPlan $catalogue -StartAtSequence $sequence -EndAtSequence $sequence).Jobs.Id
     })
     Assert-True (($legacyRangeIds | Sort-Object) -join ',' -eq 'Unit1/Effort,Unit2/AllocationInput,Unit2/DemandInput') 'legacy cross-Unit numbers preserved'
+    Assert-Throws { Select-BatchPlan $catalogue -Units Unit1 -StartAtSequence 13 -EndAtSequence 13 } 'retired MultiRole legacy slot cannot select another workbook'
     $range = Select-BatchPlan $catalogue -Units Unit2 -StartAtSequence 14 -EndAtSequence 16
     Assert-True ($range.Jobs.Count -eq 3 -and $range.Jobs[0].Unit -eq 'Unit2') 'Unit-local range'
     $range = Select-BatchPlan $catalogue -StartAtWorkbook '2. Calculations/Cost/Cost..xlsx'
@@ -341,7 +372,7 @@ try {
         $content = "@{ SchemaVersion = 1; Roles = @($entries, @{ Folder = 'Disabled'; Enabled = `$false }); RoleWorkbookOrder = @('CapacityDistrib(A.1)-shifts.xlsx','CapacityDistrib(A.2)-shifts.xlsx','CapacityDistrib(B)-shifts.xlsx') }"
         [IO.File]::WriteAllText($profilePath, $content)
         $dynamic = Get-BatchCatalogue $fixtureRoot
-        Assert-True ($dynamic.Jobs.Count -eq (2 * (17 + 3 * $count) + 11)) "dynamic expansion for $count roles"
+        Assert-True ($dynamic.Jobs.Count -eq (2 * (16 + 3 * $count) + 11)) "dynamic expansion for $count roles"
         Assert-True (@($dynamic.Jobs | Where-Object Role -eq 'Disabled').Count -eq 0) 'disabled roles excluded'
         $dynamicPlan = Select-BatchPlan $dynamic -Units Unit1 -Batches "C2.$count"
         Assert-True ($dynamicPlan.Jobs.Count -eq 3 -and $dynamicPlan.Jobs[0].Role -eq "Role$count") 'last dynamic role identity'

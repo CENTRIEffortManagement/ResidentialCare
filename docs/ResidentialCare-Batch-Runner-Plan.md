@@ -21,7 +21,7 @@ reached in a live refresh.
 
 The executable catalogue and operational settings are located beside the new
 runner. Project-relative locations are configured in `pq.project.json`.
-The catalogue references the unchanged legacy Unit and organisation manifests
+The catalogue references the legacy Unit and organisation manifests
 for existing workbook paths.
 
 ## Operator controls
@@ -114,6 +114,8 @@ batch/file selection rather than renumbering existing IDs. Unit-local ranges
 require exactly one Unit. Disjoint selections never expand into a min/max range.
 Dependency expansion is explicit and may add producer work outside the initial
 Unit selection; the complete resolved plan is printed before execution.
+Unit-local sequence 13 is no longer executable; later sequence IDs retain their
+existing meanings.
 
 ## Catalogue and dependencies
 
@@ -125,9 +127,12 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   as `Date/DemandMaster`, then releases each selected Unit's demand extract.
   `SharedUnitJobs` in the batch settings declares these consumers; Unit1 and
   Unit2 retain their Unit-level masters. Existing declared prerequisites and
-  file-access checks still apply. The default full run now contains 87 files.
+  file-access checks still apply. The default full run now contains 84 files.
 - C1 starts with Worker Reconciliation.xlsx, then Capacity-ShiftAvailability.xlsx
   and StaffListMaster.xlsx.
+- A3 runs Allocation.xlsx followed by Shift-StaffDistribution.xlsx.
+  MutliRoleCheck.xlsx is excluded from the runner, and Effort no longer depends
+  on it.
 - C2.1 through C2.N expand from enabled roles in the saved client profile.
   Each contains the three role workbooks in the profile's order. Stable internal
   identity uses the Unit and role-folder name; display numbering is frozen for
@@ -144,8 +149,10 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   Select it with `-Batches O6`; `-Batches O6 -ValidateSelectionOnly` checks
   access without opening Excel. Explicit Unit-only selections omit O6.
 
-The current two-Unit, three-role profile resolves to **60 files in 27 batches**:
-26 files per Unit and eight organisation files.
+A complete three-role Unit selection contains 25 files before shared-master
+deduplication. The organisation release contains eight ResidentialCare files
+plus the three Leave Balance Stats files. The default BD, TE and JH-RY run
+shares one demand master across the three Units, giving **84 files** in total.
 
 Dependencies are file-level edges, not blanket stage barriers. The draft
 execution catalogue includes Allocation input -> Settings Data -> demand

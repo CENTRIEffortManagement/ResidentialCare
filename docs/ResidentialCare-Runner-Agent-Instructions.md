@@ -85,6 +85,9 @@ for a key. Menu option 7 still allows validation without opening Excel.
 For the expanded runner, inaccessible files block their jobs and descendants,
 while unrelated ready work continues; a nonzero final result reports incomplete
 work. Invalid selectors and graph/configuration errors block execution globally.
+A failed refresh stops the affected chain immediately: do not start any selected
+downstream job after its prerequisite fails. Independent branches may continue;
+the overall run remains incomplete and must identify the failed and blocked work.
 Do not bypass a failed selected producer with its old
 saved output. Unselected saved inputs must be reported as not refreshed this run.
 Selections that skip intermediate workbooks on a dependency path between selected
@@ -103,6 +106,22 @@ Use the same entry point with `-ShowStatus`, `-ResumeRun <RunId> -RefreshSelecte
 or `-StopMode AfterCurrent|AfterBatch|Now`. Status identifies interrupted owners;
 do not force-resume an uncertain save. Use its separate `RunLogs/BatchRefresh`
 records, not the legacy current-status file, when reporting the new runner.
+
+Use `CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -CheckOutputs` for a
+read-only check of the latest recorded run against current file metadata. It
+does not open Excel, refresh, save, or change the run ledger. Exit 0 requires
+confirmed completed receipts with unchanged output and declared input stamps;
+missing files, incomplete evidence, changed inputs/outputs, uncertain saves and
+failed or blocked work return exit 1. This verifies recorded technical refresh
+evidence, not business reconciliation or the contents of a later manual save.
+Do not combine `-CheckOutputs` with execution, selection, reporting or stop flags.
+
+Final run output and `-ShowStatus` also list unverified outputs with their saved
+times and failed prerequisite causes. Each actual report includes an
+`output-status.json` and `output-status.md` snapshot. A later manual save is
+reported separately from the historical blocked/failed result and is not adopted
+as a successful runner refresh. `-ShowStatus` retains its status-only exit code;
+use `-CheckOutputs` when a caller needs a nonzero result for unverified outputs.
 
 New runs print their readable `coordinator.log` path and each file's start/result.
 Use that log, `-ShowStatus`, and the per-job `refresh.log` for monitoring. JSON
@@ -168,6 +187,12 @@ or substitute runtime copies implicitly.
 After changes, run `scripts/test-batch-refresh-runner.ps1` and
 `scripts/test-batch-runner-recovery.ps1` without Excel, the
 existing safety/mock suites, then the legacy smoke checks and new validation.
+For sequence changes, also run `scripts/test-runner-without-multirole.ps1` to
+verify that the retired slot is excluded and remaining sequence IDs agree across
+the legacy menus and execution routes without opening Excel.
+For output-status changes, also run `scripts/test-batch-output-status.ps1` and
+`scripts/test-batch-output-status-cli.ps1`; both use disposable synthetic data
+and verify that read-only checks leave the ledger and saved files unchanged.
 For file-access or workbook-identity guards, also run
 `scripts/test-runner-file-access.ps1` using synthetic data only.
 For Git classification or refresh-wide metadata checks, run
@@ -189,14 +214,15 @@ Interpret the user's concise requests as follows:
 | User request | Scope and action |
 |---|---|
 | `status` | Show the top-level current status and latest log. Do not refresh. |
+| `check outputs` | Check the latest recorded run's outputs against current metadata using `-CheckOutputs`. Do not open Excel or refresh. |
 | `validate all` | Validate the complete global sequence. Do not refresh. |
 | `run all` | Validate, then refresh the complete global sequence. |
 | `run units` | Validate, then refresh all discovered `UnitN` folders. |
-| `run Unit1` | Validate, then refresh Unit1's complete 24-workbook sequence. |
+| `run Unit1` | Validate, then refresh Unit1's complete 23-workbook sequence. |
 | `run org` | Validate, then refresh the eight organisation workbooks. |
 | `run RN` | Validate, then refresh the three Unit1 RN workbooks. |
 | `run roles` | Validate, then refresh the nine Unit1 role workbooks. |
-| `run calculations` | Validate, then refresh the 22-entry Unit1 calculation sequence. |
+| `run calculations` | Validate, then refresh the 21-entry Unit1 calculation sequence. |
 | `run 12 to 18` | Validate, then refresh global sequence 12 through 18 inclusive. |
 | `run Unit1 12 to 18` | Validate, then refresh Unit1 sequence 12 through 18 inclusive. |
 | `run calculations 12 to 18` | Validate, then refresh calculation-stage sequence 12 through 18 inclusive. |

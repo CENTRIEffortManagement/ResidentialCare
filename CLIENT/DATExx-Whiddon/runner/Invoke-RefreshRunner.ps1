@@ -239,13 +239,15 @@ function Get-GlobalSequenceEntries {
 
     $unitSequenceEntries = @(Get-UnitSequenceEntries)
     $orgSequenceEntries = @(Get-OrgSequenceEntries)
+    $unitSequenceSpan = [int] ($unitSequenceEntries | Measure-Object -Property Sequence -Maximum).Maximum
     $globalSequence = 1
     $entries = @()
 
     foreach ($unit in $units) {
+        $unitSequenceOffset = $globalSequence - 1
         foreach ($entry in $unitSequenceEntries) {
             $entries += [pscustomobject] @{
-                GlobalSequence = $globalSequence
+                GlobalSequence = $unitSequenceOffset + [int] $entry.Sequence
                 Stage = "Units"
                 UnitName = $unit.Name
                 UnitNumber = $unit.Number
@@ -257,8 +259,9 @@ function Get-GlobalSequenceEntries {
                 Stem = $entry.Stem
                 Role = $entry.Role
             }
-            $globalSequence++
         }
+        # A retired local slot does not renumber later units or organisation workbooks.
+        $globalSequence = $unitSequenceOffset + $unitSequenceSpan + 1
     }
 
     foreach ($entry in $orgSequenceEntries) {
@@ -420,6 +423,7 @@ function Resolve-GlobalSelection {
     }
 
     $totalCount = $entries.Count
+    $lastSequence = [int] ($entries | Measure-Object -Property GlobalSequence -Maximum).Maximum
     $unitEntriesAll = @($entries | Where-Object { $_.Stage -eq "Units" })
     $orgEntriesAll = @($entries | Where-Object { $_.Stage -eq "Org" })
     $unitTotal = $unitEntriesAll.Count
@@ -435,14 +439,14 @@ function Resolve-GlobalSelection {
     }
 
     if ($EndSequence -lt 1) {
-        $EndSequence = $totalCount
+        $EndSequence = $lastSequence
     }
 
-    if ($StartSequence -gt $totalCount) {
+    if ($StartSequence -gt $lastSequence) {
         throw "StartAtSequence $StartSequence is after the end of the Date-level production sequence."
     }
 
-    if ($EndSequence -gt $totalCount) {
+    if ($EndSequence -gt $lastSequence) {
         throw "EndAtSequence $EndSequence is after the end of the Date-level production sequence."
     }
 
@@ -452,6 +456,12 @@ function Resolve-GlobalSelection {
 
     if ($selectedEntries.Count -eq 0) {
         throw "Global sequence range $StartSequence-$EndSequence does not match any configured workbook."
+    }
+    if ($selectedEntries[0].GlobalSequence -ne $StartSequence) {
+        throw "Start sequence $StartSequence was not found in the Date-level production sequence."
+    }
+    if ($selectedEntries[-1].GlobalSequence -ne $EndSequence) {
+        throw "End sequence $EndSequence was not found in the Date-level production sequence."
     }
 
     $unitEntries = @($selectedEntries | Where-Object { $_.Stage -eq "Units" })
@@ -483,7 +493,7 @@ function Resolve-GlobalSelection {
         UnitTotal = $unitTotal
         OrgTotal = $orgTotal
         Total = $totalCount
-        OrgGlobalStart = $unitTotal + 1
+        OrgGlobalStart = [int] ($orgEntriesAll | Measure-Object -Property GlobalSequence -Minimum).Minimum
     }
 }
 
@@ -935,7 +945,7 @@ function Show-UnitsMenu {
         return
     }
 
-    $perUnitWorkbookCount = Get-UnitWorkbookCount
+    $perUnitSequenceSpan = [int] (Get-UnitSequenceEntries | Measure-Object -Property Sequence -Maximum).Maximum
     while ($true) {
         Write-Host ""
         Write-Host "Refresh UNITS"
@@ -958,7 +968,7 @@ function Show-UnitsMenu {
         }
 
         if ($choice -eq 1) {
-            $unitTotal = $units.Count * $perUnitWorkbookCount
+            $unitTotal = $units.Count * $perUnitSequenceSpan
             Invoke-ValidatedRefresh -StartSequence 1 -EndSequence $unitTotal | Out-Null
             continue
         }
@@ -973,8 +983,8 @@ function Show-UnitsMenu {
             continue
         }
 
-        $startSequence = ($unitIndex * $perUnitWorkbookCount) + 1
-        $endSequence = $startSequence + $perUnitWorkbookCount - 1
+        $startSequence = ($unitIndex * $perUnitSequenceSpan) + 1
+        $endSequence = $startSequence + $perUnitSequenceSpan - 1
         Invoke-ValidatedRefresh -StartSequence $startSequence -EndSequence $endSequence | Out-Null
     }
 }

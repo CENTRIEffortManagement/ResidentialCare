@@ -144,6 +144,7 @@ function Show-Sequence {
         $units = @(Get-DiscoveredUnits)
         $data = Import-PowerShellDataFile -LiteralPath $sequencePath
         $workbooks = @($data.Workbooks | Sort-Object Sequence)
+        $unitSequenceSpan = [int] ($workbooks | Measure-Object -Property Sequence -Maximum).Maximum
         $globalSequence = 1
 
         if ($units.Count -eq 0) {
@@ -153,10 +154,12 @@ function Show-Sequence {
 
         Write-Host ("Discovered units: {0}" -f (($units | ForEach-Object { $_.Name }) -join ', '))
         foreach ($unit in $units) {
+            $unitSequenceOffset = $globalSequence - 1
             foreach ($entry in $workbooks) {
-                Write-Host ("{0:000} [{1} #{2:00}] {1} / {3}" -f $globalSequence, $unit.Name, [int] $entry.Sequence, (Get-WorkbookDisplayName -Entry $entry))
-                $globalSequence++
+                $entrySequence = $unitSequenceOffset + [int] $entry.Sequence
+                Write-Host ("{0:000} [{1} #{2:00}] {1} / {3}" -f $entrySequence, $unit.Name, [int] $entry.Sequence, (Get-WorkbookDisplayName -Entry $entry))
             }
+            $globalSequence = $unitSequenceOffset + $unitSequenceSpan + 1
         }
     }
     catch {

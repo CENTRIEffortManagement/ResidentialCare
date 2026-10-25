@@ -235,11 +235,11 @@ Interpret the user's concise requests as follows:
 | `validate all` | Validate the complete global sequence. Do not refresh. |
 | `run all` | Validate, then refresh the complete global sequence. |
 | `run units` | Validate, then refresh all discovered `UnitN` folders. |
-| `run Unit1` | Validate, then refresh Unit1's complete 24-workbook sequence. |
+| `run Unit1` | Validate, then refresh Unit1's complete 23-workbook sequence. |
 | `run org` | Validate, then refresh the eight organisation workbooks. |
 | `run RN` | Validate, then refresh the three Unit1 RN workbooks. |
 | `run roles` | Validate, then refresh the nine Unit1 role workbooks. |
-| `run calculations` | Validate, then refresh the 22-entry Unit1 calculation sequence. |
+| `run calculations` | Validate, then refresh the 21-entry Unit1 calculation sequence. |
 | `run 12 to 18` | Validate, then refresh global sequence 12 through 18 inclusive. |
 | `run Unit1 12 to 18` | Validate, then refresh Unit1 sequence 12 through 18 inclusive. |
 | `run calculations 12 to 18` | Validate, then refresh calculation-stage sequence 12 through 18 inclusive. |

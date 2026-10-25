@@ -7,7 +7,7 @@ param(
     [string] $StartAtWorkbook, [int] $StartAtSequence, [int] $EndAtSequence,
     [switch] $IncludeOrg, [switch] $IncludeDependencies, [switch] $UseSavedIntermediates,
     [switch] $RefreshSelected, [switch] $ShowPlan, [switch] $ValidateSelectionOnly,
-    [switch] $ShowStatus, [string] $ResumeRun,
+    [switch] $ShowStatus, [switch] $CheckOutputs, [string] $ResumeRun,
     [ValidateSet('AfterCurrent', 'AfterBatch', 'Now')] [string] $StopMode,
     [ValidateRange(1, 12)] [int] $MaxParallelBatches = 12,
     [ValidateSet('true', 'false')] [string] $VisibleOverride = 'false',
@@ -56,12 +56,29 @@ function Show-ResolvedBatchPlan {
     Write-Host "`nTechnical refresh only; business reconciliation is not evaluated."
 }
 
+function Get-BatchOutputLocations {
+    param($Project)
+    $dateRoot = Resolve-BatchPath $repoRoot $Project.batchRunner.dateRoot
+    $roots = @($dateRoot)
+    if ($Project.batchRunner.PSObject.Properties['workbookRoots']) {
+        foreach ($root in $Project.batchRunner.workbookRoots.PSObject.Properties) {
+            $roots += Resolve-BatchWorkbookRoot $repoRoot ([string] $root.Value)
+        }
+    }
+    return @{ DateRoot = $dateRoot; AllowedRoots = $roots }
+}
+
 try {
     # Status/stop must remain available even if a catalogue is broken or files vanish.
     $project = Get-Content -LiteralPath (Join-Path $repoRoot 'pq.project.json') -Raw | ConvertFrom-Json
     $logRoot = Resolve-BatchPath $repoRoot $project.batchRunner.logFolder
     $currentPath = Join-Path $logRoot 'current.json'
     $reportRoot = Resolve-BatchPath $repoRoot $(if ($project.batchRunner.PSObject.Properties['reportFolder']) { $project.batchRunner.reportFolder } else { 'docs' })
+    if ($CheckOutputs -and ($ShowStatus -or $ReportRun -or $RunAll -or $RefreshSelected -or $ResumeRun -or $StopMode -or
+        $Units -or $Batches -or $Roles -or $Workbooks -or $StartAtWorkbook -or $StartAtSequence -or $EndAtSequence -or
+        $IncludeOrg -or $IncludeDependencies -or $UseSavedIntermediates -or $ExportGantt -or $ShowPlan -or $ValidateSelectionOnly)) {
+        throw 'CheckOutputs is read-only; do not combine it with run, selection, reporting or stop options.'
+    }
     if ($ReportRun) {
         if ($ReportRun -notmatch '^[a-zA-Z0-9-]+$' -or $RunAll -or $RefreshSelected -or $ResumeRun -or $StopMode) { throw 'ReportRun is report-only; do not combine it with execution or stop options.' }
         $reportDirectory = Resolve-BatchPath $logRoot $ReportRun
@@ -69,7 +86,9 @@ try {
         $reportState = Read-BatchJson (Join-Path $reportDirectory 'state.json') -AsHashtable
         if ($reportState.Status -eq 'Running' -or @(Get-ChildItem -LiteralPath $reportDirectory -Filter 'state-recovery-*.json').Count) { throw 'An active run or recovery snapshot requires inspection before final reporting.' }
         if (-not $reportPlan.PSObject.Properties['SequenceProfile']) { $reportPlan | Add-Member SequenceProfile 'Current' }
-        $null = Write-BatchActualReport $reportPlan $reportState $reportDirectory
+        $outputLocations = Get-BatchOutputLocations $project
+        $report = Write-BatchActualReport $reportPlan $reportState $reportDirectory @outputLocations
+        Show-BatchOutputStatus $report.OutputStatus
         Publish-BatchReports $reportDirectory $reportRoot $reportPlan.SequenceProfile $ReportRun
         exit 0
     }
@@ -116,8 +135,12 @@ try {
             ($menuOption -eq '5' -and -not (Expand-BatchArguments $Workbooks))) { throw 'Empty selection; nothing was started.' }
     }
     if ($RefreshSelected -and -not ($RunAll -or $ResumeRun -or $Units -or $Batches -or $Roles -or $Workbooks -or $StartAtWorkbook -or $StartAtSequence)) { throw 'Specify a selection or use RunAll explicitly.' }
-    if ($ShowStatus -or $StopMode) {
-        if (-not (Test-Path -LiteralPath $currentPath)) { Write-Host 'No batch run has been recorded.'; exit 0 }
+    if ($ShowStatus -or $CheckOutputs -or $StopMode) {
+        if (-not (Test-Path -LiteralPath $currentPath)) {
+            Write-Host 'No batch run has been recorded.'
+            if ($CheckOutputs) { Write-Host 'Outputs cannot be verified without a recorded run.'; exit 1 }
+            exit 0
+        }
         $current = Read-BatchJson $currentPath
         if ($current.RunId -notmatch '^[a-zA-Z0-9-]+$') { throw 'Invalid current run ID.' }
         $directory = Resolve-BatchPath $logRoot $current.RunId
@@ -145,6 +168,22 @@ try {
                 if ($state.Jobs[$key].Status -in @('Failed', 'Blocked', 'Stopped', 'Running')) { Write-Host "$key | $($state.Jobs[$key].Status) | $($state.Jobs[$key].Message)" }
             }
             Write-Host "Records: $([IO.Path]::GetRelativePath($repoRoot, $directory))"
+            try {
+                if (@(Get-ChildItem -LiteralPath $directory -Filter 'state-recovery-*.json' -File).Count) {
+                    throw 'A recovery snapshot exists; the saved run ledger cannot verify outputs until recovery is inspected.'
+                }
+                $savedPlan = Read-BatchJson (Join-Path $directory 'plan.json')
+                $outputLocations = Get-BatchOutputLocations $project
+                $assessment = Get-BatchOutputStatus $savedPlan $state @outputLocations
+                Show-BatchOutputStatus $assessment
+                if ($CheckOutputs) {
+                    if ($assessment.AllVerified) { exit 0 }
+                    exit 1
+                }
+            } catch {
+                Write-Host "OUTPUTS NOT VERIFIED: $($_.Exception.Message)" -ForegroundColor Yellow
+                if ($CheckOutputs) { exit 1 }
+            }
         }
         exit 0
     }
@@ -248,11 +287,14 @@ try {
     foreach ($line in (Get-BatchSavedIntermediateNotice $plan)) { Write-BatchProgress $runDirectory $line }
     $exitCode = Invoke-BatchSchedule -Plan $plan -State $state -RunDirectory $runDirectory -MaxParallelBatches $MaxParallelBatches -Visible $VisibleOverride -TimeoutMinutes $TimeoutMinutesOverride
     try {
-        $null = Write-BatchActualReport $plan $state $runDirectory
+        $outputLocations = Get-BatchOutputLocations $project
+        $actualReport = Write-BatchActualReport $plan $state $runDirectory @outputLocations
+        Show-BatchOutputStatus $actualReport.OutputStatus
         Publish-BatchReports $runDirectory $reportRoot $SequenceProfile $state.RunId
     } catch {
         Write-Warning "Refresh outcome retained; Gantt reporting failed: $($_.Exception.Message). Regenerate using -ReportRun $($state.RunId)."
         try { Write-BatchJson (Join-Path $runDirectory 'report-error.json') @{ Message = $_.Exception.Message } } catch { Write-Warning 'Could not write report error.' }
+        Write-Host 'OUTPUTS NOT VERIFIED: output-status reporting did not complete. Review the run records before using saved results.' -ForegroundColor Yellow
     }
     Write-Host "Batch run $($state.RunId): $($state.Status); exit $exitCode. Records: $([IO.Path]::GetRelativePath($repoRoot, $runDirectory))"
     foreach ($line in (Get-BatchSavedIntermediateNotice $plan)) { Write-Host $line -ForegroundColor Yellow }

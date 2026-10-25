@@ -213,6 +213,9 @@ function Get-BatchCatalogue {
         } else { @($unitManifest.Workbooks | Sort-Object Sequence) }
         $localSequence = 0
         foreach ($entry in $legacyUnitEntries) {
+            # MultiRole's retired slot stays unused so existing range IDs keep
+            # identifying the same remaining workbooks in each Unit and globally.
+            if ($localSequence -eq 12) { $globalSequence++; $localSequence++ }
             $globalSequence++
             $localSequence++
             $relative = "UNITS/$unit/$($entry.Folder)/$($entry.FileName)" -replace '\\', '/'

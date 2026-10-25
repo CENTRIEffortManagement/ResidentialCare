@@ -237,7 +237,6 @@ function Resolve-PerUnitWorkbookEntries {
         "2. Calculations/AllocationByShiftAverage.xlsx",
         "2. Calculations/Allocation.xlsx",
         "2. Calculations/Shift-StaffDistribution.xlsx",
-        "2. Calculations/MutliRoleCheck.xlsx",
         "2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
         "2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
         "2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
@@ -252,9 +251,9 @@ function Resolve-PerUnitWorkbookEntries {
     )
 
     $entries = @($SequenceData["Workbooks"])
-    if ($entries.Count -ne 24) {
+    if ($entries.Count -ne 23) {
         $script:ExitCode = 11
-        throw "Sequence file is invalid: expected exactly 24 workbooks, found $($entries.Count)."
+        throw "Sequence file is invalid: expected exactly 23 workbooks, found $($entries.Count)."
     }
 
     $seenSequences = @{}
@@ -278,9 +277,9 @@ function Resolve-PerUnitWorkbookEntries {
         $folder = [string] $entry["Folder"]
         $fileName = [string] $entry["FileName"]
 
-        if ($sequence -lt 1 -or $sequence -gt 24) {
+        if ($sequence -lt 1 -or $sequence -gt 24 -or $sequence -eq 13) {
             $script:ExitCode = 11
-            throw "Sequence file is invalid: per-unit sequence numbers must be 1 through 24."
+            throw "Sequence file is invalid: per-unit sequence numbers must be 1 through 12 or 14 through 24; slot 13 is retired."
         }
 
         if ($seenSequences.ContainsKey($sequence)) {
@@ -336,7 +335,7 @@ function Resolve-PerUnitWorkbookEntries {
         }
     }
 
-    foreach ($expectedSequence in 1..24) {
+    foreach ($expectedSequence in (@(1..12) + @(14..24))) {
         if (-not $seenSequences.ContainsKey($expectedSequence)) {
             $script:ExitCode = 11
             throw "Sequence file is invalid: missing per-unit sequence number $expectedSequence."
@@ -356,6 +355,7 @@ function Expand-AllUnitWorkbookEntries {
     )
 
     $globalSequence = 1
+    $unitSequenceSpan = [int] ($PerUnitEntries | Measure-Object -Property LocalSequence -Maximum).Maximum
     $expanded = @()
 
     foreach ($unit in $Units) {
@@ -365,6 +365,7 @@ function Expand-AllUnitWorkbookEntries {
         Assert-RequiredFolder -Root $unit.Path -RelativePath "2. Calculations/AINC4" -UnitName $unit.Name | Out-Null
         Assert-RequiredFolder -Root $unit.Path -RelativePath "2. Calculations/RN" -UnitName $unit.Name | Out-Null
 
+        $unitSequenceOffset = $globalSequence - 1
         foreach ($entry in $PerUnitEntries) {
             $workbookPath = Join-Path (Join-Path $unit.Path $entry.Folder) $entry.FileName
             if (-not (Test-IsUnderRoot -Path $workbookPath -Root $unit.Path)) {
@@ -380,7 +381,7 @@ function Expand-AllUnitWorkbookEntries {
             }
 
             $expanded += [pscustomobject] @{
-                Sequence = $globalSequence
+                Sequence = $unitSequenceOffset + [int] $entry.LocalSequence
                 UnitName = $unit.Name
                 UnitNumber = $unit.Number
                 UnitRoot = $unit.Path
@@ -394,8 +395,9 @@ function Expand-AllUnitWorkbookEntries {
                 Path = [System.IO.Path]::GetFullPath($workbookPath)
             }
 
-            $globalSequence++
         }
+        # Keep the retired local slot reserved so later global sequence IDs remain stable.
+        $globalSequence = $unitSequenceOffset + $unitSequenceSpan + 1
     }
 
     return $expanded
@@ -791,7 +793,7 @@ try {
             "-WorkbookName", $displayName,
             "-LogPath", $script:LogFile,
             "-StatusPath", $script:StatusFile,
-            "-StatusPrefix", ("[{0}/{1} {2} #{3:00}]" -f $entry.Sequence, $entries.Count, $entry.UnitName, $entry.LocalSequence),
+            "-StatusPrefix", ("[{0}/{1} {2} #{3:00}]" -f $entry.Sequence, $entries[-1].Sequence, $entry.UnitName, $entry.LocalSequence),
             "-StopRequestPath", $stopRequestPath,
             "-VisibleOverride", $VisibleOverride,
             "-TimeoutMinutesOverride", $TimeoutMinutesOverride,

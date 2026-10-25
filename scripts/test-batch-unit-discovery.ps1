@@ -25,13 +25,14 @@ try {
         $catalogue = Get-BatchCatalogue $fixtureRepo $sequenceProfile
         $plan = Select-BatchPlan $catalogue -RunAll
         Assert-Discovery (($catalogue.Units -join ',') -eq 'BD,TE,JH-RY') "$sequenceProfile discovers facilities without UnitN folders"
-        Assert-Discovery ($plan.Jobs.Count -eq 87) "$sequenceProfile builds the complete default plan"
+        Assert-Discovery ($plan.Jobs.Count -eq 84) "$sequenceProfile builds the complete default plan"
+        Assert-Discovery (@($plan.Jobs | Where-Object { $_.Id -match '/MultiRole$' -or $_.RelativePath -match 'MutliRole|MultiRole' }).Count -eq 0) "$sequenceProfile excludes MultiRole from every discovered facility"
         Assert-Discovery (($plan.Jobs | Select-Object -Last 3 | ForEach-Object Id) -join ',' -eq 'Org/LeaveBalanceStats,Org/LeaveBalanceReduction,Org/LeaveBalanceReporting') "$sequenceProfile retains Leave Balance ordering"
     }
     [void] [IO.Directory]::CreateDirectory((Join-Path $fixtureUnits 'Unit1'))
     $catalogue = Get-BatchCatalogue $fixtureRepo
     Assert-Discovery (($catalogue.Units -join ',') -eq 'Unit1,BD,TE,JH-RY') 'legacy Units remain available when present'
-    Assert-Discovery ((Select-BatchPlan $catalogue -RunAll -Units Unit1).Jobs.Count -eq 26) 'explicit legacy Unit selection still works'
+    Assert-Discovery ((Select-BatchPlan $catalogue -RunAll -Units Unit1).Jobs.Count -eq 25) 'explicit legacy Unit selection still works'
     $settingsPath = Join-Path $fixtureRunner 'ResidentialCare-BatchApproval.psd1'
     $settingsText = [IO.File]::ReadAllText($settingsPath)
     [IO.File]::WriteAllText($settingsPath, $settingsText.Replace("Folder = 'BD'", "Folder = 'MissingFacility'"))

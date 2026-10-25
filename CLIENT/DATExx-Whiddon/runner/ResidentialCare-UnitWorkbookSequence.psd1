@@ -63,11 +63,6 @@
             FileName = 'Shift-StaffDistribution.xlsx'
         }
         @{
-            Sequence = 13
-            Folder = '2. Calculations'
-            FileName = 'MutliRoleCheck.xlsx'
-        }
-        @{
             Sequence = 14
             Folder = '2. Calculations/AIN'
             FileName = 'CapacityDistrib(A.1)-shifts.xlsx'
