@@ -1,0 +1,43 @@
+{
+  "Operation": "User-requested exact BD workbook and M copies",
+  "Copies": [
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Backup": "outputs/bd-capacity-copy-20261025/backups/TE/Capacity-ShiftAvailability.xlsx",
+      "PreviousSHA256": "E3A520C0DC882006D64D9E61D297C3B14EB1DB464A37FA45728ADCAA6ADEEB81",
+      "SourceSHA256": "EF9C0CF186A3A666AEB771995E87B5D0448CDC45ADADE8803BFE3C3F83521B99",
+      "TargetSHA256": "EF9C0CF186A3A666AEB771995E87B5D0448CDC45ADADE8803BFE3C3F83521B99",
+      "ExactCopy": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Backup": "outputs/bd-capacity-copy-20261025/backups/TE/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "PreviousSHA256": "DD7C078C64F1BD0ADDC539B5288F42271CF6A147748FE8A1E5D5F9AAF3D7FA32",
+      "SourceSHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "TargetSHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "ExactCopy": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Backup": "outputs/bd-capacity-copy-20261025/backups/JH-RY/Capacity-ShiftAvailability.xlsx",
+      "PreviousSHA256": "C06879AC6005598C5422378F7CA36C072A217013FD981BF6C5F295AB41798251",
+      "SourceSHA256": "EF9C0CF186A3A666AEB771995E87B5D0448CDC45ADADE8803BFE3C3F83521B99",
+      "TargetSHA256": "EF9C0CF186A3A666AEB771995E87B5D0448CDC45ADADE8803BFE3C3F83521B99",
+      "ExactCopy": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Backup": "outputs/bd-capacity-copy-20261025/backups/JH-RY/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "PreviousSHA256": "66B45FBCE4CADC4378A3F9C1D3081BCB50D23540B4A934E164524CF9670B3D7E",
+      "SourceSHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "TargetSHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "ExactCopy": true
+    }
+  ],
+  "Refreshed": false,
+  "PowerQuerySyncPerformed": false
+}
