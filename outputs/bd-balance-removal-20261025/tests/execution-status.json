@@ -1,0 +1,8 @@
+{
+  "Status": "Not validated",
+  "Reason": "Initial native evaluation timed out. Windows profile encryption probe fails in sandbox. Requested execution outside sandbox was cancelled before a confirmed launch.",
+  "NativePassClaimed": false,
+  "RuntimeAcceptance": "Pending manual native evaluation and workbook sync/tests",
+  "FixtureSources": "Actual revised BD production M expressions with synthetic external inputs only",
+  "NextCommand": "pwsh -NoProfile -File outputs/bd-balance-removal-20261025/tests/run-native-fixtures.ps1"
+}

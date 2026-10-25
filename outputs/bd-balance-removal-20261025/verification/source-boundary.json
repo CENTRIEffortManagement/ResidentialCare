@@ -1,0 +1,35 @@
+[
+  {
+    "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "SourceSHA256": "8247462AA0DFD70D12648CDF50D5B385546C2E93ED613C13BDAC299F142BC147",
+    "Comparison": {
+      "sourceQueryCount": 70,
+      "workbookQueryCount": 71,
+      "sourceOnly": [],
+      "workbookOnly": [
+        "FacilityMappings_Prepare"
+      ],
+      "different": [
+        "ReconciledWorkers_Facility_Prepare",
+        "LINK Facilities",
+        "AvailabilityLeaveSource_Prepare",
+        "AllocationRoleHours_Prepare"
+      ],
+      "matches": false
+    }
+  },
+  {
+    "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx_PowerQuery.m",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+    "SourceSHA256": "2B4190DF69B0476D7F0373F03DEEFD563BEB0A0A6084A76EDD0FB390F1CAA93F",
+    "Comparison": {
+      "sourceQueryCount": 27,
+      "workbookQueryCount": 27,
+      "sourceOnly": [],
+      "workbookOnly": [],
+      "different": [],
+      "matches": true
+    }
+  }
+]

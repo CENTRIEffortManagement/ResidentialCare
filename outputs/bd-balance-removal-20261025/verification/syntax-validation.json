@@ -1,0 +1,19 @@
+{
+  "status": "Passed",
+  "checks": [
+    {
+      "source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "syntax": "passed",
+      "stage": "Parse",
+      "SourceSHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D"
+    },
+    {
+      "source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx_PowerQuery.m",
+      "syntax": "passed",
+      "stage": "Parse",
+      "SourceSHA256": "2B4190DF69B0476D7F0373F03DEEFD563BEB0A0A6084A76EDD0FB390F1CAA93F"
+    }
+  ],
+  "parser": "Installed Microsoft Power Query extension parser",
+  "runtimeAcceptance": "Pending manual workbook evaluation"
+}

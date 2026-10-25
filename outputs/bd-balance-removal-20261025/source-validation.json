@@ -1,0 +1,57 @@
+{
+  "Status": "Passed",
+  "Scope": "BD originals only; approved workbook-derived baseline",
+  "Comparisons": [
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Archive": "outputs/bd-balance-removal-20261025/archives/BD/Capacity-ShiftAvailability.xlsx_PowerQuery-BALANCE.m",
+      "BaselineQueryCount": 71,
+      "RevisedQueryCount": 76,
+      "Added": [
+        "IMPORT Published Roster",
+        "PublishedRoster_Prepare",
+        "RosterWorkers_Prepare",
+        "WorkerEmployment_Prepare",
+        "WorkerEmployment_Selected",
+        "AvailabilityMembership_Prepare"
+      ],
+      "Removed": [
+        "IMPORT Reconciled Workers"
+      ],
+      "Changed": [
+        "IMPORT Worker's Report",
+        "ReconciledWorkerMembership_Prepare",
+        "WorkerContracts_Prepare",
+        "ReconciledWorkers_Prepare",
+        "ReconciledWorkers_Eligible",
+        "ReconciledWorkers_CHECK"
+      ],
+      "SourceSHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "ArchiveSHA256": "AA0DCCEC6A988EDCBF0F86B1D3E09220C0B579D25493B6862BA7D2C9041CF2CD",
+      "WorkbookSHA256": "41FB0C4833392C057117C1A0C5BEEE99E9B6C56A09E58339601BD5CE25FEF436",
+      "WorkbookUnchanged": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx_PowerQuery.m",
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+      "Archive": "outputs/bd-balance-removal-20261025/archives/BD/StaffListMaster.xlsx_PowerQuery-BALANCE.m",
+      "BaselineQueryCount": 27,
+      "RevisedQueryCount": 27,
+      "Added": [],
+      "Removed": [],
+      "Changed": [],
+      "SourceSHA256": "2B4190DF69B0476D7F0373F03DEEFD563BEB0A0A6084A76EDD0FB390F1CAA93F",
+      "ArchiveSHA256": "2B4190DF69B0476D7F0373F03DEEFD563BEB0A0A6084A76EDD0FB390F1CAA93F",
+      "WorkbookSHA256": "0E29DE5406EEBD61A4C4FDD47B54518C9B7C3A72A148A57E79F80CBDC9C5B684",
+      "WorkbookUnchanged": true
+    }
+  ],
+  "PublishedInterfacesUnchanged": true,
+  "ExistingFacilityMappingPreserved": true,
+  "BalanceWorkbookDependencyRemoved": true,
+  "ArchivesVerified": true,
+  "Synced": false,
+  "Refreshed": false,
+  "RuntimeAcceptance": "Pending manual workbook sync and evaluated checks"
+}
