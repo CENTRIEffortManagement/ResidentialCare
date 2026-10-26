@@ -1,7 +1,3 @@
-// Power Query from: Capacity.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Capacity.xlsx
-// Extracted: 2026-10-07T06:55:17.023Z
-
 section Section1;
 
 shared #"IMPORT C#TABLE2" = let
@@ -41,37 +37,26 @@ shared #"IMPORT OriginalResPeriodAvailabilityTABLE2" = let
 in
     #"Added Custom";
 
+// Query: LINKRole
+// Purpose: Land Role Analysis items unchanged for enabled-role preparation.
 shared LINKRole = let
     Source = SharePoint.Tables("https://centri001.sharepoint.com/sites/WhiddonCENTRI", [Implementation="2.0", ViewMode="All"]),
-    #"bad3beb8-7064-4e11-9edd-d62dac5d702d" = Source{[Id="bad3beb8-7064-4e11-9edd-d62dac5d702d"]}[Items],
-    #"Removed Other Columns" = Table.SelectColumns(#"bad3beb8-7064-4e11-9edd-d62dac5d702d",{"Roles", "Effort Management Analysis"}),
-    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([Effort Management Analysis] = true)),
-    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Effort Management Analysis"}),
-    #"Added Index" = Table.AddIndexColumn(#"Removed Columns", "Index", 1, 1, Int64.Type),
-    #"Renamed Columns" = Table.RenameColumns(#"Added Index",{{"Index", "RoleID"}}),
-    #"Added Prefix" = Table.TransformColumns(#"Renamed Columns", {{"RoleID", each "Role" & Text.From(_, "en-AU"), type text}}),
-    #"Renamed Columns1" = Table.RenameColumns(#"Added Prefix",{{"Roles", "RoleName"}}),
-    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"RoleName", type text}, {"RoleID", type text}})
+    Items = Source{[Id="bad3beb8-7064-4e11-9edd-d62dac5d702d"]}[Items]
 in
-    #"Changed Type";
+    Items;
 
-shared Role1 = let
-    Source = LINKRole,
-    RoleName = Source{0}[RoleName]
-in
-    RoleName;
+// Query: Role1
+// Purpose: Retain the AIN compatibility imports without using a SharePoint row position.
+// Notes: Business outputs enumerate every enabled role independently of these three legacy slots.
+shared Role1 = "AIN";
 
-shared Role2 = let
-    Source = LINKRole,
-    RoleName = Source{1}[RoleName]
-in
-    RoleName;
+// Query: Role2
+// Purpose: Retain the RN compatibility imports without using a SharePoint row position.
+shared Role2 = "RN";
 
-shared Role3 = let
-    Source = LINKRole,
-    RoleName = Source{2}[RoleName]
-in
-    RoleName;
+// Query: Role3
+// Purpose: Retain the current EN nursing-lane compatibility imports without using a SharePoint row position.
+shared Role3 = "EN";
 
 shared Folder = let
     Source = Unit1Path
@@ -125,11 +110,12 @@ shared #"IMPORT OriginalResPeriodAvailabilityTABLE1" = let
 in
     #"Added Custom";
 
+// Query: Capacity
+// Purpose: Publish final C### capacity for every enabled role with its unique Settings date.
+// Notes: Retain the complete B publication, including its existing additional fields.
 shared Capacity = let
-    Source = #"IMPORT Role1C###TABLE1",
-    #"Appended Query" = Table.Combine({Source, #"IMPORT C###TABLE2", #"IMPORT Role3C###TABLE"}),
-    #"Merged Queries" = Table.NestedJoin(#"Appended Query", {"Period", "Role"}, PermutationDimensions, {"Period", "RolesList"}, "PermutationDimensions", JoinKind.LeftOuter),
-    #"Expanded PermutationDimensions" = Table.ExpandTableColumn(#"Merged Queries", "PermutationDimensions", {"Date"}, {"Date"}),
+    Source = #"Capacity Final Inputs Prepare",
+    #"Expanded PermutationDimensions" = #"Capacity Calendar Match Prepare"(Source, true),
     #"Sorted Rows" = Table.Sort(#"Expanded PermutationDimensions",{{"Role", Order.Ascending}, {"Resource", Order.Ascending}, {"Period", Order.Ascending}})
 in
     #"Sorted Rows"
@@ -141,7 +127,7 @@ in
 // Output: Role, Resource, Period, Availability, AvailabilityType, Facility, ResAvailability and ResMaxAvail.
 // Notes: Calculation and diagnostic metadata must not become row keys in downstream reporting pivots.
 shared AvailabilityDeveloped = let
-    Source = Table.Combine({#"IMPORT OriginalResPeriodAvailabilityTABLE1", #"IMPORT Role1C#TABLE", #"IMPORT Role1C##TABLE1", #"IMPORT Role1C###TABLE1", #"IMPORT C#TABLE2", #"IMPORT C##TABLE2", #"IMPORT C###TABLE2", #"IMPORT Role3C#TABLE", #"IMPORT Role3C##TABLE", #"IMPORT Role3C###TABLE", #"IMPORT OriginalResPeriodAvailabilityTABLE2", #"IMPORT OriginalResPeriodAvailabilityTABLE3"}),
+    Source = #"Capacity Reporting Inputs Prepare",
     #"Added Custom" = Table.AddColumn(Source, "Facility", each Facility),
     #"Replaced Value" = Table.ReplaceValue(#"Added Custom",0,null,Replacer.ReplaceValue,{"Availability"}),
     #"Removed Columns" = Table.RemoveColumns(#"Replaced Value",{"OriginalAvailability"}),
@@ -295,3 +281,172 @@ shared Unit1Path = let
     Value = #"Filtered Rows"{0}[Value]
 in
     Value;
+
+// Query: Capacity Enabled Roles Prepare
+// Purpose: Read every enabled role label without relying on list order or three positional slots.
+shared #"Capacity Enabled Roles Prepare" = let
+    Selected = Table.SelectColumns(LINKRole, {"Roles", "Effort Management Analysis"}),
+    Enabled = Table.SelectRows(Selected, each [Effort Management Analysis] = true),
+    Named = Table.RenameColumns(Table.SelectColumns(Enabled, {"Roles"}), {{"Roles", "RoleName"}}),
+    Normalized = Table.TransformColumns(Named, {{"RoleName", each
+        if _ = null then null else Text.Trim(Text.From(_)), type nullable text}}),
+    InvalidNames = Table.SelectRows(Normalized, each [RoleName] = null or [RoleName] = ""
+        or List.Contains({".", ".."}, [RoleName]) or Text.Contains([RoleName], "\") or Text.Contains([RoleName], "/")),
+    WithKey = Table.AddColumn(Normalized, "RoleKey", each
+        if [RoleName] = null then null else Text.Upper([RoleName]), type nullable text),
+    Counts = Table.Group(WithKey, {"RoleKey"}, {{"Rows", each Table.RowCount(_), Int64.Type}}),
+    Validated = if Table.IsEmpty(Normalized) or not Table.IsEmpty(InvalidNames)
+            or not Table.IsEmpty(Table.SelectRows(Counts, each [Rows] <> 1)) then
+            error "Capacity requires unique enabled role labels, each identifying one role folder."
+        else Normalized,
+    Sorted = Table.Sort(Validated, {{"RoleName", Order.Ascending}})
+in
+    Table.Buffer(Sorted);
+
+// Query: IMPORT Role A1
+// Purpose: Land one role's A.1 workbook navigation unchanged.
+shared #"IMPORT Role A1" = (RoleName as text) as table =>
+let
+    SourceBinary = Binary.Buffer(File.Contents(Folder & "\" & RoleName & "\CapacityDistrib(A.1)-shifts.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true)
+in
+    Navigation;
+
+// Query: IMPORT Role A2
+// Purpose: Land one role's A.2 workbook navigation unchanged.
+shared #"IMPORT Role A2" = (RoleName as text) as table =>
+let
+    SourceBinary = Binary.Buffer(File.Contents(Folder & "\" & RoleName & "\CapacityDistrib(A.2)-shifts.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true)
+in
+    Navigation;
+
+// Query: IMPORT Role B
+// Purpose: Land one role's B workbook navigation unchanged for both B publications within an evaluation.
+shared #"IMPORT Role B" = (RoleName as text) as table =>
+let
+    SourceBinary = Binary.Buffer(File.Contents(Folder & "\" & RoleName & "\CapacityDistrib(B)-shifts.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true)
+in
+    Table.Buffer(Navigation);
+
+// Query: EXTRACT Role Capacity Table
+// Purpose: Land the exact saved table unchanged; missing or ambiguous bindings remain errors.
+shared #"EXTRACT Role Capacity Table" = (Navigation as table, TableName as text) as table =>
+    Navigation{[Item = TableName, Kind = "Table"]}[Data];
+
+// Query: Capacity Stage Prepare
+// Purpose: Preserve existing capacity units and stage values while validating role-folder ownership and cell keys.
+// Notes: Reporting prunes diagnostic width before buffering. The final C### path retains every B output column.
+shared #"Capacity Stage Prepare" = (Raw as table, RoleName as text, StageName as text, Reporting as logical) as table =>
+let
+    ValueColumn = if StageName = "OriginalAvailability" then "Availability"
+        else if StageName = "C#" then "AvailabilityCapped"
+        else if StageName = "C##" then "C##"
+        else if StageName = "C###" then "C###"
+        else error "Unknown capacity stage.",
+    RequiredColumns = {"Role", "Resource", "Period", ValueColumn}
+        & (if StageName = "C###" then {"ResAvailability", "ResMaxAvail"} else {}),
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(Raw)),
+    CheckedColumns = if List.IsEmpty(MissingColumns) then Raw
+        else error Error.Record("Capacity stage input", RoleName & " " & StageName & " is missing required columns.", [MissingColumns = MissingColumns]),
+    ReportingInputs = List.Distinct(RequiredColumns & {"ResAvailability", "ResMaxAvail", "OriginalAvailability"}),
+    ScopedColumns = if Reporting then Table.SelectColumns(CheckedColumns, ReportingInputs, MissingField.UseNull) else CheckedColumns,
+    Types = {{"Role", type text}, {"Resource", Int64.Type}, {"Period", Int64.Type}, {ValueColumn, Int64.Type}}
+        & (if StageName = "C###" then {{"ResAvailability", Int64.Type}, {"ResMaxAvail", Int64.Type}} else {}),
+    Typed = Table.TransformColumnTypes(ScopedColumns, Types),
+    Snapshot = Table.Buffer(Typed),
+    WrongRoles = Table.SelectRows(Snapshot, each [Role] = null or [Role] <> RoleName),
+    ValidRole = if Table.IsEmpty(WrongRoles) then Snapshot
+        else error Error.Record("Capacity role input", "Saved " & RoleName & " " & StageName
+            & " rows belong to another or a blank role. Refresh and save that role's own workbook before consolidating.",
+            [ExpectedRole = RoleName, Stage = StageName]),
+    MissingKeys = Table.SelectRows(ValidRole, each [Resource] = null or [Period] = null),
+    KeyCounts = Table.Group(Table.SelectColumns(ValidRole, {"Resource", "Period"}), {"Resource", "Period"},
+        {{"Rows", each Table.RowCount(_), Int64.Type}}),
+    DuplicateKeys = Table.SelectRows(KeyCounts, each [Rows] <> 1),
+    Validated = if not Table.IsEmpty(MissingKeys) or not Table.IsEmpty(DuplicateKeys) then
+            error Error.Record("Capacity stage keys", RoleName & " " & StageName & " requires one row per Resource and Period.",
+                [MissingKeys = Table.RowCount(MissingKeys), DuplicateKeys = Table.RowCount(DuplicateKeys)])
+        else ValidRole,
+    WithStage = Table.AddColumn(Validated, "AvailabilityType", each StageName, type text),
+    NamedAvailability = if ValueColumn = "Availability" then WithStage
+        else Table.RenameColumns(WithStage, {{ValueColumn, "Availability"}}),
+    ReportingColumns = {"Role", "Resource", "Period", "Availability", "AvailabilityType", "ResAvailability", "ResMaxAvail", "OriginalAvailability"},
+    Result = if Reporting then Table.SelectColumns(NamedAvailability, ReportingColumns) else NamedAvailability
+in
+    Result;
+
+// Query: Capacity Role Inputs Prepare
+// Purpose: Prepare one enabled role's final B input or its four reporting stages.
+// Notes: Main Capacity reads B only. Reporting binds B once and reuses its navigation for C## and C###.
+shared #"Capacity Role Inputs Prepare" = (RoleName as text, AllStages as logical) as table =>
+let
+    BWorkbook = #"IMPORT Role B"(RoleName),
+    BFinalTable = #"EXTRACT Role Capacity Table"(BWorkbook, "C___TABLE_B"),
+    Final = #"Capacity Stage Prepare"(BFinalTable, RoleName, "C###", AllStages),
+    Result = if not AllStages then Final else
+        let
+            A1Workbook = #"IMPORT Role A1"(RoleName),
+            A2Workbook = #"IMPORT Role A2"(RoleName),
+            OriginalTable = #"EXTRACT Role Capacity Table"(A1Workbook, "ResPeriodAvailabilityTABLE"),
+            CappedTable = #"EXTRACT Role Capacity Table"(A2Workbook, "ResPeriodAvailabilityCapped_C__TABLE"),
+            BIntermediateTable = #"EXTRACT Role Capacity Table"(BWorkbook, "C__TABLE"),
+            Original = #"Capacity Stage Prepare"(OriginalTable, RoleName, "OriginalAvailability", true),
+            Capped = #"Capacity Stage Prepare"(CappedTable, RoleName, "C#", true),
+            Intermediate = #"Capacity Stage Prepare"(BIntermediateTable, RoleName, "C##", true),
+            Stages = Table.Combine({Original, Capped, Intermediate, Final})
+        in
+            Stages
+in
+    Result;
+
+// Query: Capacity Calendar Prepare
+// Purpose: Require unique Settings dates for enabled role/period keys before joining capacity.
+shared #"Capacity Calendar Prepare" = let
+    Roles = List.Buffer(#"Capacity Enabled Roles Prepare"[RoleName]),
+    Selected = Table.SelectColumns(PermutationDimensions, {"Period", "RolesList", "Date"}),
+    Scoped = Table.SelectRows(Selected, each List.Contains(Roles, [RolesList])),
+    Invalid = Table.SelectRows(Scoped, each [Period] = null or not Value.Is([Date], type date)),
+    Counts = Table.Group(Scoped, {"Period", "RolesList"}, {{"Rows", each Table.RowCount(_), Int64.Type}}),
+    Duplicates = Table.SelectRows(Counts, each [Rows] <> 1),
+    Validated = if not Table.IsEmpty(Invalid) or not Table.IsEmpty(Duplicates) then
+            error "Capacity requires one nonblank Settings date per enabled role and Period."
+        else Scoped
+in
+    Table.Buffer(Validated);
+
+// Query: Capacity Calendar Match Prepare
+// Purpose: Match every capacity stage cell to one Settings period without multiplying or silently losing rows.
+shared #"Capacity Calendar Match Prepare" = (Rows as table, IncludeDate as logical) as table =>
+let
+    Joined = Table.NestedJoin(Rows, {"Period", "Role"}, #"Capacity Calendar Prepare",
+        {"Period", "RolesList"}, "CapacityDate", JoinKind.LeftOuter),
+    // Validation and publication consume the same projected rows; do not enumerate role-workbook functions twice.
+    Snapshot = Table.Buffer(Joined),
+    Invalid = Table.SelectRows(Snapshot, each Table.RowCount([CapacityDate]) <> 1),
+    Validated = if Table.IsEmpty(Invalid) then Snapshot
+        else error "Capacity contains role/Period cells missing from the saved Settings calendar.",
+    Result = if IncludeDate then Table.ExpandTableColumn(Validated, "CapacityDate", {"Date"}, {"Date"})
+        else Table.RemoveColumns(Validated, {"CapacityDate"})
+in
+    Result;
+
+// Query: Capacity Final Inputs Prepare
+// Purpose: Collect final C### rows from every enabled role, retaining B's existing schema and values.
+shared #"Capacity Final Inputs Prepare" = let
+    Roles = #"Capacity Enabled Roles Prepare"[RoleName],
+    Tables = List.Transform(Roles, each #"Capacity Role Inputs Prepare"(_, false)),
+    Combined = Table.Combine(Tables)
+in
+    Combined;
+
+// Query: Capacity Reporting Inputs Prepare
+// Purpose: Collect the four reporting stages for every enabled role on the existing reporting grain.
+shared #"Capacity Reporting Inputs Prepare" = let
+    Roles = #"Capacity Enabled Roles Prepare"[RoleName],
+    Tables = List.Transform(Roles, each #"Capacity Role Inputs Prepare"(_, true)),
+    Combined = Table.Combine(Tables),
+    Checked = #"Capacity Calendar Match Prepare"(Combined, false)
+in
+    Checked;

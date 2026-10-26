@@ -1,0 +1,27 @@
+diff --git a/outputs/cs-inclusion-bd-step4/source-gate-20261025/adjacent-source-normalized.m b/outputs/cs-inclusion-bd-step4/source-gate-20261025/workbook-normalized.m
+index 0b020e8..1ff39b4 100644
+--- a/outputs/cs-inclusion-bd-step4/source-gate-20261025/adjacent-source-normalized.m
++++ b/outputs/cs-inclusion-bd-step4/source-gate-20261025/workbook-normalized.m
+@@ -263,16 +263,14 @@ in
+ 
+ shared DayAdjustment = let
+-    Source = Excel.CurrentWorkbook(){[Name="DayAdjustment"]}[Content],
+-    #"Changed Type" = Table.TransformColumnTypes(Source,{{"DayAdjustment", Int64.Type}}),
+-    DayAdjustment1 = #"Changed Type"{0}[DayAdjustment]
++    Source = Excel.CurrentWorkbook(){[Name="DayAdjustment"]}[Content]
+ in
+-    DayAdjustment1;
++    Source;
+ 
+ shared #"IMPORT Roster" = let
+     Source = Excel.Workbook(File.Contents(Unit1Path & "\1. Input\Allocation\Published Roster.xlsx"), null, true),
+-    Combined_Sheet = Source{[Item="Combined",Kind="Sheet"]}[Data],
+-    #"Promoted Headers1" = Table.PromoteHeaders(Combined_Sheet, [PromoteAllScalars=true]),
+-    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", Int64.Type}}),
+-    BUFFER = Table.Buffer(#"Changed Type1")
++    #"Roster Data_Sheet" = Source{[Item="Roster Data",Kind="Sheet"]}[Data],
++    #"Promoted Headers" = Table.PromoteHeaders(#"Roster Data_Sheet", [PromoteAllScalars=true]),
++    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Location", type text}, {"Pay Company", type text}, {"Department", type text}, {"Area", type text}, {"Employee Roster Name", type text}, {"Employment Type", type text}, {"Role", type text}, {"Employee Code", type text}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text}, {"Start Time", type time}, {"End Time", type time}, {"Break Length Minutes", Int64.Type}, {"Shift Length", type number}, {"Shift Net Length", type number}, {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text}, {"Non Attended", type logical}, {"Status", type text}, {"Employee_Code", type text}}),
++    BUFFER = Table.Buffer(#"Changed Type")
+ in
+     BUFFER;

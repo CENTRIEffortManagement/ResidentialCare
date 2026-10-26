@@ -1,0 +1,42 @@
+{
+  "GapSeconds": 3,
+  "ElapsedSeconds": 81.9204756,
+  "IncompleteAttempts": [],
+  "OutputStatus": {
+    "RunId": "20261026-165845-c3c7106c",
+    "RunStatus": "Completed",
+    "CheckedAtUtc": "2026-10-26T06:00:07.2552806Z",
+    "AllVerified": true,
+    "Rows": [
+      {
+        "Id": "JH-RY/Shifts",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-26T06:00:03.8057217Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      }
+    ]
+  },
+  "PeakConcurrency": 1,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "SavedIntermediates": [],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Status": "Completed",
+  "Untimed": [],
+  "RunId": "20261026-165845-c3c7106c",
+  "Rows": [
+    {
+      "Id": "JH-RY/Shifts",
+      "Finish": 81.9089835,
+      "Status": "Completed",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Start": 3.384045,
+      "Attempt": 1
+    }
+  ],
+  "ActiveIntervalSeconds": 78.5249385
+}

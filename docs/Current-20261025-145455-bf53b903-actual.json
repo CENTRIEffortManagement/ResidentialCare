@@ -1,0 +1,194 @@
+{
+  "GapSeconds": 1,
+  "OutputStatus": {
+    "RunId": "20261025-145455-bf53b903",
+    "RunStatus": "Completed",
+    "CheckedAtUtc": "2026-10-25T03:58:43.7366875Z",
+    "AllVerified": true,
+    "Rows": [
+      {
+        "Id": "BD/Role:AIN/1",
+        "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:56:45.3742941Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:AIN/2",
+        "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:57:09.1356023Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:AIN/3",
+        "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:58:40.5300969Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:RN/1",
+        "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:55:55.1654329Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:RN/2",
+        "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:56:19.0368856Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:RN/3",
+        "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:56:49.1509269Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:EN/1",
+        "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:56:01.4735855Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:EN/2",
+        "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:56:25.2390101Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:EN/3",
+        "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T03:56:53.0177541Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      }
+    ]
+  },
+  "Status": "Completed",
+  "ElapsedSeconds": 227.5578789,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ActiveIntervalSeconds": 226.2887578,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Untimed": [],
+  "RunId": "20261025-145455-bf53b903",
+  "Rows": [
+    {
+      "Id": "BD/Role:AIN/1",
+      "Start": 1.2360103,
+      "Status": "Completed",
+      "Finish": 114.0029837,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:AIN/2",
+      "Start": 114.0289631,
+      "Status": "Completed",
+      "Finish": 136.1673572,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:AIN/3",
+      "Start": 136.1900307,
+      "Status": "Completed",
+      "Finish": 227.5474416,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:RN/1",
+      "Start": 1.3143753,
+      "Status": "Completed",
+      "Finish": 65.7754841,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:RN/2",
+      "Start": 65.8037848,
+      "Status": "Completed",
+      "Finish": 86.3942834,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:RN/3",
+      "Start": 86.41829,
+      "Status": "Completed",
+      "Finish": 118.2241941,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:EN/1",
+      "Start": 1.3735325,
+      "Status": "Completed",
+      "Finish": 71.6663425,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:EN/2",
+      "Start": 71.6900916,
+      "Status": "Completed",
+      "Finish": 92.4225819,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    },
+    {
+      "Id": "BD/Role:EN/3",
+      "Start": 92.4482383,
+      "Status": "Completed",
+      "Finish": 120.6651869,
+      "Attempt": 1,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True"
+    }
+  ],
+  "PeakConcurrency": 3,
+  "IncompleteAttempts": [],
+  "SavedIntermediates": []
+}

@@ -1,0 +1,190 @@
+Latest update: full 87-file test incomplete (71 completed, 3 failed, 13 blocked)
+  Run 20261025-134711-a1fa4702, exit 1, 13m01s, peak 12 concurrent batches.
+  Settings Data and Worker Reconciliation passed in all three Units.
+  JH-RY Settings also passed its isolated save diagnostic in 21.337 seconds.
+  The earlier immediate save-confirmation failure was not reproduced; no cause
+  has been established. Read-only diagnostics were added; the guard remains.
+  MutliRoleCheck.xlsx failed in BD, TE and JH-RY during the foreground refresh
+  of MultiRoleAllocationMATRIX/MultiRoleMATRIX: key did not match any rows.
+  Those three jobs did not attempt Save; dependent jobs remained blocked.
+  All 71 completions have save/close/owned-process-exit receipts. No matching
+  owned Excel remains, no uncertain-save jobs, and no coordinator recovery.
+  Details and regression results: settings-save-diagnostic/diagnosis.txt.
+  Machine-readable evidence: settings-save-diagnostic/full-result.json.
+
+Earlier BD live test completed successfully (14/14)
+
+Scope
+  CLIENT/DATExx-Whiddon/runner/src/Invoke-AllUnitsExcelWorkbookRefresh.ps1
+  CLIENT/DATExx-Whiddon/runner/src/ExcelRefreshSafety.ps1
+  scripts/test-excel-refresh-safety.ps1
+
+Changes
+  Refresh every required loaded worksheet query once in the foreground.
+  Deduplicate QueryTables/ListObjects views by the query object's identity.
+  Use the named ListObject as the loaded output's label, without requiring its
+  QueryTable.Name. Traditional standalone queries retain their query names.
+  Record successful completion and verify it without another refresh, including
+  when Excel supplies no RefreshDate. Receipts must belong to this attempt.
+  Retain RefreshAll for remaining connections and PivotTables, temporarily
+  excluding already-refreshed worksheet connections. Restore their settings
+  even if RefreshAll fails; restoration failure prevents saving.
+  Replace the opening delay, 15-second settling delay and three quiet polls
+  with actual readiness checks. Retry busy/unreadable states once per second,
+  bounded by poll count, elapsed time and the existing worker supervisor.
+  Retry Calculate only for recognized Excel/RPC busy rejections, up to 60 calls.
+  Preserve required check-table validation, stop handling, owned-process
+  supervision, file metadata guards and verified save/close behaviour.
+
+Checks passed (exit 0; no Excel execution)
+  test-excel-refresh-safety.ps1
+    Includes the actual worker refresh/check block with fake Excel objects:
+    one refresh per table; dual collection views; distinct tables sharing a
+    connection; timestamp-free verification; stale/unsuccessful receipts;
+    provider errors; cancellation; incomplete state; overflow; failed required
+    checks; remaining RefreshAll work; setting restoration; busy/unreadable
+    retry/deadline bounds; immediate idle readiness; calculation errors;
+    stop requests; process ownership and supervisor save/close enforcement.
+  test-batch-refresh-runner.ps1 - 292 assertions
+  test-batch-runner-recovery.ps1 - 55 recovery checks
+    Its console-log access-denial warning is an injected recovery test.
+  test-parallel-role-refresh-harness.ps1 - seven mock lanes
+  test-runner-file-access.ps1 - 26 synthetic checks
+  test-git-aware-refresh.ps1 - 52 checks; optional LiveProcessChecks not used
+  Legacy status launcher smoke check - exit 0; displays an old saved status
+  git diff --check for the three changed source/test files
+
+Read-only BD validation
+  -Units BD -Batches C1,C2,U4 -ValidateSelectionOnly passed (exit 0).
+  The sandbox attempt failed with Restart Manager RmStartSession error 29.
+  The authorized outside-sandbox retry passed. Excel was not opened.
+  Details: bd-c1-c2-u4-validation-unsandboxed.log
+
+Legacy smoke limitations (not changed)
+  The Unit1 RN launcher does not exist (check exit 2).
+  Legacy global sequence 001 validation fails because no UnitN folders exist
+  (exit 1). These checks cannot pass against the present facility-only layout.
+  The expanded runner's explicit BD selection validated successfully.
+
+Operator live test (not executed by the agent)
+  Use a new run with the saved configured BD roles:
+  ./CLIENT/DATExx-Whiddon/Run-BatchRefreshRunner.cmd -Units BD -Batches C1,C2,U4 -RefreshSelected
+
+  C1: Worker Reconciliation, Capacity-ShiftAvailability, StaffListMaster.
+  C2: A.1, A.2, B for AIN, RN and EN (three parallel role branches).
+  U4: Capacity, Effort, after the selected role outputs.
+  Total: 14 workbooks, five actual batches. Other upstream saved inputs are
+  reused and labelled not refreshed this run. No organisation batches selected.
+  New source changes invalidate older run fingerprints; use a fresh run.
+
+Runtime evidence still needed
+  Confirm actual Excel foreground refresh and exclusion behaviour, successful
+  required checks and save/close, output correctness and per-workbook timings.
+  The 20261025-113700-b7b24154 baseline contains C2/U4 only (11 workbooks), so
+  compare matching workbook/phase times separately from the new 14-file total.
+  The runner prints coordinator.log and the run directory; keep that run ID.
+
+No M source or workbook was edited, synchronized or refreshed by this change.
+Existing user workbook changes and unrelated local outputs were preserved.
+
+Correction after operator run 20261025-124313-e68b1fa6
+  That run failed in BD/Workers during PreparingSynchronousRefresh because
+  QueryTable.Name was blank for UnitPath/PathTABLE. No refresh/save was issued;
+  13 descendants were blocked. Cleanup closed without saving and the supervisor
+  terminated its owned Excel process. The agent examined logs only.
+
+  The new regression test reproduced the old rejection before the fix; see
+  blank-query-name-before-fix.log. The correction enumerates named ListObjects
+  first, then maps QueryTables exposures back to those names using COM object
+  identity. Temporary IUnknown references are balanced immediately. Different
+  tables sharing a connection remain distinct. Standalone unnamed queries,
+  unnamed ListObjects and conflicting output identities still fail closed.
+
+  All six safety/mock suites passed again after this correction (exit 0):
+    blank-query-name-test-excel-refresh-safety.log
+    blank-query-name-test-batch-refresh-runner.log (292 assertions)
+    blank-query-name-test-batch-runner-recovery.log (55 checks)
+    blank-query-name-test-parallel-role-refresh-harness.log (seven lanes)
+    blank-query-name-test-runner-file-access.log (26 checks)
+    blank-query-name-test-git-aware-refresh.log (52 checks)
+
+  Added coverage for blank/null/unreadable/absent query names, ListObject-only
+  and dual-collection views, two unnamed outputs sharing a connection, identity
+  collisions, and the actual worker refresh/check block with blank-named
+  PathTABLE. A separate in-memory Scripting.Dictionary test verified actual COM
+  identity across distinct wrappers, distinct native objects and balanced
+  references; it never starts Excel.
+
+  BD C1/C2/U4 file-access validation passed again outside the sandbox; see
+  blank-query-name-bd-validation.log. Legacy status smoke passed; the two Unit1
+  smoke checks remain blocked by the already-documented missing Unit1 layout.
+  git diff --check passed for the changed runner/test source.
+
+  Ready for the operator to start a fresh BD C1/C2/U4 run using the command
+  above. Do not resume the failed run, whose engine fingerprint is now obsolete.
+  Live Excel results and timing still require that test. No workbook was opened,
+  refreshed, synchronized or saved by the agent during the correction.
+
+Latest operator run: 20261025-125113-eaa573ab (supersedes ready-to-test notes)
+  PathTABLE refreshed successfully. Twelve outputs refreshed inside BD/Workers,
+  then Employees-ALL (2)/ExternalData_3 failed its foreground refresh with
+  0x800A03EC. No workbook was saved; the other 13 jobs were blocked. Cleanup
+  closed without saving and the owned Excel process exited after termination.
+
+  The user authorized saved connection/table metadata inspection only, without
+  opening Excel, refreshing, saving or editing the original workbook. Evidence:
+    worker-reconciliation-metadata.json
+    inspect-worker-reconciliation-metadata.ps1
+
+  Confirmed metadata:
+    Employees-ALL (3)/Employees_ALL: named ListObject, queryTable12.xml,
+      connection 14, Query - Employees-ALL. This output refreshed successfully.
+    Employees-ALL (2)/ExternalData_3: standalone worksheet QueryTable,
+      queryTable13.xml, connection 15, Query - Employees-ALL(1). It failed.
+    Both connections have the identical Mashup connection string, Location
+      Employees-ALL, SQL SELECT * FROM [Employees-ALL], and 36 saved field names.
+    They are separate objects/connections, not duplicate COM exposures.
+    Connection 15 is not explicitly marked deleted. It cannot be omitted using
+      the existing deleted-query exemption.
+    WorkerReconciliation_ISSUES is another standalone worksheet QueryTable,
+      connection 42, not explicitly marked deleted; execution never reached it.
+
+  The remaining failure is localized to the separate worksheet destination's
+  foreground refresh. Its exact cause is not established by saved metadata.
+  The successful common query is evidence against assuming an Employees-ALL M
+  evaluation defect, but does not prove the destination's native Excel failure.
+  Further diagnosis needs the detailed native provider/Excel error before any
+  change that skips a required output or a further full-batch runtime test.
+
+  No runner source or workbook was changed during this metadata inspection.
+  Only connection/table/relationship metadata was read: no worksheet cell XML,
+  M definitions or other workbook contents were inspected. File size and
+  modification timestamp remained unchanged. No Excel application was started.
+
+Successful operator run: 20261025-130607-a635093e
+  Supersedes the blocked status above. The user reported deleting the redundant
+  Employees-ALL (2) sheet before this fresh run. No additional runner patch was
+  made for that deletion.
+
+  BD C1/C2/U4 completed all 14 jobs with exit 0 in 374.133 seconds (6m14s).
+  All 14 logs confirm save, workbook closure and owned Excel/Power Query exit.
+  StaffListMaster's ResourceContract_CHECK gate passed with 11 evaluated rows.
+  There were no error records, duplicate foreground refresh labels, old fixed
+  settling phases or timestamp-triggered verification refreshes in these logs.
+
+  Matching BD C2/U4 scope against run 20261025-113700-b7b24154:
+    11 matching jobs: elapsed span 736.111s -> 248.358s (66.3% reduction).
+    Peak batch concurrency was 3 in both runs.
+    AIN A.1: 232.453s -> 108.841s
+    AIN A.2:  91.399s ->  21.045s
+    AIN B:   266.210s ->  89.274s
+    Capacity: 72.847s ->  13.796s
+    Effort:   73.102s ->  15.301s
+
+  The latest 6m14s total includes three C1 jobs absent from the earlier 12m18s
+  total. The matching-scope span is the timing comparison; individual job times
+  must not be summed as wall time because role branches run concurrently.
+  This is one observed live comparison with different refreshed upstream inputs
+  and possible cache effects, not a controlled causal benchmark. Technical
+  refresh/save/close succeeded; business reconciliation was not audited here.
+  Machine-readable calculations: runtime-comparison.json.

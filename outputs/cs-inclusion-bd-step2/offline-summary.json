@@ -1,0 +1,29 @@
+{
+  "status": "Passed offline checks",
+  "source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+  "sourceSHA256": "272D31377758B8C2E0DBFC5C226364162C1AC97B9C56404A25429EEE0F764385",
+  "sourceContracts": 37,
+  "referenceArithmeticAssertions": 3442,
+  "parser": "Installed Microsoft Power Query extension parser",
+  "parsed": [
+    {
+      "source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "syntax": "Passed",
+      "stage": "Parse"
+    },
+    {
+      "source": "fixtures.pq",
+      "syntax": "Passed",
+      "stage": "Parse"
+    },
+    {
+      "source": "generated-extension.pq",
+      "syntax": "Passed",
+      "stage": "Parse"
+    }
+  ],
+  "nativeFixturesPrepared": 34,
+  "nativeFixturesExecuted": 0,
+  "nativeEvaluationPerformed": false,
+  "limitation": "Reference arithmetic and structural/syntax checks do not execute production M or verify workbook bindings, live data, or refresh."
+}

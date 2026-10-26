@@ -1,0 +1,95 @@
+{
+  "Peak": 2,
+  "Durations": {
+    "BD/Distribution": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:55:30.7920180+00:00",
+      "Seconds": 28.7024051
+    },
+    "BD/Demand": {
+      "SourceRun": "20261026-091113-b86e6a37",
+      "Observed": "2026-10-25T22:13:06.5709909+00:00",
+      "Seconds": 15.670263
+    },
+    "BD/Intervals": {
+      "SourceRun": "20261026-091113-b86e6a37",
+      "Observed": "2026-10-25T22:11:29.0193050+00:00",
+      "Seconds": 14.3539658
+    },
+    "BD/DemandIntervals": {
+      "SourceRun": "20261026-091113-b86e6a37",
+      "Observed": "2026-10-25T22:12:50.8763416+00:00",
+      "Seconds": 81.8330737
+    },
+    "BD/Shifts": {
+      "SourceRun": "20261026-091113-b86e6a37",
+      "Observed": "2026-10-25T22:13:46.8716772+00:00",
+      "Seconds": 137.7721098
+    },
+    "BD/ShiftAverage": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:54:31.0789189+00:00",
+      "Seconds": 53.51917
+    },
+    "BD/Allocation": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:55:02.0238963+00:00",
+      "Seconds": 30.8986695
+    }
+  },
+  "Untimed": [],
+  "TotalSeconds": 265.2463202,
+  "UnknownAdmission": "",
+  "Rows": [
+    {
+      "Start": 0.0,
+      "Status": "Forecast",
+      "Finish": 14.3539658,
+      "Attempt": 1,
+      "Id": "BD/Intervals"
+    },
+    {
+      "Start": 14.3539658,
+      "Status": "Forecast",
+      "Finish": 96.1870395,
+      "Attempt": 1,
+      "Id": "BD/DemandIntervals"
+    },
+    {
+      "Start": 14.3539658,
+      "Status": "Forecast",
+      "Finish": 152.1260756,
+      "Attempt": 1,
+      "Id": "BD/Shifts"
+    },
+    {
+      "Start": 96.1870395,
+      "Status": "Forecast",
+      "Finish": 111.8573025,
+      "Attempt": 1,
+      "Id": "BD/Demand"
+    },
+    {
+      "Start": 152.1260756,
+      "Status": "Forecast",
+      "Finish": 205.6452456,
+      "Attempt": 1,
+      "Id": "BD/ShiftAverage"
+    },
+    {
+      "Start": 205.6452456,
+      "Status": "Forecast",
+      "Finish": 236.54391510000002,
+      "Attempt": 1,
+      "Id": "BD/Allocation"
+    },
+    {
+      "Start": 236.54391510000002,
+      "Status": "Forecast",
+      "Finish": 265.2463202,
+      "Attempt": 1,
+      "Id": "BD/Distribution"
+    }
+  ],
+  "Complete": true
+}

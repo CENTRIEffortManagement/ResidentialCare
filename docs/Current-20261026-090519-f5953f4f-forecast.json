@@ -1,0 +1,71 @@
+{
+  "TotalSeconds": 182.79881780000002,
+  "UnknownAdmission": "",
+  "Untimed": [],
+  "Durations": {
+    "BD/Intervals": {
+      "Seconds": 15.1600076,
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:51:43.3380750+00:00"
+    },
+    "BD/DemandIntervals": {
+      "Seconds": 50.3935763,
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:52:33.7649637+00:00"
+    },
+    "BD/Shifts": {
+      "Seconds": 114.1196402,
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:53:37.5371810+00:00"
+    },
+    "BD/ShiftAverage": {
+      "Seconds": 53.51917,
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:54:31.0789189+00:00"
+    },
+    "BD/Demand": {
+      "Seconds": 20.7330047,
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:52:54.5400410+00:00"
+    }
+  },
+  "Peak": 2,
+  "Complete": true,
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "BD/Intervals",
+      "Status": "Forecast",
+      "Finish": 15.1600076
+    },
+    {
+      "Attempt": 1,
+      "Start": 15.1600076,
+      "Id": "BD/DemandIntervals",
+      "Status": "Forecast",
+      "Finish": 65.5535839
+    },
+    {
+      "Attempt": 1,
+      "Start": 15.1600076,
+      "Id": "BD/Shifts",
+      "Status": "Forecast",
+      "Finish": 129.27964780000002
+    },
+    {
+      "Attempt": 1,
+      "Start": 65.5535839,
+      "Id": "BD/Demand",
+      "Status": "Forecast",
+      "Finish": 86.2865886
+    },
+    {
+      "Attempt": 1,
+      "Start": 129.27964780000002,
+      "Id": "BD/ShiftAverage",
+      "Status": "Forecast",
+      "Finish": 182.79881780000002
+    }
+  ]
+}

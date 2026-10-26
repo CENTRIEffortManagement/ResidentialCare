@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
-// Extracted: 2026-10-05T07:55:23.444Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\CS\CapacityDistrib(B)-shifts.xlsx
+// Extracted: 2026-10-25T22:42:00.035Z
 
 section Section1;
 

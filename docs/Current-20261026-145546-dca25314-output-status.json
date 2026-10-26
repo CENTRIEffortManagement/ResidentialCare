@@ -1,0 +1,781 @@
+{
+  "RunId": "20261026-145546-dca25314",
+  "RunStatus": "PartialOrFailed",
+  "CheckedAtUtc": "2026-10-26T04:04:03.0212844Z",
+  "AllVerified": false,
+  "Rows": [
+    {
+      "Id": "Date/DemandMaster",
+      "RelativePath": "1. Input/Demand-MasterRoster Manual Read.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T04:01:03.3233755Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "TE/AllocationInput",
+      "RelativePath": "UNITS/TE/1. Input/1-AllocationExtracted.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T03:56:48.9707811Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    },
+    {
+      "Id": "TE/Settings",
+      "RelativePath": "UNITS/TE/2. Calculations/Settings Data.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T03:57:11.7531946Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "TE/DemandInput",
+      "RelativePath": "UNITS/TE/1. Input/2-DemandExtract.xlsx",
+      "RunStatus": "Failed",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T01:34:07.4839372Z",
+      "Reason": "Not updated by this run (Failed). Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Workers",
+      "RelativePath": "UNITS/TE/1. Input/Worker Reconciliation.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T03:58:26.5640856Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "TE/Availability",
+      "RelativePath": "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "RunStatus": "Failed",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T01:32:37.8389541Z",
+      "Reason": "Not updated by this run (Failed). Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Staff",
+      "RelativePath": "UNITS/TE/2. Calculations/StaffListMaster.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:50:43.8480388Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Availability did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Intervals",
+      "RelativePath": "UNITS/TE/2. Calculations/Intervals.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:51:41.5085356Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/DemandInput did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/DemandIntervals",
+      "RelativePath": "UNITS/TE/2. Calculations/DemandIntervals.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:53:06.8513510Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Intervals did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Demand",
+      "RelativePath": "UNITS/TE/2. Calculations/Demand.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:53:26.6322501Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/DemandIntervals did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Shifts",
+      "RelativePath": "UNITS/TE/2. Calculations/Shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:52:48.1964737Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Intervals did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/ShiftAverage",
+      "RelativePath": "UNITS/TE/2. Calculations/AllocationByShiftAverage.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:53:31.5351824Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Shifts did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Allocation",
+      "RelativePath": "UNITS/TE/2. Calculations/Allocation.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:53:51.1449193Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/ShiftAverage did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Distribution",
+      "RelativePath": "UNITS/TE/2. Calculations/Shift-StaffDistribution.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:54:12.0663483Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Allocation did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:AIN/1",
+      "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:05.1871888Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:AIN/2",
+      "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:54.2620945Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:AIN/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:AIN/3",
+      "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:58:33.3487029Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:AIN/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:RN/1",
+      "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:55:21.8750495Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:RN/2",
+      "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:10.4514418Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:RN/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:RN/3",
+      "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:57:14.5072742Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:RN/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:EN/1",
+      "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:55:19.4751740Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:EN/2",
+      "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:08.1315237Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:EN/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:EN/3",
+      "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:57:05.1416812Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:EN/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:CS/1",
+      "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T00:49:35.0723680Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:CS/2",
+      "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T00:50:05.6181868Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:CS/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Role:CS/3",
+      "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T00:50:45.4672090Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:CS/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Capacity",
+      "RelativePath": "UNITS/TE/2. Calculations/Capacity.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T01:05:42.8307654Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Role:AIN/3 did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:AIN/1: Prerequisite TE/Staff did not complete.",
+        "TE/Role:EN/1: Prerequisite TE/Staff did not complete.",
+        "TE/Role:RN/1: Prerequisite TE/Staff did not complete.",
+        "TE/Role:CS/1: Prerequisite TE/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "TE/Effort",
+      "RelativePath": "UNITS/TE/2. Calculations/Effort.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-22T01:24:07.4513502Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite TE/Capacity did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "TE/DemandInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ShiftUnitDemandHRS/ShiftUnitDemandHRS' failed foreground refresh: [Demand Extraction validation failed] Unique timing and exact shift spans: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nComplete demand and fractional attendance conversion: Each enabled Role Group calendar cell requires exactly one settings shift definition.\nRetained hours across all full and partial planning fortnights: Each enabled Role Group calendar cell requires exactly one settings shift definition.",
+        "TE/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+        "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+        "TE/Role:AIN/1: Prerequisite TE/Staff did not complete.",
+        "TE/Role:EN/1: Prerequisite TE/Staff did not complete.",
+        "TE/Role:RN/1: Prerequisite TE/Staff did not complete.",
+        "TE/Role:CS/1: Prerequisite TE/Staff did not complete.",
+        "TE/Allocation: Prerequisite TE/ShiftAverage did not complete.",
+        "TE/Distribution: Prerequisite TE/Allocation did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/AllocationInput",
+      "RelativePath": "UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T03:56:56.4455366Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    },
+    {
+      "Id": "JH-RY/Settings",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T03:57:18.7101132Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "JH-RY/DemandInput",
+      "RelativePath": "UNITS/JH-RY/1. Input/2-DemandExtract.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T04:01:27.3443189Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "JH-RY/Workers",
+      "RelativePath": "UNITS/JH-RY/1. Input/Worker Reconciliation.xlsx",
+      "RunStatus": "Failed",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T03:54:53.1590103Z",
+      "Reason": "Not updated by this run (Failed). Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Availability",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T03:50:58.9480174Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Workers did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Staff",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/StaffListMaster.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:50:29.4561426Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Availability did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Intervals",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Intervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T04:01:40.9356945Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "JH-RY/DemandIntervals",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/DemandIntervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T04:03:43.4805983Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "JH-RY/Demand",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Demand.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-26T04:03:58.6683060Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "JH-RY/Shifts",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+      "RunStatus": "Failed",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:53:11.1705246Z",
+      "Reason": "Not updated by this run (Failed). Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/ShiftAverage",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AllocationByShiftAverage.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:53:55.1793898Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Shifts did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Allocation",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Allocation.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:54:22.7184266Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/ShiftAverage did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Distribution",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Shift-StaffDistribution.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:54:50.2759309Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Allocation did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:AIN/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:50.3154684Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:AIN/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:57:38.5377971Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:AIN/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:AIN/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:59:14.0025399Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:AIN/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:RN/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:55:53.3085978Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:RN/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:33.2130117Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:RN/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:RN/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:57:24.4808077Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:RN/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:EN/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:55:59.8921404Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:EN/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:56:43.4656926Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:EN/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:EN/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:57:37.7368139Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:EN/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:CS/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T00:49:35.0723680Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:CS/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T00:50:05.6181868Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:CS/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Role:CS/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T00:50:45.4672090Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Staff did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:CS/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-26T01:05:42.8307654Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Role:AIN/3 did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:AIN/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Role:EN/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Role:RN/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Role:CS/1: Prerequisite JH-RY/Staff did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T04:02:40.1784277Z",
+      "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Capacity did not complete. The output predates a current declared input.",
+      "RootCauses": [
+        "JH-RY/Workers: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'IMPORT Leave Balances/IMPORT_Leave_Balances' failed foreground refresh: [Expression.Error] The column 'Employee Code' of the table wasn't found.",
+        "JH-RY/Shifts: Worker exit 1; phase Calculating; save confirmed: False; Unable to get the Calculate property of the Application class",
+        "JH-RY/Role:AIN/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Role:EN/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Role:RN/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Role:CS/1: Prerequisite JH-RY/Staff did not complete.",
+        "JH-RY/Allocation: Prerequisite JH-RY/ShiftAverage did not complete.",
+        "JH-RY/Distribution: Prerequisite JH-RY/Allocation did not complete."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    }
+  ]
+}

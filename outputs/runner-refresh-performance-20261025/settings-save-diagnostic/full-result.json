@@ -1,0 +1,2125 @@
+{
+  "RunId": "20261025-134711-a1fa4702",
+  "Scope": "RunAll: BD, TE, JH-RY plus configured shared/organisation release chain through TableauConnect-LB.xlsx",
+  "ValidationPassed": true,
+  "HiddenExcel": true,
+  "Status": "PartialOrFailed",
+  "ExitCode": 1,
+  "Started": "2026-10-25T02:47:11.601732Z",
+  "Finished": "2026-10-25T03:00:12.4131419Z",
+  "ElapsedSeconds": 780.8114099,
+  "Selected": 87,
+  "Counts": [
+    {
+      "Name": "Blocked",
+      "Count": 13
+    },
+    {
+      "Name": "Completed",
+      "Count": 71
+    },
+    {
+      "Name": "Failed",
+      "Count": 3
+    }
+  ],
+  "PeakConcurrentBatches": 12,
+  "Fingerprint": "1DA5522B9C8FE6603E3812DCD6E45DA35E0A3A15F3030FE5F4DCE7D9735FDDD2",
+  "SaveCloseOwnedExitReceipts": 71,
+  "FailedSavedOrSaveAttempted": 0,
+  "FailedClosedWithoutSave": 3,
+  "NeedsInspection": 0,
+  "OwnedExcelStillMatching": 0,
+  "ProcessInspectionErrors": 0,
+  "UnconfirmedSaveObservations": 0.0,
+  "RecoveryFiles": 0,
+  "CoordinatorErrorFiles": 0,
+  "Interpretation": "Settings Data passed in all three Units. The original JH-RY immediate save-confirmation failure did not recur; its cause remains unproven. All three MutliRoleCheck.xlsx files failed the MultiRoleAllocationMATRIX/MultiRoleMATRIX foreground refresh with key-not-found errors before saving. Full 87-file validation remains incomplete.",
+  "Jobs": [
+    {
+      "Job": "BD/Role:AIN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:57:49.3421313Z",
+      "Finished": "2026-10-25T02:58:19.6639478Z",
+      "Directory": "job-016\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1344407,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Staff",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:50:30.3552761Z",
+      "Finished": "2026-10-25T02:50:47.1618891Z",
+      "Directory": "job-031\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0538555,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/History",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/Outcomes did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "JH-RY/ShiftAverage",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:14.8647055Z",
+      "Finished": "2026-10-25T02:53:58.6606088Z",
+      "Directory": "job-061\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.5265869,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/StaffAll",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:50:47.6424793Z",
+      "Finished": "2026-10-25T02:51:03.0465016Z",
+      "Directory": "job-076\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0536486,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Availability",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:49:22.7060611Z",
+      "Finished": "2026-10-25T02:50:15.9291171Z",
+      "Directory": "job-055\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0733969,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:EN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:55:31.544477Z",
+      "Finished": "2026-10-25T02:56:13.163603Z",
+      "Directory": "job-047\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0976426,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Distribution",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:54:27.120134Z",
+      "Finished": "2026-10-25T02:54:54.3827539Z",
+      "Directory": "job-063\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.3385274,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/AllocationInput",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:47:15.1182053Z",
+      "Finished": "2026-10-25T02:47:49.5545837Z",
+      "Directory": "job-026\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1778478,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Capacity",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:59:18.0082291Z",
+      "Finished": "2026-10-25T02:59:34.8400361Z",
+      "Directory": "job-074\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1028395,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/AllocationInput",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:47:15.2321896Z",
+      "Finished": "2026-10-25T02:47:44.5591111Z",
+      "Directory": "job-051\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1876275,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:RN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:35.554508Z",
+      "Finished": "2026-10-25T02:55:33.5154338Z",
+      "Directory": "job-043\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1282053,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Effort",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite TE/MultiRole did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "JH-RY/Role:RN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:38.0273396Z",
+      "Finished": "2026-10-25T02:57:30.866474Z",
+      "Directory": "job-070\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0781226,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:RN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:54:31.5228499Z",
+      "Finished": "2026-10-25T02:56:53.8269917Z",
+      "Directory": "job-018\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1216108,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Demand",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:52:33.8070363Z",
+      "Finished": "2026-10-25T02:52:54.540041Z",
+      "Directory": "job-009\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1562316,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/LeaveBalanceReduction",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/LeaveBalanceStats did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "BD/Intervals",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:28.1780674Z",
+      "Finished": "2026-10-25T02:51:43.338075Z",
+      "Directory": "job-007\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0671691,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Effort",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite BD/MultiRole did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "BD/Settings",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:47:43.2937187Z",
+      "Finished": "2026-10-25T02:48:04.2110674Z",
+      "Directory": "job-002\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0443043,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:RN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:14.1636727Z",
+      "Finished": "2026-10-25T02:57:19.2530914Z",
+      "Directory": "job-045\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0787312,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/DemandIntervals",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:44.5794331Z",
+      "Finished": "2026-10-25T02:53:09.9151736Z",
+      "Directory": "job-033\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1184185,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:EN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:54:31.7715172Z",
+      "Finished": "2026-10-25T02:56:52.1122682Z",
+      "Directory": "job-021\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1132757,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/DemandInput",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:05.7995037Z",
+      "Finished": "2026-10-25T02:51:29.8647506Z",
+      "Directory": "job-053\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.046456,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Role:AIN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:59.8037573Z",
+      "Finished": "2026-10-25T02:57:42.3079382Z",
+      "Directory": "job-066\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.135453,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Role:EN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:11.5436822Z",
+      "Finished": "2026-10-25T02:56:48.9823159Z",
+      "Directory": "job-072\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1019716,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:RN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:57:32.1984305Z",
+      "Finished": "2026-10-25T02:58:13.1353417Z",
+      "Directory": "job-020\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0633356,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/LeaveBalanceReporting",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/LeaveBalanceReduction did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "BD/DemandIntervals",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:43.3713874Z",
+      "Finished": "2026-10-25T02:52:33.7649637Z",
+      "Directory": "job-008\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1067302,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/EffortAll",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite TE/Effort did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "JH-RY/Role:EN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:59.1443091Z",
+      "Finished": "2026-10-25T02:56:11.5034131Z",
+      "Directory": "job-071\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0911189,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Allocation",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:35.3658903Z",
+      "Finished": "2026-10-25T02:53:55.2236964Z",
+      "Directory": "job-037\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0639843,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Shifts",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:44.6600948Z",
+      "Finished": "2026-10-25T02:52:52.293246Z",
+      "Directory": "job-035\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.3082648,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Settings",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:47:49.5749066Z",
+      "Finished": "2026-10-25T02:48:07.9421574Z",
+      "Directory": "job-027\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0368611,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Workers",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:48:03.8485411Z",
+      "Finished": "2026-10-25T02:49:22.6774828Z",
+      "Directory": "job-054\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.6224077,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:EN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:52.2193739Z",
+      "Finished": "2026-10-25T02:57:29.6213667Z",
+      "Directory": "job-022\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1024146,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Demand",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:15.8368112Z",
+      "Finished": "2026-10-25T02:53:37.2632836Z",
+      "Directory": "job-059\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1364327,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/DemandInput",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:05.6990354Z",
+      "Finished": "2026-10-25T02:51:29.5671622Z",
+      "Directory": "job-028\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0417544,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:AIN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:58.980305Z",
+      "Finished": "2026-10-25T02:58:37.5327397Z",
+      "Directory": "job-042\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0691635,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/MultiRole",
+      "Status": "Failed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'MultiRoleAllocationMATRIX/MultiRoleMATRIX' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table.",
+      "Started": "2026-10-25T02:54:54.4333605Z",
+      "Finished": "2026-10-25T02:55:13.2157998Z",
+      "Directory": "job-064\\attempt-1",
+      "SaveConfirmed": false,
+      "SaveCloseOwnedExitReceipt": false,
+      "CloseWithoutSavingLogged": true,
+      "SaveAttempted": false,
+      "AfterSave": [],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/HistoryRead",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/History did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "TE/Capacity",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:58:37.5598337Z",
+      "Finished": "2026-10-25T02:58:53.3857377Z",
+      "Directory": "job-049\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1061408,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Distribution",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:55:02.0896129Z",
+      "Finished": "2026-10-25T02:55:30.792018Z",
+      "Directory": "job-013\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.3013445,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Settings",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:47:44.5825388Z",
+      "Finished": "2026-10-25T02:48:03.8256616Z",
+      "Directory": "job-052\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0455548,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:EN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:35.6611904Z",
+      "Finished": "2026-10-25T02:55:31.4137427Z",
+      "Directory": "job-046\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0975715,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:AIN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:54:31.2965027Z",
+      "Finished": "2026-10-25T02:57:49.3124219Z",
+      "Directory": "job-015\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1246549,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/Cost",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/Inefficiencies did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "JH-RY/Staff",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:50:15.9580935Z",
+      "Finished": "2026-10-25T02:50:32.4600648Z",
+      "Directory": "job-056\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.045525,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/Reporting",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/Cost did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "BD/Role:RN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:53.8663731Z",
+      "Finished": "2026-10-25T02:57:32.1609041Z",
+      "Directory": "job-019\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0858583,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/LeaveBalanceStats",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/Reporting did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "BD/Availability",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:49:27.2526681Z",
+      "Finished": "2026-10-25T02:50:31.1124227Z",
+      "Directory": "job-005\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0653903,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Workers",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:48:08.0639685Z",
+      "Finished": "2026-10-25T02:49:34.8124053Z",
+      "Directory": "job-029\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.5846112,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:EN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:57:29.6795451Z",
+      "Finished": "2026-10-25T02:58:12.8773022Z",
+      "Directory": "job-023\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0756061,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/ShiftAverage",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:37.5597489Z",
+      "Finished": "2026-10-25T02:54:31.0789189Z",
+      "Directory": "job-011\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.6471046,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Shifts",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:43.4175408Z",
+      "Finished": "2026-10-25T02:53:37.537181Z",
+      "Directory": "job-010\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.2084677,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Distribution",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:55.2533062Z",
+      "Finished": "2026-10-25T02:54:15.9790514Z",
+      "Directory": "job-038\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.2684194,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:AIN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:35.4484912Z",
+      "Finished": "2026-10-25T02:56:11.7245291Z",
+      "Directory": "job-040\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.16779,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Role:EN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:49.0383535Z",
+      "Finished": "2026-10-25T02:57:43.7462527Z",
+      "Directory": "job-073\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0666143,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Workers",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:48:04.2334337Z",
+      "Finished": "2026-10-25T02:49:27.2260527Z",
+      "Directory": "job-004\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.5777978,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Effort",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite JH-RY/MultiRole did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "JH-RY/Role:AIN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:57:42.3402959Z",
+      "Finished": "2026-10-25T02:59:17.9826957Z",
+      "Directory": "job-067\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0597618,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/DemandInput",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:05.612007Z",
+      "Finished": "2026-10-25T02:51:28.1578614Z",
+      "Directory": "job-003\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0500516,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Availability",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:49:34.841945Z",
+      "Finished": "2026-10-25T02:50:30.3316445Z",
+      "Directory": "job-030\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0652476,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Allocation",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:58.7073669Z",
+      "Finished": "2026-10-25T02:54:27.0770238Z",
+      "Directory": "job-062\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0973297,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/MultiRole",
+      "Status": "Failed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'MultiRoleAllocationMATRIX/MultiRoleMATRIX' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table.",
+      "Started": "2026-10-25T02:54:16.0156503Z",
+      "Finished": "2026-10-25T02:54:34.7324175Z",
+      "Directory": "job-039\\attempt-1",
+      "SaveConfirmed": false,
+      "SaveCloseOwnedExitReceipt": false,
+      "CloseWithoutSavingLogged": true,
+      "SaveAttempted": false,
+      "AfterSave": [],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/AllocationInput",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:47:15.0334282Z",
+      "Finished": "2026-10-25T02:47:43.2675443Z",
+      "Directory": "job-001\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1825896,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/MultiRole",
+      "Status": "Failed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'MultiRoleAllocationMATRIX/MultiRoleMATRIX' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table.",
+      "Started": "2026-10-25T02:55:30.8282257Z",
+      "Finished": "2026-10-25T02:55:46.7264023Z",
+      "Directory": "job-014\\attempt-1",
+      "SaveConfirmed": false,
+      "SaveCloseOwnedExitReceipt": false,
+      "CloseWithoutSavingLogged": true,
+      "SaveAttempted": false,
+      "AfterSave": [],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/Outcomes",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/EffortAll did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "BD/Staff",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:50:31.1616259Z",
+      "Finished": "2026-10-25T02:50:47.6194166Z",
+      "Directory": "job-006\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0484496,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Allocation",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:54:31.1252268Z",
+      "Finished": "2026-10-25T02:55:02.0238963Z",
+      "Directory": "job-012\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.091687,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:RN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:55:33.570846Z",
+      "Finished": "2026-10-25T02:56:14.0970815Z",
+      "Directory": "job-044\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0910379,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Capacity",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:59:57.5443214Z",
+      "Finished": "2026-10-25T03:00:12.3738397Z",
+      "Directory": "job-024\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1316128,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Date/DemandMaster",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:48:07.9657529Z",
+      "Finished": "2026-10-25T02:51:05.5828914Z",
+      "Directory": "job-000\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1837882,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Intervals",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:29.5926949Z",
+      "Finished": "2026-10-25T02:51:44.5547172Z",
+      "Directory": "job-032\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0614962,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "Org/Inefficiencies",
+      "Status": "Blocked",
+      "NeedsInspection": false,
+      "Message": "Prerequisite Org/Outcomes did not complete.",
+      "Started": "",
+      "Finished": "",
+      "Directory": ""
+    },
+    {
+      "Job": "JH-RY/Role:RN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:55:58.1455902Z",
+      "Finished": "2026-10-25T02:56:37.8931194Z",
+      "Directory": "job-069\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0892388,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:EN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:13.2001805Z",
+      "Finished": "2026-10-25T02:57:12.3533137Z",
+      "Directory": "job-048\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1592905,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Shifts",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:46.2034841Z",
+      "Finished": "2026-10-25T02:53:14.789086Z",
+      "Directory": "job-060\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.2802508,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Intervals",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:29.8892374Z",
+      "Finished": "2026-10-25T02:51:45.9489652Z",
+      "Directory": "job-057\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0599973,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "BD/Role:AIN/3",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:58:19.7011718Z",
+      "Finished": "2026-10-25T02:59:57.5089145Z",
+      "Directory": "job-017\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0649887,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/ShiftAverage",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:52:52.3587946Z",
+      "Finished": "2026-10-25T02:53:35.3427805Z",
+      "Directory": "job-036\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.4991181,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Role:RN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:58.9499644Z",
+      "Finished": "2026-10-25T02:55:58.0895999Z",
+      "Directory": "job-068\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.0961616,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/Role:AIN/1",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:58.8122133Z",
+      "Finished": "2026-10-25T02:56:59.7639238Z",
+      "Directory": "job-065\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1513244,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Demand",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:53:09.9412558Z",
+      "Finished": "2026-10-25T02:53:29.9244744Z",
+      "Directory": "job-034\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1635363,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "JH-RY/DemandIntervals",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:51:46.0059379Z",
+      "Finished": "2026-10-25T02:53:15.8098042Z",
+      "Directory": "job-058\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.1005304,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    },
+    {
+      "Job": "TE/Role:AIN/2",
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Started": "2026-10-25T02:56:11.7983166Z",
+      "Finished": "2026-10-25T02:56:58.9430625Z",
+      "Directory": "job-041\\attempt-1",
+      "SaveConfirmed": true,
+      "SaveCloseOwnedExitReceipt": true,
+      "CloseWithoutSavingLogged": false,
+      "SaveAttempted": true,
+      "AfterSave": [
+        {
+          "Saved": true,
+          "SavedType": "System.Boolean",
+          "SaveElapsedSeconds": 0.129906,
+          "ExcelReady": true,
+          "CalculationState": 0,
+          "ActiveRefreshes": [],
+          "Errors": {}
+        }
+      ],
+      "UnconfirmedSaveObservations": 0,
+      "OwnedExcelStillMatching": false,
+      "ProcessInspectionError": null
+    }
+  ]
+}

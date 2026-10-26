@@ -1,0 +1,67 @@
+Settings Data save diagnosis and full-run validation, 25 October 2026
+
+Settings Data
+  Added read-only save diagnostics to the existing worker: raw Saved value and
+  type, Excel readiness/calculation state, refresh activity, file stamp, and
+  timing around refresh-setting restoration and Save.
+  Preserved the save-confirmation guard. No forced Saved flag, repeated Save,
+  or successful result based only on a changed file stamp.
+  An unconfirmed save gets two bounded observations, then still fails under
+  the original guard. Successful saves get no added fixed sleep.
+
+  Isolated run: 20261025-134538-117441dd
+  Scope: JH-RY/Settings only, using the saved AllocationInput without refresh.
+  Validation passed. Hidden Excel refreshed, saved and closed the workbook.
+  Completed, exit 0, 21.337 seconds. Owned Excel/Power Query exit confirmed.
+  Saved was Boolean false before Save and Boolean true immediately afterward.
+  Excel was ready, calculation complete, and no refresh activity remained.
+
+  Full run: 20261025-134711-a1fa4702
+  Settings passed in BD, TE and JH-RY. The earlier JH-RY save-confirmation
+  failure did not reproduce in either this run or the isolated run. Its cause
+  remains unproven. Instrumentation and different run conditions can affect
+  timing; these successes are not evidence of a root-cause correction.
+  Pre-test Settings copies and verified hash receipts are in this directory.
+
+Full runner test
+  Scope: all 87 configured files, BD/TE/JH-RY plus the shared/organisation
+  release chain ending at TableauConnect-LB.xlsx. Used saved client roles.
+  Full file-access validation passed before Excel opened.
+  Hidden Excel, unchanged 30-minute per-workbook timeout, maximum 12 batches.
+  Elapsed: 780.811 seconds (13 minutes 1 second). Peak concurrency: 12.
+  Result: PartialOrFailed, exit 1; 71 Completed, 3 Failed, 13 Blocked.
+
+  All 71 completed jobs have supervisor save/close/owned-process-exit receipts.
+  All three failed jobs closed without saving; none attempted Save.
+  No matching owned Excel process remains; zero process-inspection errors.
+  No jobs require uncertain-save inspection. No coordinator-error or state-
+  recovery files were generated. No unconfirmed-save observations occurred.
+  StaffListMaster required checks passed in all three Units, 11 results each.
+  Worker Reconciliation passed in all three Units after the user's copies.
+
+  Failures, all during foreground refresh of
+  MultiRoleAllocationMATRIX/MultiRoleMATRIX:
+    CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/MutliRoleCheck.xlsx
+    CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/MutliRoleCheck.xlsx
+    CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/MutliRoleCheck.xlsx
+  Error: [Expression.Error] The key didn't match any rows in the table.
+  Logs alone do not identify the missing key or establish its cause.
+  Unit Effort jobs and downstream organisation/Leave Balance files were blocked.
+  The complete 87-file sequence has therefore not passed validation.
+  No MultiRole M source or workbook definitions were inspected or edited.
+
+Runner checks
+  Passed: 29 save-diagnostic checks, 292 batch-runner assertions, 55 recovery
+  checks, Excel-refresh safety suite, seven mock role lanes, 26 file-access
+  checks, 52 Git-aware checks, and git diff --check.
+  Legacy smoke: status passed. RN validation remains blocked by the absent
+  Unit1 launcher; global sequence 001 remains blocked by no UnitN folders.
+  These legacy limitations do not describe the expanded BD/TE/JH-RY selection,
+  whose validation passed. The detailed smoke logs are retained here.
+
+Evidence
+  isolated-result.json and full-result.json contain the result calculations.
+  Main log:
+  CLIENT/DATExx-Whiddon/RunLogs/BatchRefresh/20261025-134711-a1fa4702/coordinator.log
+  Failed attempts: job-014 (BD), job-039 (TE), job-064 (JH-RY), all attempt-1.
+  Full console and validation logs are retained in this directory.

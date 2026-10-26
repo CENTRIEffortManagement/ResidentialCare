@@ -1,0 +1,186 @@
+{
+  "Status": "PartialOrFailed",
+  "Untimed": [
+    {
+      "Status": "Blocked",
+      "Id": "BD/Availability",
+      "Predecessors": [
+        "BD/Workers",
+        "BD/AllocationInput",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Workers did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Staff",
+      "Predecessors": [
+        "BD/Availability",
+        "BD/Workers",
+        "BD/AllocationInput",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Availability did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:AIN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:AIN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/1"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:AIN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/2"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:RN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:RN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/1"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:RN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/2"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:EN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:EN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/1"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Role:EN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/2"
+      ],
+      "Reason": "Prerequisite BD/Staff did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Capacity",
+      "Predecessors": [
+        "BD/Role:AIN/3",
+        "BD/Role:EN/3",
+        "BD/Role:RN/3",
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Role:AIN/3 did not complete."
+    },
+    {
+      "Status": "Blocked",
+      "Id": "BD/Effort",
+      "Predecessors": [
+        "BD/Capacity",
+        "BD/Demand",
+        "BD/Allocation",
+        "BD/Distribution",
+        "BD/MultiRole",
+        "BD/Staff",
+        "BD/Settings"
+      ],
+      "Reason": "Prerequisite BD/Capacity did not complete."
+    }
+  ],
+  "IncompleteAttempts": [],
+  "SavedIntermediates": [],
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Rows": [
+    {
+      "Start": 2.2908894,
+      "Finish": 8.4407537,
+      "Status": "Failed",
+      "Id": "BD/Workers",
+      "Attempt": 1
+    }
+  ],
+  "RunId": "20261025-124313-e68b1fa6",
+  "ElapsedSeconds": 8.456979,
+  "PeakConcurrency": 1,
+  "ActiveIntervalSeconds": 6.1498643,
+  "GapSeconds": 2,
+  "OriginalIllustrativeBaselineSeconds": 1043
+}

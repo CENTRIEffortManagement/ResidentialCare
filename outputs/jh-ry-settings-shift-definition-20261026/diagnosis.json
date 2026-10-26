@@ -1,0 +1,57 @@
+{
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+  "WorkbookSHA256": "3F82F15CF9D28FB747B8A940B405C2082A4F20C649B0128C79C7B066055CE157",
+  "WorkbookUnchanged": true,
+  "ShiftDefinitionSource": {
+    "Table": "ShiftPeriod",
+    "Sheet": "ShiftHours",
+    "Range": "A30:G42",
+    "Rows": 12,
+    "Roles": [
+      "RN",
+      "AIN",
+      "AINC4",
+      "EN"
+    ],
+    "CSDefinitions": 0,
+    "RoleOrShiftLabelFormulaCells": 0
+  },
+  "Calendar": {
+    "Table": "PermutationDimensions",
+    "Sheet": "DimensionPermutations",
+    "Range": "A1:E349",
+    "Rows": 348,
+    "DistinctDates": 29,
+    "Roles": [
+      "AIN",
+      "CS",
+      "EN",
+      "RN"
+    ]
+  },
+  "MissingDefinitionRows": 87,
+  "MissingPairs": [
+    {
+      "Role": "CS",
+      "Shift": "AM",
+      "CalendarRows": 29,
+      "MatchingDefinitions": 0
+    },
+    {
+      "Role": "CS",
+      "Shift": "PM",
+      "CalendarRows": 29,
+      "MatchingDefinitions": 0
+    },
+    {
+      "Role": "CS",
+      "Shift": "NIGHT",
+      "CalendarRows": 29,
+      "MatchingDefinitions": 0
+    }
+  ],
+  "RootCause": "Allocation-derived calendar includes CS AM/PM/NIGHT, while the manually configured ShiftPeriod table contains no CS definitions.",
+  "WorkbookChanges": false,
+  "RefreshInvoked": false,
+  "ExtractedMSyntax": "passed"
+}

@@ -1,27 +1,33 @@
 // Power Query from: Capacity-ShiftAvailability.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Capacity-ShiftAvailability.xlsx
-// Extracted: 2026-10-21T07:14:26.972Z
+// Extracted: 2026-10-26T21:12:02.488Z
 
 section Section1;
 
 // Query: IMPORT AllocationExtracted
-// Purpose: Read the unit allocation rows already consumed by Settings, without the removed ResRolesProportion table.
+// Purpose: Land the unit's saved AllocationExtracted table unchanged for role shares and CS worker membership.
 shared #"IMPORT AllocationExtracted" = let
     SourcePath = #"FilePath - 1Input" & "\1-AllocationExtracted.xlsx",
     SourceBinary = File.Contents(SourcePath),
     Navigation = Excel.Workbook(SourceBinary, null, true),
-    Matches = Table.SelectRows(Navigation, each [Item] = "AllocationExtracted" and [Kind] = "Table"),
-    MatchCount = Table.RowCount(Matches),
-    Allocation = if MatchCount = 1 then Matches{0}[Data]
-        else error Error.Record("Allocation import", "Expected exactly one AllocationExtracted table.", [Matches = MatchCount]),
-    RequiredColumns = {"Location", "Code", "Role", "Hours", "Name"},
-    AvailableColumns = Table.ColumnNames(Allocation),
+    Allocation = Navigation{[Item = "AllocationExtracted", Kind = "Table"]}[Data]
+in
+    Allocation;
+
+// Query: AllocationExtracted_Prepare
+// Purpose: Prepare the existing role-share fields plus the original source-role and employee-ID evidence needed by CS membership.
+// Notes: Retain full text employee IDs. Narrow the saved table before buffering; no Master Roster read is required.
+shared AllocationExtracted_Prepare = let
+    Source = #"IMPORT AllocationExtracted",
+    RequiredColumns = {"Location", "Code", "Role", "Hours", "Name", "RoleShift", "Employee Code"},
+    AvailableColumns = Table.ColumnNames(Source),
     MissingColumns = List.Difference(RequiredColumns, AvailableColumns),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(Allocation, RequiredColumns)
-        else error Error.Record("Allocation import", "AllocationExtracted is missing role-share fields.", [MissingColumns = MissingColumns]),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(Source, RequiredColumns)
+        else error Error.Record("Allocation preparation", "AllocationExtracted is missing role-share or CS identity fields.", [MissingColumns = MissingColumns]),
     Normalized = Table.TransformColumns(Selected, {
         {"Location", AvailabilityText, type nullable text}, {"Code", AvailabilityText, type nullable text},
-        {"Role", AvailabilityText, type nullable text}, {"Name", AvailabilityText, type nullable text}}),
+        {"Role", AvailabilityText, type nullable text}, {"Name", AvailabilityText, type nullable text},
+        {"RoleShift", AvailabilityText, type nullable text}, {"Employee Code", AvailabilityText, type nullable text}}),
     Buffered = Table.Buffer(Normalized)
 in Buffered;
 
@@ -104,17 +110,6 @@ shared AvailabilitySubtract = (available as list, excluded as list) as list =>
     in
         Result;
 
-// Query: IMPORT Published Roster
-// Purpose: Land the existing unit's published roster unchanged for worker membership.
-// Inputs: Roster Data in 1. Input/Allocation/Published Roster.xlsx.
-shared #"IMPORT Published Roster" = let
-    SourcePath = #"FilePath - 1Input" & "\Allocation\Published Roster.xlsx",
-    SourceBinary = File.Contents(SourcePath),
-    Navigation = Excel.Workbook(SourceBinary, null, true),
-    RosterSheet = Navigation{[Item = "Roster Data", Kind = "Sheet"]}[Data]
-in
-    RosterSheet;
-
 // Query: IMPORT Worker's Report
 // Purpose: Land the existing worker-report sheet unchanged for employment and contract preparation.
 // Inputs: Sheet1 in the current unit's 1. Input/Worker's Report.xlsx.
@@ -125,70 +120,6 @@ shared #"IMPORT Worker's Report" = let
     ReportSheet = Navigation{[Item="Sheet1",Kind="Sheet"]}[Data]
 in
     ReportSheet;
-
-// Query: PublishedRoster_Prepare
-// Purpose: Preserve the existing roster location, department and base-role rules before worker selection.
-// Notes: Dates retain the original all-analysis-location roster-start basis, before agency or worker filtering.
-shared PublishedRoster_Prepare = let
-    Source = #"IMPORT Published Roster",
-    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-    SelectedColumns = Table.SelectColumns(PromotedHeaders,
-        {"Location", "Department", "Employee Roster Name", "Employment Type", "Role", "Employee Code", "Date"}),
-    TypedColumns = Table.TransformColumnTypes(SelectedColumns,
-        {{"Location", type text}, {"Department", type text}, {"Employee Roster Name", type text},
-         {"Employment Type", type text}, {"Role", type text}, {"Employee Code", type text}, {"Date", type date}}),
-    SourceLocations = {"BD: Beaudesert", "JE: Jessie Hunt", "NR: Narrabri- Robert Young", "TE: Temora ", "TE: Temora Greenstone"},
-    AnalysisLocations = Table.SelectRows(TypedColumns, each List.Contains(SourceLocations, [Location])),
-    // Only a terminal shift token is removed; roster worker roles otherwise retain their complete source value.
-    BaseRoles = Table.AddColumn(AnalysisLocations, "Worker Role", each
-        if [Department] = "Care" or [Department] = "Catering" then
-            let
-                RosterRole = if [Role] = null then null else Text.Trim([Role]),
-                HasShiftSuffix = RosterRole <> null and List.AnyTrue(List.Transform({" AM", " PM", " NS"},
-                    each Text.EndsWith(Text.Upper(RosterRole), _))),
-                BaseRole = if RosterRole = null then null
-                    else if HasShiftSuffix then Text.TrimEnd(Text.Start(RosterRole, Text.Length(RosterRole) - 2))
-                    else RosterRole,
-                ExpandedAssistant = if BaseRole = null then null else Text.Replace(BaseRole, "Asst", "Assistant")
-            in
-                ExpandedAssistant
-        else null, type nullable text)
-in
-    BaseRoles;
-
-// Query: RosterWorkers_Prepare
-// Purpose: Retain identified non-agency roster workers with the existing source role and employment attributes.
-// Output: Distinct roster candidates before preferred-role selection, keyed by complete employee ID and source facility.
-shared RosterWorkers_Prepare = let
-    Source = PublishedRoster_Prepare,
-    SelectedColumns = Table.SelectColumns(Source,
-        {"Location", "Department", "Employee Roster Name", "Employment Type", "Employee Code", "Worker Role"}),
-    NamedRole = Table.RenameColumns(SelectedColumns, {{"Worker Role", "Role"}}),
-    WithFacility = Table.AddColumn(NamedRole, "Facility-Abbrev", each
-        let
-            Location = if [Location] = null then null else Text.Trim([Location])
-        in
-            if Location = null or Location = "" then null else Text.Upper(Text.Start(Location, 2)), type nullable text),
-    NormalizeText = (value as nullable text) as nullable text =>
-        let
-            Trimmed = if value = null then null else Text.Trim(value)
-        in
-            if Trimmed = "" then null else Trimmed,
-    NormalizedFields = Table.TransformColumns(WithFacility,
-        List.Transform({"Employee Code", "Employee Roster Name", "Employment Type", "Role"},
-            each {_, NormalizeText, type nullable text})),
-    NormalizedInChargeRole = Table.ReplaceValue(NormalizedFields, "REGN -  In Charge", "REGN", Replacer.ReplaceText, {"Role"}),
-    NormalizedOtherInChargeRole = Table.ReplaceValue(NormalizedInChargeRole, "REGN - In Charge", "REGN", Replacer.ReplaceText, {"Role"}),
-    NormalizedAssistantRole = Table.ReplaceValue(NormalizedOtherInChargeRole, "Assistant in Nursing ", "Assistant in Nursing", Replacer.ReplaceText, {"Role"}),
-    DistinctWorkerColumns = List.RemoveItems(Table.ColumnNames(NormalizedAssistantRole), {"Location"}),
-    DistinctWorkers = Table.Distinct(NormalizedAssistantRole, DistinctWorkerColumns),
-    IdentifiedWorkers = Table.SelectRows(DistinctWorkers, each [Employee Code] <> null),
-    NonAgencyWorkers = Table.SelectRows(IdentifiedWorkers, each [Employment Type] <> "Agency"),
-    MembershipColumns = Table.SelectColumns(NonAgencyWorkers,
-        {"Employee Code", "Facility-Abbrev", "Employee Roster Name", "Employment Type", "Role"}),
-    WithRosterMembership = Table.AddColumn(MembershipColumns, "In Allocation Source", each true, type logical)
-in
-    Table.Buffer(WithRosterMembership);
 
 // Query: WorkerEmployment_Prepare
 // Purpose: Prepare worker-report employment facts while preserving complete employee IDs and source contract errors.
@@ -251,61 +182,114 @@ shared WorkerEmployment_Selected = let
 in
     Table.Buffer(ExpandedWorker);
 
-// Query: AvailabilityMembership_Prepare
-// Purpose: Preserve availability worker membership using full employee IDs and the existing HR-home-location match.
-// Notes: Presence does not depend on event type, dates or positive available hours; system accounts retain their existing exclusion.
-shared AvailabilityMembership_Prepare = let
-    Source = #"IMPORT Availability Leave Source",
-    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-    SelectedColumns = Table.SelectColumns(PromotedHeaders, {"Site Name", "Employee Name", "PayrollCode"}),
-    NamedEmployee = Table.RenameColumns(SelectedColumns, {{"PayrollCode", "EmployeeID"}}),
-    TypedColumns = Table.TransformColumnTypes(NamedEmployee,
-        {{"Site Name", type text}, {"Employee Name", type text}, {"EmployeeID", type text}}),
-    ClearedInvalidMatchKeys = Table.ReplaceErrorValues(TypedColumns, {{"EmployeeID", null}, {"Site Name", null}}),
-    NormalizeText = (value as nullable text) as nullable text =>
+// Query: CSAllocationWorkers_Prepare
+// Purpose: Supply filled CS allocation workers absent from Published Roster to the existing membership reconciliation.
+// Notes: Use the saved allocation, not Master Roster. Existing published identities, including excluded agency rows, retain their original path.
+shared CSAllocationWorkers_Prepare = let
+    CSRows = Table.SelectRows(AllocationExtracted_Prepare, each [Role] = "CS" and [Code] <> null),
+    SelectedEvidence = Table.SelectColumns(CSRows, {"Code", "Location", "RoleShift"}),
+    DistinctEvidence = Table.Distinct(SelectedEvidence),
+    WithFacilityKey = Table.AddColumn(DistinctEvidence, "FacilityKey", each
+        if [Location] = null then null else Text.Upper([Location]), type nullable text),
+    JoinedFacilities = Table.NestedJoin(WithFacilityKey, {"FacilityKey"}, FacilityMappings_Prepare,
+        {"FacilityKey"}, "FacilityLookup", JoinKind.LeftOuter),
+    CountedFacilities = Table.AddColumn(JoinedFacilities, "FacilityMatches", each Table.RowCount([FacilityLookup]), Int64.Type),
+    InvalidFacilities = Table.SelectRows(CountedFacilities, each [FacilityMatches] <> 1),
+    ValidFacilities = if Table.IsEmpty(InvalidFacilities) then CountedFacilities
+        else error Error.Record("CS allocation membership", "Each CS location must have one Facilities mapping.",
+            Table.SelectColumns(InvalidFacilities, {"Code", "Location", "FacilityMatches"})),
+    ExpandedFacilities = Table.ExpandTableColumn(ValidFacilities, "FacilityLookup", {"Facility-Abbrev"}, {"CanonicalFacility"}),
+    AnalysisEnabled = not Table.IsEmpty(FacilityAnalysisTABLE),
+    UnitRows = Table.SelectRows(ExpandedFacilities, each [CanonicalFacility] = Unit and AnalysisEnabled),
+    // The established membership join uses source facility codes; canonical unit mapping still happens downstream.
+    WithSourceFacility = Table.AddColumn(UnitRows, "Facility-Abbrev", each
+        Text.Upper(Text.Start([Location], 2)), type text),
+    NamedCandidates = Table.RenameColumns(WithSourceFacility, {{"Code", "EmployeeID"}, {"RoleShift", "Role"}}),
+    Candidates = Table.Distinct(Table.SelectColumns(NamedCandidates,
+        {"EmployeeID", "Facility-Abbrev", "CanonicalFacility", "Role"})),
+    // Check raw published presence before location or agency exclusions, without changing those original membership rules.
+    PublishedHeaders = Table.PromoteHeaders(#"IMPORT Published Roster", [PromoteAllScalars = true]),
+    PublishedColumns = Table.SelectColumns(PublishedHeaders, {"Employee Code", "Location"}),
+    PublishedIDs = Table.TransformColumns(PublishedColumns,
+        {{"Employee Code", AvailabilityText, type nullable text}, {"Location", AvailabilityText, type nullable text}}),
+    PublishedFacilities = Table.AddColumn(PublishedIDs, "Facility-Abbrev", each
+        if [Location] = null then null else Text.Upper(Text.Start(Text.Trim([Location]), 2)), type nullable text),
+    IdentifiedPublished = Table.SelectRows(PublishedFacilities, each [Employee Code] <> null and [#"Facility-Abbrev"] <> null),
+    PublishedKeys = Table.Buffer(Table.Distinct(Table.SelectColumns(IdentifiedPublished, {"Employee Code", "Facility-Abbrev"}))),
+    // A Master ID may match a published canonical Code rather than its original Employee Code.
+    // Use aliases from all saved allocation roles so a CS row cannot create a second identity for that published person.
+    AllocationAliasColumns = Table.SelectColumns(AllocationExtracted_Prepare, {"Code", "Employee Code", "Location"}),
+    AllocationAliasFacilities = Table.AddColumn(AllocationAliasColumns, "Facility-Abbrev", each
+        if [Location] = null then null else Text.Upper(Text.Start([Location], 2)), type nullable text),
+    AllocationAliases = Table.Distinct(Table.SelectColumns(AllocationAliasFacilities, {"Code", "Employee Code", "Facility-Abbrev"})),
+    CandidateKeys = Table.Distinct(Table.SelectColumns(Candidates, {"EmployeeID", "Facility-Abbrev"})),
+    RelevantAliases = Table.NestedJoin(AllocationAliases, {"Code", "Facility-Abbrev"}, CandidateKeys,
+        {"EmployeeID", "Facility-Abbrev"}, "CSCandidate", JoinKind.Inner),
+    PublishedAliases = Table.NestedJoin(RelevantAliases, {"Employee Code", "Facility-Abbrev"}, PublishedKeys,
+        {"Employee Code", "Facility-Abbrev"}, "PublishedIdentity", JoinKind.Inner),
+    PublishedCanonicalCodes = Table.RenameColumns(Table.Distinct(Table.SelectColumns(PublishedAliases,
+        {"Code", "Facility-Abbrev"})), {{"Code", "EmployeeID"}}),
+    ByCanonicalID = Table.NestedJoin(Candidates, {"EmployeeID", "Facility-Abbrev"}, PublishedKeys,
+        {"Employee Code", "Facility-Abbrev"}, "PublishedByCode", JoinKind.LeftOuter),
+    ByAllocationAliases = Table.NestedJoin(ByCanonicalID, {"EmployeeID", "Facility-Abbrev"}, PublishedCanonicalCodes,
+        {"EmployeeID", "Facility-Abbrev"}, "PublishedByAllocationAlias", JoinKind.LeftOuter),
+    MissingPublished = Table.SelectRows(ByAllocationAliases, each Table.IsEmpty([PublishedByCode]) and Table.IsEmpty([PublishedByAllocationAlias])),
+    NewCandidates = Table.RemoveColumns(MissingPublished, {"PublishedByCode", "PublishedByAllocationAlias"}),
+    WithRoleKey = Table.AddColumn(NewCandidates, "RosterRoleKey", each WorkerRoleKey([Role]), type nullable text),
+    JoinedRoles = Table.NestedJoin(WithRoleKey, {"RosterRoleKey"}, WorkerRoleMappings_Prepare,
+        {"RosterRoleKey"}, "SourceRole", JoinKind.LeftOuter),
+    CountedRoles = Table.AddColumn(JoinedRoles, "RoleMatches", each Table.RowCount([SourceRole]), Int64.Type),
+    InvalidRoles = Table.SelectRows(CountedRoles, each [RoleMatches] <> 1
+        or [SourceRole]{0}[MappedRoleGroup] <> "CS" or [SourceRole]{0}[RoleMappingIssue] <> null),
+    ValidRoles = if Table.IsEmpty(InvalidRoles) then CountedRoles
+        else error Error.Record("CS allocation membership", "The original RoleShift must map unambiguously to CS, separately from CSH.",
+            Table.SelectColumns(InvalidRoles, {"EmployeeID", "Facility-Abbrev", "Role", "RoleMatches"})),
+    // Reuse the existing validated identity/role totals; repeated shifts do not become repeated worker candidates.
+    CSNames = Table.SelectColumns(Table.SelectRows(AllocationRoleShares, each [Role] = "CS"),
+        {"EmployeeID", "Facility-Abbrev", "RosterName", "RoleCount"}),
+    JoinedNames = Table.NestedJoin(ValidRoles, {"EmployeeID", "CanonicalFacility"}, CSNames,
+        {"EmployeeID", "Facility-Abbrev"}, "AllocationIdentity", JoinKind.LeftOuter),
+    InvalidNames = Table.SelectRows(JoinedNames, each Table.RowCount([AllocationIdentity]) <> 1),
+    ValidNames = if Table.IsEmpty(InvalidNames) then JoinedNames
+        else error Error.Record("CS allocation membership", "Each new CS worker needs one validated allocation identity and role count.",
+            Table.SelectColumns(InvalidNames, {"EmployeeID", "Facility-Abbrev", "Role"})),
+    ExpandedNames = Table.ExpandTableColumn(ValidNames, "AllocationIdentity", {"RosterName", "RoleCount"}),
+    // Allocation has already added display suffixes. Remove only the generated terminal CS suffix before the existing naming step.
+    WithBaseName = Table.AddColumn(ExpandedNames, "Employee Roster Name", each
         let
-            Trimmed = if value = null then null else Text.Trim(value)
+            Suffix = " (CS)",
+            Name = [RosterName],
+            GeneratedSuffix = [RoleCount] > 1 and Text.EndsWith(Name, Suffix)
         in
-            if Trimmed = "" then null else Trimmed,
-    NormalizedFields = Table.TransformColumns(ClearedInvalidMatchKeys,
-        {{"EmployeeID", NormalizeText, type nullable text}, {"Employee Name", NormalizeText, type nullable text}}),
-    WithFacility = Table.AddColumn(NormalizedFields, "Facility-Abbrev", each
-        let
-            SiteName = if [Site Name] = null then null else Text.Trim([Site Name])
-        in
-            if SiteName = null or Text.Length(SiteName) < 2 then null else Text.Upper(Text.Start(SiteName, 2)), type nullable text),
-    WorkerLocationColumns = Table.SelectColumns(WorkerEmployment_Prepare, {"Employee Code", "Facility-Abbrev"}),
-    CompleteWorkerLocations = Table.SelectRows(WorkerLocationColumns, each
-        [Employee Code] <> null and [#"Facility-Abbrev"] <> null and Text.Length([#"Facility-Abbrev"]) = 2),
-    WorkerLocations = Table.Buffer(Table.Distinct(CompleteWorkerLocations)),
-    // The distinct lookup preserves every matching source row without multiplying worker candidates.
-    MatchedLocations = Table.NestedJoin(WithFacility, {"EmployeeID", "Facility-Abbrev"},
-        WorkerLocations, {"Employee Code", "Facility-Abbrev"}, "Worker Location", JoinKind.Inner),
-    RemovedLocationMatch = Table.RemoveColumns(MatchedLocations, {"Worker Location"}),
-    SourceLocations = {"BD: Beaudesert", "JE: Jessie Hunt", "NR: Narrabri- Robert Young", "TE: Temora"},
-    AnalysisLocations = Table.SelectRows(RemovedLocationMatch, each List.Contains(SourceLocations, [Site Name])),
-    WorkerAccounts = Table.SelectRows(AnalysisLocations, each [EmployeeID] <> "999999"
-        and (if [EmployeeID] = null then true else Comparer.OrdinalIgnoreCase([EmployeeID], "HF") <> 0)),
-    GroupedWorkers = Table.Group(WorkerAccounts, {"EmployeeID", "Facility-Abbrev"}, {
-        {"Records Employee Name", each
-            let
-                Names = List.Sort(List.Distinct(List.RemoveNulls([Employee Name]), Comparer.OrdinalIgnoreCase), Comparer.OrdinalIgnoreCase)
-            in
-                if List.IsEmpty(Names) then null else Names{0}, type nullable text}
-    }),
-    WithAvailabilityMembership = Table.AddColumn(GroupedWorkers, "In Records Source", each true, type logical)
+            AvailabilityText(if GeneratedSuffix then Text.Start(Name, Text.Length(Name) - Text.Length(Suffix)) else Name), type nullable text),
+    MissingBaseNames = Table.SelectRows(WithBaseName, each [Employee Roster Name] = null),
+    ValidBaseNames = if Table.IsEmpty(MissingBaseNames) then WithBaseName
+        else error "Filled CS allocations require a nonblank employee base name.",
+    WithEmploymentType = Table.AddColumn(ValidBaseNames, "Employment Type", each null, type nullable text),
+    WithAllocationFlag = Table.AddColumn(WithEmploymentType, "In Allocation Source", each true, type logical),
+    NamedEmployeeCode = Table.RenameColumns(WithAllocationFlag, {{"EmployeeID", "Employee Code"}}),
+    Output = Table.Distinct(Table.SelectColumns(NamedEmployeeCode,
+        {"Employee Code", "Facility-Abbrev", "Employee Roster Name", "Employment Type", "Role", "In Allocation Source"}))
 in
-    Table.Buffer(WithAvailabilityMembership);
+    Table.Buffer(Output);
+
+// Query: RosterMembership_Prepare
+// Purpose: Share the existing published candidates plus only the missing filled CS workers before HR/preferred-role selection.
+// Notes: The buffer is narrow worker-grain data, not the complete allocation shift table.
+shared RosterMembership_Prepare = let
+    Combined = Table.Combine({RosterWorkers_Prepare, CSAllocationWorkers_Prepare}, Value.Type(RosterWorkers_Prepare))
+in
+    Table.Buffer(Combined);
 
 // Query: ReconciledWorkerMembership_Prepare
-// Purpose: Supply the existing worker interface from roster, availability and HR without reading Balance or Worker Reconciliation.
+// Purpose: Reconcile published and filled CS allocation membership with availability and HR using the existing worker rules.
 // Output: One preferred source-role worker per employee/facility; legacy In Leave Balances is always false.
 // Notes: In Records means availability membership; In HR Records identifies employment enrichment only.
 shared ReconciledWorkerMembership_Prepare = let
     RosterDates = List.RemoveNulls(PublishedRoster_Prepare[Date]),
     RosterStart = if List.IsEmpty(RosterDates) then error "Published Roster contains no roster dates." else List.Min(RosterDates),
     JoinedMembership = Table.NestedJoin(AvailabilityMembership_Prepare, {"EmployeeID", "Facility-Abbrev"},
-        RosterWorkers_Prepare, {"Employee Code", "Facility-Abbrev"}, "Roster Worker", JoinKind.FullOuter),
+        RosterMembership_Prepare, {"Employee Code", "Facility-Abbrev"}, "Roster Worker", JoinKind.FullOuter),
     ExpandedRoster = Table.ExpandTableColumn(JoinedMembership, "Roster Worker",
         {"Employee Code", "Facility-Abbrev", "Employee Roster Name", "Employment Type", "Role", "In Allocation Source"},
         {"Roster EmployeeID", "Roster Facility", "Roster Name", "Roster Employment Type", "Roster Role", "In Allocation Source"}),
@@ -534,9 +518,9 @@ shared WorkerRoleKey = (roleName as any) as nullable text =>
         RoleKey;
 
 // Query: AvailabilityRoleGroups
-// Purpose: Define the LINK Roles Role Groups published by this availability model.
+// Purpose: Define the existing nursing Role Groups and CS published by this availability model.
 // Notes: Other valid LINK Roles assignments are expected nonblocking exclusions, not worker identity failures.
-shared AvailabilityRoleGroups = List.Buffer({"RN", "AIN", "EN"});
+shared AvailabilityRoleGroups = List.Buffer({"RN", "AIN", "EN", "CS"});
 
 // Query: WorkerRoleMappings_Prepare
 // Purpose: Resolve LINK Roles to one inspectable Role Group assignment per normalized Roster Roles key.
@@ -550,8 +534,11 @@ shared WorkerRoleMappings_Prepare = let
     }),
     RosterRoleKeys = Table.AddColumn(Normalized, "RosterRoleKey",
         each WorkerRoleKey([Roster Roles]), type nullable text),
+    // NA and N/A are placeholder roster labels, not roles. CS may still have DC Category = NA.
+    WithoutPlaceholderRoles = Table.SelectRows(RosterRoleKeys,
+        each [RosterRoleKey] <> "NA"),
     // Ignore wholly empty list items; partially populated definitions remain visible as issues.
-    NonEmptyDefinitions = Table.SelectRows(RosterRoleKeys,
+    NonEmptyDefinitions = Table.SelectRows(WithoutPlaceholderRoles,
         each [RosterRoleKey] <> null or [Role Group] <> null),
     CombineSortedDistinctText = (values as list) as nullable text =>
         let
@@ -635,6 +622,70 @@ let
     Result = Table.RemoveColumns(EnabledUnit, {"LeaveBalanceAnalysis"})
 in
     Result;
+
+// Query: PublishedRoster_Prepare
+// Purpose: Preserve the existing roster location, department and base-role rules before worker selection.
+// Notes: Dates retain the original all-analysis-location roster-start basis, before agency or worker filtering.
+shared PublishedRoster_Prepare = let
+    Source = #"IMPORT Published Roster",
+    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+    SelectedColumns = Table.SelectColumns(PromotedHeaders,
+        {"Location", "Department", "Employee Roster Name", "Employment Type", "Role", "Employee Code", "Date"}),
+    TypedColumns = Table.TransformColumnTypes(SelectedColumns,
+        {{"Location", type text}, {"Department", type text}, {"Employee Roster Name", type text},
+         {"Employment Type", type text}, {"Role", type text}, {"Employee Code", type text}, {"Date", type date}}),
+    SourceLocations = {"BD: Beaudesert", "JE: Jessie Hunt", "NR: Narrabri- Robert Young", "TE: Temora ", "TE: Temora Greenstone"},
+    AnalysisLocations = Table.SelectRows(TypedColumns, each List.Contains(SourceLocations, [Location])),
+    // Only a terminal shift token is removed; roster worker roles otherwise retain their complete source value.
+    BaseRoles = Table.AddColumn(AnalysisLocations, "Worker Role", each
+        if [Department] = "Care" or [Department] = "Catering" then
+            let
+                RosterRole = if [Role] = null then null else Text.Trim([Role]),
+                HasShiftSuffix = RosterRole <> null and List.AnyTrue(List.Transform({" AM", " PM", " NS"},
+                    each Text.EndsWith(Text.Upper(RosterRole), _))),
+                BaseRole = if RosterRole = null then null
+                    else if HasShiftSuffix then Text.TrimEnd(Text.Start(RosterRole, Text.Length(RosterRole) - 2))
+                    else RosterRole,
+                ExpandedAssistant = if BaseRole = null then null else Text.Replace(BaseRole, "Asst", "Assistant")
+            in
+                ExpandedAssistant
+        else null, type nullable text)
+in
+    BaseRoles;
+
+// Query: RosterWorkers_Prepare
+// Purpose: Retain identified non-agency roster workers with the existing source role and employment attributes.
+// Output: Distinct roster candidates before preferred-role selection, keyed by complete employee ID and source facility.
+shared RosterWorkers_Prepare = let
+    Source = PublishedRoster_Prepare,
+    SelectedColumns = Table.SelectColumns(Source,
+        {"Location", "Department", "Employee Roster Name", "Employment Type", "Employee Code", "Worker Role"}),
+    NamedRole = Table.RenameColumns(SelectedColumns, {{"Worker Role", "Role"}}),
+    WithFacility = Table.AddColumn(NamedRole, "Facility-Abbrev", each
+        let
+            Location = if [Location] = null then null else Text.Trim([Location])
+        in
+            if Location = null or Location = "" then null else Text.Upper(Text.Start(Location, 2)), type nullable text),
+    NormalizeText = (value as nullable text) as nullable text =>
+        let
+            Trimmed = if value = null then null else Text.Trim(value)
+        in
+            if Trimmed = "" then null else Trimmed,
+    NormalizedFields = Table.TransformColumns(WithFacility,
+        List.Transform({"Employee Code", "Employee Roster Name", "Employment Type", "Role"},
+            each {_, NormalizeText, type nullable text})),
+    NormalizedInChargeRole = Table.ReplaceValue(NormalizedFields, "REGN -  In Charge", "REGN", Replacer.ReplaceText, {"Role"}),
+    NormalizedOtherInChargeRole = Table.ReplaceValue(NormalizedInChargeRole, "REGN - In Charge", "REGN", Replacer.ReplaceText, {"Role"}),
+    NormalizedAssistantRole = Table.ReplaceValue(NormalizedOtherInChargeRole, "Assistant in Nursing ", "Assistant in Nursing", Replacer.ReplaceText, {"Role"}),
+    DistinctWorkerColumns = List.RemoveItems(Table.ColumnNames(NormalizedAssistantRole), {"Location"}),
+    DistinctWorkers = Table.Distinct(NormalizedAssistantRole, DistinctWorkerColumns),
+    IdentifiedWorkers = Table.SelectRows(DistinctWorkers, each [Employee Code] <> null),
+    NonAgencyWorkers = Table.SelectRows(IdentifiedWorkers, each [Employment Type] <> "Agency"),
+    MembershipColumns = Table.SelectColumns(NonAgencyWorkers,
+        {"Employee Code", "Facility-Abbrev", "Employee Roster Name", "Employment Type", "Role"}),
+    WithRosterMembership = Table.AddColumn(MembershipColumns, "In Allocation Source", each true, type logical)
+in
+    Table.Buffer(WithRosterMembership);
 
 // Query: IMPORT Availability Leave Source
 // Purpose: Land the availability/leave Combined Output sheet unchanged.
@@ -1249,12 +1300,35 @@ shared ReconciledWorkers_Prepare = let
 in
     BufferedResult;
 
+// Query: AvailabilityRaw
+// Purpose: Show raw unit availability/leave records with the reconciled role attached by Employee Code and facility.
+// Inputs: AvailabilityLeaveSource_Prepare and ReconciledWorkers_Prepare.
+// Output: One source record per matched reconciled source role; unmatched records retain null role fields.
+// Notes: Retain all source Types and raw date/comment values before eligibility, interval processing or roster-date clipping.
+shared AvailabilityRaw = let
+    WorkerRoleColumns = Table.SelectColumns(ReconciledWorkers_Prepare,
+        {"EmployeeID", "Facility-Abbrev", "Role", "SourceRole"}),
+    IdentifiedWorkers = Table.SelectRows(WorkerRoleColumns, each [EmployeeID] <> null),
+    WorkerRoles = Table.Distinct(IdentifiedWorkers),
+    NamedEmployeeCode = Table.RenameColumns(AvailabilityLeaveSource_Prepare,
+        {{"Payroll Code", "Employee Code"}}),
+    // Match complete employee IDs within the same canonical facility; retain records outside eligible worker outputs.
+    JoinedRoles = Table.NestedJoin(NamedEmployeeCode, {"Employee Code", "Facility-Abbrev"},
+        WorkerRoles, {"EmployeeID", "Facility-Abbrev"}, "WorkerRoles", JoinKind.LeftOuter),
+    ExpandedRoles = Table.ExpandTableColumn(JoinedRoles, "WorkerRoles",
+        {"Role", "SourceRole"}, {"Role", "SourceRole"}),
+    Output = Table.ReorderColumns(ExpandedRoles,
+        {"Employee Code", "Employee Name", "Role", "SourceRole", "Type", "Date From", "Date To",
+         "Availability or Leave Reason", "Facility-Abbrev", "Site Name", "SourceRecord"})
+in
+    Output;
+
 // Query: AllocationRoleHours_Prepare
 // Purpose: Aggregate approved-role allocation hours by employee, mapped facility and role.
 // Notes: Facility-Abbrev is the facility identity; raw Locations are retained only as source provenance.
 shared AllocationRoleHours_Prepare = let
     ApprovedRoleNames = AvailabilityRoleGroups,
-    ApprovedRoles = Table.SelectRows(#"IMPORT AllocationExtracted", each List.Contains(ApprovedRoleNames, [Role])),
+    ApprovedRoles = Table.SelectRows(AllocationExtracted_Prepare, each List.Contains(ApprovedRoleNames, [Role])),
     NormalizedFacilityKey = Table.AddColumn(ApprovedRoles, "FacilityKey", each
         if [Location] = null then null else Text.Upper(Text.Trim(Text.From([Location]))), type nullable text),
     JoinedFacilities = Table.NestedJoin(NormalizedFacilityKey, {"FacilityKey"}, FacilityMappings_Prepare,
@@ -1329,7 +1403,7 @@ in
     BufferedResult;
 
 // Query: AllocationRoleShares
-// Purpose: Calculate unrounded AIN/EN/RN proportions using all approved-role hours per employee and mapped facility.
+// Purpose: Calculate unrounded nursing and CS proportions using all approved-role hours per employee and mapped facility.
 // Notes: The same employee ID may occur at multiple facilities; shares are calculated separately by Facility-Abbrev.
 shared AllocationRoleShares = let
     Source = AllocationRoleHours_Prepare,
@@ -2449,6 +2523,52 @@ shared AllocationRoleShares_CHECK = let
 in
     CheckTable;
 
+// Query: AvailabilityMembership_Prepare
+// Purpose: Preserve availability worker membership using full employee IDs and the existing HR-home-location match.
+// Notes: Presence does not depend on event type, dates or positive available hours; system accounts retain their existing exclusion.
+shared AvailabilityMembership_Prepare = let
+    Source = #"IMPORT Availability Leave Source",
+    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+    SelectedColumns = Table.SelectColumns(PromotedHeaders, {"Site Name", "Employee Name", "PayrollCode"}),
+    NamedEmployee = Table.RenameColumns(SelectedColumns, {{"PayrollCode", "EmployeeID"}}),
+    TypedColumns = Table.TransformColumnTypes(NamedEmployee,
+        {{"Site Name", type text}, {"Employee Name", type text}, {"EmployeeID", type text}}),
+    ClearedInvalidMatchKeys = Table.ReplaceErrorValues(TypedColumns, {{"EmployeeID", null}, {"Site Name", null}}),
+    NormalizeText = (value as nullable text) as nullable text =>
+        let
+            Trimmed = if value = null then null else Text.Trim(value)
+        in
+            if Trimmed = "" then null else Trimmed,
+    NormalizedFields = Table.TransformColumns(ClearedInvalidMatchKeys,
+        {{"EmployeeID", NormalizeText, type nullable text}, {"Employee Name", NormalizeText, type nullable text}}),
+    WithFacility = Table.AddColumn(NormalizedFields, "Facility-Abbrev", each
+        let
+            SiteName = if [Site Name] = null then null else Text.Trim([Site Name])
+        in
+            if SiteName = null or Text.Length(SiteName) < 2 then null else Text.Upper(Text.Start(SiteName, 2)), type nullable text),
+    WorkerLocationColumns = Table.SelectColumns(WorkerEmployment_Prepare, {"Employee Code", "Facility-Abbrev"}),
+    CompleteWorkerLocations = Table.SelectRows(WorkerLocationColumns, each
+        [Employee Code] <> null and [#"Facility-Abbrev"] <> null and Text.Length([#"Facility-Abbrev"]) = 2),
+    WorkerLocations = Table.Buffer(Table.Distinct(CompleteWorkerLocations)),
+    // The distinct lookup preserves every matching source row without multiplying worker candidates.
+    MatchedLocations = Table.NestedJoin(WithFacility, {"EmployeeID", "Facility-Abbrev"},
+        WorkerLocations, {"Employee Code", "Facility-Abbrev"}, "Worker Location", JoinKind.Inner),
+    RemovedLocationMatch = Table.RemoveColumns(MatchedLocations, {"Worker Location"}),
+    SourceLocations = {"BD: Beaudesert", "JE: Jessie Hunt", "NR: Narrabri- Robert Young", "TE: Temora"},
+    AnalysisLocations = Table.SelectRows(RemovedLocationMatch, each List.Contains(SourceLocations, [Site Name])),
+    WorkerAccounts = Table.SelectRows(AnalysisLocations, each [EmployeeID] <> "999999"
+        and (if [EmployeeID] = null then true else Comparer.OrdinalIgnoreCase([EmployeeID], "HF") <> 0)),
+    GroupedWorkers = Table.Group(WorkerAccounts, {"EmployeeID", "Facility-Abbrev"}, {
+        {"Records Employee Name", each
+            let
+                Names = List.Sort(List.Distinct(List.RemoveNulls([Employee Name]), Comparer.OrdinalIgnoreCase), Comparer.OrdinalIgnoreCase)
+            in
+                if List.IsEmpty(Names) then null else Names{0}, type nullable text}
+    }),
+    WithAvailabilityMembership = Table.AddColumn(GroupedWorkers, "In Records Source", each true, type logical)
+in
+    Table.Buffer(WithAvailabilityMembership);
+
 // Query: MultiRoles
 // Purpose: Publish role-specific roster names for employees allocated to more than one approved role.
 // Output: Name, MultiRole and unrounded RoleShare; the null legacy column only keeps MutliRoleCheck's Name import working.
@@ -2857,3 +2977,14 @@ shared #"IMPORT CasualRosterShiftCaps" = let
     #"Changed Type" = Table.TransformColumnTypes(CasualRosterShiftCaps_Table,{{"Employee Code", Int64.Type}, {"Employment Type", type text}, {"Unit", type text}, {"DaysAve", Int64.Type}, {"DaysMax", Int64.Type}, {"HrsAve", type number}, {"HrsMax", type number}, {"ShiftsMonth", Int64.Type}, {"RosterShiftCap", Int64.Type}})
 in
     #"Changed Type";
+
+// Query: IMPORT Published Roster
+// Purpose: Land the existing unit's published roster unchanged for worker membership.
+// Inputs: Roster Data in 1. Input/Allocation/Published Roster.xlsx.
+shared #"IMPORT Published Roster" = let
+    SourcePath = #"FilePath - 1Input" & "\Allocation\Published Roster.xlsx",
+    SourceBinary = File.Contents(SourcePath),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    RosterSheet = Navigation{[Item = "Roster Data", Kind = "Sheet"]}[Data]
+in
+    RosterSheet;

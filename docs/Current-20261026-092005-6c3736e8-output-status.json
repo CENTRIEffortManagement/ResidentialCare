@@ -1,0 +1,91 @@
+{
+  "RunId": "20261026-092005-6c3736e8",
+  "RunStatus": "PartialOrFailed",
+  "CheckedAtUtc": "2026-10-25T22:22:39.1673371Z",
+  "AllVerified": false,
+  "Rows": [
+    {
+      "Id": "BD/Intervals",
+      "RelativePath": "UNITS/BD/2. Calculations/Intervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T22:20:18.7560357Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "BD/DemandIntervals",
+      "RelativePath": "UNITS/BD/2. Calculations/DemandIntervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T22:21:41.1059338Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "BD/Demand",
+      "RelativePath": "UNITS/BD/2. Calculations/Demand.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T22:21:56.0985575Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "BD/Shifts",
+      "RelativePath": "UNITS/BD/2. Calculations/Shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T22:22:35.9153471Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "BD/ShiftAverage",
+      "RelativePath": "UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:54:27.5490264Z",
+      "Reason": "Not updated by this run (Blocked). Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx The output predates a current declared input.",
+      "RootCauses": [
+        "BD/ShiftAverage: Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "BD/Allocation",
+      "RelativePath": "UNITS/BD/2. Calculations/Allocation.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:54:58.5337697Z",
+      "Reason": "Not updated by this run (Blocked). Waiting for BD/ShiftAverage The output predates a current declared input.",
+      "RootCauses": [
+        "BD/ShiftAverage: Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    },
+    {
+      "Id": "BD/Distribution",
+      "RelativePath": "UNITS/BD/2. Calculations/Shift-StaffDistribution.xlsx",
+      "RunStatus": "Blocked",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-25T02:55:26.8054252Z",
+      "Reason": "Not updated by this run (Blocked). Waiting for BD/Allocation The output predates a current declared input.",
+      "RootCauses": [
+        "BD/ShiftAverage: Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx"
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": false
+    }
+  ]
+}

@@ -72,9 +72,9 @@ function Invoke-FakeRun {
 try {
     $catalogue = Get-BatchCatalogue $catalogueRoot
     $defaultRun = Select-BatchPlan $catalogue -RunAll
-    Assert-True ($defaultRun.Jobs.Count -eq 84) 'Run all selects BD, TE, JH-RY, one shared demand master and eleven organisation workbooks'
-    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 84) 'unqualified preview matches Run all scope'
-    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 40) 'default run resolves three Unit batch sets, one shared input batch and six organisation batches'
+    Assert-True ($defaultRun.Jobs.Count -eq 90) 'Run all selects current facilities including CS without retired Workers jobs, one shared demand master and eleven organisation workbooks'
+    Assert-True ((Select-BatchPlan $catalogue).Jobs.Count -eq 90) 'unqualified preview matches Run all scope'
+    Assert-True (@($defaultRun.Jobs | Group-Object BatchKey).Count -eq 43) 'default run resolves three Unit batch sets including CS, one shared input batch and six organisation batches'
     Assert-True (@($defaultRun.Jobs | Where-Object Unit -in @('Unit1', 'Unit2')).Count -eq 0 -and @($defaultRun.Jobs | Where-Object Unit -eq 'Org').Count -eq 11) 'Run all excludes legacy Units and includes the complete organisation release chain'
     Assert-True ($defaultRun.Jobs[-1].Id -eq 'Org/LeaveBalanceReporting' -and (Split-Path $defaultRun.Jobs[-1].Path -Leaf) -eq 'TableauConnect-LB.xlsx') 'Run all ends at the Leave Balance reporting workbook'
     Assert-True (($catalogue.RunAllUnits -join ',') -eq 'BD,TE,JH-RY' -and $catalogue.RunAllIncludeOrg) 'saved default scope includes organisation work'
@@ -101,7 +101,8 @@ try {
     Assert-True (@($pickList | Where-Object { $_ -like 'D1 -*' }).Count -eq 1) 'shared Unit batch choices are not duplicated'
     Assert-True ('C2.2 - Role capacity - AINC4 [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'legacy AINC4 role has a dedicated batch choice'
     Assert-True ('C2.4 - Role capacity - EN [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'EN has a dedicated batch choice'
-    Assert-True ([array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'C2.4 -*' })) -lt [array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'U4 -*' }))) 'all C2 role choices are listed before U4'
+    Assert-True ('C2.5 - Role capacity - CS [CapacityDistrib(A.1)-shifts.xlsx, CapacityDistrib(A.2)-shifts.xlsx, CapacityDistrib(B)-shifts.xlsx]' -in $pickList) 'CS has a dedicated batch choice'
+    Assert-True ([array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'C2.5 -*' })) -lt [array]::IndexOf($pickList, ($pickList | Where-Object { $_ -like 'U4 -*' }))) 'all C2 role choices are listed before U4'
     Assert-True (@($pickList | Where-Object { $_ -like 'C2 - All enabled*' }).Count -eq 1) 'all-role shorthand is offered once'
     Assert-True ('O1 - Cross-unit assembly [StafMasterList-All.xlsx, Effort-All.xlsx]' -in $pickList) 'organisation choices include files'
     Assert-True ('O6 - Leave Balance Stats [LBStats.xlsx, LBReduction.xlsx, TableauConnect-LB.xlsx]' -in $pickList) 'Leave Balance batch picker shows its title and ordered files'
@@ -131,6 +132,25 @@ try {
     # leaving Capacity/Effort (and other reporting intermediates) out of the run.
     foreach ($sequenceProfile in @('Current', 'ParallelInputs-Unit1Priority')) {
         $gapCatalogue = Get-BatchCatalogue $catalogueRoot $sequenceProfile
+        Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Workers' } "$sequenceProfile cannot dispatch the retired facility workbook by ID"
+        $c1Ids = @('JH-RY/AllocationInput','JH-RY/Settings','JH-RY/Availability','JH-RY/Staff',
+            'JH-RY/Role:CS/1','JH-RY/Role:CS/2','JH-RY/Role:CS/3')
+        $c1Jobs = @(foreach ($id in $c1Ids) {
+            $actual = @($gapCatalogue.Jobs | Where-Object Id -eq $id)[0]
+            New-FakeJob $actual.Id $actual.BatchKey -Depends @($actual.Dependencies | Where-Object { $_ -in $c1Ids })
+        })
+        foreach ($job in $c1Jobs) {
+            $job.Reads = @($c1Jobs | Where-Object { $_.Id -in $job.Dependencies } | ForEach-Object Path)
+        }
+        $c1Run = Invoke-FakeRun $c1Jobs -Slow 'JH-RY/AllocationInput','JH-RY/Settings'
+        Assert-True ($c1Run.Code -eq 0 -and
+            $c1Run.Events.IndexOf('start:JH-RY/Availability') -gt $c1Run.Events.IndexOf('end:JH-RY/AllocationInput') -and
+            $c1Run.Events.IndexOf('start:JH-RY/Availability') -gt $c1Run.Events.IndexOf('end:JH-RY/Settings') -and
+            $c1Run.Events.IndexOf('start:JH-RY/Staff') -gt $c1Run.Events.IndexOf('end:JH-RY/Availability')) "$sequenceProfile keeps the retained C1 chain ordered without Workers"
+        $c1Failure = Invoke-FakeRun $c1Jobs -Fail 'JH-RY/Availability'
+        Assert-True ($c1Failure.Code -eq 1 -and @('JH-RY/Staff','JH-RY/Role:CS/1','JH-RY/Role:CS/2','JH-RY/Role:CS/3' | Where-Object {
+            $c1Failure.State.Jobs[$_].Status -ne 'Blocked' -or "start:$_" -in $c1Failure.Events
+        }).Count -eq 0) "$sequenceProfile Availability failure still blocks Staff and CS before dispatch"
         Assert-True (@($gapCatalogue.Jobs | Where-Object { $_.Id -match '/MultiRole$' -or $_.RelativePath -match 'MutliRole|MultiRole' }).Count -eq 0) "$sequenceProfile has no MultiRole job or target"
         Assert-True (@($gapCatalogue.Jobs | ForEach-Object Reads | Where-Object { $_ -match 'MutliRole|MultiRole' }).Count -eq 0) "$sequenceProfile never requires a MultiRole file as an input"
         Assert-True (@($gapCatalogue.Jobs | ForEach-Object Dependencies | Where-Object { $_ -match '/MultiRole$' }).Count -eq 0) "$sequenceProfile has no dangling MultiRole prerequisite"
@@ -173,7 +193,7 @@ try {
         Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Capacity','Org/EffortAll' } "$sequenceProfile cannot skip Effort when Capacity is selected"
         Assert-Throws { Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','JH-RY/Role:AIN/3' } "$sequenceProfile cannot skip the middle role workbook"
         $gapFilled = Select-BatchPlan $gapCatalogue -Units JH-RY -Batches C2,U4,O1,O2,O3,O4,O5,O6
-        Assert-True ($gapFilled.Jobs.Count -eq 22 -and
+        Assert-True ($gapFilled.Jobs.Count -eq 25 -and
             'JH-RY/Capacity' -in $gapFilled.Jobs.Id -and 'JH-RY/Effort' -in $gapFilled.Jobs.Id -and
             @($gapFilled.Jobs | Where-Object { $_.Unit -notin @('JH-RY','Org') }).Count -eq 0) "$sequenceProfile accepts the completed chain without selecting other Units or earlier inputs"
         $withDependencies = Select-BatchPlan $gapCatalogue -Units JH-RY -Batches C2,O1,O2,O5,O6 -IncludeDependencies
@@ -184,7 +204,7 @@ try {
         Assert-True ((Select-BatchPlan $gapCatalogue -Workbooks 'BD/Role:AIN/3','TE/Effort').Jobs.Count -eq 2) "$sequenceProfile independent Units do not create a false gap"
 
         $manualPlan = Select-BatchPlan $gapCatalogue -Units BD,TE,JH-RY -Batches 'C1,C2,U4,01,02,05,06' -UseSavedIntermediates
-        Assert-True ($manualPlan.Jobs.Count -eq 50 -and $manualPlan.UseSavedIntermediates -and
+        Assert-True ($manualPlan.Jobs.Count -eq 56 -and $manualPlan.UseSavedIntermediates -and
             ($manualPlan.SavedIntermediates.Id -join ',') -eq 'Org/Cost,Org/History,Org/HistoryRead' -and
             @($manualPlan.Jobs | Where-Object Batch -in @('O3','O4')).Count -eq 0) "$sequenceProfile exact reported selection deliberately reuses O3/O4 without refreshing them"
         $savedGap = Select-BatchPlan $gapCatalogue -Workbooks 'JH-RY/Role:AIN/1','Org/EffortAll' -UseSavedIntermediates
@@ -235,10 +255,12 @@ try {
     Assert-Throws { Select-BatchPlan $catalogue -Units BD -Batches C2.2 } 'AINC4 batch is empty for BD'
     $bdRole = Select-BatchPlan $catalogue -Units BD -Batches C2.4
     Assert-True ($bdRole.Jobs.Count -eq 3 -and $bdRole.Jobs[0].Role -eq 'EN') 'BD EN role uses the dedicated C2.4 batch'
+    $csRole = Select-BatchPlan $catalogue -Batches C2.5
+    Assert-True ($csRole.Jobs.Count -eq 9 -and @($csRole.Jobs | Where-Object { $_.Role -ne 'CS' -or $_.Unit -notin @('BD','TE','JH-RY') }).Count -eq 0) 'CS batch selects only the nine configured facility role workbooks'
     $bdUnit = Select-BatchPlan $catalogue -RunAll -Units BD
-    Assert-True ($bdUnit.Jobs.Count -eq 25 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work'
+    Assert-True ($bdUnit.Jobs.Count -eq 27 -and @($bdUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'BD full Unit scope excludes organisation work and retired Workers'
     $everyUnit = Select-BatchPlan $catalogue -RunAll -Units All
-    Assert-True ($everyUnit.Jobs.Count -eq 123 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit and the shared master once without organisation jobs'
+    Assert-True ($everyUnit.Jobs.Count -eq 129 -and @($everyUnit.Jobs | Where-Object Unit -eq 'Org').Count -eq 0) 'selected All runs every Unit and the shared master once without organisation jobs'
     $bdCapacity = @($bdUnit.Jobs | Where-Object Id -eq 'BD/Capacity')[0]
     Assert-True ('BD/Role:EN/3' -in $bdCapacity.Dependencies -and 'BD/Role:AINC4/3' -notin $bdCapacity.Dependencies) 'BD consolidation waits for EN rather than AINC4'
     $role = Select-BatchPlan $catalogue -Units Unit2 -Roles RN

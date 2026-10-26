@@ -1,0 +1,5114 @@
+{
+  "StartedUtc": "2026-10-26T00:25:28.1593691Z",
+  "FinishedUtc": "2026-10-26T00:25:29.2903513Z",
+  "TargetProcessIds": [
+    60052
+  ],
+  "ReadOnlyInspection": true,
+  "KnownUiWindow": 0,
+  "KnownUiWindowConfirmed": false,
+  "KnownUiWindowDetails": null,
+  "WaitChainSkipped": true,
+  "WctDisabledReason": "Previous diagnostic host terminated with native access violation; no WCT retry.",
+  "ComWaitCallbacksRegistered": false,
+  "SampleElapsedMilliseconds": 1050.1988,
+  "Before": [
+    {
+      "ProcessId": 60052,
+      "ProcessName": "EXCEL",
+      "StartUtc": "2026-10-26T00:25:11.9039368Z",
+      "StartTicks": 639285711119039368,
+      "WorkingSetBytes": 750129152,
+      "Threads": [
+        {
+          "ThreadId": 32716,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 8515.625,
+          "StartUtc": "2026-10-26T00:25:11.9039395Z"
+        },
+        {
+          "ThreadId": 46488,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:11.9204619Z"
+        },
+        {
+          "ThreadId": 78500,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:11.9205111Z"
+        },
+        {
+          "ThreadId": 38280,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:11.9205638Z"
+        },
+        {
+          "ThreadId": 42520,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 171.875,
+          "StartUtc": "2026-10-26T00:25:12.0213014Z"
+        },
+        {
+          "ThreadId": 73224,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0302474Z"
+        },
+        {
+          "ThreadId": 71728,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0330534Z"
+        },
+        {
+          "ThreadId": 73968,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0330806Z"
+        },
+        {
+          "ThreadId": 75636,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0330904Z"
+        },
+        {
+          "ThreadId": 14860,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331043Z"
+        },
+        {
+          "ThreadId": 59852,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331534Z"
+        },
+        {
+          "ThreadId": 70280,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331628Z"
+        },
+        {
+          "ThreadId": 49708,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331717Z"
+        },
+        {
+          "ThreadId": 60600,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331815Z"
+        },
+        {
+          "ThreadId": 68740,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331904Z"
+        },
+        {
+          "ThreadId": 75992,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332008Z"
+        },
+        {
+          "ThreadId": 8544,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332127Z"
+        },
+        {
+          "ThreadId": 18988,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332240Z"
+        },
+        {
+          "ThreadId": 8708,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332349Z"
+        },
+        {
+          "ThreadId": 51212,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332501Z"
+        },
+        {
+          "ThreadId": 79064,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332589Z"
+        },
+        {
+          "ThreadId": 56188,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332729Z"
+        },
+        {
+          "ThreadId": 65704,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332861Z"
+        },
+        {
+          "ThreadId": 78088,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332987Z"
+        },
+        {
+          "ThreadId": 19968,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333079Z"
+        },
+        {
+          "ThreadId": 16272,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333171Z"
+        },
+        {
+          "ThreadId": 46040,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333260Z"
+        },
+        {
+          "ThreadId": 77240,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333360Z"
+        },
+        {
+          "ThreadId": 62688,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333467Z"
+        },
+        {
+          "ThreadId": 55020,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333567Z"
+        },
+        {
+          "ThreadId": 69180,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333671Z"
+        },
+        {
+          "ThreadId": 54276,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333766Z"
+        },
+        {
+          "ThreadId": 53036,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333858Z"
+        },
+        {
+          "ThreadId": 22512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333951Z"
+        },
+        {
+          "ThreadId": 53516,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334035Z"
+        },
+        {
+          "ThreadId": 79796,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334139Z"
+        },
+        {
+          "ThreadId": 77168,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334245Z"
+        },
+        {
+          "ThreadId": 74004,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334340Z"
+        },
+        {
+          "ThreadId": 48632,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 93.75,
+          "StartUtc": "2026-10-26T00:25:12.0400490Z"
+        },
+        {
+          "ThreadId": 50560,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 187.5,
+          "StartUtc": "2026-10-26T00:25:12.0410168Z"
+        },
+        {
+          "ThreadId": 70672,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.0420159Z"
+        },
+        {
+          "ThreadId": 40444,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0439725Z"
+        },
+        {
+          "ThreadId": 67232,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.0442350Z"
+        },
+        {
+          "ThreadId": 65492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0522712Z"
+        },
+        {
+          "ThreadId": 24668,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:12.0526733Z"
+        },
+        {
+          "ThreadId": 49236,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0709472Z"
+        },
+        {
+          "ThreadId": 74116,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:12.0713826Z"
+        },
+        {
+          "ThreadId": 16524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 78.125,
+          "StartUtc": "2026-10-26T00:25:12.0727775Z"
+        },
+        {
+          "ThreadId": 73824,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 62.5,
+          "StartUtc": "2026-10-26T00:25:12.0728329Z"
+        },
+        {
+          "ThreadId": 36880,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 93.75,
+          "StartUtc": "2026-10-26T00:25:12.0728876Z"
+        },
+        {
+          "ThreadId": 60032,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 312.5,
+          "StartUtc": "2026-10-26T00:25:12.0746080Z"
+        },
+        {
+          "ThreadId": 73336,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0855801Z"
+        },
+        {
+          "ThreadId": 41320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0855965Z"
+        },
+        {
+          "ThreadId": 72260,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0856436Z"
+        },
+        {
+          "ThreadId": 71208,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0856979Z"
+        },
+        {
+          "ThreadId": 69080,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0894615Z"
+        },
+        {
+          "ThreadId": 60512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0955919Z"
+        },
+        {
+          "ThreadId": 56088,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0959519Z"
+        },
+        {
+          "ThreadId": 75804,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.1082957Z"
+        },
+        {
+          "ThreadId": 43692,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1196985Z"
+        },
+        {
+          "ThreadId": 69584,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197221Z"
+        },
+        {
+          "ThreadId": 71016,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197345Z"
+        },
+        {
+          "ThreadId": 20288,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197468Z"
+        },
+        {
+          "ThreadId": 78916,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197598Z"
+        },
+        {
+          "ThreadId": 68348,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197744Z"
+        },
+        {
+          "ThreadId": 75320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197871Z"
+        },
+        {
+          "ThreadId": 62448,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198036Z"
+        },
+        {
+          "ThreadId": 17880,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198147Z"
+        },
+        {
+          "ThreadId": 56248,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198279Z"
+        },
+        {
+          "ThreadId": 72728,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198391Z"
+        },
+        {
+          "ThreadId": 40352,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198491Z"
+        },
+        {
+          "ThreadId": 41180,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198621Z"
+        },
+        {
+          "ThreadId": 69508,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198748Z"
+        },
+        {
+          "ThreadId": 78024,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198862Z"
+        },
+        {
+          "ThreadId": 72084,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199004Z"
+        },
+        {
+          "ThreadId": 70064,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199111Z"
+        },
+        {
+          "ThreadId": 23632,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199235Z"
+        },
+        {
+          "ThreadId": 66188,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199355Z"
+        },
+        {
+          "ThreadId": 64548,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199452Z"
+        },
+        {
+          "ThreadId": 73756,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199547Z"
+        },
+        {
+          "ThreadId": 78380,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199679Z"
+        },
+        {
+          "ThreadId": 74684,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199783Z"
+        },
+        {
+          "ThreadId": 9944,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199907Z"
+        },
+        {
+          "ThreadId": 41496,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200030Z"
+        },
+        {
+          "ThreadId": 54992,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200191Z"
+        },
+        {
+          "ThreadId": 55024,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200315Z"
+        },
+        {
+          "ThreadId": 61524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200730Z"
+        },
+        {
+          "ThreadId": 11756,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200841Z"
+        },
+        {
+          "ThreadId": 68004,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200950Z"
+        },
+        {
+          "ThreadId": 74364,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1201061Z"
+        },
+        {
+          "ThreadId": 25520,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1201161Z"
+        },
+        {
+          "ThreadId": 79232,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1208604Z"
+        },
+        {
+          "ThreadId": 78624,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1209387Z"
+        },
+        {
+          "ThreadId": 58188,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.1478166Z"
+        },
+        {
+          "ThreadId": 79800,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.1525945Z"
+        },
+        {
+          "ThreadId": 59436,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2874569Z"
+        },
+        {
+          "ThreadId": 77532,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875194Z"
+        },
+        {
+          "ThreadId": 73324,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875293Z"
+        },
+        {
+          "ThreadId": 77792,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875387Z"
+        },
+        {
+          "ThreadId": 64556,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875480Z"
+        },
+        {
+          "ThreadId": 67472,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875569Z"
+        },
+        {
+          "ThreadId": 77080,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875663Z"
+        },
+        {
+          "ThreadId": 8112,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876032Z"
+        },
+        {
+          "ThreadId": 8712,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876126Z"
+        },
+        {
+          "ThreadId": 70616,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876216Z"
+        },
+        {
+          "ThreadId": 51376,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876303Z"
+        },
+        {
+          "ThreadId": 69428,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876391Z"
+        },
+        {
+          "ThreadId": 6728,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876489Z"
+        },
+        {
+          "ThreadId": 79688,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876610Z"
+        },
+        {
+          "ThreadId": 52988,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876710Z"
+        },
+        {
+          "ThreadId": 69432,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876808Z"
+        },
+        {
+          "ThreadId": 67504,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876894Z"
+        },
+        {
+          "ThreadId": 41508,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876982Z"
+        },
+        {
+          "ThreadId": 74740,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877067Z"
+        },
+        {
+          "ThreadId": 58800,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877149Z"
+        },
+        {
+          "ThreadId": 75412,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877239Z"
+        },
+        {
+          "ThreadId": 39716,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877326Z"
+        },
+        {
+          "ThreadId": 70060,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877435Z"
+        },
+        {
+          "ThreadId": 57020,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877519Z"
+        },
+        {
+          "ThreadId": 78396,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.2877601Z"
+        },
+        {
+          "ThreadId": 54164,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877695Z"
+        },
+        {
+          "ThreadId": 10040,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877781Z"
+        },
+        {
+          "ThreadId": 45036,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877875Z"
+        },
+        {
+          "ThreadId": 78852,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877967Z"
+        },
+        {
+          "ThreadId": 57016,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2878055Z"
+        },
+        {
+          "ThreadId": 25128,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2878152Z"
+        },
+        {
+          "ThreadId": 66596,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2878245Z"
+        },
+        {
+          "ThreadId": 70592,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2966656Z"
+        },
+        {
+          "ThreadId": 66648,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967169Z"
+        },
+        {
+          "ThreadId": 48844,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967302Z"
+        },
+        {
+          "ThreadId": 67924,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967429Z"
+        },
+        {
+          "ThreadId": 63124,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967826Z"
+        },
+        {
+          "ThreadId": 70452,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967911Z"
+        },
+        {
+          "ThreadId": 44072,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968001Z"
+        },
+        {
+          "ThreadId": 58388,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968089Z"
+        },
+        {
+          "ThreadId": 79108,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968175Z"
+        },
+        {
+          "ThreadId": 64592,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968259Z"
+        },
+        {
+          "ThreadId": 70872,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968346Z"
+        },
+        {
+          "ThreadId": 45196,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968440Z"
+        },
+        {
+          "ThreadId": 76524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968518Z"
+        },
+        {
+          "ThreadId": 73492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968609Z"
+        },
+        {
+          "ThreadId": 45160,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968724Z"
+        },
+        {
+          "ThreadId": 55640,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968813Z"
+        },
+        {
+          "ThreadId": 13796,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968901Z"
+        },
+        {
+          "ThreadId": 70500,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968993Z"
+        },
+        {
+          "ThreadId": 61320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969071Z"
+        },
+        {
+          "ThreadId": 76152,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969154Z"
+        },
+        {
+          "ThreadId": 68772,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969235Z"
+        },
+        {
+          "ThreadId": 76080,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969324Z"
+        },
+        {
+          "ThreadId": 26224,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969406Z"
+        },
+        {
+          "ThreadId": 56512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969513Z"
+        },
+        {
+          "ThreadId": 54760,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969598Z"
+        },
+        {
+          "ThreadId": 74120,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969684Z"
+        },
+        {
+          "ThreadId": 72516,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969796Z"
+        },
+        {
+          "ThreadId": 77484,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969888Z"
+        },
+        {
+          "ThreadId": 79400,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970001Z"
+        },
+        {
+          "ThreadId": 22688,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970084Z"
+        },
+        {
+          "ThreadId": 45140,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970193Z"
+        },
+        {
+          "ThreadId": 40660,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970281Z"
+        },
+        {
+          "ThreadId": 75904,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.3981128Z"
+        },
+        {
+          "ThreadId": 20056,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.0907696Z"
+        },
+        {
+          "ThreadId": 49048,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2118659Z"
+        },
+        {
+          "ThreadId": 65840,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2119053Z"
+        },
+        {
+          "ThreadId": 68512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2124614Z"
+        },
+        {
+          "ThreadId": 52900,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.2185398Z"
+        },
+        {
+          "ThreadId": 70948,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2226006Z"
+        },
+        {
+          "ThreadId": 76176,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.5506278Z"
+        },
+        {
+          "ThreadId": 76352,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.5854698Z"
+        },
+        {
+          "ThreadId": 66008,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:13.6072959Z"
+        },
+        {
+          "ThreadId": 46900,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.6124501Z"
+        },
+        {
+          "ThreadId": 42536,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 281.25,
+          "StartUtc": "2026-10-26T00:25:13.7594367Z"
+        },
+        {
+          "ThreadId": 70840,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.7602205Z"
+        },
+        {
+          "ThreadId": 44980,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.8241855Z"
+        },
+        {
+          "ThreadId": 76688,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9529834Z"
+        },
+        {
+          "ThreadId": 75528,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530182Z"
+        },
+        {
+          "ThreadId": 66324,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530336Z"
+        },
+        {
+          "ThreadId": 72268,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530510Z"
+        },
+        {
+          "ThreadId": 79088,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530715Z"
+        },
+        {
+          "ThreadId": 5740,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530862Z"
+        },
+        {
+          "ThreadId": 52464,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531010Z"
+        },
+        {
+          "ThreadId": 38920,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531137Z"
+        },
+        {
+          "ThreadId": 76448,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531257Z"
+        },
+        {
+          "ThreadId": 76444,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531379Z"
+        },
+        {
+          "ThreadId": 58948,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531549Z"
+        },
+        {
+          "ThreadId": 78968,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531686Z"
+        },
+        {
+          "ThreadId": 3848,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531823Z"
+        },
+        {
+          "ThreadId": 65356,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531998Z"
+        },
+        {
+          "ThreadId": 77024,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9532164Z"
+        },
+        {
+          "ThreadId": 75912,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9532288Z"
+        },
+        {
+          "ThreadId": 75092,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 78.125,
+          "StartUtc": "2026-10-26T00:25:13.9698445Z"
+        },
+        {
+          "ThreadId": 13492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.3316701Z"
+        },
+        {
+          "ThreadId": 60932,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:14.3319023Z"
+        },
+        {
+          "ThreadId": 5076,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.3336584Z"
+        },
+        {
+          "ThreadId": 65696,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.6877877Z"
+        },
+        {
+          "ThreadId": 20276,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.7139862Z"
+        },
+        {
+          "ThreadId": 15492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.7578462Z"
+        },
+        {
+          "ThreadId": 78524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 578.125,
+          "StartUtc": "2026-10-26T00:25:14.8039586Z"
+        },
+        {
+          "ThreadId": 68296,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.8045499Z"
+        },
+        {
+          "ThreadId": 55052,
+          "State": "Wait",
+          "WaitReason": "ExecutionDelay",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:15.7619446Z"
+        },
+        {
+          "ThreadId": 73024,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.1568892Z"
+        },
+        {
+          "ThreadId": 71672,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.1591108Z"
+        },
+        {
+          "ThreadId": 44316,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.1661697Z"
+        },
+        {
+          "ThreadId": 40320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.6107505Z"
+        },
+        {
+          "ThreadId": 76492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:17.6107879Z"
+        },
+        {
+          "ThreadId": 58780,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 531.25,
+          "StartUtc": "2026-10-26T00:25:17.7353532Z"
+        },
+        {
+          "ThreadId": 68660,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:17.9001246Z"
+        },
+        {
+          "ThreadId": 39832,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:18.0409846Z"
+        },
+        {
+          "ThreadId": 77768,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 203.125,
+          "StartUtc": "2026-10-26T00:25:18.1023468Z"
+        },
+        {
+          "ThreadId": 52020,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:18.2482603Z"
+        },
+        {
+          "ThreadId": 62444,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 62.5,
+          "StartUtc": "2026-10-26T00:25:18.4118766Z"
+        },
+        {
+          "ThreadId": 53716,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 343.75,
+          "StartUtc": "2026-10-26T00:25:18.4122553Z"
+        },
+        {
+          "ThreadId": 68396,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:18.5451987Z"
+        },
+        {
+          "ThreadId": 43628,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:19.4303548Z"
+        },
+        {
+          "ThreadId": 53932,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:19.4342323Z"
+        },
+        {
+          "ThreadId": 21156,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 62.5,
+          "StartUtc": "2026-10-26T00:25:20.1980414Z"
+        },
+        {
+          "ThreadId": 76292,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:20.7666525Z"
+        },
+        {
+          "ThreadId": 79856,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:20.7788384Z"
+        },
+        {
+          "ThreadId": 73548,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:20.7803914Z"
+        },
+        {
+          "ThreadId": 60156,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:21.3844593Z"
+        },
+        {
+          "ThreadId": 16776,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 78.125,
+          "StartUtc": "2026-10-26T00:25:21.3844562Z"
+        },
+        {
+          "ThreadId": 66240,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 359.375,
+          "StartUtc": "2026-10-26T00:25:21.9716289Z"
+        },
+        {
+          "ThreadId": 26944,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:27.1751586Z"
+        }
+      ],
+      "Errors": []
+    }
+  ],
+  "After": [
+    {
+      "ProcessId": 60052,
+      "ProcessName": "EXCEL",
+      "StartUtc": "2026-10-26T00:25:11.9039368Z",
+      "StartTicks": 639285711119039368,
+      "WorkingSetBytes": 750120960,
+      "Threads": [
+        {
+          "ThreadId": 32716,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 8515.625,
+          "StartUtc": "2026-10-26T00:25:11.9039395Z"
+        },
+        {
+          "ThreadId": 46488,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:11.9204619Z"
+        },
+        {
+          "ThreadId": 78500,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:11.9205111Z"
+        },
+        {
+          "ThreadId": 38280,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:11.9205638Z"
+        },
+        {
+          "ThreadId": 42520,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 171.875,
+          "StartUtc": "2026-10-26T00:25:12.0213014Z"
+        },
+        {
+          "ThreadId": 73224,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0302474Z"
+        },
+        {
+          "ThreadId": 71728,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0330534Z"
+        },
+        {
+          "ThreadId": 73968,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0330806Z"
+        },
+        {
+          "ThreadId": 75636,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0330904Z"
+        },
+        {
+          "ThreadId": 14860,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331043Z"
+        },
+        {
+          "ThreadId": 59852,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331534Z"
+        },
+        {
+          "ThreadId": 70280,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331628Z"
+        },
+        {
+          "ThreadId": 49708,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331717Z"
+        },
+        {
+          "ThreadId": 60600,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331815Z"
+        },
+        {
+          "ThreadId": 68740,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0331904Z"
+        },
+        {
+          "ThreadId": 75992,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332008Z"
+        },
+        {
+          "ThreadId": 8544,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332127Z"
+        },
+        {
+          "ThreadId": 18988,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332240Z"
+        },
+        {
+          "ThreadId": 8708,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332349Z"
+        },
+        {
+          "ThreadId": 51212,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332501Z"
+        },
+        {
+          "ThreadId": 79064,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332589Z"
+        },
+        {
+          "ThreadId": 56188,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332729Z"
+        },
+        {
+          "ThreadId": 65704,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332861Z"
+        },
+        {
+          "ThreadId": 78088,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0332987Z"
+        },
+        {
+          "ThreadId": 19968,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333079Z"
+        },
+        {
+          "ThreadId": 16272,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333171Z"
+        },
+        {
+          "ThreadId": 46040,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333260Z"
+        },
+        {
+          "ThreadId": 77240,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333360Z"
+        },
+        {
+          "ThreadId": 62688,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333467Z"
+        },
+        {
+          "ThreadId": 55020,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333567Z"
+        },
+        {
+          "ThreadId": 69180,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333671Z"
+        },
+        {
+          "ThreadId": 54276,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333766Z"
+        },
+        {
+          "ThreadId": 53036,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333858Z"
+        },
+        {
+          "ThreadId": 22512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0333951Z"
+        },
+        {
+          "ThreadId": 53516,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334035Z"
+        },
+        {
+          "ThreadId": 79796,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334139Z"
+        },
+        {
+          "ThreadId": 77168,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334245Z"
+        },
+        {
+          "ThreadId": 74004,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0334340Z"
+        },
+        {
+          "ThreadId": 48632,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 93.75,
+          "StartUtc": "2026-10-26T00:25:12.0400490Z"
+        },
+        {
+          "ThreadId": 50560,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 187.5,
+          "StartUtc": "2026-10-26T00:25:12.0410168Z"
+        },
+        {
+          "ThreadId": 70672,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.0420159Z"
+        },
+        {
+          "ThreadId": 40444,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0439725Z"
+        },
+        {
+          "ThreadId": 67232,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.0442350Z"
+        },
+        {
+          "ThreadId": 65492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0522712Z"
+        },
+        {
+          "ThreadId": 24668,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:12.0526733Z"
+        },
+        {
+          "ThreadId": 49236,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0709472Z"
+        },
+        {
+          "ThreadId": 74116,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:12.0713826Z"
+        },
+        {
+          "ThreadId": 16524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 78.125,
+          "StartUtc": "2026-10-26T00:25:12.0727775Z"
+        },
+        {
+          "ThreadId": 73824,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 62.5,
+          "StartUtc": "2026-10-26T00:25:12.0728329Z"
+        },
+        {
+          "ThreadId": 36880,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 93.75,
+          "StartUtc": "2026-10-26T00:25:12.0728876Z"
+        },
+        {
+          "ThreadId": 60032,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 312.5,
+          "StartUtc": "2026-10-26T00:25:12.0746080Z"
+        },
+        {
+          "ThreadId": 73336,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0855801Z"
+        },
+        {
+          "ThreadId": 41320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0855965Z"
+        },
+        {
+          "ThreadId": 72260,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0856436Z"
+        },
+        {
+          "ThreadId": 71208,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.0856979Z"
+        },
+        {
+          "ThreadId": 69080,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0894615Z"
+        },
+        {
+          "ThreadId": 60512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0955919Z"
+        },
+        {
+          "ThreadId": 56088,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.0959519Z"
+        },
+        {
+          "ThreadId": 75804,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:12.1082957Z"
+        },
+        {
+          "ThreadId": 43692,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1196985Z"
+        },
+        {
+          "ThreadId": 69584,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197221Z"
+        },
+        {
+          "ThreadId": 71016,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197345Z"
+        },
+        {
+          "ThreadId": 20288,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197468Z"
+        },
+        {
+          "ThreadId": 78916,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197598Z"
+        },
+        {
+          "ThreadId": 68348,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197744Z"
+        },
+        {
+          "ThreadId": 75320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1197871Z"
+        },
+        {
+          "ThreadId": 62448,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198036Z"
+        },
+        {
+          "ThreadId": 17880,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198147Z"
+        },
+        {
+          "ThreadId": 56248,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198279Z"
+        },
+        {
+          "ThreadId": 72728,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198391Z"
+        },
+        {
+          "ThreadId": 40352,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198491Z"
+        },
+        {
+          "ThreadId": 41180,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198621Z"
+        },
+        {
+          "ThreadId": 69508,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198748Z"
+        },
+        {
+          "ThreadId": 78024,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1198862Z"
+        },
+        {
+          "ThreadId": 72084,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199004Z"
+        },
+        {
+          "ThreadId": 70064,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199111Z"
+        },
+        {
+          "ThreadId": 23632,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199235Z"
+        },
+        {
+          "ThreadId": 66188,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199355Z"
+        },
+        {
+          "ThreadId": 64548,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199452Z"
+        },
+        {
+          "ThreadId": 73756,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199547Z"
+        },
+        {
+          "ThreadId": 78380,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199679Z"
+        },
+        {
+          "ThreadId": 74684,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199783Z"
+        },
+        {
+          "ThreadId": 9944,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1199907Z"
+        },
+        {
+          "ThreadId": 41496,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200030Z"
+        },
+        {
+          "ThreadId": 54992,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200191Z"
+        },
+        {
+          "ThreadId": 55024,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200315Z"
+        },
+        {
+          "ThreadId": 61524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200730Z"
+        },
+        {
+          "ThreadId": 11756,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200841Z"
+        },
+        {
+          "ThreadId": 68004,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1200950Z"
+        },
+        {
+          "ThreadId": 74364,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1201061Z"
+        },
+        {
+          "ThreadId": 25520,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1201161Z"
+        },
+        {
+          "ThreadId": 79232,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1208604Z"
+        },
+        {
+          "ThreadId": 78624,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.1209387Z"
+        },
+        {
+          "ThreadId": 79800,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.1525945Z"
+        },
+        {
+          "ThreadId": 59436,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2874569Z"
+        },
+        {
+          "ThreadId": 77532,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875194Z"
+        },
+        {
+          "ThreadId": 73324,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875293Z"
+        },
+        {
+          "ThreadId": 77792,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875387Z"
+        },
+        {
+          "ThreadId": 64556,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875480Z"
+        },
+        {
+          "ThreadId": 67472,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875569Z"
+        },
+        {
+          "ThreadId": 77080,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2875663Z"
+        },
+        {
+          "ThreadId": 8112,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876032Z"
+        },
+        {
+          "ThreadId": 8712,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876126Z"
+        },
+        {
+          "ThreadId": 70616,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876216Z"
+        },
+        {
+          "ThreadId": 51376,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876303Z"
+        },
+        {
+          "ThreadId": 69428,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876391Z"
+        },
+        {
+          "ThreadId": 6728,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876489Z"
+        },
+        {
+          "ThreadId": 79688,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876610Z"
+        },
+        {
+          "ThreadId": 52988,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876710Z"
+        },
+        {
+          "ThreadId": 69432,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876808Z"
+        },
+        {
+          "ThreadId": 67504,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876894Z"
+        },
+        {
+          "ThreadId": 41508,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2876982Z"
+        },
+        {
+          "ThreadId": 74740,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877067Z"
+        },
+        {
+          "ThreadId": 58800,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877149Z"
+        },
+        {
+          "ThreadId": 75412,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877239Z"
+        },
+        {
+          "ThreadId": 39716,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877326Z"
+        },
+        {
+          "ThreadId": 70060,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877435Z"
+        },
+        {
+          "ThreadId": 57020,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877519Z"
+        },
+        {
+          "ThreadId": 78396,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:12.2877601Z"
+        },
+        {
+          "ThreadId": 54164,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877695Z"
+        },
+        {
+          "ThreadId": 10040,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877781Z"
+        },
+        {
+          "ThreadId": 45036,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877875Z"
+        },
+        {
+          "ThreadId": 78852,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2877967Z"
+        },
+        {
+          "ThreadId": 57016,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2878055Z"
+        },
+        {
+          "ThreadId": 25128,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2878152Z"
+        },
+        {
+          "ThreadId": 66596,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2878245Z"
+        },
+        {
+          "ThreadId": 70592,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2966656Z"
+        },
+        {
+          "ThreadId": 66648,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967169Z"
+        },
+        {
+          "ThreadId": 48844,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967302Z"
+        },
+        {
+          "ThreadId": 67924,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967429Z"
+        },
+        {
+          "ThreadId": 63124,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967826Z"
+        },
+        {
+          "ThreadId": 70452,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2967911Z"
+        },
+        {
+          "ThreadId": 44072,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968001Z"
+        },
+        {
+          "ThreadId": 58388,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968089Z"
+        },
+        {
+          "ThreadId": 79108,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968175Z"
+        },
+        {
+          "ThreadId": 64592,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968259Z"
+        },
+        {
+          "ThreadId": 70872,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968346Z"
+        },
+        {
+          "ThreadId": 45196,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968440Z"
+        },
+        {
+          "ThreadId": 76524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968518Z"
+        },
+        {
+          "ThreadId": 73492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968609Z"
+        },
+        {
+          "ThreadId": 45160,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968724Z"
+        },
+        {
+          "ThreadId": 55640,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968813Z"
+        },
+        {
+          "ThreadId": 13796,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968901Z"
+        },
+        {
+          "ThreadId": 70500,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2968993Z"
+        },
+        {
+          "ThreadId": 61320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969071Z"
+        },
+        {
+          "ThreadId": 76152,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969154Z"
+        },
+        {
+          "ThreadId": 68772,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969235Z"
+        },
+        {
+          "ThreadId": 76080,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969324Z"
+        },
+        {
+          "ThreadId": 26224,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969406Z"
+        },
+        {
+          "ThreadId": 56512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969513Z"
+        },
+        {
+          "ThreadId": 54760,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969598Z"
+        },
+        {
+          "ThreadId": 74120,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969684Z"
+        },
+        {
+          "ThreadId": 72516,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969796Z"
+        },
+        {
+          "ThreadId": 77484,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2969888Z"
+        },
+        {
+          "ThreadId": 79400,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970001Z"
+        },
+        {
+          "ThreadId": 22688,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970084Z"
+        },
+        {
+          "ThreadId": 45140,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970193Z"
+        },
+        {
+          "ThreadId": 40660,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.2970281Z"
+        },
+        {
+          "ThreadId": 75904,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:12.3981128Z"
+        },
+        {
+          "ThreadId": 20056,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.0907696Z"
+        },
+        {
+          "ThreadId": 49048,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2118659Z"
+        },
+        {
+          "ThreadId": 65840,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2119053Z"
+        },
+        {
+          "ThreadId": 68512,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2124614Z"
+        },
+        {
+          "ThreadId": 52900,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.2185398Z"
+        },
+        {
+          "ThreadId": 70948,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.2226006Z"
+        },
+        {
+          "ThreadId": 76176,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.5506278Z"
+        },
+        {
+          "ThreadId": 76352,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.5854698Z"
+        },
+        {
+          "ThreadId": 66008,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:13.6072959Z"
+        },
+        {
+          "ThreadId": 46900,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.6124501Z"
+        },
+        {
+          "ThreadId": 42536,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 281.25,
+          "StartUtc": "2026-10-26T00:25:13.7594367Z"
+        },
+        {
+          "ThreadId": 70840,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.7602205Z"
+        },
+        {
+          "ThreadId": 44980,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:13.8241855Z"
+        },
+        {
+          "ThreadId": 76688,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9529834Z"
+        },
+        {
+          "ThreadId": 75528,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530182Z"
+        },
+        {
+          "ThreadId": 66324,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530336Z"
+        },
+        {
+          "ThreadId": 72268,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530510Z"
+        },
+        {
+          "ThreadId": 79088,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530715Z"
+        },
+        {
+          "ThreadId": 5740,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9530862Z"
+        },
+        {
+          "ThreadId": 52464,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531010Z"
+        },
+        {
+          "ThreadId": 38920,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531137Z"
+        },
+        {
+          "ThreadId": 76448,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531257Z"
+        },
+        {
+          "ThreadId": 76444,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531379Z"
+        },
+        {
+          "ThreadId": 58948,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531549Z"
+        },
+        {
+          "ThreadId": 78968,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531686Z"
+        },
+        {
+          "ThreadId": 3848,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531823Z"
+        },
+        {
+          "ThreadId": 65356,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9531998Z"
+        },
+        {
+          "ThreadId": 77024,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9532164Z"
+        },
+        {
+          "ThreadId": 75912,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:13.9532288Z"
+        },
+        {
+          "ThreadId": 75092,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 78.125,
+          "StartUtc": "2026-10-26T00:25:13.9698445Z"
+        },
+        {
+          "ThreadId": 13492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.3316701Z"
+        },
+        {
+          "ThreadId": 60932,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:14.3319023Z"
+        },
+        {
+          "ThreadId": 5076,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.3336584Z"
+        },
+        {
+          "ThreadId": 65696,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.6877877Z"
+        },
+        {
+          "ThreadId": 20276,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.7139862Z"
+        },
+        {
+          "ThreadId": 15492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.7578462Z"
+        },
+        {
+          "ThreadId": 78524,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 578.125,
+          "StartUtc": "2026-10-26T00:25:14.8039586Z"
+        },
+        {
+          "ThreadId": 68296,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:14.8045499Z"
+        },
+        {
+          "ThreadId": 55052,
+          "State": "Wait",
+          "WaitReason": "ExecutionDelay",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:15.7619446Z"
+        },
+        {
+          "ThreadId": 73024,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.1568892Z"
+        },
+        {
+          "ThreadId": 71672,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.1591108Z"
+        },
+        {
+          "ThreadId": 44316,
+          "State": "Wait",
+          "WaitReason": "Unknown",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.1661697Z"
+        },
+        {
+          "ThreadId": 40320,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:17.6107505Z"
+        },
+        {
+          "ThreadId": 76492,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:17.6107879Z"
+        },
+        {
+          "ThreadId": 58780,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 531.25,
+          "StartUtc": "2026-10-26T00:25:17.7353532Z"
+        },
+        {
+          "ThreadId": 68660,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 31.25,
+          "StartUtc": "2026-10-26T00:25:17.9001246Z"
+        },
+        {
+          "ThreadId": 39832,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:18.0409846Z"
+        },
+        {
+          "ThreadId": 77768,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 203.125,
+          "StartUtc": "2026-10-26T00:25:18.1023468Z"
+        },
+        {
+          "ThreadId": 52020,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:18.2482603Z"
+        },
+        {
+          "ThreadId": 62444,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 62.5,
+          "StartUtc": "2026-10-26T00:25:18.4118766Z"
+        },
+        {
+          "ThreadId": 53716,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 343.75,
+          "StartUtc": "2026-10-26T00:25:18.4122553Z"
+        },
+        {
+          "ThreadId": 68396,
+          "State": "Wait",
+          "WaitReason": "Executive",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:18.5451987Z"
+        },
+        {
+          "ThreadId": 43628,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:19.4303548Z"
+        },
+        {
+          "ThreadId": 53932,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:19.4342323Z"
+        },
+        {
+          "ThreadId": 21156,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 62.5,
+          "StartUtc": "2026-10-26T00:25:20.1980414Z"
+        },
+        {
+          "ThreadId": 76292,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:20.7666525Z"
+        },
+        {
+          "ThreadId": 79856,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 46.875,
+          "StartUtc": "2026-10-26T00:25:20.7788384Z"
+        },
+        {
+          "ThreadId": 73548,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:20.7803914Z"
+        },
+        {
+          "ThreadId": 60156,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 15.625,
+          "StartUtc": "2026-10-26T00:25:21.3844593Z"
+        },
+        {
+          "ThreadId": 16776,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 78.125,
+          "StartUtc": "2026-10-26T00:25:21.3844562Z"
+        },
+        {
+          "ThreadId": 66240,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 359.375,
+          "StartUtc": "2026-10-26T00:25:21.9716289Z"
+        },
+        {
+          "ThreadId": 26944,
+          "State": "Wait",
+          "WaitReason": "UserRequest",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:27.1751586Z"
+        },
+        {
+          "ThreadId": 77620,
+          "State": "Wait",
+          "WaitReason": "EventPairLow",
+          "CpuMilliseconds": 0.0,
+          "StartUtc": "2026-10-26T00:25:28.4005611Z"
+        }
+      ],
+      "Errors": []
+    }
+  ],
+  "ThreadCpuAndWaitSamples": [
+    {
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Executive",
+      "StartUtc": "2026-10-26T00:25:11.9039395Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 46488,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:11.9204619Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78500,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:11.9205111Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 38280,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:11.9205638Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 42520,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0213014Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73224,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0302474Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 71728,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0330534Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73968,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0330806Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75636,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0330904Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 14860,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0331043Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 59852,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0331534Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70280,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0331628Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 49708,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0331717Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 60600,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0331815Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68740,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0331904Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75992,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332008Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 8544,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332127Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 18988,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332240Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 8708,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332349Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 51212,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332501Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79064,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332589Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 56188,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332729Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 65704,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332861Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78088,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0332987Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 19968,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333079Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 16272,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333171Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 46040,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333260Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77240,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333360Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 62688,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333467Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 55020,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333567Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 69180,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333671Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 54276,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333766Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 53036,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333858Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 22512,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0333951Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 53516,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0334035Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79796,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0334139Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77168,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0334245Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 74004,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0334340Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 48632,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.0400490Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 50560,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.0410168Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70672,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.0420159Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 40444,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0439725Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 67232,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.0442350Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 65492,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0522712Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 24668,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.0526733Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 49236,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.0709472Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 74116,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0713826Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 16524,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0727775Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73824,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0728329Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 36880,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0728876Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 60032,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0746080Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73336,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0855801Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 41320,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0855965Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 72260,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0856436Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 71208,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0856979Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 69080,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:12.0894615Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 60512,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0955919Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 56088,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.0959519Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75804,
+      "CpuDeltaMilliseconds": 15.625,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1082957Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 43692,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1196985Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 69584,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1197221Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 71016,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1197345Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 20288,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1197468Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78916,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1197598Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68348,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1197744Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75320,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1197871Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 62448,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198036Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 17880,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198147Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 56248,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198279Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 72728,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198391Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 40352,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198491Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 41180,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198621Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 69508,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198748Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78024,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1198862Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 72084,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199004Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70064,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199111Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 23632,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199235Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 66188,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199355Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 64548,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199452Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73756,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199547Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78380,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199679Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 74684,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199783Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 9944,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1199907Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 41496,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1200030Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 54992,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1200191Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 55024,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1200315Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 61524,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1200730Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 11756,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1200841Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68004,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1200950Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 74364,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1201061Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 25520,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1201161Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79232,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1208604Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78624,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.1209387Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79800,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.1525945Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 59436,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2874569Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77532,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2875194Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73324,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2875293Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77792,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2875387Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 64556,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2875480Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 67472,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2875569Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77080,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2875663Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 8112,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876032Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 8712,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876126Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70616,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876216Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 51376,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876303Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 69428,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876391Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 6728,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876489Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79688,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876610Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 52988,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876710Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 69432,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876808Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 67504,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876894Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 41508,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2876982Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 74740,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877067Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 58800,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877149Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75412,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877239Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 39716,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877326Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70060,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877435Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 57020,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877519Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78396,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877601Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 54164,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877695Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 10040,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877781Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 45036,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877875Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78852,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2877967Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 57016,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2878055Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 25128,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2878152Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 66596,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2878245Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70592,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2966656Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 66648,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2967169Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 48844,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2967302Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 67924,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2967429Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 63124,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2967826Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70452,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2967911Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 44072,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968001Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 58388,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968089Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79108,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968175Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 64592,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968259Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70872,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968346Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 45196,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968440Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76524,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968518Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73492,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968609Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 45160,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968724Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 55640,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968813Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 13796,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968901Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70500,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2968993Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 61320,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969071Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76152,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969154Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68772,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969235Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76080,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969324Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 26224,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969406Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 56512,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969513Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 54760,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969598Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 74120,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969684Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 72516,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969796Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77484,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2969888Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79400,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2970001Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 22688,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2970084Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 45140,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2970193Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 40660,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:12.2970281Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75904,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:12.3981128Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 20056,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.0907696Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 49048,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.2118659Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 65840,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.2119053Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68512,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.2124614Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 52900,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:13.2185398Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70948,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:13.2226006Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76176,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:13.5506278Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76352,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.5854698Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 66008,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.6072959Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 46900,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:13.6124501Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 42536,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.7594367Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 70840,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.7602205Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 44980,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:13.8241855Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76688,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9529834Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75528,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9530182Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 66324,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9530336Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 72268,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9530510Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79088,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9530715Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 5740,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9530862Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 52464,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531010Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 38920,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531137Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76448,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531257Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76444,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531379Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 58948,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531549Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78968,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531686Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 3848,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531823Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 65356,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9531998Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77024,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9532164Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75912,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9532288Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 75092,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:13.9698445Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 13492,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.3316701Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 60932,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.3319023Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 5076,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.3336584Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 65696,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.6877877Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 20276,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.7139862Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 15492,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.7578462Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 78524,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.8039586Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68296,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:14.8045499Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 55052,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "ExecutionDelay",
+      "StartUtc": "2026-10-26T00:25:15.7619446Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73024,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:17.1568892Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 71672,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:17.1591108Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 44316,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Unknown",
+      "StartUtc": "2026-10-26T00:25:17.1661697Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 40320,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:17.6107505Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76492,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:17.6107879Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 58780,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:17.7353532Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68660,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Executive",
+      "StartUtc": "2026-10-26T00:25:17.9001246Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 39832,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Executive",
+      "StartUtc": "2026-10-26T00:25:18.0409846Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77768,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:18.1023468Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 52020,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Executive",
+      "StartUtc": "2026-10-26T00:25:18.2482603Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 62444,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:18.4118766Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 53716,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:18.4122553Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 68396,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "Executive",
+      "StartUtc": "2026-10-26T00:25:18.5451987Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 43628,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:19.4303548Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 53932,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:19.4342323Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 21156,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:20.1980414Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 76292,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:20.7666525Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 79856,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:20.7788384Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 73548,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:20.7803914Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 60156,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:21.3844593Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 16776,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:21.3844562Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 66240,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:21.9716289Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 26944,
+      "CpuDeltaMilliseconds": 0.0,
+      "State": "Wait",
+      "WaitReason": "UserRequest",
+      "StartUtc": "2026-10-26T00:25:27.1751586Z"
+    },
+    {
+      "ProcessId": 60052,
+      "ThreadId": 77620,
+      "CpuDeltaMilliseconds": null,
+      "State": "Wait",
+      "WaitReason": "EventPairLow",
+      "StartUtc": "2026-10-26T00:25:28.4005611Z"
+    }
+  ],
+  "TargetWindows": [
+    {
+      "Handle": 18290564,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "HardwareMonitorWindow",
+      "ClassName": "HardwareMonitorWindowClass",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 5971052,
+      "ProcessId": 60052,
+      "ThreadId": 66008,
+      "Title": "",
+      "ClassName": "Hidden Window of the IM Abstraction layer",
+      "Visible": false,
+      "Enabled": false,
+      "Owner": 0
+    },
+    {
+      "Handle": 8330426,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "MsoPeopleSearchMessages",
+      "Visible": false,
+      "Enabled": false,
+      "Owner": 0
+    },
+    {
+      "Handle": 2236766,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "ThunderMain",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 5251432,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": ".NET-BroadcastEventWindow.4.0.0.0.165f26b.0",
+      "ClassName": ".NET-BroadcastEventWindow.4.0.0.0.165f26b.0",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 2954670,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "CapacityDistrib(A.1)-shifts  -  Read-Only - CS A.1 DIAGNOSTIC - closes without saving",
+      "ClassName": "XLMAIN",
+      "Visible": true,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 4398240,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "DDE Server Window",
+      "ClassName": "OleDdeWndClass",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 4660414,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "AcroStubUnloadWClass",
+      "ClassName": "AcroStubUnloadWClass",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 5643518,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "MsoStdCompMgr",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 88280134,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "ComboLBox",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 4134158,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "ComboLBox",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 19207594,
+      "ProcessId": 60052,
+      "ThreadId": 65492,
+      "Title": "OfficePowerManagerWindow",
+      "ClassName": "OfficePowerManagerWindow",
+      "Visible": false,
+      "Enabled": false,
+      "Owner": 0
+    },
+    {
+      "Handle": 5513684,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "ARC Event Window 00",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 11739500,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "ARC Event Window 00",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 5051740,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "ARC Event Window 00",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 9635170,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "",
+      "ClassName": "XLMAIN",
+      "Visible": false,
+      "Enabled": true,
+      "Owner": 0
+    },
+    {
+      "Handle": 13836374,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "Default IME",
+      "ClassName": "IME",
+      "Visible": false,
+      "Enabled": false,
+      "Owner": 2954670
+    },
+    {
+      "Handle": 13705316,
+      "ProcessId": 60052,
+      "ThreadId": 32716,
+      "Title": "MSCTFIME UI",
+      "ClassName": "MSCTFIME UI",
+      "Visible": false,
+      "Enabled": false,
+      "Owner": 13836374
+    }
+  ],
+  "WaitChains": [],
+  "Limitations": [
+    "A single WCT node can mean running or an unsupported wait; it does not prove absence of a hang.",
+    "Access-denied or NoAccess results are incomplete evidence; this script does not change token privileges.",
+    "Thread state and wait chains are point-in-time observations, not an M query execution trace.",
+    "Earliest-start selection is explicitly a candidate when no main-window identity is available."
+  ]
+}

@@ -1,6 +1,6 @@
 // Power Query from: CapacityDistrib(A.1)-shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(A.1)-shifts.xlsx
-// Extracted: 2026-10-05T07:47:05.241Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\CS\CapacityDistrib(A.1)-shifts.xlsx
+// Extracted: 2026-10-25T22:41:47.143Z
 
 section Section1;
 
@@ -49,66 +49,9 @@ in
 // Purpose: Expose the validated SharePoint number; null represents an unavailable setting, never a fallback threshold.
 shared WorkingDayAllocationThreshold = WorkingDayAllocationThreshold_Status[Value];
 
-// Query: IMPORT Demand
-// Purpose: Open Demand.xlsx once and expose its workbook navigation table without business transformations.
-shared #"IMPORT Demand" = let
-    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Demand.xlsx")),
-    Navigation = Excel.Workbook(SourceBinary, null, true),
-    BufferedNavigation = Table.Buffer(Navigation)
-in
-    BufferedNavigation;
-
-// Query: Demand Source Prepare
-// Purpose: Select and type the role-specific shift-demand table used by A.1.
-shared #"Demand Source Prepare" = let
-    Navigation = #"IMPORT Demand",
-    Matches = Table.SelectRows(Navigation, each [Item] = "ShiftDemandHCAverageANACC" and [Kind] = "Table"),
-    DemandTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("A.1 demand import", "Expected exactly one ShiftDemandHCAverageANACC table.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"Facility", "Role", "Date", "ShiftPeriod", "UnitShiftEffort", "ShiftDurations.Duration", "ShiftDemandHCAverage"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(DemandTable)),
-    ValidatedTable = if List.IsEmpty(MissingColumns) then DemandTable
-        else error Error.Record("A.1 demand import", "ShiftDemandHCAverageANACC is missing required columns.", [MissingColumns = MissingColumns]),
-    FilteredRole = Table.SelectRows(ValidatedTable, each [Role] = Role),
-    RenamedShiftDuration = Table.RenameColumns(FilteredRole, {{"ShiftDurations.Duration", "ShiftDurations.ShiftDuration"}}),
-    Typed = Table.TransformColumnTypes(RenamedShiftDuration, {{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"ShiftPeriod", type text}, {"UnitShiftEffort", type number}, {"ShiftDurations.ShiftDuration", type number}, {"ShiftDemandHCAverage", type number}})
-in
-    Typed;
-
 // Query: IMPORT ShiftUnitDemandHRS !!
 // Purpose: Preserve the existing prepared-demand interface for downstream queries.
 shared #"IMPORT ShiftUnitDemandHRS !!" = #"Demand Source Prepare";
-
-// Query: IMPORT StaffListMaster
-// Purpose: Open StaffListMaster.xlsx once and expose its workbook navigation table without business transformations.
-shared #"IMPORT StaffListMaster" = let
-    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\StaffListMaster.xlsx")),
-    Navigation = Excel.Workbook(SourceBinary, null, true),
-    BufferedNavigation = Table.Buffer(Navigation)
-in
-    BufferedNavigation;
-
-// Query: Masterlist Prepare
-// Purpose: Validate and prepare the role-specific employee contract used by A.1.
-// Output: One row per source master-list record before Resource-grain validation.
-shared #"Masterlist Prepare" = let
-    Navigation = #"IMPORT StaffListMaster",
-    Matches = Table.SelectRows(Navigation, each [Item] = "Table_Masterlist" and [Kind] = "Table"),
-    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("A.1 master-list import", "Expected exactly one Table_Masterlist table.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"Name", "Role", "Resource", "EmployeeID", "Facility-Abbrev", "PreferredRole", "Contracted FN Hours",
-        "Contracted Shifts", "Settings Max Availability", "Effective Shift Cap", "Limit Basis"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
-    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
-        else error Error.Record("A.1 master-list import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
-    Typed = Table.TransformColumnTypes(Selected,
-        {{"Name", type text}, {"Role", type text}, {"Resource", Int64.Type}, {"EmployeeID", type text},
-         {"Facility-Abbrev", type text}, {"PreferredRole", type text}, {"Contracted FN Hours", type nullable number},
-         {"Contracted Shifts", type nullable number}, {"Settings Max Availability", type nullable number},
-         {"Effective Shift Cap", type nullable number}, {"Limit Basis", type text}}),
-    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
-in
-    FilteredRole;
 
 // Query: IMPORT Masterlist !!
 // Purpose: Preserve the existing prepared-master-list interface for downstream queries.
@@ -124,59 +67,9 @@ shared A1CheckResult = (name as text, evaluate as function) as record =>
          Failures = if Result[HasError] then null else Result[Value],
          Details = if Result[HasError] then (try Result[Error][Message] otherwise "Evaluation failed") else null];
 
-// Query: IMPORT Capacity ShiftAvailability
-// Purpose: Open Capacity-ShiftAvailability.xlsx once and expose its workbook navigation table without business transformations.
-shared #"IMPORT Capacity ShiftAvailability" = let
-    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Capacity-ShiftAvailability.xlsx")),
-    Navigation = Excel.Workbook(SourceBinary, null, true),
-    BufferedNavigation = Table.Buffer(Navigation)
-in
-    BufferedNavigation;
-
-// Query: ResDayShift Prepare
-// Purpose: Validate and type only the availability fields consumed by A.1, then apply the dynamic role scope.
-shared #"ResDayShift Prepare" = let
-    Navigation = #"IMPORT Capacity ShiftAvailability",
-    Matches = Table.SelectRows(Navigation, each [Item] = "ResDayShift" and [Kind] = "Table"),
-    ResDayShiftTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("A.1 availability import", "Expected exactly one ResDayShift table.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"Name", "Role", "Week", "Day", "Shift", "EffectiveShiftHrs", "Date"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ResDayShiftTable)),
-    ValidatedTable = if List.IsEmpty(MissingColumns) then ResDayShiftTable
-        else error Error.Record("A.1 availability import", "ResDayShift is missing required columns.", [MissingColumns = MissingColumns]),
-    Typed = Table.TransformColumnTypes(ValidatedTable, {{"Name", type text}, {"Role", type text}, {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", type date}}),
-    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
-in
-    FilteredRole;
-
 // Query: IMPORT ResDayShift !!
 // Purpose: Preserve the existing prepared-availability interface for downstream queries.
 shared #"IMPORT ResDayShift !!" = #"ResDayShift Prepare";
-
-// Query: IMPORT AllocationByShiftAverage
-// Purpose: Open AllocationByShiftAverage.xlsx once and expose its workbook navigation table without business transformations.
-shared #"IMPORT AllocationByShiftAverage" = let
-    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\AllocationByShiftAverage.xlsx")),
-    Navigation = Excel.Workbook(SourceBinary, null, true),
-    BufferedNavigation = Table.Buffer(Navigation)
-in
-    BufferedNavigation;
-
-// Query: ResourceShiftAllocation Prepare
-// Purpose: Validate and prepare the role-specific resource-shift allocations used by A.1.
-shared #"ResourceShiftAllocation Prepare" = let
-    Navigation = #"IMPORT AllocationByShiftAverage",
-    Matches = Table.SelectRows(Navigation, each [Item] = "ResourceShiftAllocation" and [Kind] = "Table"),
-    AllocationTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
-        else error Error.Record("A.1 allocation import", "Expected exactly one ResourceShiftAllocation table.", [Matches = Table.RowCount(Matches)]),
-    RequiredColumns = {"ShiftDate", "ShiftPeriod", "IntervalAssociatedShift", "Name", "Role", "ResShiftEffort", "ResShiftEffectiveRatio", "ResShiftFTE"},
-    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(AllocationTable)),
-    ValidatedTable = if List.IsEmpty(MissingColumns) then AllocationTable
-        else error Error.Record("A.1 allocation import", "ResourceShiftAllocation is missing required columns.", [MissingColumns = MissingColumns]),
-    Typed = Table.TransformColumnTypes(ValidatedTable, {{"ShiftDate", type date}, {"ShiftPeriod", type text}, {"IntervalAssociatedShift", type text}, {"Name", type text}, {"Role", type text}, {"ResShiftEffort", type number}, {"ResShiftEffectiveRatio", type number}, {"ResShiftFTE", type number}}),
-    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
-in
-    FilteredRole;
 
 // Query: IMPORT ResourceShiftAllocation - Role!!
 // Purpose: Preserve the existing prepared-allocation interface for downstream queries.
@@ -387,7 +280,8 @@ shared A1ResourceIdentity_CHECK = let
     ResourceMap = Resources,
     AvailabilityMatchCounts = Table.Distinct(Table.SelectColumns(A1AvailabilityIdentity_Prepare, {"Name", "Role", "MatchCount", "Resource"})),
     AllocationMatchCounts = Table.Distinct(Table.SelectColumns(A1AllocationIdentity_Prepare, {"Name", "Role", "MatchCount", "Resource"})),
-    AllocationMappingFailureCount = Table.RowCount(Table.SelectRows(AllocationMatchCounts, each [MatchCount] <> 1 or [Resource] = null)),
+    #"Sorted Rows" = Table.Sort(AllocationMatchCounts,{{"MatchCount", Order.Ascending}}),
+    AllocationMappingFailureCount = Table.RowCount(Table.SelectRows(#"Sorted Rows", each [MatchCount] <> 1 or [Resource] = null)),
     Checks = {
         A1CheckResult("Resource identifiers are populated", () => Table.RowCount(Table.SelectRows(ResourceMap, each [Resource] = null))),
         A1CheckResult("Resource identifiers are unique", () => Table.RowCount(ResourceMap) - Table.RowCount(Table.Distinct(ResourceMap, {"Resource"}))),
@@ -2458,3 +2352,110 @@ in
 // Purpose: Preserve the existing Settings maximum interface using the validated roster value.
 // Notes: Null denotes an unavailable maximum; optional spare is excluded through Resource diagnostics.
 shared #"EXTRACT MaxAvailability" = A1SettingsMaximum_Status[Value];
+
+// Query: IMPORT Demand
+// Purpose: Open Demand.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT Demand" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Demand.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
+in
+    BufferedNavigation;
+
+// Query: Demand Source Prepare
+// Purpose: Select and type the role-specific shift-demand table used by A.1.
+shared #"Demand Source Prepare" = let
+    Navigation = #"IMPORT Demand",
+    Matches = Table.SelectRows(Navigation, each [Item] = "ShiftDemandHCAverageANACC" and [Kind] = "Table"),
+    DemandTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 demand import", "Expected exactly one ShiftDemandHCAverageANACC table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Facility", "Role", "Date", "ShiftPeriod", "UnitShiftEffort", "ShiftDurations.Duration", "ShiftDemandHCAverage"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(DemandTable)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then DemandTable
+        else error Error.Record("A.1 demand import", "ShiftDemandHCAverageANACC is missing required columns.", [MissingColumns = MissingColumns]),
+    FilteredRole = Table.SelectRows(ValidatedTable, each [Role] = Role),
+    RenamedShiftDuration = Table.RenameColumns(FilteredRole, {{"ShiftDurations.Duration", "ShiftDurations.ShiftDuration"}}),
+    Typed = Table.TransformColumnTypes(RenamedShiftDuration, {{"Facility", type text}, {"Role", type text}, {"Date", type date}, {"ShiftPeriod", type text}, {"UnitShiftEffort", type number}, {"ShiftDurations.ShiftDuration", type number}, {"ShiftDemandHCAverage", type number}})
+in
+    Typed;
+
+// Query: IMPORT StaffListMaster
+// Purpose: Open StaffListMaster.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT StaffListMaster" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\StaffListMaster.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
+in
+    BufferedNavigation;
+
+// Query: Masterlist Prepare
+// Purpose: Validate and prepare the role-specific employee contract used by A.1.
+// Output: One row per source master-list record before Resource-grain validation.
+shared #"Masterlist Prepare" = let
+    Navigation = #"IMPORT StaffListMaster",
+    Matches = Table.SelectRows(Navigation, each [Item] = "Table_Masterlist" and [Kind] = "Table"),
+    MasterlistTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 master-list import", "Expected exactly one Table_Masterlist table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Name", "Role", "Resource", "EmployeeID", "Facility-Abbrev", "PreferredRole", "Contracted FN Hours",
+        "Contracted Shifts", "Settings Max Availability", "Effective Shift Cap", "Limit Basis"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(MasterlistTable)),
+    Selected = if List.IsEmpty(MissingColumns) then Table.SelectColumns(MasterlistTable, RequiredColumns)
+        else error Error.Record("A.1 master-list import", "Table_Masterlist is missing required contract columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(Selected,
+        {{"Name", type text}, {"Role", type text}, {"Resource", Int64.Type}, {"EmployeeID", type text},
+         {"Facility-Abbrev", type text}, {"PreferredRole", type text}, {"Contracted FN Hours", type nullable number},
+         {"Contracted Shifts", type nullable number}, {"Settings Max Availability", type nullable number},
+         {"Effective Shift Cap", type nullable number}, {"Limit Basis", type text}}),
+    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
+in
+    FilteredRole;
+
+// Query: IMPORT Capacity ShiftAvailability
+// Purpose: Open Capacity-ShiftAvailability.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT Capacity ShiftAvailability" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\Capacity-ShiftAvailability.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
+in
+    BufferedNavigation;
+
+// Query: ResDayShift Prepare
+// Purpose: Validate and type only the availability fields consumed by A.1, then apply the dynamic role scope.
+shared #"ResDayShift Prepare" = let
+    Navigation = #"IMPORT Capacity ShiftAvailability",
+    Matches = Table.SelectRows(Navigation, each [Item] = "ResDayShift" and [Kind] = "Table"),
+    ResDayShiftTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 availability import", "Expected exactly one ResDayShift table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"Name", "Role", "Week", "Day", "Shift", "EffectiveShiftHrs", "Date"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(ResDayShiftTable)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then ResDayShiftTable
+        else error Error.Record("A.1 availability import", "ResDayShift is missing required columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(ValidatedTable, {{"Name", type text}, {"Role", type text}, {"Week", Int64.Type}, {"Day", type text}, {"Shift", type text}, {"EffectiveShiftHrs", type number}, {"Date", type date}}),
+    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
+in
+    FilteredRole;
+
+// Query: IMPORT AllocationByShiftAverage
+// Purpose: Open AllocationByShiftAverage.xlsx once and expose its workbook navigation table without business transformations.
+shared #"IMPORT AllocationByShiftAverage" = let
+    SourceBinary = Binary.Buffer(File.Contents(FilePath & "\2. Calculations\AllocationByShiftAverage.xlsx")),
+    Navigation = Excel.Workbook(SourceBinary, null, true),
+    BufferedNavigation = Table.Buffer(Navigation)
+in
+    BufferedNavigation;
+
+// Query: ResourceShiftAllocation Prepare
+// Purpose: Validate and prepare the role-specific resource-shift allocations used by A.1.
+shared #"ResourceShiftAllocation Prepare" = let
+    Navigation = #"IMPORT AllocationByShiftAverage",
+    Matches = Table.SelectRows(Navigation, each [Item] = "ResourceShiftAllocation" and [Kind] = "Table"),
+    AllocationTable = if Table.RowCount(Matches) = 1 then Matches{0}[Data]
+        else error Error.Record("A.1 allocation import", "Expected exactly one ResourceShiftAllocation table.", [Matches = Table.RowCount(Matches)]),
+    RequiredColumns = {"ShiftDate", "ShiftPeriod", "IntervalAssociatedShift", "Name", "Role", "ResShiftEffort", "ResShiftEffectiveRatio", "ResShiftFTE"},
+    MissingColumns = List.Difference(RequiredColumns, Table.ColumnNames(AllocationTable)),
+    ValidatedTable = if List.IsEmpty(MissingColumns) then AllocationTable
+        else error Error.Record("A.1 allocation import", "ResourceShiftAllocation is missing required columns.", [MissingColumns = MissingColumns]),
+    Typed = Table.TransformColumnTypes(ValidatedTable, {{"ShiftDate", type date}, {"ShiftPeriod", type text}, {"IntervalAssociatedShift", type text}, {"Name", type text}, {"Role", type text}, {"ResShiftEffort", type number}, {"ResShiftEffectiveRatio", type number}, {"ResShiftFTE", type number}}),
+    FilteredRole = Table.SelectRows(Typed, each [Role] = Role)
+in
+    FilteredRole;

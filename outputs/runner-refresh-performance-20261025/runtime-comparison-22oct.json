@@ -1,0 +1,124 @@
+{
+  "BaselineRun": "20261022-121419-d2d39cdc",
+  "LatestRun": "20261025-130607-a635093e",
+  "MatchingWorkbooks": 14,
+  "BaselineTotalJobs": 50,
+  "LatestTotalJobs": 14,
+  "BaselinePeakConcurrency": 10,
+  "LatestPeakConcurrency": 3,
+  "FullBdSpanDefinition": "First selected BD job start through final BD job finish; excludes coordinator startup and non-BD work.",
+  "Oct22BdSpanSeconds": 657.1051593999999,
+  "LatestBdSpanSeconds": 371.9238831,
+  "BdPercentReduction": 43.4,
+  "Oct22BdFinishSecondsAfterRunStart": 659.1392238,
+  "LatestFullRunSeconds": 374.1330139,
+  "Oct22DownstreamSpanSeconds": 461.48506639999994,
+  "LatestDownstreamSpanSeconds": 248.35793720000004,
+  "DownstreamPercentReduction": 46.2,
+  "Comparisons": [
+    {
+      "Id": "BD/Workers",
+      "RelativePath": "UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "Oct22Seconds": 85.911,
+      "LatestSeconds": 61.785,
+      "PercentReduction": 28.1
+    },
+    {
+      "Id": "BD/Availability",
+      "RelativePath": "UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Oct22Seconds": 65.272,
+      "LatestSeconds": 48.691,
+      "PercentReduction": 25.4
+    },
+    {
+      "Id": "BD/Staff",
+      "RelativePath": "UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+      "Oct22Seconds": 44.367,
+      "LatestSeconds": 13.009,
+      "PercentReduction": 70.7
+    },
+    {
+      "Id": "BD/Role:AIN/1",
+      "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+      "Oct22Seconds": 189.551,
+      "LatestSeconds": 108.841,
+      "PercentReduction": 42.6
+    },
+    {
+      "Id": "BD/Role:AIN/2",
+      "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+      "Oct22Seconds": 63.476,
+      "LatestSeconds": 21.045,
+      "PercentReduction": 66.8
+    },
+    {
+      "Id": "BD/Role:AIN/3",
+      "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "Oct22Seconds": 122.311,
+      "LatestSeconds": 89.274,
+      "PercentReduction": 27.0
+    },
+    {
+      "Id": "BD/Role:RN/1",
+      "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+      "Oct22Seconds": 123.003,
+      "LatestSeconds": 57.163,
+      "PercentReduction": 53.5
+    },
+    {
+      "Id": "BD/Role:RN/2",
+      "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+      "Oct22Seconds": 55.367,
+      "LatestSeconds": 18.964,
+      "PercentReduction": 65.7
+    },
+    {
+      "Id": "BD/Role:RN/3",
+      "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+      "Oct22Seconds": 68.497,
+      "LatestSeconds": 28.537,
+      "PercentReduction": 58.3
+    },
+    {
+      "Id": "BD/Role:EN/1",
+      "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+      "Oct22Seconds": 123.939,
+      "LatestSeconds": 63.606,
+      "PercentReduction": 48.7
+    },
+    {
+      "Id": "BD/Role:EN/2",
+      "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+      "Oct22Seconds": 55.259,
+      "LatestSeconds": 19.808,
+      "PercentReduction": 64.2
+    },
+    {
+      "Id": "BD/Role:EN/3",
+      "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+      "Oct22Seconds": 68.336,
+      "LatestSeconds": 24.871,
+      "PercentReduction": 63.6
+    },
+    {
+      "Id": "BD/Capacity",
+      "RelativePath": "UNITS/BD/2. Calculations/Capacity.xlsx",
+      "Oct22Seconds": 44.049,
+      "LatestSeconds": 13.796,
+      "PercentReduction": 68.7
+    },
+    {
+      "Id": "BD/Effort",
+      "RelativePath": "UNITS/BD/2. Calculations/Effort.xlsx",
+      "Oct22Seconds": 41.979,
+      "LatestSeconds": 15.301,
+      "PercentReduction": 63.6
+    }
+  ],
+  "Limitations": [
+    "Single successful live run on the new runner; no repeatability estimate.",
+    "22 October also ran TE, JH-RY and organisation jobs; resource contention differs.",
+    "Workbook definitions, redundant sheet and upstream data changed between runs.",
+    "Technical refresh/save/close and required check gates are verified; business output equivalence was not audited."
+  ]
+}

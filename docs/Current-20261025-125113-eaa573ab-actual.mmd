@@ -1,0 +1,25 @@
+gantt
+    title Current 20261025-125113-eaa573ab PartialOrFailed - elapsed 00 00 43 - peak 1
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/C1
+    %% Predecessors: BD/AllocationInput, BD/Settings
+    BD/Workers attempt 1 Failed :crit, task1, 2000-01-01 00:00:02.183, 2000-01-01 00:00:43.384
+    %% Untimed BD/Availability; predecessors: BD/Workers, BD/AllocationInput, BD/Settings
+    %% Untimed BD/Staff; predecessors: BD/Availability, BD/Workers, BD/AllocationInput, BD/Settings
+    section BD/C2 AIN
+    %% Untimed BD/Role:AIN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:AIN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    %% Untimed BD/Role:AIN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    section BD/C2 RN
+    %% Untimed BD/Role:RN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:RN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    %% Untimed BD/Role:RN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    section BD/C2 EN
+    %% Untimed BD/Role:EN/1; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    %% Untimed BD/Role:EN/2; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    %% Untimed BD/Role:EN/3; predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    section BD/U4
+    %% Untimed BD/Capacity; predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    %% Untimed BD/Effort; predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings

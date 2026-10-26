@@ -1,7 +1,3 @@
-// Power Query from: CapacityDistrib(B)-shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\AIN\CapacityDistrib(B)-shifts.xlsx
-// Extracted: 2026-10-05T07:55:23.444Z
-
 section Section1;
 
 // Query: fnBFiniteNumber

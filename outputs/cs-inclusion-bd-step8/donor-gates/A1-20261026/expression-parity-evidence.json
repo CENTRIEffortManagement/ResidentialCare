@@ -1,0 +1,22 @@
+{
+  "sourceDefinitionCount": 137,
+  "workbookDefinitionCount": 137,
+  "queryNamesCaseSensitiveUnique": true,
+  "missingInWorkbook": [],
+  "missingInSource": [],
+  "changedDefinitionNames": [
+    "A1ResourceIdentity_CHECK"
+  ],
+  "exactExpressionsMatchIgnoringOrderAndPrefixHeaders": false,
+  "comparison": "Compare each complete shared definition from shared keyword through its terminating semicolon after line-ending normalization. Scan string/quoted identifiers and comments so embedded semicolons do not terminate definitions. Prefix headers and ordering are separately represented by the whole-section diff.",
+  "changes": [
+    {
+      "name": "A1ResourceIdentity_CHECK",
+      "sourceCharacters": 1866,
+      "workbookCharacters": 1949,
+      "firstDifference": 353,
+      "sourceContext": "ctColumns(A1AllocationIdentity_Prepare, {\"Name\", \"Role\", \"MatchCount\", \"Resource\"})),\n    AllocationMappingFailureCount = Table.RowCount(Table.SelectRows(AllocationMatchCounts, each [MatchCount] <> 1 or [Resource] = null)),\n    Checks = {\n        A1CheckResult(\"Resource identifiers are populated\", () => Table.RowCount(Table.SelectRows(ResourceMap, ",
+      "workbookContext": "ctColumns(A1AllocationIdentity_Prepare, {\"Name\", \"Role\", \"MatchCount\", \"Resource\"})),\n    #\"Sorted Rows\" = Table.Sort(AllocationMatchCounts,{{\"MatchCount\", Order.Ascending}}),\n    AllocationMappingFailureCount = Table.RowCount(Table.SelectRows(#\"Sorted Rows\", each [MatchCount] <> 1 or [Resource] = null)),\n    Checks = {\n        A1CheckResult(\"Resou"
+    }
+  ]
+}

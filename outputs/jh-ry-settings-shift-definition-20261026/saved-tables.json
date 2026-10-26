@@ -1,0 +1,2989 @@
+{
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+  "SHA256": "3F82F15CF9D28FB747B8A940B405C2082A4F20C649B0128C79C7B066055CE157",
+  "WorkbookUnchanged": true,
+  "Tables": [
+    {
+      "Name": "ShiftPeriod",
+      "Sheet": "ShiftHours",
+      "Range": "A30:G42",
+      "Columns": [
+        "Role",
+        "ShiftPeriod",
+        "StartTime",
+        "StartDay",
+        "DurationOfShifts",
+        "EndDay",
+        "EndTimeCheck"
+      ],
+      "RowCount": 12,
+      "Rows": [
+        {
+          "Role": "RN",
+          "ShiftPeriod": "AM",
+          "StartTime": "6",
+          "StartDay": "0.25",
+          "DurationOfShifts": "8",
+          "EndDay": "0.58333333333333326",
+          "EndTimeCheck": "0.58333333333333326"
+        },
+        {
+          "Role": "RN",
+          "ShiftPeriod": "PM",
+          "StartTime": "14",
+          "StartDay": "0.58333333333333337",
+          "DurationOfShifts": "8.5",
+          "EndDay": "0.9375",
+          "EndTimeCheck": "0.9375"
+        },
+        {
+          "Role": "RN",
+          "ShiftPeriod": "NIGHT",
+          "StartTime": "22.5",
+          "StartDay": "0.9375",
+          "DurationOfShifts": "7.5",
+          "EndDay": "0.25",
+          "EndTimeCheck": "0.25"
+        },
+        {
+          "Role": "AIN",
+          "ShiftPeriod": "AM",
+          "StartTime": "6",
+          "StartDay": "0.25",
+          "DurationOfShifts": "8",
+          "EndDay": "0.58333333333333326",
+          "EndTimeCheck": "0.58333333333333326"
+        },
+        {
+          "Role": "AIN",
+          "ShiftPeriod": "PM",
+          "StartTime": "14",
+          "StartDay": "0.58333333333333337",
+          "DurationOfShifts": "8",
+          "EndDay": "0.91666666666666674",
+          "EndTimeCheck": "0.91666666666666674"
+        },
+        {
+          "Role": "AIN",
+          "ShiftPeriod": "NIGHT",
+          "StartTime": "22",
+          "StartDay": "0.91666666666666663",
+          "DurationOfShifts": "8",
+          "EndDay": "0.25",
+          "EndTimeCheck": "0.25"
+        },
+        {
+          "Role": "AINC4",
+          "ShiftPeriod": "AM",
+          "StartTime": "6",
+          "StartDay": "0.25",
+          "DurationOfShifts": "8",
+          "EndDay": "0.58333333333333326",
+          "EndTimeCheck": "0.58333333333333326"
+        },
+        {
+          "Role": "AINC4",
+          "ShiftPeriod": "PM",
+          "StartTime": "14",
+          "StartDay": "0.58333333333333337",
+          "DurationOfShifts": "8.5",
+          "EndDay": "0.9375",
+          "EndTimeCheck": "0.9375"
+        },
+        {
+          "Role": "AINC4",
+          "ShiftPeriod": "NIGHT",
+          "StartTime": "22.5",
+          "StartDay": "0.9375",
+          "DurationOfShifts": "7.5",
+          "EndDay": "0.25",
+          "EndTimeCheck": "0.25"
+        },
+        {
+          "Role": "EN",
+          "ShiftPeriod": "AM",
+          "StartTime": "6",
+          "StartDay": "0.25",
+          "DurationOfShifts": "8",
+          "EndDay": "0.58333333333333326",
+          "EndTimeCheck": "0.58333333333333326"
+        },
+        {
+          "Role": "EN",
+          "ShiftPeriod": "PM",
+          "StartTime": "14",
+          "StartDay": "0.58333333333333337",
+          "DurationOfShifts": "8.5",
+          "EndDay": "0.9375",
+          "EndTimeCheck": "0.9375"
+        },
+        {
+          "Role": "EN",
+          "ShiftPeriod": "NIGHT",
+          "StartTime": "22.5",
+          "StartDay": "0.9375",
+          "DurationOfShifts": "7.5",
+          "EndDay": "0.25",
+          "EndTimeCheck": "0.25"
+        }
+      ],
+      "FormulaCells": [
+        {
+          "Cell": "D31",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "E31",
+          "Column": "DurationOfShifts",
+          "Formula": "C32-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8"
+        },
+        {
+          "Cell": "F31",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "G31",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "D32",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333337"
+        },
+        {
+          "Cell": "E32",
+          "Column": "DurationOfShifts",
+          "Formula": "C33-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8.5"
+        },
+        {
+          "Cell": "F32",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "G32",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "D33",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "E33",
+          "Column": "DurationOfShifts",
+          "Formula": "-ShiftPeriod[[#This Row],[StartTime]]+24+(C31)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "7.5"
+        },
+        {
+          "Cell": "F33",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "G33",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "D34",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "E34",
+          "Column": "DurationOfShifts",
+          "Formula": "C35-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8"
+        },
+        {
+          "Cell": "F34",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "G34",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "D35",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333337"
+        },
+        {
+          "Cell": "E35",
+          "Column": "DurationOfShifts",
+          "Formula": "C36-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8"
+        },
+        {
+          "Cell": "F35",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.91666666666666674"
+        },
+        {
+          "Cell": "G35",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.91666666666666674"
+        },
+        {
+          "Cell": "D36",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.91666666666666663"
+        },
+        {
+          "Cell": "E36",
+          "Column": "DurationOfShifts",
+          "Formula": "-ShiftPeriod[[#This Row],[StartTime]]+24+(C34)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8"
+        },
+        {
+          "Cell": "F36",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "G36",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "D37",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "E37",
+          "Column": "DurationOfShifts",
+          "Formula": "C38-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8"
+        },
+        {
+          "Cell": "F37",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "G37",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "D38",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333337"
+        },
+        {
+          "Cell": "E38",
+          "Column": "DurationOfShifts",
+          "Formula": "C39-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8.5"
+        },
+        {
+          "Cell": "F38",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "G38",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "D39",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "E39",
+          "Column": "DurationOfShifts",
+          "Formula": "-ShiftPeriod[[#This Row],[StartTime]]+24+(C37)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "7.5"
+        },
+        {
+          "Cell": "F39",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "G39",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "D40",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "E40",
+          "Column": "DurationOfShifts",
+          "Formula": "C41-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8"
+        },
+        {
+          "Cell": "F40",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "G40",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333326"
+        },
+        {
+          "Cell": "D41",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.58333333333333337"
+        },
+        {
+          "Cell": "E41",
+          "Column": "DurationOfShifts",
+          "Formula": "C42-ShiftPeriod[[#This Row],[StartTime]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "8.5"
+        },
+        {
+          "Cell": "F41",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "G41",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "D42",
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.9375"
+        },
+        {
+          "Cell": "E42",
+          "Column": "DurationOfShifts",
+          "Formula": "-ShiftPeriod[[#This Row],[StartTime]]+24+(C40)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "7.5"
+        },
+        {
+          "Cell": "F42",
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        },
+        {
+          "Cell": "G42",
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]",
+          "Type": "",
+          "SharedIndex": "",
+          "CachedValue": "0.25"
+        }
+      ],
+      "ColumnFormulas": [
+        {
+          "Column": "StartDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartTime]]/24"
+        },
+        {
+          "Column": "DurationOfShifts",
+          "Formula": "C32-C31"
+        },
+        {
+          "Column": "EndDay",
+          "Formula": "ShiftPeriod[[#This Row],[StartDay]]+ShiftPeriod[[#This Row],[DurationOfShifts]]/24 -IF(ShiftPeriod[[#This Row],[ShiftPeriod]]=\"NIGHT\",1,0)"
+        },
+        {
+          "Column": "EndTimeCheck",
+          "Formula": "ShiftPeriod[[#This Row],[EndDay]]"
+        }
+      ]
+    },
+    {
+      "Name": "PermutationDimensions",
+      "Sheet": "DimensionPermutations",
+      "Range": "A1:E349",
+      "Columns": [
+        "Date",
+        "Day",
+        "Shifts",
+        "Period",
+        "RolesList"
+      ],
+      "RowCount": 348,
+      "Rows": [
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "AM",
+          "Period": "1",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "AM",
+          "Period": "1",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "AM",
+          "Period": "1",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "AM",
+          "Period": "1",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "PM",
+          "Period": "2",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "PM",
+          "Period": "2",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "PM",
+          "Period": "2",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "PM",
+          "Period": "2",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "NIGHT",
+          "Period": "3",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "NIGHT",
+          "Period": "3",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "NIGHT",
+          "Period": "3",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46293",
+          "Day": "1",
+          "Shifts": "NIGHT",
+          "Period": "3",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "AM",
+          "Period": "4",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "AM",
+          "Period": "4",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "AM",
+          "Period": "4",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "AM",
+          "Period": "4",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "PM",
+          "Period": "5",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "PM",
+          "Period": "5",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "PM",
+          "Period": "5",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "PM",
+          "Period": "5",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "NIGHT",
+          "Period": "6",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "NIGHT",
+          "Period": "6",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "NIGHT",
+          "Period": "6",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46294",
+          "Day": "2",
+          "Shifts": "NIGHT",
+          "Period": "6",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "AM",
+          "Period": "7",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "AM",
+          "Period": "7",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "AM",
+          "Period": "7",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "AM",
+          "Period": "7",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "PM",
+          "Period": "8",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "PM",
+          "Period": "8",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "PM",
+          "Period": "8",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "PM",
+          "Period": "8",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "NIGHT",
+          "Period": "9",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "NIGHT",
+          "Period": "9",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "NIGHT",
+          "Period": "9",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46295",
+          "Day": "3",
+          "Shifts": "NIGHT",
+          "Period": "9",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "AM",
+          "Period": "10",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "AM",
+          "Period": "10",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "AM",
+          "Period": "10",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "AM",
+          "Period": "10",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "PM",
+          "Period": "11",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "PM",
+          "Period": "11",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "PM",
+          "Period": "11",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "PM",
+          "Period": "11",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "NIGHT",
+          "Period": "12",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "NIGHT",
+          "Period": "12",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "NIGHT",
+          "Period": "12",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46296",
+          "Day": "4",
+          "Shifts": "NIGHT",
+          "Period": "12",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "AM",
+          "Period": "13",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "AM",
+          "Period": "13",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "AM",
+          "Period": "13",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "AM",
+          "Period": "13",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "PM",
+          "Period": "14",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "PM",
+          "Period": "14",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "PM",
+          "Period": "14",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "PM",
+          "Period": "14",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "NIGHT",
+          "Period": "15",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "NIGHT",
+          "Period": "15",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "NIGHT",
+          "Period": "15",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46297",
+          "Day": "5",
+          "Shifts": "NIGHT",
+          "Period": "15",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "AM",
+          "Period": "16",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "AM",
+          "Period": "16",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "AM",
+          "Period": "16",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "AM",
+          "Period": "16",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "PM",
+          "Period": "17",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "PM",
+          "Period": "17",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "PM",
+          "Period": "17",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "PM",
+          "Period": "17",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "NIGHT",
+          "Period": "18",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "NIGHT",
+          "Period": "18",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "NIGHT",
+          "Period": "18",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46298",
+          "Day": "6",
+          "Shifts": "NIGHT",
+          "Period": "18",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "AM",
+          "Period": "19",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "AM",
+          "Period": "19",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "AM",
+          "Period": "19",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "AM",
+          "Period": "19",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "PM",
+          "Period": "20",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "PM",
+          "Period": "20",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "PM",
+          "Period": "20",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "PM",
+          "Period": "20",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "NIGHT",
+          "Period": "21",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "NIGHT",
+          "Period": "21",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "NIGHT",
+          "Period": "21",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46299",
+          "Day": "7",
+          "Shifts": "NIGHT",
+          "Period": "21",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "AM",
+          "Period": "22",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "AM",
+          "Period": "22",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "AM",
+          "Period": "22",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "AM",
+          "Period": "22",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "PM",
+          "Period": "23",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "PM",
+          "Period": "23",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "PM",
+          "Period": "23",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "PM",
+          "Period": "23",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "NIGHT",
+          "Period": "24",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "NIGHT",
+          "Period": "24",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "NIGHT",
+          "Period": "24",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46300",
+          "Day": "8",
+          "Shifts": "NIGHT",
+          "Period": "24",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "AM",
+          "Period": "25",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "AM",
+          "Period": "25",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "AM",
+          "Period": "25",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "AM",
+          "Period": "25",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "PM",
+          "Period": "26",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "PM",
+          "Period": "26",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "PM",
+          "Period": "26",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "PM",
+          "Period": "26",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "NIGHT",
+          "Period": "27",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "NIGHT",
+          "Period": "27",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "NIGHT",
+          "Period": "27",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46301",
+          "Day": "9",
+          "Shifts": "NIGHT",
+          "Period": "27",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "AM",
+          "Period": "28",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "AM",
+          "Period": "28",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "AM",
+          "Period": "28",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "AM",
+          "Period": "28",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "PM",
+          "Period": "29",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "PM",
+          "Period": "29",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "PM",
+          "Period": "29",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "PM",
+          "Period": "29",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "NIGHT",
+          "Period": "30",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "NIGHT",
+          "Period": "30",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "NIGHT",
+          "Period": "30",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46302",
+          "Day": "10",
+          "Shifts": "NIGHT",
+          "Period": "30",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "AM",
+          "Period": "31",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "AM",
+          "Period": "31",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "AM",
+          "Period": "31",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "AM",
+          "Period": "31",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "PM",
+          "Period": "32",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "PM",
+          "Period": "32",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "PM",
+          "Period": "32",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "PM",
+          "Period": "32",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "NIGHT",
+          "Period": "33",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "NIGHT",
+          "Period": "33",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "NIGHT",
+          "Period": "33",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46303",
+          "Day": "11",
+          "Shifts": "NIGHT",
+          "Period": "33",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "AM",
+          "Period": "34",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "AM",
+          "Period": "34",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "AM",
+          "Period": "34",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "AM",
+          "Period": "34",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "PM",
+          "Period": "35",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "PM",
+          "Period": "35",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "PM",
+          "Period": "35",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "PM",
+          "Period": "35",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "NIGHT",
+          "Period": "36",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "NIGHT",
+          "Period": "36",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "NIGHT",
+          "Period": "36",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46304",
+          "Day": "12",
+          "Shifts": "NIGHT",
+          "Period": "36",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "AM",
+          "Period": "37",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "AM",
+          "Period": "37",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "AM",
+          "Period": "37",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "AM",
+          "Period": "37",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "PM",
+          "Period": "38",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "PM",
+          "Period": "38",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "PM",
+          "Period": "38",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "PM",
+          "Period": "38",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "NIGHT",
+          "Period": "39",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "NIGHT",
+          "Period": "39",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "NIGHT",
+          "Period": "39",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46305",
+          "Day": "13",
+          "Shifts": "NIGHT",
+          "Period": "39",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "AM",
+          "Period": "40",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "AM",
+          "Period": "40",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "AM",
+          "Period": "40",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "AM",
+          "Period": "40",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "PM",
+          "Period": "41",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "PM",
+          "Period": "41",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "PM",
+          "Period": "41",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "PM",
+          "Period": "41",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "NIGHT",
+          "Period": "42",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "NIGHT",
+          "Period": "42",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "NIGHT",
+          "Period": "42",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46306",
+          "Day": "14",
+          "Shifts": "NIGHT",
+          "Period": "42",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "AM",
+          "Period": "43",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "AM",
+          "Period": "43",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "AM",
+          "Period": "43",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "AM",
+          "Period": "43",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "PM",
+          "Period": "44",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "PM",
+          "Period": "44",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "PM",
+          "Period": "44",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "PM",
+          "Period": "44",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "NIGHT",
+          "Period": "45",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "NIGHT",
+          "Period": "45",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "NIGHT",
+          "Period": "45",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46307",
+          "Day": "15",
+          "Shifts": "NIGHT",
+          "Period": "45",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "AM",
+          "Period": "46",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "AM",
+          "Period": "46",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "AM",
+          "Period": "46",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "AM",
+          "Period": "46",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "PM",
+          "Period": "47",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "PM",
+          "Period": "47",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "PM",
+          "Period": "47",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "PM",
+          "Period": "47",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "NIGHT",
+          "Period": "48",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "NIGHT",
+          "Period": "48",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "NIGHT",
+          "Period": "48",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46308",
+          "Day": "16",
+          "Shifts": "NIGHT",
+          "Period": "48",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "AM",
+          "Period": "49",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "AM",
+          "Period": "49",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "AM",
+          "Period": "49",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "AM",
+          "Period": "49",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "PM",
+          "Period": "50",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "PM",
+          "Period": "50",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "PM",
+          "Period": "50",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "PM",
+          "Period": "50",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "NIGHT",
+          "Period": "51",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "NIGHT",
+          "Period": "51",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "NIGHT",
+          "Period": "51",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46309",
+          "Day": "17",
+          "Shifts": "NIGHT",
+          "Period": "51",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "AM",
+          "Period": "52",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "AM",
+          "Period": "52",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "AM",
+          "Period": "52",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "AM",
+          "Period": "52",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "PM",
+          "Period": "53",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "PM",
+          "Period": "53",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "PM",
+          "Period": "53",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "PM",
+          "Period": "53",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "NIGHT",
+          "Period": "54",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "NIGHT",
+          "Period": "54",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "NIGHT",
+          "Period": "54",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46310",
+          "Day": "18",
+          "Shifts": "NIGHT",
+          "Period": "54",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "AM",
+          "Period": "55",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "AM",
+          "Period": "55",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "AM",
+          "Period": "55",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "AM",
+          "Period": "55",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "PM",
+          "Period": "56",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "PM",
+          "Period": "56",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "PM",
+          "Period": "56",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "PM",
+          "Period": "56",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "NIGHT",
+          "Period": "57",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "NIGHT",
+          "Period": "57",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "NIGHT",
+          "Period": "57",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46311",
+          "Day": "19",
+          "Shifts": "NIGHT",
+          "Period": "57",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "AM",
+          "Period": "58",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "AM",
+          "Period": "58",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "AM",
+          "Period": "58",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "AM",
+          "Period": "58",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "PM",
+          "Period": "59",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "PM",
+          "Period": "59",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "PM",
+          "Period": "59",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "PM",
+          "Period": "59",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "NIGHT",
+          "Period": "60",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "NIGHT",
+          "Period": "60",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "NIGHT",
+          "Period": "60",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46312",
+          "Day": "20",
+          "Shifts": "NIGHT",
+          "Period": "60",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "AM",
+          "Period": "61",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "AM",
+          "Period": "61",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "AM",
+          "Period": "61",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "AM",
+          "Period": "61",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "PM",
+          "Period": "62",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "PM",
+          "Period": "62",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "PM",
+          "Period": "62",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "PM",
+          "Period": "62",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "NIGHT",
+          "Period": "63",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "NIGHT",
+          "Period": "63",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "NIGHT",
+          "Period": "63",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46313",
+          "Day": "21",
+          "Shifts": "NIGHT",
+          "Period": "63",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "AM",
+          "Period": "64",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "AM",
+          "Period": "64",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "AM",
+          "Period": "64",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "AM",
+          "Period": "64",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "PM",
+          "Period": "65",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "PM",
+          "Period": "65",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "PM",
+          "Period": "65",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "PM",
+          "Period": "65",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "NIGHT",
+          "Period": "66",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "NIGHT",
+          "Period": "66",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "NIGHT",
+          "Period": "66",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46314",
+          "Day": "22",
+          "Shifts": "NIGHT",
+          "Period": "66",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "AM",
+          "Period": "67",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "AM",
+          "Period": "67",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "AM",
+          "Period": "67",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "AM",
+          "Period": "67",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "PM",
+          "Period": "68",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "PM",
+          "Period": "68",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "PM",
+          "Period": "68",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "PM",
+          "Period": "68",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "NIGHT",
+          "Period": "69",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "NIGHT",
+          "Period": "69",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "NIGHT",
+          "Period": "69",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46315",
+          "Day": "23",
+          "Shifts": "NIGHT",
+          "Period": "69",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "AM",
+          "Period": "70",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "AM",
+          "Period": "70",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "AM",
+          "Period": "70",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "AM",
+          "Period": "70",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "PM",
+          "Period": "71",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "PM",
+          "Period": "71",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "PM",
+          "Period": "71",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "PM",
+          "Period": "71",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "NIGHT",
+          "Period": "72",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "NIGHT",
+          "Period": "72",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "NIGHT",
+          "Period": "72",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46316",
+          "Day": "24",
+          "Shifts": "NIGHT",
+          "Period": "72",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "AM",
+          "Period": "73",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "AM",
+          "Period": "73",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "AM",
+          "Period": "73",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "AM",
+          "Period": "73",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "PM",
+          "Period": "74",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "PM",
+          "Period": "74",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "PM",
+          "Period": "74",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "PM",
+          "Period": "74",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "NIGHT",
+          "Period": "75",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "NIGHT",
+          "Period": "75",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "NIGHT",
+          "Period": "75",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46317",
+          "Day": "25",
+          "Shifts": "NIGHT",
+          "Period": "75",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "AM",
+          "Period": "76",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "AM",
+          "Period": "76",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "AM",
+          "Period": "76",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "AM",
+          "Period": "76",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "PM",
+          "Period": "77",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "PM",
+          "Period": "77",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "PM",
+          "Period": "77",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "PM",
+          "Period": "77",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "NIGHT",
+          "Period": "78",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "NIGHT",
+          "Period": "78",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "NIGHT",
+          "Period": "78",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46318",
+          "Day": "26",
+          "Shifts": "NIGHT",
+          "Period": "78",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "AM",
+          "Period": "79",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "AM",
+          "Period": "79",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "AM",
+          "Period": "79",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "AM",
+          "Period": "79",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "PM",
+          "Period": "80",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "PM",
+          "Period": "80",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "PM",
+          "Period": "80",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "PM",
+          "Period": "80",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "NIGHT",
+          "Period": "81",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "NIGHT",
+          "Period": "81",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "NIGHT",
+          "Period": "81",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46319",
+          "Day": "27",
+          "Shifts": "NIGHT",
+          "Period": "81",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "AM",
+          "Period": "82",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "AM",
+          "Period": "82",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "AM",
+          "Period": "82",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "AM",
+          "Period": "82",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "PM",
+          "Period": "83",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "PM",
+          "Period": "83",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "PM",
+          "Period": "83",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "PM",
+          "Period": "83",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "NIGHT",
+          "Period": "84",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "NIGHT",
+          "Period": "84",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "NIGHT",
+          "Period": "84",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46320",
+          "Day": "28",
+          "Shifts": "NIGHT",
+          "Period": "84",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "AM",
+          "Period": "85",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "AM",
+          "Period": "85",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "AM",
+          "Period": "85",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "AM",
+          "Period": "85",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "PM",
+          "Period": "86",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "PM",
+          "Period": "86",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "PM",
+          "Period": "86",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "PM",
+          "Period": "86",
+          "RolesList": "RN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "NIGHT",
+          "Period": "87",
+          "RolesList": "AIN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "NIGHT",
+          "Period": "87",
+          "RolesList": "CS"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "NIGHT",
+          "Period": "87",
+          "RolesList": "EN"
+        },
+        {
+          "Date": "46321",
+          "Day": "29",
+          "Shifts": "NIGHT",
+          "Period": "87",
+          "RolesList": "RN"
+        }
+      ],
+      "FormulaCells": [],
+      "ColumnFormulas": []
+    }
+  ]
+}

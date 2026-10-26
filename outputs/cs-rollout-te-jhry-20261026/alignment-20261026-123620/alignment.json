@@ -1,0 +1,345 @@
+{
+  "Scope": "Eight approved rollout workbooks in BD, TE and JH-RY only",
+  "Status": "All destination workbooks and sources align with saved BD definitions",
+  "DestinationWorkbooksChecked": 16,
+  "Workbooks": [
+    {
+      "Unit": "TE",
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "62F70859B0C168460F8DFAE7560C56A7ACB1F8C05B827BDD6C351EAA713E8A6C"
+    },
+    {
+      "Unit": "TE",
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "B0385074CB3E8169433C9454F5D03032D9B65368A025742E0DD3DF43E8C41B5B"
+    },
+    {
+      "Unit": "TE",
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "F6FBF3393F57A089E08C090F5752B01347AD25497AA8D0CAA8DB30FECD6BDA81"
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "FF37FFDFF562F9352D0AD858A195EBAE2061819AFE008706BF4741B680163E5C"
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/Capacity.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "BB7F8371E8ED90425ABC3139DEAA799753CCD14C6DDBE5604BC22D53E574EA75"
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "7D645F05CD9AD19EC8E94CE3B2B60D0FD59B9212A4ECA151285375109066A137"
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "B188132570418211320B387D44639FA29E546D2DDEA76F9851A6959969011022"
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "4BD5670D51FB8B2D7FB3C1CD13D76D142951EFDB4B61EDB118D6371B88D447BB"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "62F70859B0C168460F8DFAE7560C56A7ACB1F8C05B827BDD6C351EAA713E8A6C"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "B0385074CB3E8169433C9454F5D03032D9B65368A025742E0DD3DF43E8C41B5B"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "F6FBF3393F57A089E08C090F5752B01347AD25497AA8D0CAA8DB30FECD6BDA81"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "FF37FFDFF562F9352D0AD858A195EBAE2061819AFE008706BF4741B680163E5C"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/Capacity.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "BB7F8371E8ED90425ABC3139DEAA799753CCD14C6DDBE5604BC22D53E574EA75"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "7D645F05CD9AD19EC8E94CE3B2B60D0FD59B9212A4ECA151285375109066A137"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "B188132570418211320B387D44639FA29E546D2DDEA76F9851A6959969011022"
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "ExactWorkbookMatchToBD": true,
+      "SavedMDefinitionsMatchBD": true,
+      "AdjacentMMatchesBD": true,
+      "WorkbookSHA256": "4BD5670D51FB8B2D7FB3C1CD13D76D142951EFDB4B61EDB118D6371B88D447BB"
+    }
+  ],
+  "SourceExports": [
+    {
+      "Unit": "BD",
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "MExportMatchesSavedWorkbook": false,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "MExportMatchesSavedWorkbook": false,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "2. Calculations/Capacity.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/Capacity.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "TE",
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/Capacity.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "JH-RY",
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "MExportMatchesSavedWorkbook": true,
+      "WorkbookUnchanged": true
+    }
+  ],
+  "StaleSourceExports": [
+    {
+      "Unit": "BD",
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "MExportMatchesSavedWorkbook": false,
+      "WorkbookUnchanged": true
+    },
+    {
+      "Unit": "BD",
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "MExportMatchesSavedWorkbook": false,
+      "WorkbookUnchanged": true
+    }
+  ],
+  "DonorStability": [
+    {
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "2. Calculations/Capacity.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "UnchangedDuringCheck": true
+    },
+    {
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "UnchangedDuringCheck": true
+    }
+  ],
+  "CS_A1_PreviewSettings": [
+    {
+      "ExplicitPreviewOff": true,
+      "Unit": "BD"
+    },
+    {
+      "ExplicitPreviewOff": true,
+      "Unit": "TE"
+    },
+    {
+      "ExplicitPreviewOff": true,
+      "Unit": "JH-RY"
+    }
+  ],
+  "WorkbookContentsChanged": false,
+  "Refreshed": false
+}

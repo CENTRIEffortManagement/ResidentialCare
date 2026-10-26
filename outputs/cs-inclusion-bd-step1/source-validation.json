@@ -1,0 +1,35 @@
+{
+  "source": "CLIENT/DATExx-Whiddon/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m",
+  "sourceSHA256": "A9BBBADDCB8C5178358E9AA038B8AC188BC29B69365A5014F68A0033F45614F4",
+  "originalSourceSHA256": "29BF3A23A09AF64C8ABA924DBB97CE610A7374FB1B9F7FF99EF0B2269A427814",
+  "originalSourceBytesUnchanged": true,
+  "existingSharedDefinitionsUnchanged": 65,
+  "addedSharedDefinitions": 12,
+  "workbookSHA256": "CF76FEB214A307A75352BB616AA631BF7A1784C3B022B962C6DBFD66DC81A8B9",
+  "workbookUnchanged": true,
+  "sourceOfTruthGate": "All original definition text matched exact workbook; source had one additional terminal LF only.",
+  "syntax": {
+    "source": "Passed",
+    "fixtures": "Passed",
+    "generatedNativeExtension": "Passed",
+    "parser": "Installed Microsoft Power Query extension parser"
+  },
+  "projectValidator": {
+    "status": "Passed",
+    "configuredFiles": 14,
+    "limitation": "Configured Workflows files only; this adjacent M source was parsed separately."
+  },
+  "whitespace": "Passed",
+  "nativeTests": {
+    "status": "Blocked before evaluation",
+    "preparedCases": 28,
+    "executedCases": 0,
+    "reason": "Sandbox DPAPI credential-store initialization failed; unsandboxed Windows-profile approval request was canceled."
+  },
+  "review": {
+    "status": "No blocking structural issue found",
+    "performance": "Narrow stage buffers, deduplicated mappings and bounded 42-cell grids. Separate check/output evaluations can repeat work; runtime and memory not measured."
+  },
+  "synchronized": false,
+  "refreshed": false
+}

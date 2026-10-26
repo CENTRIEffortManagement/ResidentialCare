@@ -1,0 +1,156 @@
+{
+  "Status": "Completed",
+  "IncompleteAttempts": [],
+  "SavedIntermediates": [],
+  "Untimed": [],
+  "OutputStatus": {
+    "RunId": "20261026-092340-e96f53e6",
+    "RunStatus": "Completed",
+    "CheckedAtUtc": "2026-10-25T22:27:37.2411718Z",
+    "AllVerified": true,
+    "Rows": [
+      {
+        "Id": "BD/Intervals",
+        "RelativePath": "UNITS/BD/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:23:52.3683661Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/DemandIntervals",
+        "RelativePath": "UNITS/BD/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:25:14.5146423Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Demand",
+        "RelativePath": "UNITS/BD/2. Calculations/Demand.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:25:30.1933843Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Shifts",
+        "RelativePath": "UNITS/BD/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:26:11.5062027Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/ShiftAverage",
+        "RelativePath": "UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:27:06.5795920Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Allocation",
+        "RelativePath": "UNITS/BD/2. Calculations/Allocation.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:27:18.3739725Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Distribution",
+        "RelativePath": "UNITS/BD/2. Calculations/Shift-StaffDistribution.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:27:34.1031187Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      }
+    ]
+  },
+  "PeakConcurrency": 2,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Start": 1.1175238,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 14.707561,
+      "Id": "BD/Intervals",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 14.7331011,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 96.7868219,
+      "Id": "BD/DemandIntervals",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 96.8139437,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 112.4907566,
+      "Id": "BD/Demand",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 14.7949207,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 153.7163294,
+      "Id": "BD/Shifts",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 153.7360686,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 209.1510397,
+      "Id": "BD/ShiftAverage",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 209.1743898,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 220.5002482,
+      "Id": "BD/Allocation",
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Start": 220.5255684,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 236.3774838,
+      "Id": "BD/Distribution",
+      "Status": "Completed"
+    }
+  ],
+  "GapSeconds": 1,
+  "ActiveIntervalSeconds": 235.16601039999998,
+  "RunId": "20261026-092340-e96f53e6",
+  "ElapsedSeconds": 236.3877726,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement."
+}

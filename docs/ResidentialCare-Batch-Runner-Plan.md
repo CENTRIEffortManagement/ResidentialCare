@@ -127,9 +127,15 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   as `Date/DemandMaster`, then releases each selected Unit's demand extract.
   `SharedUnitJobs` in the batch settings declares these consumers; Unit1 and
   Unit2 retain their Unit-level masters. Existing declared prerequisites and
-  file-access checks still apply. The default full run now contains 84 files.
-- C1 starts with Worker Reconciliation.xlsx, then Capacity-ShiftAvailability.xlsx
-  and StaffListMaster.xlsx.
+  file-access checks still apply. The default full run now contains 90 files.
+- C1 runs Capacity-ShiftAvailability.xlsx then StaffListMaster.xlsx for BD, TE
+  and JH-RY. Their `AdditionalUnits` settings use
+  `UseWorkerReconciliation = $false` because Availability reconciles worker
+  membership internally. Both sequence profiles omit the separate Workers job
+  and its ordering/read dependencies for those facilities. Allocation and
+  Settings prerequisites remain enforced. Legacy Unit1/Unit2 retain Worker
+  Reconciliation.xlsx before Availability and Staff; an omitted setting retains
+  that existing behaviour.
 - A3 runs Allocation.xlsx followed by Shift-StaffDistribution.xlsx.
   MutliRoleCheck.xlsx is excluded from the runner, and Effort no longer depends
   on it.
@@ -149,10 +155,12 @@ Unit batches retain D1, A1, S1, C1, D2, A2, A3, C2 and U4:
   Select it with `-Batches O6`; `-Batches O6 -ValidateSelectionOnly` checks
   access without opening Excel. Explicit Unit-only selections omit O6.
 
-A complete three-role Unit selection contains 25 files before shared-master
-deduplication. The organisation release contains eight ResidentialCare files
-plus the three Leave Balance Stats files. The default BD, TE and JH-RY run
-shares one demand master across the three Units, giving **84 files** in total.
+A complete legacy three-role Unit selection contains 25 files. Each current
+four-role facility contains 27 files before shared-master deduplication, including
+CS and excluding Worker Reconciliation. The organisation release contains eight
+ResidentialCare files plus the three Leave Balance Stats files. The default BD,
+TE and JH-RY run shares one demand master across the three Units, giving **90
+files** in total.
 
 Dependencies are file-level edges, not blanket stage barriers. The draft
 execution catalogue includes Allocation input -> Settings Data -> demand

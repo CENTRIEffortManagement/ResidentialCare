@@ -1,0 +1,18 @@
+Avoid duplicate Excel query refreshes and fixed runner waits
+
+Refresh each loaded worksheet query once in the foreground and verify its
+completion receipt without repeating the refresh. Deduplicate QueryTables and
+ListObjects by query identity, including tables with blank query names.
+Retain RefreshAll for other connections and PivotTables, restore its settings,
+and replace fixed delays with bounded connection and calculation readiness.
+
+Capture raw save-confirmation values and Excel state for diagnosis while
+preserving the existing save decision, required checks and process safeguards.
+Add coverage for refresh deduplication, bounded readiness, failure barriers and
+observational save diagnostics.
+
+Validation: runner, recovery, refresh-safety, file-access, Git-aware and mock
+role suites passed, including 29 save-diagnostic checks. BD C1/C2/U4 passed
+14/14. The full 87-file run completed 71, failed 3 MultiRole query refreshes
+with key-not-found errors, and blocked 13 dependents. Settings Data passed in
+all three units; the earlier JH-RY save-confirmation failure did not recur.

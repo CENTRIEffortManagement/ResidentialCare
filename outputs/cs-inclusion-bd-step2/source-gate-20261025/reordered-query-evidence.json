@@ -1,0 +1,21 @@
+{
+  "strictSectionEquality": false,
+  "movedBlocks": [
+    {
+      "query": "IMPORT CentriSyncPaths",
+      "exactTextIncludingHeaderAndWhitespaceMatches": true,
+      "sourcePosition": 28801,
+      "workbookPosition": 19
+    },
+    {
+      "query": "IMPORT PermutationDimensions",
+      "exactTextIncludingHeaderAndWhitespaceMatches": true,
+      "sourcePosition": 26577,
+      "workbookPosition": 14169
+    }
+  ],
+  "remainderExactlyMatches": false,
+  "remainderSourceEqualsWorkbookPlusSingleLF": true,
+  "all49DefinitionTextsUnchangedApartFromOrder": true,
+  "interpretation": "The two stated blocks are exactly text-identical including their headers and whitespace; removing them leaves every remaining character identical except the proven extra terminal LF in the adjacent source. No query definition has changed."
+}

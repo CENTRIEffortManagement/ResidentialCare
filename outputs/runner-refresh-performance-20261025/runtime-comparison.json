@@ -1,0 +1,71 @@
+{
+  "BaselineRun": "20261025-113700-b7b24154",
+  "CurrentRun": "20261025-130607-a635093e",
+  "CurrentStatus": "Completed",
+  "CurrentJobCount": 14,
+  "CurrentTotalSeconds": 374.1330139,
+  "BaselineJobCount": 11,
+  "BaselineTotalSeconds": 738.0562594,
+  "MatchedScope": "BD C2/U4, 11 jobs; elapsed span from first matching job start through last matching job finish.",
+  "BaselineMatchedSpanSeconds": 736.1109608999999,
+  "CurrentMatchedSpanSeconds": 248.35793720000004,
+  "MatchedPercentReduction": 66.3,
+  "Jobs": [
+    {
+      "Id": "BD/Role:AIN/1",
+      "BeforeSeconds": 232.4534735,
+      "AfterSeconds": 108.8406912
+    },
+    {
+      "Id": "BD/Role:AIN/2",
+      "BeforeSeconds": 91.39946760000001,
+      "AfterSeconds": 21.044573200000002
+    },
+    {
+      "Id": "BD/Role:AIN/3",
+      "BeforeSeconds": 266.21025299999997,
+      "AfterSeconds": 89.27391779999999
+    },
+    {
+      "Id": "BD/Role:RN/1",
+      "BeforeSeconds": 142.2498216,
+      "AfterSeconds": 57.16317649999999
+    },
+    {
+      "Id": "BD/Role:RN/2",
+      "BeforeSeconds": 80.16493020000001,
+      "AfterSeconds": 18.96417340000002
+    },
+    {
+      "Id": "BD/Role:RN/3",
+      "BeforeSeconds": 92.6520793,
+      "AfterSeconds": 28.5373874
+    },
+    {
+      "Id": "BD/Role:EN/1",
+      "BeforeSeconds": 147.1124495,
+      "AfterSeconds": 63.605885900000004
+    },
+    {
+      "Id": "BD/Role:EN/2",
+      "BeforeSeconds": 82.38687730000001,
+      "AfterSeconds": 19.80839230000001
+    },
+    {
+      "Id": "BD/Role:EN/3",
+      "BeforeSeconds": 90.04788299999998,
+      "AfterSeconds": 24.87082369999999
+    },
+    {
+      "Id": "BD/Capacity",
+      "BeforeSeconds": 72.8472746000001,
+      "AfterSeconds": 13.796427199999982
+    },
+    {
+      "Id": "BD/Effort",
+      "BeforeSeconds": 73.10188159999996,
+      "AfterSeconds": 15.300591800000007
+    }
+  ],
+  "Interpretation": "Observed single-run improvement. Baseline excludes C1; current run includes C1 and newly refreshed upstream inputs. This is not a controlled causal benchmark or a business-result audit."
+}

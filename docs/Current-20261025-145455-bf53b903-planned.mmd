@@ -1,0 +1,26 @@
+gantt
+    title Current forecast - elapsed 00 05 26
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/C2 AIN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role AIN/1 attempt 1 Forecast :task1, 2000-01-01 00:00:00.000, 2000-01-01 00:03:18.015
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    BD/Role AIN/2 attempt 1 Forecast :task2, 2000-01-01 00:03:18.015, 2000-01-01 00:03:48.337
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    BD/Role AIN/3 attempt 1 Forecast :task3, 2000-01-01 00:03:48.337, 2000-01-01 00:05:26.145
+    section BD/C2 RN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role RN/1 attempt 1 Forecast :task4, 2000-01-01 00:00:00.000, 2000-01-01 00:02:22.304
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    BD/Role RN/2 attempt 1 Forecast :task5, 2000-01-01 00:02:22.304, 2000-01-01 00:03:00.598
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    BD/Role RN/3 attempt 1 Forecast :task6, 2000-01-01 00:03:00.598, 2000-01-01 00:03:41.535
+    section BD/C2 EN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role EN/1 attempt 1 Forecast :task7, 2000-01-01 00:00:00.000, 2000-01-01 00:02:20.340
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    BD/Role EN/2 attempt 1 Forecast :task8, 2000-01-01 00:02:20.340, 2000-01-01 00:02:57.742
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    BD/Role EN/3 attempt 1 Forecast :task9, 2000-01-01 00:02:57.742, 2000-01-01 00:03:40.940

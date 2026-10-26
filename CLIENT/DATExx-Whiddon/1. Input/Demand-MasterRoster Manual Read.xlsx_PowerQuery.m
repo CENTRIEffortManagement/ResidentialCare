@@ -2919,3 +2919,393 @@ shared Units = let
     #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows1",{{"Title", "Unit"}})
 in
     #"Renamed Columns";
+
+
+// Query: RoleDemand Finite Number
+// Purpose: Validate authoritative hours and numeric source keys without converting display FTE.
+shared #"RoleDemand Finite Number" = (Value as any) as logical =>
+    Value.Is(Value, type number) and not Number.IsNaN(Value) and Number.Abs(Value) <> #infinity;
+
+// Query: RoleDemand Role Analysis Prepare
+// Purpose: Resolve one logical effort-analysis control per exact configured role group.
+// Inputs: EXTRACT RoleAnalysis. False and null flags remain excluded.
+shared #"RoleDemand Role Analysis Prepare" =
+let
+    Selected = Table.SelectColumns(#"EXTRACT RoleAnalysis", {"Roles", "Effort Management Analysis"}),
+    Trimmed = Table.TransformColumns(Selected, {{"Roles", each if _ = null then null else Text.Trim(_), type nullable text}}),
+    Invalid = Table.SelectRows(Trimmed, each [Roles] = null or [Roles] = ""
+        or ([Effort Management Analysis] <> null and not Value.Is([Effort Management Analysis], type logical))),
+    Counts = Table.Group(Trimmed, {"Roles"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
+    Duplicates = Table.SelectRows(Counts, each [Count] <> 1),
+    Validated = if not Table.IsEmpty(Invalid) then error "Role demand requires nonblank role groups and logical effort flags."
+        else if not Table.IsEmpty(Duplicates) then error "Role demand requires one analysis row per role group."
+        else Trimmed
+in
+    Table.Buffer(Validated);
+
+// Query: RoleDemand Care Role Mapping Prepare
+// Purpose: Resolve each existing DC-role aggregate to one enabled output group without multiplying roster aliases.
+// Notes: Validate enabled/excluded conflicts before filtering. Wholly excluded shared DC roles stay excluded.
+shared #"RoleDemand Care Role Mapping Prepare" =
+let
+    Selected = Table.SelectColumns(#"EXTRACT Roles", {"DC Role", "DC Category", "Direct Care %", "Role Group"}),
+    Normalised = Table.TransformColumns(Selected, {
+        {"DC Role", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text},
+        {"DC Category", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text},
+        {"Role Group", each if _ = null then null else Text.Trim(_), type nullable text}
+    }),
+    CareDefinitions = Table.SelectRows(Normalised, each List.Contains({"RN", "OTHER"}, [DC Category])),
+    Invalid = Table.SelectRows(CareDefinitions, each [DC Role] = null or [DC Role] = ""
+        or [Role Group] = null or [Role Group] = ""
+        or not #"RoleDemand Finite Number"([#"Direct Care %"]) or [#"Direct Care %"] <= 0 or [#"Direct Care %"] > 1),
+    ValidDefinitions = if not Table.IsEmpty(Invalid) then error "Invalid direct-care role demand definition." else CareDefinitions,
+    Joined = Table.NestedJoin(ValidDefinitions, {"Role Group"}, #"RoleDemand Role Analysis Prepare", {"Roles"}, "Analysis", JoinKind.LeftOuter),
+    Missing = Table.SelectRows(Joined, each Table.RowCount([Analysis]) <> 1),
+    ValidAnalysis = if not Table.IsEmpty(Missing) then error "A direct-care role group has no unique analysis setting." else Joined,
+    Expanded = Table.ExpandTableColumn(ValidAnalysis, "Analysis", {"Effort Management Analysis"}),
+    DistinctDefinitions = Table.Distinct(Expanded),
+    Counts = Table.Group(DistinctDefinitions, {"DC Role"}, {
+        {"Count", each Table.RowCount(_), Int64.Type},
+        {"Enabled", each List.Contains([Effort Management Analysis], true), type logical}
+    }),
+    Conflicts = Table.SelectRows(Counts, each [Enabled] and [Count] <> 1),
+    Validated = if not Table.IsEmpty(Conflicts) then
+            error Error.Record("Ambiguous care demand mapping", "An enabled DC role cannot share conflicting groups, percentages or inclusion settings.", Conflicts)
+        else DistinctDefinitions,
+    // Excluded definitions require only a unique lookup key; no arbitrary group is assigned.
+    Enabled = Table.SelectRows(Validated, each [Effort Management Analysis] = true),
+    DisabledKeys = Table.Distinct(Table.SelectColumns(Table.SelectRows(Validated, each [Effort Management Analysis] <> true), {"DC Role"})),
+    Disabled = Table.AddColumn(DisabledKeys, "Effort Management Analysis", each false, type logical),
+    Resolved = Table.Combine({Enabled, Disabled}),
+    Named = Table.RenameColumns(Resolved, {{"DC Role", "SourceRoleKey"}, {"Role Group", "Role"},
+        {"DC Category", "MappedCategory"}, {"Direct Care %", "MappedDirectCare"}})
+in
+    Table.Buffer(Named);
+
+// Query: RoleDemand Source Weeks Prepare
+// Purpose: Preserve the established ordered two source weeks for each modelled canonical facility.
+// Inputs: MW Historical Weeks. Sparse CS rows never redefine the source week order.
+shared #"RoleDemand Source Weeks Prepare" =
+let
+    Selected = Table.Distinct(Table.SelectColumns(#"MW Historical Weeks",
+        {"Facility", "Week No", "FortnightWeek", "HistoricalWeeksInPeriod"})),
+    Invalid = Table.SelectRows(Selected, each [Facility] = null or Text.Trim([Facility]) = ""
+        or not #"RoleDemand Finite Number"([Week No]) or Number.RoundDown([Week No]) <> [Week No]
+        or not List.Contains({1, 2}, [FortnightWeek]) or [HistoricalWeeksInPeriod] <> 2),
+    Coverage = Table.Group(Selected, {"Facility"}, {{"Valid", each
+        let Weeks = Table.Sort(_, {{"FortnightWeek", Order.Ascending}})
+        in Table.RowCount(Weeks) = 2 and List.Sort(Weeks[FortnightWeek]) = {1, 2}
+            and Weeks{0}[Week No] < Weeks{1}[Week No], type logical}}),
+    Validated = if Table.IsEmpty(Selected) or not Table.IsEmpty(Invalid)
+            or not Table.IsEmpty(Table.SelectRows(Coverage, each not [Valid])) then
+            error "Role demand requires exactly two ordered source weeks per modelled facility."
+        else Selected
+in
+    Table.Buffer(Table.RemoveColumns(Validated, {"HistoricalWeeksInPeriod"}));
+
+// Query: RoleDemand Care Source Prepare
+// Purpose: Prepare existing care publications at their original source DC-role grain before combining groups.
+// Notes: Hours remain authoritative. Direct-care attributes are checked only against their care definitions.
+shared #"RoleDemand Care Source Prepare" = (Raw as table, IsProfile as logical) as table =>
+let
+    Common = {"Facility", "Role", "DC Role", "DC Category", "MinuteCategory", "Direct Care %",
+        "Week No", "FortnightWeek", "DayOfWeek", "FortnightDayIndex", "Shift", "RedistributedDemandHours"},
+    ProfileColumns = {"HistoricalRosterHours", "RedistributionMatchCount", "HistoricalCoverageStatus", "ProfileAlignmentStatus"},
+    Selected = Table.SelectColumns(Raw, Common & (if IsProfile then ProfileColumns else {})),
+    Named = Table.RenameColumns(Selected, {{"Role", "SourceRole"}}),
+    WithKey = Table.AddColumn(Named, "SourceRoleKey",
+        each if [DC Role] = null then null else Text.Upper(Text.Trim([DC Role])), type nullable text),
+    InvalidKeys = Table.SelectRows(WithKey, each [Facility] = null or Text.Trim([Facility]) = ""
+        or [SourceRoleKey] = null or [SourceRoleKey] = "" or [SourceRole] = null
+        or Text.Upper(Text.Trim([SourceRole])) <> [SourceRoleKey]
+        or not #"RoleDemand Finite Number"([Week No])
+        or not List.Contains({1, 2}, [FortnightWeek]) or not List.Contains({1..7}, [DayOfWeek])
+        or [FortnightDayIndex] <> ([FortnightWeek] - 1) * 7 + [DayOfWeek]
+        or not List.Contains({"AM", "PM", "NS"}, [Shift])
+        or not #"RoleDemand Finite Number"([RedistributedDemandHours]) or [RedistributedDemandHours] < 0
+        or not #"RoleDemand Finite Number"([#"Direct Care %"]) or [#"Direct Care %"] <= 0 or [#"Direct Care %"] > 1
+        or (if IsProfile then not #"RoleDemand Finite Number"([HistoricalRosterHours]) or [HistoricalRosterHours] < 0 else false)),
+    Keys = {"Facility", "SourceRoleKey", "Week No", "FortnightDayIndex", "Shift"},
+    DuplicateKeys = Table.RowCount(WithKey) <> Table.RowCount(Table.Distinct(Table.SelectColumns(WithKey, Keys))),
+    ValidKeys = if not Table.IsEmpty(InvalidKeys) or DuplicateKeys then error "Invalid or duplicate care demand source cells." else WithKey,
+    JoinedWeeks = Table.NestedJoin(ValidKeys, {"Facility", "Week No", "FortnightWeek"}, #"RoleDemand Source Weeks Prepare",
+        {"Facility", "Week No", "FortnightWeek"}, "SourceWeek", JoinKind.LeftOuter),
+    ValidWeeks = if not Table.IsEmpty(Table.SelectRows(JoinedWeeks, each Table.RowCount([SourceWeek]) <> 1)) then
+            error "Care demand does not match the established source fortnight." else Table.RemoveColumns(JoinedWeeks, {"SourceWeek"}),
+    JoinedMapping = Table.NestedJoin(ValidWeeks, {"SourceRoleKey"}, #"RoleDemand Care Role Mapping Prepare",
+        {"SourceRoleKey"}, "Mapping", JoinKind.LeftOuter),
+    ValidMapping = if not Table.IsEmpty(Table.SelectRows(JoinedMapping, each Table.RowCount([Mapping]) <> 1)) then
+            error "A published care role has no unique role-demand mapping." else JoinedMapping,
+    Expanded = Table.ExpandTableColumn(ValidMapping, "Mapping",
+        {"Role", "MappedCategory", "MappedDirectCare", "Effort Management Analysis"}),
+    InvalidAttributes = Table.SelectRows(Expanded, each [Effort Management Analysis] = true and (
+        Text.Upper(Text.Trim([DC Category])) <> [MappedCategory] or [#"Direct Care %"] <> [MappedDirectCare]
+        or [MinuteCategory] <> (if [MappedCategory] = "RN" then "RN" else "OTHERS"))),
+    Validated = if not Table.IsEmpty(InvalidAttributes) then error "Published care attributes differ from the role-demand mapping." else Expanded
+in
+    Table.Buffer(Validated);
+
+// Query: RoleDemand Care Cells Prepare
+// Purpose: Preserve validated care demand hours and productive-hour arithmetic, then aggregate roster aliases once.
+// Inputs: Existing care demand, paired complete profile and checks; the legacy publications are unchanged.
+shared #"RoleDemand Care Cells Prepare" =
+let
+    UpstreamChecks = MinuteWorkersFTE_CHECK,
+    BadChecks = Table.SelectRows(UpstreamChecks, each not List.Contains({"Pass", "Warning"}, [Severity])),
+    ValidChecks = if Table.IsEmpty(UpstreamChecks) or not Table.IsEmpty(BadChecks) then
+            error "Existing care-demand publication checks must pass before the combined handover." else true,
+    Demand = if ValidChecks then #"RoleDemand Care Source Prepare"(MinuteWorkersFTE_TABLE, false) else error "Care checks failed.",
+    Profile = #"RoleDemand Care Source Prepare"(MinuteWorkersFTE_HISTORICAL_FORTNIGHT_TABLE, true),
+    IncludedDemand = Table.SelectRows(Demand, each [Effort Management Analysis] = true),
+    IncludedProfile = Table.SelectRows(Profile, each [Effort Management Analysis] = true),
+    Keys = {"Facility", "SourceRoleKey", "Week No", "FortnightDayIndex", "Shift"},
+    Orphans = Table.NestedJoin(IncludedDemand, Keys, IncludedProfile, Keys, "Profile", JoinKind.LeftAnti),
+    Joined = Table.NestedJoin(IncludedProfile, Keys, IncludedDemand, Keys, "DemandRows", JoinKind.LeftOuter),
+    WithCount = Table.AddColumn(Joined, "DemandRowCount", each Table.RowCount([DemandRows]), Int64.Type),
+    Invalid = Table.SelectRows(WithCount, each [HistoricalCoverageStatus] <> "PASS"
+        or not List.Contains({"PASS", "PASS ZERO"}, [ProfileAlignmentStatus])
+        or [RedistributionMatchCount] <> [DemandRowCount]
+        or (if [DemandRowCount] = 1 then
+            Number.Abs([RedistributedDemandHours] - [DemandRows]{0}[RedistributedDemandHours]) > 0.0000001
+            or [#"Direct Care %"] <> [DemandRows]{0}[#"Direct Care %"] or [Role] <> [DemandRows]{0}[Role]
+            else [DemandRowCount] <> 0 or [ProfileAlignmentStatus] <> "PASS ZERO"
+                or [HistoricalRosterHours] <> 0 or [RedistributedDemandHours] <> 0)
+        or ([ProfileAlignmentStatus] = "PASS ZERO" and
+            ([RedistributionMatchCount] <> 0 or [HistoricalRosterHours] <> 0 or [RedistributedDemandHours] <> 0))
+        or ([ProfileAlignmentStatus] = "PASS" and [HistoricalRosterHours] <= 0)),
+    Coverage = Table.Group(IncludedProfile, {"Facility", "SourceRoleKey"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
+    Validated = if not Table.IsEmpty(Orphans) or not Table.IsEmpty(Invalid)
+            or not Table.IsEmpty(Table.SelectRows(Coverage, each [Count] <> 42)) then
+            error "Care demand/profile cells do not reconcile or lack a complete 42-cell source pattern."
+        else Table.RemoveColumns(WithCount, {"DemandRows", "DemandRowCount"}),
+    WithHours = Table.AddColumn(Validated, "DemandHRS", each [RedistributedDemandHours], type number),
+    // Apply each original care percentage before summing into a role group.
+    WithProductiveHours = Table.AddColumn(WithHours, "ProductiveHRS", each [DemandHRS] * [#"Direct Care %"], type number),
+    WithStandardShift = Table.TransformColumns(WithProductiveHours, {{"Shift", each if _ = "NS" then "NIGHT" else _, type text}}),
+    Grouped = Table.Group(WithStandardShift, {"Facility", "Role", "Week No", "FortnightWeek", "DayOfWeek", "FortnightDayIndex", "Shift"}, {
+        {"DemandHRS", each List.Sum([DemandHRS]), type number},
+        {"ProductiveHRS", each List.Sum([ProductiveHRS]), type nullable number}
+    }),
+    WithBasis = Table.AddColumn(Grouped, "DemandBasis", each "CareMinutes", type text)
+in
+    Table.Buffer(WithBasis);
+
+// Query: RoleDemand CS Role Mapping Prepare
+// Purpose: Select CS using exact roster-role mappings, keeping CSH and all other non-care groups separate.
+// Notes: Conflicting assignments are checked before the CS filter. No direct-care percentage is invented.
+shared #"RoleDemand CS Role Mapping Prepare" =
+let
+    Selected = Table.SelectColumns(#"EXTRACT Roles", {"Roster Roles", "Role Group", "DC Category"}),
+    Normalised = Table.TransformColumns(Selected, {
+        {"Roster Roles", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text},
+        {"Role Group", each if _ = null then null else Text.Trim(_), type nullable text},
+        {"DC Category", each if _ = null then null else Text.Upper(Text.Trim(_)), type nullable text}
+    }),
+    CSDefinitions = Table.SelectRows(Normalised, each [Role Group] = "CS"),
+    Invalid = Table.SelectRows(CSDefinitions, each [Roster Roles] = null or [Roster Roles] = "" or [DC Category] <> "NA"),
+    Keys = List.Buffer(List.Distinct(CSDefinitions[Roster Roles])),
+    RelevantDefinitions = Table.Distinct(Table.SelectRows(Normalised, each List.Contains(Keys, [Roster Roles]))),
+    Counts = Table.Group(RelevantDefinitions, {"Roster Roles"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
+    CSAnalysis = Table.SelectRows(#"RoleDemand Role Analysis Prepare", each [Roles] = "CS"),
+    Enabled = if Table.RowCount(CSAnalysis) = 1 then CSAnalysis{0}[Effort Management Analysis] = true else false,
+    Validated = if not Table.IsEmpty(Invalid) or not Table.IsEmpty(Table.SelectRows(Counts, each [Count] <> 1)) then
+            error "CS roster labels require one unambiguous non-direct-care role assignment."
+        else if not Table.IsEmpty(CSDefinitions) and Table.RowCount(CSAnalysis) <> 1 then error "CS requires a role-analysis setting."
+        else if Enabled and Table.IsEmpty(CSDefinitions) then error "CS is enabled without a roster-role mapping."
+        else if Enabled then Table.Distinct(CSDefinitions) else Table.FirstN(CSDefinitions, 0)
+in
+    Table.Buffer(Table.RenameColumns(Table.SelectColumns(Validated, {"Roster Roles"}), {{"Roster Roles", "RosterRoleKey"}}));
+
+// Query: RoleDemand CS Rows Prepare
+// Purpose: Preserve every mapped CS roster position and its supplied net hours before standard-shift aggregation.
+// Notes: Unlisted locations retain a zero match count for the combined warning. No employee or duplicate-shift filter is applied.
+shared #"RoleDemand CS Rows Prepare" =
+let
+    Empty = #table(type table [Facility = nullable text, #"Week No" = nullable number,
+        FortnightWeek = nullable number, DayOfWeek = nullable number, FortnightDayIndex = nullable number,
+        Shift = nullable text, DemandHRS = nullable number, LocationMatchCount = Int64.Type], {}),
+    Mapping = #"RoleDemand CS Role Mapping Prepare",
+    Result = if Table.IsEmpty(Mapping) then Empty else
+        let
+            Selected = Table.SelectColumns(#"Master Source Prepare", {"Location", "Role", "Week No", "Week Day", "Start Time", "Shift Net Length"}),
+            WithRoleKey = Table.AddColumn(Selected, "RosterRoleKey",
+                each if [Role] = null then null else Text.Upper(Text.Trim([Role])), type nullable text),
+            SelectedCS = Table.NestedJoin(WithRoleKey, {"RosterRoleKey"}, Mapping, {"RosterRoleKey"}, "CSMapping", JoinKind.Inner),
+            Narrow = Table.RemoveColumns(SelectedCS, {"Role", "RosterRoleKey", "CSMapping"}),
+            WithLocationKey = Table.AddColumn(Narrow, "SourceLocationKey",
+                each if [Location] = null then null else Text.Upper(Text.Trim([Location])), type nullable text),
+            Locations = Table.Distinct(Table.SelectColumns(#"MW Facility Mapping Prepare", {"SourceLocationKey", "Facility"})),
+            JoinedLocations = Table.NestedJoin(WithLocationKey, {"SourceLocationKey"}, Locations, {"SourceLocationKey"}, "LocationMapping", JoinKind.LeftOuter),
+            WithLocationCount = Table.AddColumn(JoinedLocations, "LocationMatchCount", each Table.RowCount([LocationMapping]), Int64.Type),
+            ValidLocations = if not Table.IsEmpty(Table.SelectRows(WithLocationCount, each [LocationMatchCount] > 1)) then
+                    error "A CS source location maps to multiple canonical facilities." else WithLocationCount,
+            ExpandedLocation = Table.ExpandTableColumn(ValidLocations, "LocationMapping", {"Facility"}),
+            WithDay = Table.AddColumn(ExpandedLocation, "DayOfWeek",
+                each List.PositionOf({"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}, [#"Week Day"]) + 1, Int64.Type),
+            JoinedWeeks = Table.NestedJoin(WithDay, {"Facility", "Week No"}, #"RoleDemand Source Weeks Prepare",
+                {"Facility", "Week No"}, "SourceWeek", JoinKind.LeftOuter),
+            WithWeekCount = Table.AddColumn(JoinedWeeks, "WeekMatchCount", each Table.RowCount([SourceWeek]), Int64.Type),
+            ExpandedWeeks = Table.ExpandTableColumn(WithWeekCount, "SourceWeek", {"FortnightWeek"}),
+            Invalid = Table.SelectRows(ExpandedWeeks, each [LocationMatchCount] = 1 and (
+                [WeekMatchCount] <> 1 or not List.Contains({1..7}, [DayOfWeek])
+                or not Value.Is([Start Time], type time)
+                or not #"RoleDemand Finite Number"([Shift Net Length]) or [Shift Net Length] < 0)),
+            ValidRows = if not Table.IsEmpty(Invalid) then error "CS requires valid source weeks, weekdays, start times and nonnegative net hours." else ExpandedWeeks,
+            WithDayIndex = Table.AddColumn(ValidRows, "FortnightDayIndex",
+                each if [FortnightWeek] = null then null else ([FortnightWeek] - 1) * 7 + [DayOfWeek], type nullable number),
+            // Preserve the existing start-time classification; downstream Settings supplies the full standard shift span.
+            WithShift = Table.AddColumn(WithDayIndex, "Shift", each
+                if not Value.Is([Start Time], type time) then null
+                else if [Start Time] <= StartAM then "NIGHT"
+                else if [Start Time] <= StartPM then "AM"
+                else if [Start Time] <= StartNS then "PM" else "NIGHT", type nullable text),
+            NamedHours = Table.RenameColumns(WithShift, {{"Shift Net Length", "DemandHRS"}}),
+            Prepared = Table.SelectColumns(NamedHours,
+                {"Facility", "Week No", "FortnightWeek", "DayOfWeek", "FortnightDayIndex", "Shift", "DemandHRS", "LocationMatchCount"})
+        in Prepared
+in
+    Table.Buffer(Result);
+
+// Query: RoleDemand CS Pattern Prepare
+// Purpose: Complete CS's fortnight pattern with proven zero cells and unchanged source net hours.
+// Notes: Full facility/week source coverage proves absent CS cells are zero; a wholly missing CS facility remains an error.
+shared #"RoleDemand CS Pattern Prepare" =
+let
+    Empty = #table(type table [Facility = text, Role = text, #"Week No" = number, FortnightWeek = number,
+        DayOfWeek = number, FortnightDayIndex = number, Shift = text, DemandHRS = number,
+        ProductiveHRS = nullable number, DemandBasis = text], {}),
+    Result = if Table.IsEmpty(#"RoleDemand CS Role Mapping Prepare") then Empty else
+        let
+            Weeks = #"RoleDemand Source Weeks Prepare",
+            Rows = Table.SelectRows(#"RoleDemand CS Rows Prepare", each [LocationMatchCount] = 1),
+            ExpectedFacilities = List.Buffer(List.Distinct(Weeks[Facility])),
+            MissingFacilities = List.Difference(ExpectedFacilities, List.Distinct(Rows[Facility])),
+            ValidRows = if not List.IsEmpty(MissingFacilities) then
+                    error Error.Record("Missing CS demand source", "Enabled CS cannot publish an entirely absent facility as zero demand.", MissingFacilities)
+                else Rows,
+            // Coverage uses all raw roster roles, since CS can legitimately have no shift on a given day.
+            RawCoverage = Table.SelectColumns(#"Master Source Prepare", {"Location", "Week No", "Week Day"}),
+            WithLocationKey = Table.AddColumn(RawCoverage, "SourceLocationKey",
+                each if [Location] = null then null else Text.Upper(Text.Trim([Location])), type nullable text),
+            Locations = Table.Distinct(Table.SelectColumns(#"MW Facility Mapping Prepare", {"SourceLocationKey", "Facility"})),
+            MappedCoverage = Table.NestedJoin(WithLocationKey, {"SourceLocationKey"}, Locations, {"SourceLocationKey"}, "LocationMapping", JoinKind.Inner),
+            ExpandedCoverage = Table.ExpandTableColumn(MappedCoverage, "LocationMapping", {"Facility"}),
+            WithDay = Table.AddColumn(ExpandedCoverage, "DayOfWeek",
+                each List.PositionOf({"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}, [#"Week Day"]) + 1, Int64.Type),
+            ValidDays = Table.SelectRows(WithDay, each List.Contains({1..7}, [DayOfWeek])),
+            Coverage = Table.Group(ValidDays, {"Facility", "Week No"}, {{"DaysPresent", each List.Count(List.Distinct([DayOfWeek])), Int64.Type}}),
+            JoinedCoverage = Table.NestedJoin(Weeks, {"Facility", "Week No"}, Coverage, {"Facility", "Week No"}, "Coverage", JoinKind.LeftOuter),
+            Incomplete = Table.SelectRows(JoinedCoverage, each Table.RowCount([Coverage]) <> 1 or [Coverage]{0}[DaysPresent] <> 7),
+            ValidWeeks = if not Table.IsEmpty(Incomplete) then error "Complete raw facility/week coverage is required to prove zero CS demand cells." else Weeks,
+            FortnightDays = Table.SelectColumns(#"MW Fortnight Days", {"FortnightWeek", "DayOfWeek", "FortnightDayIndex"}),
+            JoinedDays = Table.NestedJoin(ValidWeeks, {"FortnightWeek"}, FortnightDays, {"FortnightWeek"}, "Days", JoinKind.Inner),
+            ExpandedDays = Table.ExpandTableColumn(JoinedDays, "Days", {"DayOfWeek", "FortnightDayIndex"}),
+            WithShifts = Table.AddColumn(ExpandedDays, "Shift", each {"AM", "PM", "NIGHT"}, type list),
+            Grid = Table.ExpandListColumn(WithShifts, "Shift"),
+            Keys = {"Facility", "Week No", "FortnightWeek", "DayOfWeek", "FortnightDayIndex", "Shift"},
+            Observed = Table.Group(ValidRows, Keys, {{"DemandHRS", each List.Sum([DemandHRS]), type number}}),
+            JoinedHours = Table.NestedJoin(Grid, Keys, Observed, Keys, "Observed", JoinKind.LeftOuter),
+            ExpandedHours = Table.ExpandTableColumn(JoinedHours, "Observed", {"DemandHRS"}),
+            ProvenZeros = Table.ReplaceValue(ExpandedHours, null, 0, Replacer.ReplaceValue, {"DemandHRS"}),
+            WithRole = Table.AddColumn(ProvenZeros, "Role", each "CS", type text),
+            WithProductiveHours = Table.AddColumn(WithRole, "ProductiveHRS", each null, type nullable number),
+            WithBasis = Table.AddColumn(WithProductiveHours, "DemandBasis", each "MasterRoster", type text),
+            SourceTotals = Table.Group(ValidRows, {"Facility", "Week No"}, {{"SourceHours", each List.Sum([DemandHRS]), type number}}),
+            PatternTotals = Table.Group(WithBasis, {"Facility", "Week No"}, {{"PatternHours", each List.Sum([DemandHRS]), type number}}),
+            JoinedTotals = Table.NestedJoin(SourceTotals, {"Facility", "Week No"}, PatternTotals, {"Facility", "Week No"}, "Pattern", JoinKind.LeftOuter),
+            BadTotals = Table.SelectRows(JoinedTotals, each Table.RowCount([Pattern]) <> 1
+                or Number.Abs([SourceHours] - [Pattern]{0}[PatternHours]) > 0.0000001),
+            Validated = if not Table.IsEmpty(BadTotals) then error "CS standard-shift pattern does not conserve source net hours." else WithBasis
+        in Validated
+in
+    Table.Buffer(Result);
+
+// Query: RoleDemand Pattern Prepare
+// Purpose: Combine care and CS into one complete role-group fortnight handover without FTE-derived hours.
+// Output: One row per canonical Facility, Role, FortnightDayIndex and standard Shift.
+shared #"RoleDemand Pattern Prepare" =
+let
+    Columns = {"Facility", "Role", "Week No", "FortnightWeek", "DayOfWeek", "FortnightDayIndex", "Shift", "DemandHRS", "ProductiveHRS", "DemandBasis"},
+    Care = #"RoleDemand Care Cells Prepare",
+    CS = #"RoleDemand CS Pattern Prepare",
+    Combined = Table.SelectColumns(Table.Combine({Care, CS}), Columns),
+    CareGroups = Table.SelectColumns(Table.SelectRows(#"RoleDemand Care Role Mapping Prepare", each [Effort Management Analysis] = true), {"Role"}),
+    Groups = Table.Distinct(Table.Combine({CareGroups,
+        if Table.IsEmpty(#"RoleDemand CS Role Mapping Prepare") then #table(type table [Role = text], {}) else #table(type table [Role = text], {{"CS"}})})),
+    Facilities = Table.Distinct(Table.SelectColumns(#"RoleDemand Source Weeks Prepare", {"Facility"})),
+    Expected = Table.ExpandTableColumn(Table.AddColumn(Facilities, "Groups", each Groups), "Groups", {"Role"}),
+    Counts = Table.Group(Combined, {"Facility", "Role"}, {{"CellCount", each Table.RowCount(_), Int64.Type}}),
+    Coverage = Table.NestedJoin(Expected, {"Facility", "Role"}, Counts, {"Facility", "Role"}, "Actual", JoinKind.LeftOuter),
+    Missing = Table.SelectRows(Coverage, each Table.RowCount([Actual]) <> 1 or [Actual]{0}[CellCount] <> 42),
+    DuplicateKeys = Table.RowCount(Combined) <> Table.RowCount(Table.Distinct(Table.SelectColumns(Combined, {"Facility", "Role", "FortnightDayIndex", "Shift"}))),
+    Invalid = Table.SelectRows(Combined, each not #"RoleDemand Finite Number"([DemandHRS]) or [DemandHRS] < 0
+        or (if [DemandBasis] = "MasterRoster" then [Role] <> "CS" or [ProductiveHRS] <> null
+            else [DemandBasis] <> "CareMinutes" or [Role] = "CS"
+                or not #"RoleDemand Finite Number"([ProductiveHRS]) or [ProductiveHRS] < 0)),
+    Validated = if Table.IsEmpty(Expected) or not Table.IsEmpty(Missing) or DuplicateKeys
+            or Table.RowCount(Combined) <> Table.RowCount(Expected) * 42 or not Table.IsEmpty(Invalid) then
+            error "Combined role demand requires 42 unique valid cells for every enabled facility/role."
+        else Combined,
+    Typed = Table.TransformColumnTypes(Validated, {{"Facility", type text}, {"Role", type text}, {"Week No", Int64.Type},
+        {"FortnightWeek", Int64.Type}, {"DayOfWeek", Int64.Type}, {"FortnightDayIndex", Int64.Type}, {"Shift", type text},
+        {"DemandHRS", type number}, {"ProductiveHRS", type nullable number}, {"DemandBasis", type text}})
+in
+    Table.Buffer(Table.Sort(Typed, {{"Facility", Order.Ascending}, {"Role", Order.Ascending},
+        {"FortnightDayIndex", Order.Ascending}, {"Shift", Order.Ascending}}));
+
+// Query: RoleDemand_CHECK
+// Purpose: Expose required combined-handover failures and explicit CS inclusion without repeating expected location exclusions.
+// Output: The existing Check/Severity/Facility/MinuteCategory/Role/Actual/Expected/Message check schema.
+shared RoleDemand_CHECK =
+let
+    CheckStage = (Name as text, Work as function) as record =>
+        let Attempt = try Work()
+        in [Check = Name, Severity = if Attempt[HasError] then "Error" else "Pass",
+            Actual = if Attempt[HasError] then null else Attempt[Value],
+            Message = if Attempt[HasError] then Attempt[Error][Message] else "Validated"],
+    Stages = #"MW Check Table"({
+        CheckStage("Unique role-analysis controls", () => Table.RowCount(#"RoleDemand Role Analysis Prepare")),
+        CheckStage("Unambiguous care role-group mappings", () => Table.RowCount(#"RoleDemand Care Role Mapping Prepare")),
+        CheckStage("Established source fortnight", () => Table.RowCount(#"RoleDemand Source Weeks Prepare")),
+        CheckStage("Existing care publication and source-cell agreement", () => Table.RowCount(#"RoleDemand Care Cells Prepare")),
+        CheckStage("CS roster-role and source rows", () => Table.RowCount(
+            Table.SelectRows(#"RoleDemand CS Rows Prepare", each [LocationMatchCount] = 1))),
+        CheckStage("CS source-hour conservation and proven zero cells", () => Table.RowCount(#"RoleDemand CS Pattern Prepare")),
+        CheckStage("Complete combined role-demand handover", () => Table.RowCount(#"RoleDemand Pattern Prepare"))
+    }),
+    CSControlAttempt = try Table.SelectRows(#"RoleDemand Role Analysis Prepare", each [Roles] = "CS"),
+    // Invalid or missing settings remain stage errors; a valid disabled setting must not look like successful CS inclusion.
+    CSInclusion = if CSControlAttempt[HasError] then #"MW Check Table"({})
+        else if Table.RowCount(CSControlAttempt[Value]) <> 1 then #"MW Check Table"({})
+        else
+            let Enabled = CSControlAttempt[Value]{0}[Effort Management Analysis] = true
+            in #"MW Check Table"({
+                [Check = "CS effort-analysis inclusion", Severity = if Enabled then "Pass" else "Warning",
+                    Role = "CS", Actual = if Enabled then 1 else 0, Expected = 1,
+                    Message = if Enabled then "CS is enabled for effort management."
+                        else "CS preparation was skipped and no CS demand was published because Role Analysis does not enable Effort Management Analysis for CS."]
+            }),
+    CareAttempt = try MinuteWorkersFTE_CHECK,
+    // These notices describe expected rows outside the configured source scope.
+    // They remain in the original care diagnostics; all other warnings are preserved here.
+    CareWarnings = if CareAttempt[HasError] then #"MW Check Table"({}) else
+        Table.SelectRows(CareAttempt[Value], each [Severity] = "Warning"
+            and [Check] <> "Master Roster Location is outside configured Units")
+in
+    Table.Combine({Stages, CSInclusion, CareWarnings});
+
+// Query: RoleDemand_TABLE
+// Purpose: Publish all enabled care and CS demand together for downstream operational handovers.
+// Inputs: RoleDemand_CHECK and RoleDemand Pattern Prepare.
+// Output: Facility, Role, source fortnight keys, standard Shift, authoritative DemandHRS, nullable ProductiveHRS and DemandBasis.
+// Notes: CS hours are spread across Settings standard shifts by the downstream unit extract, without care-minute adjustments.
+shared RoleDemand_TABLE =
+let
+    Checks = Table.Buffer(RoleDemand_CHECK),
+    Failures = Table.SelectRows(Checks, each [Severity] = "Error"),
+    Validated = if not Table.IsEmpty(Failures) then
+        error Error.Record("Role demand publication validation failed",
+            Text.Combine(List.Transform(Table.ToRecords(Failures), each [Check] & ": " & [Message]), "#(lf)"), Failures)
+        else #"RoleDemand Pattern Prepare"
+in
+    Validated;

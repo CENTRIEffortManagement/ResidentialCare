@@ -1,0 +1,1460 @@
+{
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "RunId": "20261026-125427-58338aa4",
+  "IncompleteAttempts": [],
+  "ActiveIntervalSeconds": 198.813908,
+  "Status": "PartialOrFailed",
+  "OutputStatus": {
+    "RunId": "20261026-125427-58338aa4",
+    "RunStatus": "PartialOrFailed",
+    "CheckedAtUtc": "2026-10-26T01:57:49.2569809Z",
+    "AllVerified": false,
+    "Rows": [
+      {
+        "Id": "Date/DemandMaster",
+        "RelativePath": "1. Input/Demand-MasterRoster Manual Read.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:33:46.5826654Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Settings did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/AllocationInput",
+        "RelativePath": "UNITS/TE/1. Input/1-AllocationExtracted.xlsx",
+        "RunStatus": "Failed",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:29:47.2155078Z",
+        "Reason": "Not updated by this run (Failed). Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "TE/Settings",
+        "RelativePath": "UNITS/TE/2. Calculations/Settings Data.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:48:05.0869073Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/AllocationInput did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/DemandInput",
+        "RelativePath": "UNITS/TE/1. Input/2-DemandExtract.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:34:07.4839372Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Settings did not complete.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Workers",
+        "RelativePath": "UNITS/TE/1. Input/Worker Reconciliation.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:31:22.7236830Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/AllocationInput did not complete.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Availability",
+        "RelativePath": "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:32:37.8389541Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Workers did not complete.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Staff",
+        "RelativePath": "UNITS/TE/2. Calculations/StaffListMaster.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:50:43.8480388Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Availability did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Intervals",
+        "RelativePath": "UNITS/TE/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:51:41.5085356Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/AllocationInput did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/DemandIntervals",
+        "RelativePath": "UNITS/TE/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:06.8513510Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Intervals did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Demand",
+        "RelativePath": "UNITS/TE/2. Calculations/Demand.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:26.6322501Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/DemandIntervals did not complete.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Shifts",
+        "RelativePath": "UNITS/TE/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:52:48.1964737Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Intervals did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/ShiftAverage",
+        "RelativePath": "UNITS/TE/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:31.5351824Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Shifts did not complete.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Allocation",
+        "RelativePath": "UNITS/TE/2. Calculations/Allocation.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:51.1449193Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/ShiftAverage did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Distribution",
+        "RelativePath": "UNITS/TE/2. Calculations/Shift-StaffDistribution.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:54:12.0663483Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Allocation did not complete.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Role:AIN/1",
+        "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:05.1871888Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:AIN/2",
+        "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:54.2620945Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:AIN/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:AIN/3",
+        "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:58:33.3487029Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:AIN/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:RN/1",
+        "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:55:21.8750495Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:RN/2",
+        "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:10.4514418Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:RN/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:RN/3",
+        "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:57:14.5072742Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:RN/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:EN/1",
+        "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:55:19.4751740Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:EN/2",
+        "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:08.1315237Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:EN/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:EN/3",
+        "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:57:05.1416812Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:EN/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:CS/1",
+        "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T00:49:35.0723680Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:CS/2",
+        "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T00:50:05.6181868Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:CS/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:CS/3",
+        "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T00:50:45.4672090Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:CS/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Capacity",
+        "RelativePath": "UNITS/TE/2. Calculations/Capacity.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:05:42.8307654Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Role:AIN/3 did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:AIN/1: Prerequisite TE/Demand did not complete.",
+          "TE/Role:EN/1: Prerequisite TE/Demand did not complete.",
+          "TE/Role:RN/1: Prerequisite TE/Demand did not complete.",
+          "TE/Role:CS/1: Prerequisite TE/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Effort",
+        "RelativePath": "UNITS/TE/2. Calculations/Effort.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-22T01:24:07.4513502Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite TE/Capacity did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "TE/Settings: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Workers: Prerequisite TE/AllocationInput did not complete.",
+          "TE/Shifts: Prerequisite TE/Intervals did not complete.",
+          "TE/Role:AIN/1: Prerequisite TE/Demand did not complete.",
+          "TE/Role:EN/1: Prerequisite TE/Demand did not complete.",
+          "TE/Role:RN/1: Prerequisite TE/Demand did not complete.",
+          "TE/Role:CS/1: Prerequisite TE/Demand did not complete.",
+          "TE/Allocation: Prerequisite TE/ShiftAverage did not complete.",
+          "TE/Distribution: Prerequisite TE/Allocation did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/AllocationInput",
+        "RelativePath": "UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-26T01:55:34.2174088Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "JH-RY/Settings",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-26T01:55:54.7479284Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/DemandInput",
+        "RelativePath": "UNITS/JH-RY/1. Input/2-DemandExtract.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:34:07.4839372Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite Date/DemandMaster did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Workers",
+        "RelativePath": "UNITS/JH-RY/1. Input/Worker Reconciliation.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-26T01:56:59.4213278Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Availability",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+        "RunStatus": "Failed",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:32:37.8389541Z",
+        "Reason": "Not updated by this run (Failed). Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK. The output predates a current declared input.",
+        "RootCauses": [
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Staff",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/StaffListMaster.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:50:29.4561426Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Availability did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Intervals",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:51:43.1804577Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/DemandInput did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/DemandIntervals",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:12.5828427Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Intervals did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Demand",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Demand.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:34.1864864Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/DemandIntervals did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Shifts",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:11.1705246Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Intervals did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/ShiftAverage",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:53:55.1793898Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Shifts did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Allocation",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Allocation.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:54:22.7184266Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/ShiftAverage did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Distribution",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Shift-StaffDistribution.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:54:50.2759309Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Allocation did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:AIN/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:50.3154684Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:AIN/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:57:38.5377971Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:AIN/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:AIN/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:59:14.0025399Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:AIN/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:RN/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:55:53.3085978Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:RN/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:33.2130117Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:RN/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:RN/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:57:24.4808077Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:RN/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:EN/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:55:59.8921404Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:EN/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:56:43.4656926Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:EN/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:EN/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:57:37.7368139Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:EN/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:CS/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T00:49:35.0723680Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:CS/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T00:50:05.6181868Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:CS/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Role:CS/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T00:50:45.4672090Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Demand did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:CS/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Capacity",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-26T01:05:42.8307654Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Role:AIN/3 did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:AIN/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Role:EN/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Role:RN/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Role:CS/1: Prerequisite JH-RY/Demand did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/Effort",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T04:02:40.1784277Z",
+        "Reason": "Not updated by this run (Blocked). Prerequisite JH-RY/Capacity did not complete. The output predates a current declared input.",
+        "RootCauses": [
+          "TE/AllocationInput: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+          "JH-RY/Availability: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+          "JH-RY/Shifts: Prerequisite JH-RY/Intervals did not complete.",
+          "JH-RY/Role:AIN/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Role:EN/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Role:RN/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Role:CS/1: Prerequisite JH-RY/Demand did not complete.",
+          "JH-RY/Allocation: Prerequisite JH-RY/ShiftAverage did not complete.",
+          "JH-RY/Distribution: Prerequisite JH-RY/Allocation did not complete."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      }
+    ]
+  },
+  "GapSeconds": 2,
+  "Untimed": [
+    {
+      "Id": "Date/DemandMaster",
+      "Status": "Blocked",
+      "Predecessors": [
+        "BD/Settings",
+        "TE/Settings",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite TE/Settings did not complete."
+    },
+    {
+      "Id": "TE/Settings",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/AllocationInput"
+      ],
+      "Reason": "Prerequisite TE/AllocationInput did not complete."
+    },
+    {
+      "Id": "TE/DemandInput",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Date/DemandMaster",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Settings did not complete."
+    },
+    {
+      "Id": "TE/Workers",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/AllocationInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/AllocationInput did not complete."
+    },
+    {
+      "Id": "TE/Availability",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Workers",
+        "TE/AllocationInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Workers did not complete."
+    },
+    {
+      "Id": "TE/Staff",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Availability",
+        "TE/Workers",
+        "TE/AllocationInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Availability did not complete."
+    },
+    {
+      "Id": "TE/Intervals",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/AllocationInput",
+        "TE/DemandInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/AllocationInput did not complete."
+    },
+    {
+      "Id": "TE/DemandIntervals",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Intervals",
+        "TE/DemandInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Intervals did not complete."
+    },
+    {
+      "Id": "TE/Demand",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/DemandIntervals",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/DemandIntervals did not complete."
+    },
+    {
+      "Id": "TE/Shifts",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Intervals",
+        "TE/AllocationInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Intervals did not complete."
+    },
+    {
+      "Id": "TE/ShiftAverage",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Shifts",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Shifts did not complete."
+    },
+    {
+      "Id": "TE/Allocation",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/ShiftAverage",
+        "TE/AllocationInput",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/ShiftAverage did not complete."
+    },
+    {
+      "Id": "TE/Distribution",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Allocation",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Allocation did not complete."
+    },
+    {
+      "Id": "TE/Role:AIN/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:AIN/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:AIN/1"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:AIN/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:AIN/2"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:RN/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:RN/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:RN/1"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:RN/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:RN/2"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:EN/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:EN/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:EN/1"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:EN/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:EN/2"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:CS/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:CS/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:CS/1"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Role:CS/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:CS/2"
+      ],
+      "Reason": "Prerequisite TE/Demand did not complete."
+    },
+    {
+      "Id": "TE/Capacity",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Role:AIN/3",
+        "TE/Role:EN/3",
+        "TE/Role:RN/3",
+        "TE/Role:CS/3",
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Role:AIN/3 did not complete."
+    },
+    {
+      "Id": "TE/Effort",
+      "Status": "Blocked",
+      "Predecessors": [
+        "TE/Capacity",
+        "TE/Demand",
+        "TE/Allocation",
+        "TE/Distribution",
+        "TE/Staff",
+        "TE/Settings"
+      ],
+      "Reason": "Prerequisite TE/Capacity did not complete."
+    },
+    {
+      "Id": "JH-RY/DemandInput",
+      "Status": "Blocked",
+      "Predecessors": [
+        "Date/DemandMaster",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite Date/DemandMaster did not complete."
+    },
+    {
+      "Id": "JH-RY/Staff",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Availability",
+        "JH-RY/Workers",
+        "JH-RY/AllocationInput",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Availability did not complete."
+    },
+    {
+      "Id": "JH-RY/Intervals",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/AllocationInput",
+        "JH-RY/DemandInput",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/DemandInput did not complete."
+    },
+    {
+      "Id": "JH-RY/DemandIntervals",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Intervals",
+        "JH-RY/DemandInput",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Intervals did not complete."
+    },
+    {
+      "Id": "JH-RY/Demand",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/DemandIntervals",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/DemandIntervals did not complete."
+    },
+    {
+      "Id": "JH-RY/Shifts",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Intervals",
+        "JH-RY/AllocationInput",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Intervals did not complete."
+    },
+    {
+      "Id": "JH-RY/ShiftAverage",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Shifts",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Shifts did not complete."
+    },
+    {
+      "Id": "JH-RY/Allocation",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/ShiftAverage",
+        "JH-RY/AllocationInput",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/ShiftAverage did not complete."
+    },
+    {
+      "Id": "JH-RY/Distribution",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Allocation",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Allocation did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:AIN/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:AIN/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:AIN/1"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:AIN/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:AIN/2"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:RN/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:RN/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:RN/1"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:RN/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:RN/2"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:EN/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:EN/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:EN/1"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:EN/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:EN/2"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:CS/1",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:CS/2",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:CS/1"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Role:CS/3",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:CS/2"
+      ],
+      "Reason": "Prerequisite JH-RY/Demand did not complete."
+    },
+    {
+      "Id": "JH-RY/Capacity",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Role:AIN/3",
+        "JH-RY/Role:EN/3",
+        "JH-RY/Role:RN/3",
+        "JH-RY/Role:CS/3",
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Role:AIN/3 did not complete."
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "Status": "Blocked",
+      "Predecessors": [
+        "JH-RY/Capacity",
+        "JH-RY/Demand",
+        "JH-RY/Allocation",
+        "JH-RY/Distribution",
+        "JH-RY/Staff",
+        "JH-RY/Settings"
+      ],
+      "Reason": "Prerequisite JH-RY/Capacity did not complete."
+    }
+  ],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ElapsedSeconds": 200.5200134,
+  "PeakConcurrency": 2,
+  "SavedIntermediates": [],
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Finish": 16.1618858,
+      "Id": "TE/AllocationInput",
+      "Message": "Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'AllocationExtracted (2)/AllocationExtracted' failed foreground refresh: [Expression.Error] Master CS locations require unique Facilities mappings to the complete current Unit.",
+      "Start": 1.608335,
+      "Status": "Failed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 69.9150936,
+      "Id": "JH-RY/AllocationInput",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Start": 1.6996235,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 90.6258548,
+      "Id": "JH-RY/Settings",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Start": 69.9386467,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 156.2894071,
+      "Id": "JH-RY/Workers",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Start": 90.6521613,
+      "Status": "Completed"
+    },
+    {
+      "Attempt": 1,
+      "Finish": 200.5081097,
+      "Id": "JH-RY/Availability",
+      "Message": "Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'ResDayShift/ResDayShift' failed foreground refresh: [ResDayShift validation] Required availability checks failed: Unique worker/date leave totals; Eligible worker roles have roster shifts; Settings shift endpoints; Unique worker shift rows; Segments obey availability and exclusions; Disjoint segments and reconciled hours; Published facility and roles. Inspect ResDayShift_CHECK.",
+      "Start": 156.3254142,
+      "Status": "Failed"
+    }
+  ]
+}

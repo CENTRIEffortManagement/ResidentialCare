@@ -1,0 +1,19 @@
+gantt
+    title Current 20261026-092005-6c3736e8 PartialOrFailed - elapsed 00 02 33 - peak 2
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/D2
+    %% Predecessors: BD/AllocationInput, BD/DemandInput, BD/Settings
+    BD/Intervals attempt 1 Completed :done, task1, 2000-01-01 00:00:01.265, 2000-01-01 00:00:16.004
+    %% Predecessors: BD/Intervals, BD/DemandInput, BD/Settings
+    BD/DemandIntervals attempt 1 Completed :done, task2, 2000-01-01 00:00:16.028, 2000-01-01 00:01:38.202
+    %% Predecessors: BD/DemandIntervals, BD/Settings
+    BD/Demand attempt 1 Completed :done, task3, 2000-01-01 00:01:38.228, 2000-01-01 00:01:53.164
+    section BD/A2
+    %% Predecessors: BD/Intervals, BD/AllocationInput, BD/Settings
+    BD/Shifts attempt 1 Completed :done, task4, 2000-01-01 00:00:16.112, 2000-01-01 00:02:33.118
+    %% Untimed BD/ShiftAverage; predecessors: BD/Shifts, BD/Settings
+    section BD/A3
+    %% Untimed BD/Allocation; predecessors: BD/ShiftAverage, BD/AllocationInput, BD/Settings
+    %% Untimed BD/Distribution; predecessors: BD/Allocation, BD/Settings

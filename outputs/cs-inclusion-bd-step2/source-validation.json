@@ -1,0 +1,56 @@
+{
+  "source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+  "sourceSHA256": "272D31377758B8C2E0DBFC5C226364162C1AC97B9C56404A25429EEE0F764385",
+  "baselineSourceSHA256": "EFCF6B5827A14C802001822711C984E4465258CD2C03FBBEB69A9F6D8DC2078A",
+  "sourceGate": "All49definitionsmatch exactworkbook;2identicalqueriesreorderedandoneextra terminalLF in source.",
+  "retainedQueryCount": 49,
+  "changedExpressions": [
+    "EXTRACT Distributed Demand FTE",
+    "EXTRACT Distributed Demand FTE Fortnight",
+    "EXTRACT Distributed Demand FTE Checks",
+    "Distributed Demand FTE Fortnight Scope",
+    "Demand Roles",
+    "Distributed FTE Source Validate",
+    "Distributed FTE Rows Prepare",
+    "Distributed FTE Profile Prepare",
+    "Distributed FTE Exclusions",
+    "Distributed FTE Source Cells",
+    "Distributed FTE Prepare",
+    "Demand Extraction Prepare",
+    "Demand Reconciliation Targets",
+    "DemandExtraction_RECONCILIATION",
+    "DemandExtraction_CHECK"
+  ],
+  "protectedContracts": {
+    "pathsUnchanged": true,
+    "calendarAndTimingExpressionsUnchanged": true,
+    "publicOutput": "ShiftUnitDemandHRS",
+    "publicOutputColumns": 12,
+    "publicOutputExpressionUnchanged": true
+  },
+  "inputs": {
+    "demand": "RoleDemand_TABLE",
+    "checks": "RoleDemand_CHECK",
+    "legacyProfileQueries": "Load-safe aliases of combined handover"
+  },
+  "csBehaviour": {
+    "basis": "MasterRoster",
+    "hours": "Pass authoritative DemandHRS unchanged; spread across configured standard shift",
+    "productiveHours": null
+  },
+  "verification": {
+    "sourceContractsPassed": 37,
+    "referenceArithmeticAssertionsPassed": 3442,
+    "microsoftMParser": "Passed source,fixturesandgeneratedextension",
+    "whitespace": "Passed",
+    "independentReview": "No blocking issue found",
+    "nativeFixturesPrepared": 34,
+    "nativeFixturesExecuted": 0
+  },
+  "performanceReview": "Narrow10-columnhandoverscopedbeforebuffering;noDCprofilejoin/regrouporpercentage reapplication. Repeatedsmallcalendar/checkevaluationpossible; live memory/runtime unmeasured.",
+  "workbookSHA256": "714D10C29AA91269487F60CF5438CB28B39FF03B704CF8AC9585294809B32BD0",
+  "workbookUnchanged": true,
+  "upstreamMSourceUnchanged": true,
+  "synchronized": false,
+  "refreshed": false
+}

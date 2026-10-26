@@ -131,6 +131,7 @@ function Get-BatchCatalogue {
     $scopePath = $null
     $unitRoles = @{}
     $additionalUnitNames = @()
+    $unitsWithoutWorkerReconciliation = @()
     if ($config.PSObject.Properties['runScope']) {
         $scopePath = Resolve-BatchPath $RepoRoot $config.runScope
         $scope = Read-ResidentialCareRunScope $scopePath 'DATExx-Whiddon'
@@ -172,6 +173,10 @@ function Get-BatchCatalogue {
                 if ($role -isnot [string] -or $role -cnotmatch '^[A-Za-z0-9][A-Za-z0-9_-]*$') {
                     throw "Invalid role folder for additional Unit $unit`: $role"
                 }
+            }
+            if ($entry.ContainsKey('UseWorkerReconciliation')) {
+                if ($entry.UseWorkerReconciliation -isnot [bool]) { throw "UseWorkerReconciliation must be boolean: $unit" }
+                if (-not $entry.UseWorkerReconciliation) { $unitsWithoutWorkerReconciliation += $unit }
             }
             $additionalUnitNames += $unit
             $unitRoles[$unit] = $unitRoleNames
@@ -222,12 +227,17 @@ function Get-BatchCatalogue {
             $legacy.Add([pscustomobject]@{ Global = $globalSequence; Local = $localSequence; Unit = $unit; Path = $relative })
         }
         foreach ($spec in $catalogue.UnitJobs) {
+            # Only configured facilities with internal worker membership retire
+            # the separate workbook. Legacy Units keep their existing chain.
+            if ($unit -in $unitsWithoutWorkerReconciliation -and $spec.Id -eq 'Workers') { continue }
             $localPath = if ($spec.ContainsKey('Sequence')) {
                 $entry = @($unitManifest.Workbooks | Where-Object Sequence -eq $spec.Sequence)
                 if ($entry.Count -ne 1) { throw "Invalid Unit manifest reference: $($spec.Sequence)" }
                 "$($entry[0].Folder)/$($entry[0].FileName)"
             } else { $spec.Path }
-            $dependencies = @($spec.Depends | ForEach-Object {
+            $dependencies = @($spec.Depends | Where-Object {
+                $unit -notin $unitsWithoutWorkerReconciliation -or $_ -ne 'Workers'
+            } | ForEach-Object {
                 if ($_ -eq 'RoleOutputs') { foreach ($role in $currentRoles) { "$unit/Role:$role/3" } }
                 else { "$unit/$_" }
             })
@@ -328,7 +338,9 @@ function Get-BatchCatalogue {
         } elseif (-not $job.Role) {
             $definition = @($catalogue.UnitJobs | Where-Object { "$($job.Unit)/$($_.Id)" -eq $job.Id })[0]
             if ($definition.ContainsKey('ReadJobs')) {
-                $readJobs = @($definition.ReadJobs | ForEach-Object {
+                $readJobs = @($definition.ReadJobs | Where-Object {
+                    $job.Unit -notin $unitsWithoutWorkerReconciliation -or $_ -ne 'Workers'
+                } | ForEach-Object {
                     if ($_ -eq 'RoleOutputs') { foreach ($role in @($unitRoles[$job.Unit])) { "$($job.Unit)/Role:$role/3" } }
                     else { "$($job.Unit)/$_" }
                 })

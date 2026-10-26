@@ -1,0 +1,202 @@
+{
+  "source_gate_equal": true,
+  "native_runs": [
+    {
+      "log": "outputs/cs-a1-failure-20261026/native-probe-20261026-095621.log",
+      "opening": {
+        "Sequence": 2,
+        "Phase": "Opening exact workbook read-only",
+        "Table": "",
+        "TimeUtc": "2026-10-25T22:56:23.5827182Z",
+        "OwnedExcelId": 65976,
+        "OwnedExcelStartTicks": 639285657821290430,
+        "Data": null
+      },
+      "refresh_all": null,
+      "sequential_tables": 13,
+      "sequential_seconds": 50.387,
+      "diagnostics": null,
+      "closed_without_saving": {
+        "Sequence": 44,
+        "Phase": "Closed without saving",
+        "Table": "",
+        "TimeUtc": "2026-10-25T22:57:17.1335781Z",
+        "OwnedExcelId": 65976,
+        "OwnedExcelStartTicks": 639285657821290430,
+        "Data": {
+          "Unchanged": true,
+          "AfterSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A",
+          "BeforeSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A"
+        }
+      }
+    },
+    {
+      "log": "outputs/cs-a1-failure-20261026/native-probe-20261026-100407.log",
+      "opening": {
+        "Sequence": 2,
+        "Phase": "Opening exact workbook read-only",
+        "Table": "",
+        "TimeUtc": "2026-10-25T23:04:08.9218050Z",
+        "OwnedExcelId": 60920,
+        "OwnedExcelStartTicks": 639285662475123238,
+        "Data": null
+      },
+      "refresh_all": {
+        "Sequence": 5,
+        "Phase": "Refresh All completed",
+        "Table": "",
+        "TimeUtc": "2026-10-25T23:04:36.6113359Z",
+        "OwnedExcelId": 60920,
+        "OwnedExcelStartTicks": 639285662475123238,
+        "Data": {
+          "Seconds": 27.259,
+          "Rows": {
+            "Demand_Prepare": 84,
+            "ResourcePeriodTABLE_empty": 2856,
+            "CapacityDiagnostics_SUMMARY": 40,
+            "ResPeriodAvailabilityTABLE": 2698,
+            "A1SpareDayChoices_Prepare": 952,
+            "ResPeriodAllocationTABLE": 432,
+            "C__ResSingleShiftDayTABLE": 890,
+            "ResPeriodWDTABLE": 1923,
+            "ResPeriodCapPrioritised": 271,
+            "RolePathTABLE": 7,
+            "ResPeriodShiftNWDTABLE": 933,
+            "CapacityDiagnostics_DETAILS": 83,
+            "MultiDayPeriod_Remove": 968
+          }
+        }
+      },
+      "sequential_tables": 0,
+      "sequential_seconds": 0,
+      "diagnostics": null,
+      "closed_without_saving": {
+        "Sequence": 8,
+        "Phase": "Closed without saving",
+        "Table": "",
+        "TimeUtc": "2026-10-25T23:04:39.2696336Z",
+        "OwnedExcelId": 60920,
+        "OwnedExcelStartTicks": 639285662475123238,
+        "Data": {
+          "AfterSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A",
+          "Unchanged": true,
+          "BeforeSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A"
+        }
+      }
+    },
+    {
+      "log": "outputs/cs-a1-failure-20261026/native-probe-20261026-101543.log",
+      "opening": {
+        "Sequence": 2,
+        "Phase": "Opening exact workbook without saving",
+        "Table": "",
+        "TimeUtc": "2026-10-25T23:15:45.6934929Z",
+        "OwnedExcelId": 53088,
+        "OwnedExcelStartTicks": 639285669442156569,
+        "Data": {
+          "ReadOnly": false,
+          "EventsEnabled": true
+        }
+      },
+      "refresh_all": {
+        "Sequence": 5,
+        "Phase": "Refresh All completed",
+        "Table": "",
+        "TimeUtc": "2026-10-25T23:16:13.4681658Z",
+        "OwnedExcelId": 53088,
+        "OwnedExcelStartTicks": 639285669442156569,
+        "Data": {
+          "Seconds": 27.299,
+          "Rows": {
+            "Demand_Prepare": 84,
+            "ResPeriodAvailabilityTABLE": 2698,
+            "ResPeriodAllocationTABLE": 432,
+            "A1SpareDayChoices_Prepare": 952,
+            "ResPeriodCapPrioritised": 271,
+            "ResourcePeriodTABLE_empty": 2856,
+            "ResPeriodWDTABLE": 1923,
+            "C__ResSingleShiftDayTABLE": 890,
+            "ResPeriodShiftNWDTABLE": 933,
+            "CapacityDiagnostics_SUMMARY": 40,
+            "RolePathTABLE": 7,
+            "MultiDayPeriod_Remove": 968,
+            "CapacityDiagnostics_DETAILS": 83
+          }
+        }
+      },
+      "sequential_tables": 0,
+      "sequential_seconds": 0,
+      "diagnostics": {
+        "SummaryNonPass": [
+          {
+            "Failures": 2.0,
+            "Status": "Fail",
+            "Check": "Allocation names map to exactly one Resource",
+            "Details": "Unresolved allocations are skipped and retained in A1AllocationIdentity_EXCEPTIONS; other Resources continue."
+          },
+          {
+            "Failures": 7.0,
+            "Status": "Fail",
+            "Check": "Existing allocated calendar respects five worked days",
+            "Details": null
+          },
+          {
+            "Failures": 76.0,
+            "Status": "Fail",
+            "Check": "Skipped allocation records",
+            "Details": null
+          }
+        ]
+      },
+      "closed_without_saving": {
+        "Sequence": 8,
+        "Phase": "Closed without saving",
+        "Table": "",
+        "TimeUtc": "2026-10-25T23:16:14.8267623Z",
+        "OwnedExcelId": 53088,
+        "OwnedExcelStartTicks": 639285669442156569,
+        "Data": {
+          "AfterSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A",
+          "BeforeSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A",
+          "Unchanged": true
+        }
+      }
+    }
+  ],
+  "original_workbook_files": [
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "unchanged_since_input_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+      "unchanged_since_input_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "unchanged_since_input_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "unchanged_since_input_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Demand.xlsx",
+      "unchanged_since_input_read": true
+    },
+    {
+      "path": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Settings Data.xlsx",
+      "unchanged_since_input_read": true
+    }
+  ],
+  "findings": {
+    "freeze_reproduced": false,
+    "unmatched_allocation_names": {
+      "Alexis Griffin (CS)": 51,
+      "Craig Rabnott": 25
+    },
+    "existing_allocated_clusters_over_five_days": 7,
+    "CS_allocated_cells": 432,
+    "CS_capacity_rows": 890
+  }
+}

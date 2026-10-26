@@ -1,0 +1,122 @@
+{
+  "RunId": "20261026-090519-f5953f4f",
+  "Status": "PartialOrFailed",
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Untimed": [
+    {
+      "Predecessors": [
+        "BD/Shifts",
+        "BD/Settings"
+      ],
+      "Id": "BD/ShiftAverage",
+      "Status": "Blocked",
+      "Reason": "Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx"
+    }
+  ],
+  "ElapsedSeconds": 158.9921422,
+  "PeakConcurrency": 2,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "GapSeconds": 2,
+  "Rows": [
+    {
+      "Id": "BD/Intervals",
+      "Start": 2.1153051,
+      "Status": "Completed",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 15.5226251,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/DemandIntervals",
+      "Start": 15.5464284,
+      "Status": "Completed",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 99.9933057,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Demand",
+      "Start": 100.0176508,
+      "Status": "Completed",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 116.4252869,
+      "Attempt": 1
+    },
+    {
+      "Id": "BD/Shifts",
+      "Start": 15.6058358,
+      "Status": "Completed",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 158.9787452,
+      "Attempt": 1
+    }
+  ],
+  "OutputStatus": {
+    "RunId": "20261026-090519-f5953f4f",
+    "RunStatus": "PartialOrFailed",
+    "CheckedAtUtc": "2026-10-25T22:07:58.6254853Z",
+    "AllVerified": false,
+    "Rows": [
+      {
+        "Id": "BD/Intervals",
+        "RelativePath": "UNITS/BD/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:05:31.9969389Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/DemandIntervals",
+        "RelativePath": "UNITS/BD/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:06:56.2128805Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Demand",
+        "RelativePath": "UNITS/BD/2. Calculations/Demand.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:07:12.8232012Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Shifts",
+        "RelativePath": "UNITS/BD/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-25T22:07:54.8860206Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/ShiftAverage",
+        "RelativePath": "UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "NotUpdated",
+        "LastSavedUtc": "2026-10-25T02:54:27.5490264Z",
+        "Reason": "Not updated by this run (Blocked). Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx The output predates a current declared input.",
+        "RootCauses": [
+          "BD/ShiftAverage: Excel lock file found: C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\~$AllocationByShiftAverage.xlsx"
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": false
+      }
+    ]
+  },
+  "ActiveIntervalSeconds": 156.8396368,
+  "SavedIntermediates": [],
+  "IncompleteAttempts": []
+}

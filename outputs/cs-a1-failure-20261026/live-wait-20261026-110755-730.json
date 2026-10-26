@@ -1,0 +1,38 @@
+{
+  "StartedUtc": "2026-10-26T00:07:55.9842790Z",
+  "FinishedUtc": "2026-10-26T00:07:57.0301370Z",
+  "TargetProcessIds": [
+    60148
+  ],
+  "ReadOnlyInspection": true,
+  "KnownUiWindow": 0,
+  "KnownUiWindowConfirmed": false,
+  "KnownUiWindowDetails": null,
+  "WaitChainSkipped": true,
+  "WctDisabledReason": "Previous diagnostic host terminated with native access violation; no WCT retry.",
+  "ComWaitCallbacksRegistered": false,
+  "SampleElapsedMilliseconds": 1013.5997,
+  "Before": [
+    {
+      "ProcessId": 60148,
+      "Error": "Cannot find a process with the process identifier 60148.",
+      "Threads": []
+    }
+  ],
+  "After": [
+    {
+      "ProcessId": 60148,
+      "Error": "Cannot find a process with the process identifier 60148.",
+      "Threads": []
+    }
+  ],
+  "ThreadCpuAndWaitSamples": [],
+  "TargetWindows": [],
+  "WaitChains": [],
+  "Limitations": [
+    "A single WCT node can mean running or an unsupported wait; it does not prove absence of a hang.",
+    "Access-denied or NoAccess results are incomplete evidence; this script does not change token privileges.",
+    "Thread state and wait chains are point-in-time observations, not an M query execution trace.",
+    "Earliest-start selection is explicitly a candidate when no main-window identity is available."
+  ]
+}

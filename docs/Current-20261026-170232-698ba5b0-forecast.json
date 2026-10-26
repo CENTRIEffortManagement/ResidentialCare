@@ -1,0 +1,1255 @@
+{
+  "Rows": [
+    {
+      "Finish": 108.2053102,
+      "Id": "BD/AllocationInput",
+      "Status": "Forecast",
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Finish": 63.6484614,
+      "Id": "TE/AllocationInput",
+      "Status": "Forecast",
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Finish": 71.2367966,
+      "Id": "JH-RY/AllocationInput",
+      "Status": "Forecast",
+      "Start": 0.0,
+      "Attempt": 1
+    },
+    {
+      "Finish": 86.6850158,
+      "Id": "TE/Settings",
+      "Status": "Forecast",
+      "Start": 63.6484614,
+      "Attempt": 1
+    },
+    {
+      "Finish": 93.56615430000001,
+      "Id": "JH-RY/Settings",
+      "Status": "Forecast",
+      "Start": 71.2367966,
+      "Attempt": 1
+    },
+    {
+      "Finish": 142.1747153,
+      "Id": "TE/Availability",
+      "Status": "Forecast",
+      "Start": 86.6850158,
+      "Attempt": 1
+    },
+    {
+      "Finish": 146.7892103,
+      "Id": "JH-RY/Availability",
+      "Status": "Forecast",
+      "Start": 93.56615430000001,
+      "Attempt": 1
+    },
+    {
+      "Finish": 128.6442777,
+      "Id": "BD/Settings",
+      "Status": "Forecast",
+      "Start": 108.2053102,
+      "Attempt": 1
+    },
+    {
+      "Finish": 354.09817369999996,
+      "Id": "Date/DemandMaster",
+      "Status": "Forecast",
+      "Start": 128.6442777,
+      "Attempt": 1
+    },
+    {
+      "Finish": 204.61145299999998,
+      "Id": "BD/Availability",
+      "Status": "Forecast",
+      "Start": 128.6442777,
+      "Attempt": 1
+    },
+    {
+      "Finish": 158.9813283,
+      "Id": "TE/Staff",
+      "Status": "Forecast",
+      "Start": 142.1747153,
+      "Attempt": 1
+    },
+    {
+      "Finish": 163.29118160000002,
+      "Id": "JH-RY/Staff",
+      "Status": "Forecast",
+      "Start": 146.7892103,
+      "Attempt": 1
+    },
+    {
+      "Finish": 221.49691249999998,
+      "Id": "BD/Staff",
+      "Status": "Forecast",
+      "Start": 204.61145299999998,
+      "Attempt": 1
+    },
+    {
+      "Finish": 238.3660483,
+      "Id": "Org/StaffAll",
+      "Status": "Forecast",
+      "Start": 221.49691249999998,
+      "Attempt": 1
+    },
+    {
+      "Finish": 373.74784589999996,
+      "Id": "BD/DemandInput",
+      "Status": "Forecast",
+      "Start": 354.09817369999996,
+      "Attempt": 1
+    },
+    {
+      "Finish": 377.9663005,
+      "Id": "TE/DemandInput",
+      "Status": "Forecast",
+      "Start": 354.09817369999996,
+      "Attempt": 1
+    },
+    {
+      "Finish": 377.06502609999995,
+      "Id": "JH-RY/DemandInput",
+      "Status": "Forecast",
+      "Start": 354.09817369999996,
+      "Attempt": 1
+    },
+    {
+      "Finish": 388.630323,
+      "Id": "BD/Intervals",
+      "Status": "Forecast",
+      "Start": 373.74784589999996,
+      "Attempt": 1
+    },
+    {
+      "Finish": 390.8327786,
+      "Id": "JH-RY/Intervals",
+      "Status": "Forecast",
+      "Start": 377.06502609999995,
+      "Attempt": 1
+    },
+    {
+      "Finish": 392.9283228,
+      "Id": "TE/Intervals",
+      "Status": "Forecast",
+      "Start": 377.9663005,
+      "Attempt": 1
+    },
+    {
+      "Finish": 471.6109754,
+      "Id": "BD/DemandIntervals",
+      "Status": "Forecast",
+      "Start": 388.630323,
+      "Attempt": 1
+    },
+    {
+      "Finish": 529.553058,
+      "Id": "BD/Shifts",
+      "Status": "Forecast",
+      "Start": 388.630323,
+      "Attempt": 1
+    },
+    {
+      "Finish": 513.2330803,
+      "Id": "JH-RY/DemandIntervals",
+      "Status": "Forecast",
+      "Start": 390.8327786,
+      "Attempt": 1
+    },
+    {
+      "Finish": 469.3577171,
+      "Id": "JH-RY/Shifts",
+      "Status": "Forecast",
+      "Start": 390.8327786,
+      "Attempt": 1
+    },
+    {
+      "Finish": 478.2640633,
+      "Id": "TE/DemandIntervals",
+      "Status": "Forecast",
+      "Start": 392.9283228,
+      "Attempt": 1
+    },
+    {
+      "Finish": 460.561474,
+      "Id": "TE/Shifts",
+      "Status": "Forecast",
+      "Start": 392.9283228,
+      "Attempt": 1
+    },
+    {
+      "Finish": 503.54545989999997,
+      "Id": "TE/ShiftAverage",
+      "Status": "Forecast",
+      "Start": 460.561474,
+      "Attempt": 1
+    },
+    {
+      "Finish": 513.1536204,
+      "Id": "JH-RY/ShiftAverage",
+      "Status": "Forecast",
+      "Start": 469.3577171,
+      "Attempt": 1
+    },
+    {
+      "Finish": 487.2844141,
+      "Id": "BD/Demand",
+      "Status": "Forecast",
+      "Start": 471.6109754,
+      "Attempt": 1
+    },
+    {
+      "Finish": 498.24728189999996,
+      "Id": "TE/Demand",
+      "Status": "Forecast",
+      "Start": 478.2640633,
+      "Attempt": 1
+    },
+    {
+      "Finish": 523.4032659999999,
+      "Id": "TE/Allocation",
+      "Status": "Forecast",
+      "Start": 503.54545989999997,
+      "Attempt": 1
+    },
+    {
+      "Finish": 659.8214978,
+      "Id": "TE/Role:AIN/1",
+      "Status": "Forecast",
+      "Start": 503.54545989999997,
+      "Attempt": 1
+    },
+    {
+      "Finish": 621.5063857,
+      "Id": "TE/Role:RN/1",
+      "Status": "Forecast",
+      "Start": 503.54545989999997,
+      "Attempt": 1
+    },
+    {
+      "Finish": 619.2980122,
+      "Id": "TE/Role:EN/1",
+      "Status": "Forecast",
+      "Start": 503.54545989999997,
+      "Attempt": 1
+    }
+  ],
+  "UnknownAdmission": "TE/Role:CS/1",
+  "Untimed": [
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/ShiftAverage",
+      "Predecessors": [
+        "BD/Shifts",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Allocation",
+      "Predecessors": [
+        "BD/ShiftAverage",
+        "BD/AllocationInput",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Distribution",
+      "Predecessors": [
+        "BD/Allocation",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:AIN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:AIN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:AIN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:AIN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:RN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:RN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:RN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:RN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:EN/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:EN/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:EN/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:EN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:CS/1",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:CS/2",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:CS/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Role:CS/3",
+      "Predecessors": [
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/ShiftAverage",
+        "BD/Settings",
+        "BD/Role:CS/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Capacity",
+      "Predecessors": [
+        "BD/Role:AIN/3",
+        "BD/Role:EN/3",
+        "BD/Role:RN/3",
+        "BD/Role:CS/3",
+        "BD/Demand",
+        "BD/Staff",
+        "BD/Availability",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "BD/Effort",
+      "Predecessors": [
+        "BD/Capacity",
+        "BD/Demand",
+        "BD/Allocation",
+        "BD/Distribution",
+        "BD/Staff",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Distribution",
+      "Predecessors": [
+        "TE/Allocation",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:AIN/2",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:AIN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:AIN/3",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:AIN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:RN/2",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:RN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:RN/3",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:RN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:EN/2",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:EN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:EN/3",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:EN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:CS/1",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:CS/2",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:CS/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Role:CS/3",
+      "Predecessors": [
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/ShiftAverage",
+        "TE/Settings",
+        "TE/Role:CS/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Capacity",
+      "Predecessors": [
+        "TE/Role:AIN/3",
+        "TE/Role:EN/3",
+        "TE/Role:RN/3",
+        "TE/Role:CS/3",
+        "TE/Demand",
+        "TE/Staff",
+        "TE/Availability",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "TE/Effort",
+      "Predecessors": [
+        "TE/Capacity",
+        "TE/Demand",
+        "TE/Allocation",
+        "TE/Distribution",
+        "TE/Staff",
+        "TE/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Demand",
+      "Predecessors": [
+        "JH-RY/DemandIntervals",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Allocation",
+      "Predecessors": [
+        "JH-RY/ShiftAverage",
+        "JH-RY/AllocationInput",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Distribution",
+      "Predecessors": [
+        "JH-RY/Allocation",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:AIN/1",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:AIN/2",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:AIN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:AIN/3",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:AIN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:RN/1",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:RN/2",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:RN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:RN/3",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:RN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:EN/1",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:EN/2",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:EN/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:EN/3",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:EN/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:CS/1",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:CS/2",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:CS/1"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Role:CS/3",
+      "Predecessors": [
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/ShiftAverage",
+        "JH-RY/Settings",
+        "JH-RY/Role:CS/2"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Capacity",
+      "Predecessors": [
+        "JH-RY/Role:AIN/3",
+        "JH-RY/Role:EN/3",
+        "JH-RY/Role:RN/3",
+        "JH-RY/Role:CS/3",
+        "JH-RY/Demand",
+        "JH-RY/Staff",
+        "JH-RY/Availability",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "JH-RY/Effort",
+      "Predecessors": [
+        "JH-RY/Capacity",
+        "JH-RY/Demand",
+        "JH-RY/Allocation",
+        "JH-RY/Distribution",
+        "JH-RY/Staff",
+        "JH-RY/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/EffortAll",
+      "Predecessors": [
+        "Org/StaffAll",
+        "BD/Effort",
+        "TE/Effort",
+        "JH-RY/Effort"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/Outcomes",
+      "Predecessors": [
+        "Org/EffortAll",
+        "Org/StaffAll"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/Inefficiencies",
+      "Predecessors": [
+        "Org/Outcomes"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/Cost",
+      "Predecessors": [
+        "Org/Inefficiencies",
+        "BD/Settings"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/History",
+      "Predecessors": [
+        "Org/Outcomes"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/HistoryRead",
+      "Predecessors": [
+        "Org/History"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/Reporting",
+      "Predecessors": [
+        "Org/Cost",
+        "Org/HistoryRead",
+        "Org/Inefficiencies"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/LeaveBalanceStats",
+      "Predecessors": [
+        "Org/Reporting"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/LeaveBalanceReduction",
+      "Predecessors": [
+        "Org/LeaveBalanceStats"
+      ]
+    },
+    {
+      "Reason": "Unknown duration or start affected by unknown slot occupancy",
+      "Id": "Org/LeaveBalanceReporting",
+      "Predecessors": [
+        "Org/LeaveBalanceReduction"
+      ]
+    }
+  ],
+  "Peak": 7,
+  "TotalSeconds": null,
+  "Durations": {
+    "JH-RY/Settings": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 22.3293577,
+      "Observed": "2026-10-26T03:57:21.8192165+00:00"
+    },
+    "JH-RY/Effort": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 16.1103309,
+      "Observed": "2026-10-25T04:02:43.1671105+00:00"
+    },
+    "BD/Demand": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 15.6734387,
+      "Observed": "2026-10-26T01:36:04.1645732+00:00"
+    },
+    "TE/Allocation": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 19.8578061,
+      "Observed": "2026-10-25T02:53:55.2236964+00:00"
+    },
+    "Org/LeaveBalanceReduction": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 13.7586738,
+      "Observed": "2026-10-25T04:04:58.2392553+00:00"
+    },
+    "BD/Role:AIN/1": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 132.4519886,
+      "Observed": "2026-10-26T01:39:56.1019362+00:00"
+    },
+    "BD/Effort": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 16.3950936,
+      "Observed": "2026-10-26T01:42:46.8756060+00:00"
+    },
+    "TE/Shifts": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 67.6331512,
+      "Observed": "2026-10-25T02:52:52.2932460+00:00"
+    },
+    "JH-RY/Demand": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 15.0133986,
+      "Observed": "2026-10-26T04:04:01.6009957+00:00"
+    },
+    "JH-RY/Role:EN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 54.7078992,
+      "Observed": "2026-10-25T02:57:43.7462527+00:00"
+    },
+    "TE/Role:EN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 115.7525523,
+      "Observed": "2026-10-25T02:55:31.4137427+00:00"
+    },
+    "BD/Settings": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 20.4389675,
+      "Observed": "2026-10-26T01:30:10.5437944+00:00"
+    },
+    "TE/Availability": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 55.4896995,
+      "Observed": "2026-10-25T02:50:30.3316445+00:00"
+    },
+    "JH-RY/AllocationInput": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 71.2367966,
+      "Observed": "2026-10-26T03:56:59.4599538+00:00"
+    },
+    "TE/Demand": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 19.9832186,
+      "Observed": "2026-10-25T02:53:29.9244744+00:00"
+    },
+    "Org/Inefficiencies": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 19.186179,
+      "Observed": "2026-10-25T04:04:07.9001616+00:00"
+    },
+    "Org/LeaveBalanceReporting": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 44.6345203,
+      "Observed": "2026-10-22T01:30:46.6381276+00:00"
+    },
+    "TE/Role:RN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 65.0894187,
+      "Observed": "2026-10-25T02:57:19.2530914+00:00"
+    },
+    "JH-RY/Role:RN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 119.1396355,
+      "Observed": "2026-10-25T02:55:58.0895999+00:00"
+    },
+    "TE/Capacity": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 15.825904,
+      "Observed": "2026-10-25T02:58:53.3857377+00:00"
+    },
+    "BD/Intervals": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 14.8824771,
+      "Observed": "2026-10-26T01:34:25.4580580+00:00"
+    },
+    "BD/Allocation": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 16.9659312,
+      "Observed": "2026-10-26T01:38:00.5511609+00:00"
+    },
+    "JH-RY/Role:AIN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 42.5041809,
+      "Observed": "2026-10-25T02:57:42.3079382+00:00"
+    },
+    "JH-RY/DemandInput": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 22.9668524,
+      "Observed": "2026-10-26T04:01:30.3490896+00:00"
+    },
+    "BD/Shifts": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 140.922735,
+      "Observed": "2026-10-26T01:36:46.4673270+00:00"
+    },
+    "TE/AllocationInput": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 63.6484614,
+      "Observed": "2026-10-26T03:56:51.7861531+00:00"
+    },
+    "BD/Role:RN/2": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 20.2808455,
+      "Observed": "2026-10-26T01:39:19.2404953+00:00"
+    },
+    "TE/DemandInput": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 23.8681268,
+      "Observed": "2026-10-25T02:51:29.5671622+00:00"
+    },
+    "TE/Role:AIN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 47.1447459,
+      "Observed": "2026-10-25T02:56:58.9430625+00:00"
+    },
+    "BD/Role:RN/1": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 75.1708121,
+      "Observed": "2026-10-26T01:38:58.9236660+00:00"
+    },
+    "JH-RY/ShiftAverage": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 43.7959033,
+      "Observed": "2026-10-25T02:53:58.6606088+00:00"
+    },
+    "BD/Role:EN/1": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 73.0825209,
+      "Observed": "2026-10-26T01:38:56.9638344+00:00"
+    },
+    "TE/Staff": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 16.806613,
+      "Observed": "2026-10-25T02:50:47.1618891+00:00"
+    },
+    "JH-RY/Capacity": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 14.9728834,
+      "Observed": "2026-10-25T04:02:27.0221551+00:00"
+    },
+    "Org/EffortAll": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 55.3053385,
+      "Observed": "2026-10-25T04:03:38.4940198+00:00"
+    },
+    "BD/Availability": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 75.9671753,
+      "Observed": "2026-10-26T01:32:43.1072496+00:00"
+    },
+    "Date/DemandMaster": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 225.453896,
+      "Observed": "2026-10-26T04:01:07.2996536+00:00"
+    },
+    "JH-RY/Staff": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 16.5019713,
+      "Observed": "2026-10-25T02:50:32.4600648+00:00"
+    },
+    "JH-RY/Role:EN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 37.4386337,
+      "Observed": "2026-10-25T02:56:48.9823159+00:00"
+    },
+    "TE/Role:EN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 41.619126,
+      "Observed": "2026-10-25T02:56:13.1636030+00:00"
+    },
+    "TE/ShiftAverage": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 42.9839859,
+      "Observed": "2026-10-25T02:53:35.3427805+00:00"
+    },
+    "BD/Role:EN/2": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 21.4323087,
+      "Observed": "2026-10-26T01:39:18.4327255+00:00"
+    },
+    "JH-RY/DemandIntervals": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 122.4003017,
+      "Observed": "2026-10-26T04:03:46.5664498+00:00"
+    },
+    "BD/Role:AIN/3": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 94.4998091,
+      "Observed": "2026-10-26T01:41:54.8431815+00:00"
+    },
+    "Org/HistoryRead": {
+      "SourceRun": "20261020-231415-90c3e105",
+      "Seconds": 39.7821632,
+      "Observed": "2026-10-20T12:33:45.6930859+00:00"
+    },
+    "JH-RY/Shifts": {
+      "SourceRun": "20261026-165845-c3c7106c",
+      "Seconds": 78.5249385,
+      "Observed": "2026-10-26T06:00:07.1219149+00:00"
+    },
+    "Org/Outcomes": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 10.1854034,
+      "Observed": "2026-10-25T04:03:48.6979689+00:00"
+    },
+    "BD/Role:AIN/2": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 24.193112,
+      "Observed": "2026-10-26T01:40:20.3185216+00:00"
+    },
+    "TE/Role:EN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 59.1531332,
+      "Observed": "2026-10-25T02:57:12.3533137+00:00"
+    },
+    "Org/Cost": {
+      "SourceRun": "20261020-231415-90c3e105",
+      "Seconds": 41.6835943,
+      "Observed": "2026-10-20T12:33:53.4939898+00:00"
+    },
+    "JH-RY/Distribution": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 27.2626199,
+      "Observed": "2026-10-25T02:54:54.3827539+00:00"
+    },
+    "BD/AllocationInput": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 108.2053102,
+      "Observed": "2026-10-26T01:29:50.0796230+00:00"
+    },
+    "Org/LeaveBalanceStats": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 23.4541068,
+      "Observed": "2026-10-25T04:04:44.4646374+00:00"
+    },
+    "TE/Distribution": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 20.7257452,
+      "Observed": "2026-10-25T02:54:15.9790514+00:00"
+    },
+    "TE/Role:RN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 40.5262355,
+      "Observed": "2026-10-25T02:56:14.0970815+00:00"
+    },
+    "Org/History": {
+      "SourceRun": "20261020-231415-90c3e105",
+      "Seconds": 41.7565177,
+      "Observed": "2026-10-20T12:33:05.8910693+00:00"
+    },
+    "Org/StaffAll": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 16.8691358,
+      "Observed": "2026-10-25T04:02:28.9949399+00:00"
+    },
+    "TE/Settings": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 23.0365544,
+      "Observed": "2026-10-26T03:57:14.8682596+00:00"
+    },
+    "TE/DemandIntervals": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 85.3357405,
+      "Observed": "2026-10-25T02:53:09.9151736+00:00"
+    },
+    "BD/Role:EN/3": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 34.116485,
+      "Observed": "2026-10-26T01:39:52.5760523+00:00"
+    },
+    "BD/Capacity": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 35.5881365,
+      "Observed": "2026-10-26T01:42:30.4557747+00:00"
+    },
+    "TE/Role:AIN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 98.5524347,
+      "Observed": "2026-10-25T02:58:37.5327397+00:00"
+    },
+    "BD/Role:RN/3": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 36.4946462,
+      "Observed": "2026-10-26T01:39:55.7609655+00:00"
+    },
+    "BD/DemandInput": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 19.6496722,
+      "Observed": "2026-10-26T01:34:10.5471761+00:00"
+    },
+    "JH-RY/Availability": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 53.223056,
+      "Observed": "2026-10-25T02:50:15.9291171+00:00"
+    },
+    "BD/Staff": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 16.8854595,
+      "Observed": "2026-10-26T01:33:00.0253987+00:00"
+    },
+    "TE/Intervals": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 14.9620223,
+      "Observed": "2026-10-25T02:51:44.5547172+00:00"
+    },
+    "JH-RY/Role:AIN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 95.6423998,
+      "Observed": "2026-10-25T02:59:17.9826957+00:00"
+    },
+    "TE/Effort": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 42.1020584,
+      "Observed": "2026-10-22T01:24:10.1605702+00:00"
+    },
+    "Org/Reporting": {
+      "SourceRun": "20261025-150211-e887a1dc",
+      "Seconds": 13.0738476,
+      "Observed": "2026-10-25T04:04:20.9931382+00:00"
+    },
+    "BD/Distribution": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 19.7300533,
+      "Observed": "2026-10-26T01:38:20.3052595+00:00"
+    },
+    "TE/Role:AIN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 156.2760379,
+      "Observed": "2026-10-25T02:56:11.7245291+00:00"
+    },
+    "BD/ShiftAverage": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 57.0541656,
+      "Observed": "2026-10-26T01:37:43.5428100+00:00"
+    },
+    "JH-RY/Role:RN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 52.8391344,
+      "Observed": "2026-10-25T02:57:30.8664740+00:00"
+    },
+    "JH-RY/Role:RN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 39.7475292,
+      "Observed": "2026-10-25T02:56:37.8931194+00:00"
+    },
+    "TE/Role:RN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 117.9609258,
+      "Observed": "2026-10-25T02:55:33.5154338+00:00"
+    },
+    "BD/DemandIntervals": {
+      "SourceRun": "20261026-122800-6fe2017d",
+      "Seconds": 82.9806524,
+      "Observed": "2026-10-26T01:35:48.4604771+00:00"
+    },
+    "JH-RY/Role:AIN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 180.9517105,
+      "Observed": "2026-10-25T02:56:59.7639238+00:00"
+    },
+    "JH-RY/Allocation": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 28.3696569,
+      "Observed": "2026-10-25T02:54:27.0770238+00:00"
+    },
+    "JH-RY/Intervals": {
+      "SourceRun": "20261026-145546-dca25314",
+      "Seconds": 13.7677525,
+      "Observed": "2026-10-26T04:01:44.1446229+00:00"
+    },
+    "JH-RY/Role:EN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Seconds": 132.359104,
+      "Observed": "2026-10-25T02:56:11.5034131+00:00"
+    }
+  },
+  "Complete": false
+}

@@ -1,0 +1,355 @@
+{
+  "Operation": "User-authorized exact BD workbook copies to TE and JH-RY",
+  "Status": "Completed",
+  "FilesPerUnit": 7,
+  "Units": [
+    "TE",
+    "JH-RY"
+  ],
+  "SourceWorkbooks": [
+    {
+      "File": "1. Input/1-AllocationExtracted.xlsx",
+      "WorkbookSHA256": "7FD1F9315CDF4E8FDD4D08A256F62496FB57588F531AEF5EDA26E11B084C7EF8",
+      "ExtractedMSHA256": "AB0CC63F0D08C5C709E27708677464C5769A440F079C47A4CC1763832E1AB8F8",
+      "AdjacentMMatchesSavedWorkbook": false,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    },
+    {
+      "File": "1. Input/2-DemandExtract.xlsx",
+      "WorkbookSHA256": "DC88FFBD4841EC6B5FE90DEA864B30A05A6ACC298C80977ACAE0632B4A9B8BCF",
+      "ExtractedMSHA256": "32EF948D76F4CFEFCDFA9EB26D4953F433F6958403744BBD4ECB260C4B292A27",
+      "AdjacentMMatchesSavedWorkbook": true,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    },
+    {
+      "File": "2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "WorkbookSHA256": "2725D1526197D98CEF9AEA71B2EB942F345F2FD8D4232082DB7A3A2993881F0A",
+      "ExtractedMSHA256": "91AD99EB2AF0A26928119057736F56CD18BE126FE687CC8FE20E29DC1E0FE442",
+      "AdjacentMMatchesSavedWorkbook": true,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    },
+    {
+      "File": "2. Calculations/Capacity.xlsx",
+      "WorkbookSHA256": "BB7F8371E8ED90425ABC3139DEAA799753CCD14C6DDBE5604BC22D53E574EA75",
+      "ExtractedMSHA256": "21325931257A0F3F033B346E0F431398808EC4E8528F9F88EDFE3BD825F35D44",
+      "AdjacentMMatchesSavedWorkbook": true,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    },
+    {
+      "File": "2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "WorkbookSHA256": "7D645F05CD9AD19EC8E94CE3B2B60D0FD59B9212A4ECA151285375109066A137",
+      "ExtractedMSHA256": "6AB9D25BEAEC430A76D9C90ADED1D3D6B867900AC6E7A878CC14E0683F298FD6",
+      "AdjacentMMatchesSavedWorkbook": true,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    },
+    {
+      "File": "2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "WorkbookSHA256": "B188132570418211320B387D44639FA29E546D2DDEA76F9851A6959969011022",
+      "ExtractedMSHA256": "1E6C3E2F81092991DF9AD2EA143E522CCAA29362A7BF308B8492FE6094706C8E",
+      "AdjacentMMatchesSavedWorkbook": true,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    },
+    {
+      "File": "2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "WorkbookSHA256": "4BD5670D51FB8B2D7FB3C1CD13D76D142951EFDB4B61EDB118D6371B88D447BB",
+      "ExtractedMSHA256": "ACD9E6FB77F5AFD8F487C70D2EFB9504DACA8F39C26DCC0CEE14D6B64E50D334",
+      "AdjacentMMatchesSavedWorkbook": true,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    }
+  ],
+  "Backups": [
+    {
+      "SHA256": "41CD2E1DFF29C6EED77ACA46D5418A1D652B94FF2D8F593533750066484B1C39",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/1. Input/1-AllocationExtracted.xlsx"
+    },
+    {
+      "SHA256": "3F47BA8052F03B9ECB23DDFD40FA57A2D868C19F7865794EAE84F5C22B7E68DC",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "36ED23C7D5B4B6FA18152C86DC39AA11DCE1587BE22DC21B36E0A7E7FF698004",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/1. Input/1-AllocationExtracted.xlsx"
+    },
+    {
+      "SHA256": "033388E5899B53993670661CE699800AF7DD611661A52BAC65CBF3FD0A6B964B",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "6E0FFAF6323987CF4389AF5FC490E814BC2D6DBF24A94CCFB233C6AF6CD8D783",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\2-DemandExtract.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/1. Input/2-DemandExtract.xlsx"
+    },
+    {
+      "SHA256": "07E6208D02906F21CBCBA24126DAB259E16287F3E25473DCCC29218974C988B6",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\2-DemandExtract.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/1. Input/2-DemandExtract.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "B2F0CD25ACFB44D67D63F906D680E42A7AC0DFD04499CCF5CD5BD09458259CA8",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\2-DemandExtract.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/1. Input/2-DemandExtract.xlsx"
+    },
+    {
+      "SHA256": "EF59A98CC8B2FDA5627D6B1810C6AF81E5EF2E0EF5FEB82BA70AE5AFE6B8CC24",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\2-DemandExtract.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/1. Input/2-DemandExtract.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "4F59F5D3DDCA90E6C962A9B9A98FBA116F2F153C043255D12565E30FF0A179F9",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+    },
+    {
+      "SHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "8CAC98F0CF2CAD76464AEA67C1629C1E5469375054FEDA18D6D25DABD2DDC72D",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx"
+    },
+    {
+      "SHA256": "9C19F79668DE1B02EFB2F4DC6F376FF75AC4C15CD59ED02CE0CA9E5BB995A44D",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "5CC0608C3EF2287C9E3BC58CCB22B78EAABD3E9699A5A17F66E65D392C4EA6DD",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/Capacity.xlsx"
+    },
+    {
+      "SHA256": "149B163CEC0F08AC9BFA8D9D9E88E3C5423166D10DEA40F1A2C8E9CC9D1BC392",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/Capacity.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "20F90ACB258C5C15F7D4B7F5E5A05342C39B2BE4E0E1D9739619E32C45F758F4",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/Capacity.xlsx"
+    },
+    {
+      "SHA256": "149B163CEC0F08AC9BFA8D9D9E88E3C5423166D10DEA40F1A2C8E9CC9D1BC392",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/Capacity.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "72682E57BE37FBF2F2A20027F6A23F9C9A6DBF2BD7A4F6325832A1C67D696B22",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx"
+    },
+    {
+      "SHA256": "2FADD4659345452DE7874DF8EFB20DF4F1D0FF1326852A737C599D10C8C5A022",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "72682E57BE37FBF2F2A20027F6A23F9C9A6DBF2BD7A4F6325832A1C67D696B22",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx"
+    },
+    {
+      "SHA256": "2FADD4659345452DE7874DF8EFB20DF4F1D0FF1326852A737C599D10C8C5A022",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "2A6F9CE945209E07C63D7346EA262287BE0140BC948D55CED2D39AC76BBE50FC",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx"
+    },
+    {
+      "SHA256": "6F18B5F1C046889FEF6E08E7B6526A7C1852B4E509B900713F3D790063AFC93A",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "2A6F9CE945209E07C63D7346EA262287BE0140BC948D55CED2D39AC76BBE50FC",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx"
+    },
+    {
+      "SHA256": "6F18B5F1C046889FEF6E08E7B6526A7C1852B4E509B900713F3D790063AFC93A",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "6E33D91816F8D205C867ADBB59C7B6D0D3D3FE95D96B2B8763ABE4D088F7A127",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx"
+    },
+    {
+      "SHA256": "CFD21F9435A23A33D49DBC74C71C569829BC51F41E9801F071C582AD1AFCAD3D",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m"
+    },
+    {
+      "SHA256": "6E33D91816F8D205C867ADBB59C7B6D0D3D3FE95D96B2B8763ABE4D088F7A127",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx"
+    },
+    {
+      "SHA256": "CFD21F9435A23A33D49DBC74C71C569829BC51F41E9801F071C582AD1AFCAD3D",
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-122507/backups/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m"
+    }
+  ],
+  "Copies": [
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/1-AllocationExtracted.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/1. Input/1-AllocationExtracted.xlsx",
+      "PreviousWorkbookSHA256": "41CD2E1DFF29C6EED77ACA46D5418A1D652B94FF2D8F593533750066484B1C39",
+      "WorkbookSHA256": "7FD1F9315CDF4E8FDD4D08A256F62496FB57588F531AEF5EDA26E11B084C7EF8",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "AB0CC63F0D08C5C709E27708677464C5769A440F079C47A4CC1763832E1AB8F8",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/1-AllocationExtracted.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+      "PreviousWorkbookSHA256": "36ED23C7D5B4B6FA18152C86DC39AA11DCE1587BE22DC21B36E0A7E7FF698004",
+      "WorkbookSHA256": "7FD1F9315CDF4E8FDD4D08A256F62496FB57588F531AEF5EDA26E11B084C7EF8",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "AB0CC63F0D08C5C709E27708677464C5769A440F079C47A4CC1763832E1AB8F8",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/2-DemandExtract.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/1. Input/2-DemandExtract.xlsx",
+      "PreviousWorkbookSHA256": "6E0FFAF6323987CF4389AF5FC490E814BC2D6DBF24A94CCFB233C6AF6CD8D783",
+      "WorkbookSHA256": "DC88FFBD4841EC6B5FE90DEA864B30A05A6ACC298C80977ACAE0632B4A9B8BCF",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "32EF948D76F4CFEFCDFA9EB26D4953F433F6958403744BBD4ECB260C4B292A27",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/2-DemandExtract.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/2-DemandExtract.xlsx",
+      "PreviousWorkbookSHA256": "B2F0CD25ACFB44D67D63F906D680E42A7AC0DFD04499CCF5CD5BD09458259CA8",
+      "WorkbookSHA256": "DC88FFBD4841EC6B5FE90DEA864B30A05A6ACC298C80977ACAE0632B4A9B8BCF",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/2-DemandExtract.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "32EF948D76F4CFEFCDFA9EB26D4953F433F6958403744BBD4ECB260C4B292A27",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "PreviousWorkbookSHA256": "4F59F5D3DDCA90E6C962A9B9A98FBA116F2F153C043255D12565E30FF0A179F9",
+      "WorkbookSHA256": "2725D1526197D98CEF9AEA71B2EB942F345F2FD8D4232082DB7A3A2993881F0A",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "91AD99EB2AF0A26928119057736F56CD18BE126FE687CC8FE20E29DC1E0FE442",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "PreviousWorkbookSHA256": "8CAC98F0CF2CAD76464AEA67C1629C1E5469375054FEDA18D6D25DABD2DDC72D",
+      "WorkbookSHA256": "2725D1526197D98CEF9AEA71B2EB942F345F2FD8D4232082DB7A3A2993881F0A",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "91AD99EB2AF0A26928119057736F56CD18BE126FE687CC8FE20E29DC1E0FE442",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity.xlsx",
+      "PreviousWorkbookSHA256": "5CC0608C3EF2287C9E3BC58CCB22B78EAABD3E9699A5A17F66E65D392C4EA6DD",
+      "WorkbookSHA256": "BB7F8371E8ED90425ABC3139DEAA799753CCD14C6DDBE5604BC22D53E574EA75",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "21325931257A0F3F033B346E0F431398808EC4E8528F9F88EDFE3BD825F35D44",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+      "PreviousWorkbookSHA256": "20F90ACB258C5C15F7D4B7F5E5A05342C39B2BE4E0E1D9739619E32C45F758F4",
+      "WorkbookSHA256": "BB7F8371E8ED90425ABC3139DEAA799753CCD14C6DDBE5604BC22D53E574EA75",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "21325931257A0F3F033B346E0F431398808EC4E8528F9F88EDFE3BD825F35D44",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "PreviousWorkbookSHA256": "72682E57BE37FBF2F2A20027F6A23F9C9A6DBF2BD7A4F6325832A1C67D696B22",
+      "WorkbookSHA256": "7D645F05CD9AD19EC8E94CE3B2B60D0FD59B9212A4ECA151285375109066A137",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "6AB9D25BEAEC430A76D9C90ADED1D3D6B867900AC6E7A878CC14E0683F298FD6",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "PreviousWorkbookSHA256": "72682E57BE37FBF2F2A20027F6A23F9C9A6DBF2BD7A4F6325832A1C67D696B22",
+      "WorkbookSHA256": "7D645F05CD9AD19EC8E94CE3B2B60D0FD59B9212A4ECA151285375109066A137",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "6AB9D25BEAEC430A76D9C90ADED1D3D6B867900AC6E7A878CC14E0683F298FD6",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "PreviousWorkbookSHA256": "2A6F9CE945209E07C63D7346EA262287BE0140BC948D55CED2D39AC76BBE50FC",
+      "WorkbookSHA256": "B188132570418211320B387D44639FA29E546D2DDEA76F9851A6959969011022",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "1E6C3E2F81092991DF9AD2EA143E522CCAA29362A7BF308B8492FE6094706C8E",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "PreviousWorkbookSHA256": "2A6F9CE945209E07C63D7346EA262287BE0140BC948D55CED2D39AC76BBE50FC",
+      "WorkbookSHA256": "B188132570418211320B387D44639FA29E546D2DDEA76F9851A6959969011022",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "1E6C3E2F81092991DF9AD2EA143E522CCAA29362A7BF308B8492FE6094706C8E",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "PreviousWorkbookSHA256": "6E33D91816F8D205C867ADBB59C7B6D0D3D3FE95D96B2B8763ABE4D088F7A127",
+      "WorkbookSHA256": "4BD5670D51FB8B2D7FB3C1CD13D76D142951EFDB4B61EDB118D6371B88D447BB",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "ACD9E6FB77F5AFD8F487C70D2EFB9504DACA8F39C26DCC0CEE14D6B64E50D334",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "PreviousWorkbookSHA256": "6E33D91816F8D205C867ADBB59C7B6D0D3D3FE95D96B2B8763ABE4D088F7A127",
+      "WorkbookSHA256": "4BD5670D51FB8B2D7FB3C1CD13D76D142951EFDB4B61EDB118D6371B88D447BB",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "ACD9E6FB77F5AFD8F487C70D2EFB9504DACA8F39C26DCC0CEE14D6B64E50D334",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    }
+  ],
+  "WorkbookRefreshPerformed": false,
+  "PowerQuerySyncPerformed": false,
+  "SourceExtractionPerformed": true,
+  "Note": "Copied cached results remain BD results until each destination is recalculated, refreshed and saved."
+}

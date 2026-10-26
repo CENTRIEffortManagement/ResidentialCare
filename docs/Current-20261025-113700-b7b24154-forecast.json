@@ -1,0 +1,143 @@
+{
+  "Complete": true,
+  "UnknownAdmission": "",
+  "Untimed": [],
+  "Peak": 3,
+  "Rows": [
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "BD/Role:AIN/1",
+      "Finish": 189.550747
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "BD/Role:RN/1",
+      "Finish": 123.0028097
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 0.0,
+      "Id": "BD/Role:EN/1",
+      "Finish": 123.9392266
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 123.0028097,
+      "Id": "BD/Role:RN/2",
+      "Finish": 178.3698177
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 123.9392266,
+      "Id": "BD/Role:EN/2",
+      "Finish": 179.19854379999998
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 178.3698177,
+      "Id": "BD/Role:RN/3",
+      "Finish": 246.8671737
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 179.19854379999998,
+      "Id": "BD/Role:EN/3",
+      "Finish": 247.5344194
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 189.550747,
+      "Id": "BD/Role:AIN/2",
+      "Finish": 253.0268038
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 253.0268038,
+      "Id": "BD/Role:AIN/3",
+      "Finish": 375.3381753
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 375.3381753,
+      "Id": "BD/Capacity",
+      "Finish": 419.38707969999996
+    },
+    {
+      "Status": "Forecast",
+      "Attempt": 1,
+      "Start": 419.38707969999996,
+      "Id": "BD/Effort",
+      "Finish": 461.36558729999996
+    }
+  ],
+  "TotalSeconds": 461.36558729999996,
+  "Durations": {
+    "BD/Role:AIN/3": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 122.3113715,
+      "Observed": "2026-10-22T01:23:52.7311202+00:00"
+    },
+    "BD/Role:EN/1": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 123.9392266,
+      "Observed": "2026-10-22T01:19:41.4630367+00:00"
+    },
+    "BD/Role:EN/2": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 55.2593172,
+      "Observed": "2026-10-22T01:20:36.7717616+00:00"
+    },
+    "BD/Capacity": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 44.0489044,
+      "Observed": "2026-10-22T01:24:36.8038378+00:00"
+    },
+    "BD/Role:RN/3": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 68.497356,
+      "Observed": "2026-10-22T01:21:44.4331195+00:00"
+    },
+    "BD/Role:EN/3": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 68.3358756,
+      "Observed": "2026-10-22T01:21:45.1440636+00:00"
+    },
+    "BD/Effort": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 41.9785076,
+      "Observed": "2026-10-22T01:25:18.8065226+00:00"
+    },
+    "BD/Role:AIN/2": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 63.4760568,
+      "Observed": "2026-10-22T01:21:50.3882616+00:00"
+    },
+    "BD/Role:RN/2": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 55.367008,
+      "Observed": "2026-10-22T01:20:35.8520623+00:00"
+    },
+    "BD/Role:RN/1": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 123.0028097,
+      "Observed": "2026-10-22T01:19:40.4042043+00:00"
+    },
+    "BD/Role:AIN/1": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Seconds": 189.550747,
+      "Observed": "2026-10-22T01:20:46.8722032+00:00"
+    }
+  }
+}

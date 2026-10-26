@@ -1,0 +1,15 @@
+{
+  "source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+  "sourceSHA256": "E3C2390EBFB375795EC6829A42D2022D9496A7B30FC9018035726D50102D2304",
+  "changedQuery": "MasterRosterWeek1Monday",
+  "removedQuery": "INPUT MasterRosterWeek1Monday",
+  "anchor": "Exact earliest current-unit Published Roster date from RosterStart; Monday guard retained",
+  "unrelatedUserCodePreserved": true,
+  "comparison": "Exact text with line-ending normalization and optional terminal newline only",
+  "namedCellRequired": false,
+  "syntax": "Passed installed Microsoft M parser",
+  "workbookSyncPerformed": false,
+  "workbookRefreshPerformed": false,
+  "nativeEvaluationPerformed": false,
+  "performance": "Reuses existing published-only RosterStart scalar; no new import, expansion, buffer or Settings dependency."
+}

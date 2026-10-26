@@ -1,0 +1,32 @@
+[
+  {
+    "Unit": "BD",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+    "Before": "outputs\\availability-na-fix-20261026\\BD\\before.saved.m",
+    "Evidence": "outputs\\availability-na-fix-20261026\\BD\\before.extraction.json",
+    "OwnerFile": false,
+    "ExclusiveAccess": true,
+    "AccessError": null
+  },
+  {
+    "Unit": "TE",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "Source": "CLIENT/DATExx-Whiddon/UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+    "Before": "outputs\\availability-na-fix-20261026\\TE\\before.saved.m",
+    "Evidence": "outputs\\availability-na-fix-20261026\\TE\\before.extraction.json",
+    "OwnerFile": true,
+    "ExclusiveAccess": false,
+    "AccessError": "Exception calling \"Open\" with \"4\" argument(s): \"The process cannot access the file 'C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx' because it is being used by another process.\""
+  },
+  {
+    "Unit": "JH-RY",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "Source": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+    "Before": "outputs\\availability-na-fix-20261026\\JH-RY\\before.saved.m",
+    "Evidence": "outputs\\availability-na-fix-20261026\\JH-RY\\before.extraction.json",
+    "OwnerFile": false,
+    "ExclusiveAccess": true,
+    "AccessError": null
+  }
+]

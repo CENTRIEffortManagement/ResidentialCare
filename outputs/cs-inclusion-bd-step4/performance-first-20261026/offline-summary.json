@@ -1,0 +1,22 @@
+{
+  "status": "Passed offline equivalence and source checks",
+  "source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m",
+  "sourceSHA256": "FDB0AD6CCA5456CE9E3769B2636CCA4FFF0F6891728518E7044F2193824F91E6",
+  "sourceContracts": 50,
+  "referenceCases": 15,
+  "referenceAssertions": 107,
+  "sharedQueryCount": 38,
+  "changedQueryExpressions": [
+    "AllocationExtracted"
+  ],
+  "unchangedOtherQueryExpressions": 37,
+  "publicResDoubleRolesRetained": true,
+  "mainAllocationExtractionReferences": 1,
+  "mainExternalResDoubleRolesReferences": 0,
+  "syntax": "Passed",
+  "parser": "Installed Microsoft Power Query extension parser",
+  "nativeEvaluationPerformed": false,
+  "productionMExecuted": false,
+  "timingMeasured": false,
+  "limitation": "The arithmetic/reference models and M parser do not execute production M or measure Excel refresh time or memory."
+}

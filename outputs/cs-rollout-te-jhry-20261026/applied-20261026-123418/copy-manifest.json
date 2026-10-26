@@ -1,0 +1,67 @@
+{
+  "Operation": "User-authorized exact BD workbook copies to TE and JH-RY",
+  "Status": "Completed",
+  "FilesPerUnit": 1,
+  "Units": [
+    "TE",
+    "JH-RY"
+  ],
+  "SourceWorkbooks": [
+    {
+      "File": "1. Input/Worker Reconciliation.xlsx",
+      "WorkbookSHA256": "F6FBF3393F57A089E08C090F5752B01347AD25497AA8D0CAA8DB30FECD6BDA81",
+      "ExtractedMSHA256": "8BC59BBEDA84A8A50CB845394EEC82A4FCA7D3BB8BF9D5801070C85392B18981",
+      "AdjacentMMatchesSavedWorkbook": false,
+      "Syntax": "Passed",
+      "DonorChanged": false
+    }
+  ],
+  "Backups": [
+    {
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\Worker Reconciliation.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-123418/backups/TE/1. Input/Worker Reconciliation.xlsx",
+      "SHA256": "C433D1698F47DB97FDF5E6DFC7ABA92E2366DFE5E803B4BA52CCA9E04F940FD6"
+    },
+    {
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\Worker Reconciliation.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-123418/backups/TE/1. Input/Worker Reconciliation.xlsx_PowerQuery.m",
+      "SHA256": "F42A562B1877B6C29B55740A64F416E0D479E5ED5CA80D781D58A57310B4627A"
+    },
+    {
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\Worker Reconciliation.xlsx",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-123418/backups/JH-RY/1. Input/Worker Reconciliation.xlsx",
+      "SHA256": "2C188A950E1862870E5CA943D3565F62B30739F4E9D4A9EDC03F8F5BCBA4FB22"
+    },
+    {
+      "Target": "CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\Worker Reconciliation.xlsx_PowerQuery.m",
+      "Backup": "outputs/cs-rollout-te-jhry-20261026/applied-20261026-123418/backups/JH-RY/1. Input/Worker Reconciliation.xlsx_PowerQuery.m",
+      "SHA256": "8ECD6C17ABAF9F4316E81DB3721E0FE5290EB10677677132AA5C762A2EABAEA6"
+    }
+  ],
+  "Copies": [
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/TE/1. Input/Worker Reconciliation.xlsx",
+      "PreviousWorkbookSHA256": "C433D1698F47DB97FDF5E6DFC7ABA92E2366DFE5E803B4BA52CCA9E04F940FD6",
+      "WorkbookSHA256": "F6FBF3393F57A089E08C090F5752B01347AD25497AA8D0CAA8DB30FECD6BDA81",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/TE/1. Input/Worker Reconciliation.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "8BC59BBEDA84A8A50CB845394EEC82A4FCA7D3BB8BF9D5801070C85392B18981",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    },
+    {
+      "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "Target": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/Worker Reconciliation.xlsx",
+      "PreviousWorkbookSHA256": "2C188A950E1862870E5CA943D3565F62B30739F4E9D4A9EDC03F8F5BCBA4FB22",
+      "WorkbookSHA256": "F6FBF3393F57A089E08C090F5752B01347AD25497AA8D0CAA8DB30FECD6BDA81",
+      "ExtractedSource": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/Worker Reconciliation.xlsx_PowerQuery.m",
+      "ExtractedMSHA256": "8BC59BBEDA84A8A50CB845394EEC82A4FCA7D3BB8BF9D5801070C85392B18981",
+      "ExactWorkbookCopy": true,
+      "ExactSourceMatch": true
+    }
+  ],
+  "WorkbookRefreshPerformed": false,
+  "PowerQuerySyncPerformed": false,
+  "SourceExtractionPerformed": true,
+  "Note": "Copied cached results remain BD results until each destination is recalculated, refreshed and saved."
+}

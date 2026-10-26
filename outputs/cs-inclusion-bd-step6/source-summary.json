@@ -1,0 +1,25 @@
+{
+  "status": "Passed source contracts and Microsoft M syntax parser",
+  "source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx_PowerQuery.m",
+  "sourceSHA256": "B0E7DEA53E19828FCC8A573E68C6E82821FDEEFEE3A9664537B1105C3F204138",
+  "sourceContracts": 113,
+  "originalDefinitions": 76,
+  "currentDefinitions": 79,
+  "changedOriginalQueryExpressions": [
+    "IMPORT AllocationExtracted",
+    "ReconciledWorkerMembership_Prepare",
+    "AvailabilityRoleGroups",
+    "AllocationRoleHours_Prepare"
+  ],
+  "unchangedOriginalQueryExpressions": 72,
+  "newQueryNames": [
+    "AllocationExtracted_Prepare",
+    "CSAllocationWorkers_Prepare",
+    "RosterMembership_Prepare"
+  ],
+  "syntax": "Passed",
+  "nativeEvaluationPerformed": false,
+  "productionMExecuted": false,
+  "timingMeasured": false,
+  "limitation": "Source contracts and the parser do not execute production M or verify saved workbook data/bindings."
+}

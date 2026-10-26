@@ -1,0 +1,20 @@
+{
+  "status": "Passed independent reference checks",
+  "referenceAssertions": 122,
+  "covered": [
+    "CS-only BD selection",
+    "blank-ID allocation exclusion with source demand untouched",
+    "Monday anchor with negative and positive offsets",
+    "partial and repeated horizons",
+    "raw net hours and break minutes",
+    "overnight end dates",
+    "all legitimate templates",
+    "unchanged published facts",
+    "two-or-more role naming",
+    "legacy AIN/AINC4 ratio scope",
+    "future published-CS overlap guard"
+  ],
+  "nativeEvaluationPerformed": false,
+  "productionMExecuted": false,
+  "limitation": "These are independent reference expectations. They do not prove that the pending production M implements them or that Excel outputs are current."
+}

@@ -1,0 +1,131 @@
+{
+  "Rows": [
+    {
+      "Finish": 16.831807,
+      "Start": 0.0,
+      "Id": "JH-RY/Capacity",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 15.4040223,
+      "Start": 0.0,
+      "Id": "Org/StaffAll",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 62.820228,
+      "Start": 16.831807,
+      "Id": "JH-RY/Effort",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 132.959763,
+      "Start": 62.820228,
+      "Id": "Org/EffortAll",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 172.4170216,
+      "Start": 132.959763,
+      "Id": "Org/Outcomes",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 221.0529846,
+      "Start": 172.4170216,
+      "Id": "Org/Inefficiencies",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 262.5334578,
+      "Start": 221.0529846,
+      "Id": "Org/Reporting",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 303.5170399,
+      "Start": 262.5334578,
+      "Id": "Org/LeaveBalanceStats",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 345.8881164,
+      "Start": 303.5170399,
+      "Id": "Org/LeaveBalanceReduction",
+      "Status": "Forecast",
+      "Attempt": 1
+    },
+    {
+      "Finish": 390.5226367,
+      "Start": 345.8881164,
+      "Id": "Org/LeaveBalanceReporting",
+      "Status": "Forecast",
+      "Attempt": 1
+    }
+  ],
+  "Durations": {
+    "Org/LeaveBalanceReduction": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:30:01.9874940+00:00",
+      "Seconds": 42.3710765
+    },
+    "Org/Inefficiencies": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:27:57.0987053+00:00",
+      "Seconds": 48.635963
+    },
+    "Org/Outcomes": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:27:08.4447612+00:00",
+      "Seconds": 39.4572586
+    },
+    "Org/Reporting": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:28:38.5978345+00:00",
+      "Seconds": 41.4804732
+    },
+    "JH-RY/Capacity": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:59:34.8400361+00:00",
+      "Seconds": 16.831807
+    },
+    "Org/StaffAll": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:51:03.0465016+00:00",
+      "Seconds": 15.4040223
+    },
+    "JH-RY/Effort": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:23:09.2670004+00:00",
+      "Seconds": 45.988421
+    },
+    "Org/LeaveBalanceStats": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:29:19.5990883+00:00",
+      "Seconds": 40.9835821
+    },
+    "Org/EffortAll": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:26:28.9687708+00:00",
+      "Seconds": 70.139535
+    },
+    "Org/LeaveBalanceReporting": {
+      "SourceRun": "20261022-121419-d2d39cdc",
+      "Observed": "2026-10-22T01:30:46.6381276+00:00",
+      "Seconds": 44.6345203
+    }
+  },
+  "Untimed": [],
+  "Peak": 2,
+  "UnknownAdmission": "",
+  "TotalSeconds": 390.5226367,
+  "Complete": true
+}

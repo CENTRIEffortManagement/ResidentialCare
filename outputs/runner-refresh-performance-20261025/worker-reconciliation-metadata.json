@@ -1,0 +1,912 @@
+{
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+  "Scope": "Saved connection/table metadata only; no worksheet cell data or M definitions read.",
+  "TargetOutputs": [
+    {
+      "Sheet": "Employees-ALL (3)",
+      "SheetState": null,
+      "Exposure": "ListObject.QueryTable",
+      "Table": {
+        "xmlns": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+        "mc:Ignorable": "xr xr3",
+        "xmlns:xr": "http://schemas.microsoft.com/office/spreadsheetml/2014/revision",
+        "xmlns:xr3": "http://schemas.microsoft.com/office/spreadsheetml/2016/revision3",
+        "id": "5",
+        "xr:uid": "{7D6FAA72-8A27-4FB2-9388-3217538F26EB}",
+        "name": "Employees_ALL",
+        "displayName": "Employees_ALL",
+        "ref": "A1:AJ382",
+        "tableType": "queryTable",
+        "totalsRowShown": "0"
+      },
+      "Query": {
+        "xmlns": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+        "mc:Ignorable": "xr16",
+        "xmlns:xr16": "http://schemas.microsoft.com/office/spreadsheetml/2017/revision16",
+        "name": "ExternalData_4",
+        "connectionId": "14",
+        "xr16:uid": "{B580774F-5445-43E4-8CED-37156F6994E0}",
+        "autoFormatId": "16",
+        "applyNumberFormats": "0",
+        "applyBorderFormats": "0",
+        "applyFontFormats": "0",
+        "applyPatternFormats": "0",
+        "applyAlignmentFormats": "0",
+        "applyWidthHeightFormats": "0"
+      },
+      "Part": "xl/queryTables/queryTable12.xml",
+      "RefreshMetadata": {
+        "Attributes": {
+          "nextId": "74"
+        },
+        "Fields": [
+          {
+            "id": "2",
+            "name": "Payroll Code",
+            "tableColumnId": "2"
+          },
+          {
+            "id": "23",
+            "name": "Facility-AbbrevZ",
+            "tableColumnId": "1"
+          },
+          {
+            "id": "35",
+            "name": "Records Employee Name",
+            "tableColumnId": "20"
+          },
+          {
+            "id": "56",
+            "name": "Availabilities Location",
+            "tableColumnId": "30"
+          },
+          {
+            "id": "52",
+            "name": "In Records Source",
+            "tableColumnId": "28"
+          },
+          {
+            "id": "3",
+            "name": "Department",
+            "tableColumnId": "3"
+          },
+          {
+            "id": "7",
+            "name": "Employee Roster Name",
+            "tableColumnId": "7"
+          },
+          {
+            "id": "8",
+            "name": "Employment Type",
+            "tableColumnId": "8"
+          },
+          {
+            "id": "9",
+            "name": "Employee Code",
+            "tableColumnId": "9"
+          },
+          {
+            "id": "17",
+            "name": "RoleX",
+            "tableColumnId": "17"
+          },
+          {
+            "id": "10",
+            "name": "Facility-AbbrevX",
+            "tableColumnId": "10"
+          },
+          {
+            "id": "53",
+            "name": "In Allocation Source",
+            "tableColumnId": "29"
+          },
+          {
+            "id": "57",
+            "name": "Roster Location",
+            "tableColumnId": "31"
+          },
+          {
+            "id": "27",
+            "name": "In Records",
+            "tableColumnId": "5"
+          },
+          {
+            "id": "28",
+            "name": "In Allocation",
+            "tableColumnId": "6"
+          },
+          {
+            "id": "11",
+            "name": "AssignedAvailID",
+            "tableColumnId": "11"
+          },
+          {
+            "id": "36",
+            "name": "Join Facility-Abbrev",
+            "tableColumnId": "21"
+          },
+          {
+            "id": "58",
+            "name": "Leave Balance Role",
+            "tableColumnId": "32"
+          },
+          {
+            "id": "59",
+            "name": "Leave Balance Location",
+            "tableColumnId": "33"
+          },
+          {
+            "id": "60",
+            "name": "In Leave Balances Source",
+            "tableColumnId": "34"
+          },
+          {
+            "id": "61",
+            "name": "In Leave Balances",
+            "tableColumnId": "35"
+          },
+          {
+            "id": "29",
+            "name": "Worker Membership",
+            "tableColumnId": "14"
+          },
+          {
+            "id": "12",
+            "name": "Employee Code.1",
+            "tableColumnId": "12"
+          },
+          {
+            "id": "24",
+            "name": "Facility-AbbrevY",
+            "tableColumnId": "4"
+          },
+          {
+            "id": "18",
+            "name": "Position Description",
+            "tableColumnId": "18"
+          },
+          {
+            "id": "72",
+            "name": "Employee Status Description",
+            "tableColumnId": "13"
+          },
+          {
+            "id": "19",
+            "name": "Contracted FN Hours",
+            "tableColumnId": "19"
+          },
+          {
+            "id": "37",
+            "name": "Start Date",
+            "tableColumnId": "22"
+          },
+          {
+            "id": "30",
+            "name": "Termination Date",
+            "tableColumnId": "15"
+          },
+          {
+            "id": "38",
+            "name": "Termination Reason Description",
+            "tableColumnId": "23"
+          },
+          {
+            "id": "39",
+            "name": "Current Worker Row Count",
+            "tableColumnId": "24"
+          },
+          {
+            "id": "40",
+            "name": "Current Worker Eligible Row Count",
+            "tableColumnId": "25"
+          },
+          {
+            "id": "62",
+            "name": "Records Location",
+            "tableColumnId": "36"
+          },
+          {
+            "id": "41",
+            "name": "Current Worker Match Missing",
+            "tableColumnId": "26"
+          },
+          {
+            "id": "42",
+            "name": "Current Worker Record Ambiguous",
+            "tableColumnId": "27"
+          },
+          {
+            "id": "31",
+            "name": "Terminated Before Roster",
+            "tableColumnId": "16"
+          }
+        ]
+      }
+    },
+    {
+      "Sheet": "Employees-ALL (2)",
+      "SheetState": null,
+      "Exposure": "Worksheet.QueryTables",
+      "Table": null,
+      "Query": {
+        "xmlns": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+        "mc:Ignorable": "xr16",
+        "xmlns:xr16": "http://schemas.microsoft.com/office/spreadsheetml/2017/revision16",
+        "name": "ExternalData_3",
+        "connectionId": "15",
+        "xr16:uid": "{68BD59DC-324B-4D89-AE70-F33DE9ECF268}",
+        "autoFormatId": "16",
+        "applyNumberFormats": "0",
+        "applyBorderFormats": "0",
+        "applyFontFormats": "0",
+        "applyPatternFormats": "0",
+        "applyAlignmentFormats": "0",
+        "applyWidthHeightFormats": "0"
+      },
+      "Part": "xl/queryTables/queryTable13.xml",
+      "RefreshMetadata": {
+        "Attributes": {
+          "nextId": "38"
+        },
+        "Fields": [
+          {
+            "id": "1",
+            "name": "Payroll Code"
+          },
+          {
+            "id": "2",
+            "name": "Facility-AbbrevZ"
+          },
+          {
+            "id": "3",
+            "name": "Records Employee Name"
+          },
+          {
+            "id": "4",
+            "name": "Availabilities Location"
+          },
+          {
+            "id": "5",
+            "name": "In Records Source"
+          },
+          {
+            "id": "6",
+            "name": "Department"
+          },
+          {
+            "id": "7",
+            "name": "Employee Roster Name"
+          },
+          {
+            "id": "8",
+            "name": "Employment Type"
+          },
+          {
+            "id": "9",
+            "name": "Employee Code"
+          },
+          {
+            "id": "10",
+            "name": "RoleX"
+          },
+          {
+            "id": "11",
+            "name": "Facility-AbbrevX"
+          },
+          {
+            "id": "12",
+            "name": "In Allocation Source"
+          },
+          {
+            "id": "13",
+            "name": "Roster Location"
+          },
+          {
+            "id": "14",
+            "name": "In Records"
+          },
+          {
+            "id": "15",
+            "name": "In Allocation"
+          },
+          {
+            "id": "16",
+            "name": "AssignedAvailID"
+          },
+          {
+            "id": "17",
+            "name": "Join Facility-Abbrev"
+          },
+          {
+            "id": "18",
+            "name": "Leave Balance Role"
+          },
+          {
+            "id": "19",
+            "name": "Leave Balance Location"
+          },
+          {
+            "id": "20",
+            "name": "In Leave Balances Source"
+          },
+          {
+            "id": "21",
+            "name": "In Leave Balances"
+          },
+          {
+            "id": "22",
+            "name": "Worker Membership"
+          },
+          {
+            "id": "23",
+            "name": "Employee Code.1"
+          },
+          {
+            "id": "24",
+            "name": "Facility-AbbrevY"
+          },
+          {
+            "id": "25",
+            "name": "Position Description"
+          },
+          {
+            "id": "27",
+            "name": "Contracted FN Hours"
+          },
+          {
+            "id": "28",
+            "name": "Start Date"
+          },
+          {
+            "id": "29",
+            "name": "Termination Date"
+          },
+          {
+            "id": "30",
+            "name": "Termination Reason Description"
+          },
+          {
+            "id": "31",
+            "name": "Current Worker Row Count"
+          },
+          {
+            "id": "32",
+            "name": "Current Worker Eligible Row Count"
+          },
+          {
+            "id": "33",
+            "name": "Records Location"
+          },
+          {
+            "id": "34",
+            "name": "Current Worker Match Missing"
+          },
+          {
+            "id": "35",
+            "name": "Current Worker Record Ambiguous"
+          },
+          {
+            "id": "36",
+            "name": "Terminated Before Roster"
+          },
+          {
+            "id": "37",
+            "name": "Employee Status Description"
+          }
+        ]
+      }
+    },
+    {
+      "Sheet": "WorkerReconciliation_ISSUES",
+      "SheetState": null,
+      "Exposure": "Worksheet.QueryTables",
+      "Table": null,
+      "Query": {
+        "xmlns": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+        "mc:Ignorable": "xr16",
+        "xmlns:xr16": "http://schemas.microsoft.com/office/spreadsheetml/2017/revision16",
+        "name": "ExternalData_3",
+        "connectionId": "42",
+        "xr16:uid": "{16C0A4CA-8034-4571-AAB5-FEC076A878D2}",
+        "autoFormatId": "16",
+        "applyNumberFormats": "0",
+        "applyBorderFormats": "0",
+        "applyFontFormats": "0",
+        "applyPatternFormats": "0",
+        "applyAlignmentFormats": "0",
+        "applyWidthHeightFormats": "0"
+      },
+      "Part": "xl/queryTables/queryTable17.xml",
+      "RefreshMetadata": {
+        "Attributes": {
+          "nextId": "8"
+        },
+        "Fields": [
+          {
+            "id": "1",
+            "name": "Issue"
+          },
+          {
+            "id": "2",
+            "name": "EmployeeID"
+          },
+          {
+            "id": "3",
+            "name": "Facility-Abbrev"
+          },
+          {
+            "id": "4",
+            "name": "Employee Roster Name"
+          },
+          {
+            "id": "5",
+            "name": "Role"
+          },
+          {
+            "id": "6",
+            "name": "Worker Membership"
+          },
+          {
+            "id": "7",
+            "name": "Details"
+          }
+        ]
+      }
+    }
+  ],
+  "Connections": {
+    "14": {
+      "Attributes": {
+        "id": "14",
+        "xr16:uid": "{DB8FA4B3-55B1-40A9-903D-A42123E0C85F}",
+        "keepAlive": "1",
+        "name": "Query - Employees-ALL",
+        "description": "Connection to the 'Employees-ALL' query in the workbook.",
+        "type": "5",
+        "refreshedVersion": "8",
+        "background": "1",
+        "saveData": "1"
+      },
+      "Properties": [
+        {
+          "Type": "dbPr",
+          "Attributes": {
+            "connection": "Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=Employees-ALL;Extended Properties=\"\"",
+            "command": "SELECT * FROM [Employees-ALL]"
+          }
+        }
+      ]
+    },
+    "15": {
+      "Attributes": {
+        "id": "15",
+        "xr16:uid": "{95F01B0B-2585-4ECF-8E38-669F71360001}",
+        "keepAlive": "1",
+        "name": "Query - Employees-ALL(1)",
+        "description": "Connection to the 'Employees-ALL' query in the workbook.",
+        "type": "5",
+        "refreshedVersion": "8",
+        "background": "1",
+        "saveData": "1"
+      },
+      "Properties": [
+        {
+          "Type": "dbPr",
+          "Attributes": {
+            "connection": "Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=Employees-ALL;Extended Properties=\"\"",
+            "command": "SELECT * FROM [Employees-ALL]"
+          }
+        }
+      ]
+    },
+    "42": {
+      "Attributes": {
+        "id": "42",
+        "xr16:uid": "{1C3B24D6-2F88-4F95-A40D-5C82C7E71FE4}",
+        "keepAlive": "1",
+        "name": "Query - WorkerReconciliation_ISSUES",
+        "description": "Connection to the 'WorkerReconciliation_ISSUES' query in the workbook.",
+        "type": "5",
+        "refreshedVersion": "8",
+        "background": "1",
+        "saveData": "1"
+      },
+      "Properties": [
+        {
+          "Type": "dbPr",
+          "Attributes": {
+            "connection": "Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=WorkerReconciliation_ISSUES;Extended Properties=\"\"",
+            "command": "SELECT * FROM [WorkerReconciliation_ISSUES]"
+          }
+        }
+      ]
+    }
+  },
+  "OtherOutputsOnSameConnections": [
+    {
+      "Sheet": "WorkerReconciliation_ISSUES",
+      "SheetState": null,
+      "Exposure": "Worksheet.QueryTables",
+      "Table": null,
+      "Query": {
+        "xmlns": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+        "mc:Ignorable": "xr16",
+        "xmlns:xr16": "http://schemas.microsoft.com/office/spreadsheetml/2017/revision16",
+        "name": "ExternalData_3",
+        "connectionId": "42",
+        "xr16:uid": "{16C0A4CA-8034-4571-AAB5-FEC076A878D2}",
+        "autoFormatId": "16",
+        "applyNumberFormats": "0",
+        "applyBorderFormats": "0",
+        "applyFontFormats": "0",
+        "applyPatternFormats": "0",
+        "applyAlignmentFormats": "0",
+        "applyWidthHeightFormats": "0"
+      },
+      "Part": "xl/queryTables/queryTable17.xml",
+      "RefreshMetadata": {
+        "Attributes": {
+          "nextId": "8"
+        },
+        "Fields": [
+          {
+            "id": "1",
+            "name": "Issue"
+          },
+          {
+            "id": "2",
+            "name": "EmployeeID"
+          },
+          {
+            "id": "3",
+            "name": "Facility-Abbrev"
+          },
+          {
+            "id": "4",
+            "name": "Employee Roster Name"
+          },
+          {
+            "id": "5",
+            "name": "Role"
+          },
+          {
+            "id": "6",
+            "name": "Worker Membership"
+          },
+          {
+            "id": "7",
+            "name": "Details"
+          }
+        ]
+      }
+    }
+  ],
+  "ConnectionCount": 43,
+  "EmployeeQueryConnections": [
+    {
+      "id": "14",
+      "xr16:uid": "{DB8FA4B3-55B1-40A9-903D-A42123E0C85F}",
+      "keepAlive": "1",
+      "name": "Query - Employees-ALL",
+      "description": "Connection to the 'Employees-ALL' query in the workbook.",
+      "type": "5",
+      "refreshedVersion": "8",
+      "background": "1",
+      "saveData": "1"
+    },
+    {
+      "id": "15",
+      "xr16:uid": "{95F01B0B-2585-4ECF-8E38-669F71360001}",
+      "keepAlive": "1",
+      "name": "Query - Employees-ALL(1)",
+      "description": "Connection to the 'Employees-ALL' query in the workbook.",
+      "type": "5",
+      "refreshedVersion": "8",
+      "background": "1",
+      "saveData": "1"
+    }
+  ],
+  "MetadataOutputs": [
+    {
+      "Sheet": "UnitPath",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "PathTABLE",
+      "QueryName": "ExternalData_1",
+      "ConnectionId": "32",
+      "Part": "xl/queryTables/queryTable1.xml"
+    },
+    {
+      "Sheet": "Availabilities-Employees-AVAIL",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "Availabilities_Employees_AVAIL",
+      "QueryName": "ExternalData_2",
+      "ConnectionId": "6",
+      "Part": "xl/queryTables/queryTable2.xml"
+    },
+    {
+      "Sheet": "LeakedTerminatedWorkers_DIAGNOS",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "LeakedTerminatedWorkers_DIAGNOSTICS",
+      "QueryName": "ExternalData_13",
+      "ConnectionId": "26",
+      "Part": "xl/queryTables/queryTable3.xml"
+    },
+    {
+      "Sheet": "InvalidWorkerMembership_DIAGNOS",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "InvalidWorkerMembership_DIAGNOSTICS",
+      "QueryName": "ExternalData_12",
+      "ConnectionId": "25",
+      "Part": "xl/queryTables/queryTable4.xml"
+    },
+    {
+      "Sheet": "AmbiguousCurrentWorkers_DIAGNOS",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "AmbiguousCurrentWorkers_DIAGNOSTICS",
+      "QueryName": "ExternalData_11",
+      "ConnectionId": "1",
+      "Part": "xl/queryTables/queryTable5.xml"
+    },
+    {
+      "Sheet": "UnmatchedCurrentWorkers_DIAGNOS",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "UnmatchedCurrentWorkers_DIAGNOSTICS",
+      "QueryName": "ExternalData_10",
+      "ConnectionId": "40",
+      "Part": "xl/queryTables/queryTable6.xml"
+    },
+    {
+      "Sheet": "IncompleteWorkerIdentity_DIAGNO",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "IncompleteWorkerIdentity_DIAGNOSTICS",
+      "QueryName": "ExternalData_9",
+      "ConnectionId": "24",
+      "Part": "xl/queryTables/queryTable7.xml"
+    },
+    {
+      "Sheet": "DuplicateWorkers_DIAGNOSTICS",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "DuplicateWorkers_DIAGNOSTICS",
+      "QueryName": "ExternalData_8",
+      "ConnectionId": "13",
+      "Part": "xl/queryTables/queryTable8.xml"
+    },
+    {
+      "Sheet": "EmployeesTABLE_Prepare",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "EmployeesTABLE_Prepare",
+      "QueryName": "ExternalData_7",
+      "ConnectionId": "19",
+      "Part": "xl/queryTables/queryTable9.xml"
+    },
+    {
+      "Sheet": "CurrentWorkers_Reconciled",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "CurrentWorkers_Reconciled",
+      "QueryName": "ExternalData_6",
+      "ConnectionId": "12",
+      "Part": "xl/queryTables/queryTable10.xml"
+    },
+    {
+      "Sheet": "RosterStartDate",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "RosterStartDate",
+      "QueryName": "ExternalData_5",
+      "ConnectionId": "38",
+      "Part": "xl/queryTables/queryTable11.xml"
+    },
+    {
+      "Sheet": "Employees-ALL (3)",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "Employees_ALL",
+      "QueryName": "ExternalData_4",
+      "ConnectionId": "14",
+      "Part": "xl/queryTables/queryTable12.xml"
+    },
+    {
+      "Sheet": "Employees-ALL (2)",
+      "Exposure": "Worksheet.QueryTables",
+      "TableName": null,
+      "QueryName": "ExternalData_3",
+      "ConnectionId": "15",
+      "Part": "xl/queryTables/queryTable13.xml"
+    },
+    {
+      "Sheet": "TerminatedWorkers_DIAGNOSTICS",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "TerminatedWorkers_DIAGNOSTICS",
+      "QueryName": "ExternalData_4",
+      "ConnectionId": "39",
+      "Part": "xl/queryTables/queryTable14.xml"
+    },
+    {
+      "Sheet": "WorkerReconciliation_CHECK",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "WorkerReconciliation_CHECK",
+      "QueryName": "ExternalData_3",
+      "ConnectionId": "41",
+      "Part": "xl/queryTables/queryTable15.xml"
+    },
+    {
+      "Sheet": "WorkerSourceAttributes_SUMMARY",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "WorkerSourceAttributes_SUMMARY",
+      "QueryName": "ExternalData_4",
+      "ConnectionId": "43",
+      "Part": "xl/queryTables/queryTable16.xml"
+    },
+    {
+      "Sheet": "WorkerReconciliation_ISSUES",
+      "Exposure": "Worksheet.QueryTables",
+      "TableName": null,
+      "QueryName": "ExternalData_3",
+      "ConnectionId": "42",
+      "Part": "xl/queryTables/queryTable17.xml"
+    },
+    {
+      "Sheet": "IMPORT Combined Roster",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "IMPORT_Combined_Roster",
+      "QueryName": "ExternalData_5",
+      "ConnectionId": "21",
+      "Part": "xl/queryTables/queryTable18.xml"
+    },
+    {
+      "Sheet": "IMPORT Combined Availabilities",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "IMPORT_Combined_Availabilities",
+      "QueryName": "ExternalData_4",
+      "ConnectionId": "20",
+      "Part": "xl/queryTables/queryTable19.xml"
+    },
+    {
+      "Sheet": "IMPORT Leave Balances",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "IMPORT_Leave_Balances",
+      "QueryName": "ExternalData_4",
+      "ConnectionId": "23",
+      "Part": "xl/queryTables/queryTable20.xml"
+    },
+    {
+      "Sheet": "IMPORT Current_Workers",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "IMPORT_Current_Workers",
+      "QueryName": "ExternalData_3",
+      "ConnectionId": "22",
+      "Part": "xl/queryTables/queryTable21.xml"
+    },
+    {
+      "Sheet": "Employees-TABLE",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "Employees_TABLE",
+      "QueryName": "ExternalData_2",
+      "ConnectionId": "18",
+      "Part": "xl/queryTables/queryTable22.xml"
+    },
+    {
+      "Sheet": "Availabilities",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "Availabilities_Prepare",
+      "QueryName": "ExternalData_1",
+      "ConnectionId": "4",
+      "Part": "xl/queryTables/queryTable23.xml"
+    },
+    {
+      "Sheet": "Roster Blank AGENCY",
+      "Exposure": "ListObject.QueryTable",
+      "TableName": "Roster_Blank_AGENCY",
+      "QueryName": "ExternalData_3",
+      "ConnectionId": "33",
+      "Part": "xl/queryTables/queryTable24.xml"
+    }
+  ],
+  "PartsRead": [
+    "xl/workbook.xml",
+    "xl/_rels/workbook.xml.rels",
+    "xl/connections.xml",
+    "xl/worksheets/_rels/sheet1.xml.rels",
+    "xl/tables/table1.xml",
+    "xl/tables/_rels/table1.xml.rels",
+    "xl/queryTables/queryTable1.xml",
+    "xl/worksheets/_rels/sheet2.xml.rels",
+    "xl/tables/table2.xml",
+    "xl/tables/_rels/table2.xml.rels",
+    "xl/queryTables/queryTable2.xml",
+    "xl/worksheets/_rels/sheet3.xml.rels",
+    "xl/tables/table3.xml",
+    "xl/worksheets/_rels/sheet4.xml.rels",
+    "xl/tables/table4.xml",
+    "xl/tables/_rels/table4.xml.rels",
+    "xl/queryTables/queryTable3.xml",
+    "xl/worksheets/_rels/sheet5.xml.rels",
+    "xl/tables/table5.xml",
+    "xl/tables/_rels/table5.xml.rels",
+    "xl/queryTables/queryTable4.xml",
+    "xl/worksheets/_rels/sheet6.xml.rels",
+    "xl/tables/table6.xml",
+    "xl/tables/_rels/table6.xml.rels",
+    "xl/queryTables/queryTable5.xml",
+    "xl/worksheets/_rels/sheet7.xml.rels",
+    "xl/tables/table7.xml",
+    "xl/tables/_rels/table7.xml.rels",
+    "xl/queryTables/queryTable6.xml",
+    "xl/worksheets/_rels/sheet8.xml.rels",
+    "xl/tables/table8.xml",
+    "xl/tables/_rels/table8.xml.rels",
+    "xl/queryTables/queryTable7.xml",
+    "xl/worksheets/_rels/sheet9.xml.rels",
+    "xl/tables/table9.xml",
+    "xl/tables/_rels/table9.xml.rels",
+    "xl/queryTables/queryTable8.xml",
+    "xl/worksheets/_rels/sheet10.xml.rels",
+    "xl/tables/table10.xml",
+    "xl/tables/_rels/table10.xml.rels",
+    "xl/queryTables/queryTable9.xml",
+    "xl/worksheets/_rels/sheet11.xml.rels",
+    "xl/tables/table11.xml",
+    "xl/tables/_rels/table11.xml.rels",
+    "xl/queryTables/queryTable10.xml",
+    "xl/worksheets/_rels/sheet12.xml.rels",
+    "xl/tables/table12.xml",
+    "xl/tables/_rels/table12.xml.rels",
+    "xl/queryTables/queryTable11.xml",
+    "xl/worksheets/_rels/sheet13.xml.rels",
+    "xl/tables/table13.xml",
+    "xl/tables/_rels/table13.xml.rels",
+    "xl/queryTables/queryTable12.xml",
+    "xl/worksheets/_rels/sheet14.xml.rels",
+    "xl/queryTables/queryTable13.xml",
+    "xl/worksheets/_rels/sheet15.xml.rels",
+    "xl/tables/table14.xml",
+    "xl/tables/_rels/table14.xml.rels",
+    "xl/queryTables/queryTable14.xml",
+    "xl/worksheets/_rels/sheet16.xml.rels",
+    "xl/tables/table15.xml",
+    "xl/tables/_rels/table15.xml.rels",
+    "xl/queryTables/queryTable15.xml",
+    "xl/worksheets/_rels/sheet17.xml.rels",
+    "xl/tables/table16.xml",
+    "xl/tables/_rels/table16.xml.rels",
+    "xl/queryTables/queryTable16.xml",
+    "xl/worksheets/_rels/sheet18.xml.rels",
+    "xl/queryTables/queryTable17.xml",
+    "xl/worksheets/_rels/sheet19.xml.rels",
+    "xl/tables/table17.xml",
+    "xl/tables/_rels/table17.xml.rels",
+    "xl/queryTables/queryTable18.xml",
+    "xl/worksheets/_rels/sheet20.xml.rels",
+    "xl/tables/table18.xml",
+    "xl/tables/_rels/table18.xml.rels",
+    "xl/queryTables/queryTable19.xml",
+    "xl/worksheets/_rels/sheet21.xml.rels",
+    "xl/tables/table19.xml",
+    "xl/worksheets/_rels/sheet22.xml.rels",
+    "xl/tables/table20.xml",
+    "xl/worksheets/_rels/sheet23.xml.rels",
+    "xl/tables/table21.xml",
+    "xl/tables/_rels/table21.xml.rels",
+    "xl/queryTables/queryTable20.xml",
+    "xl/worksheets/_rels/sheet24.xml.rels",
+    "xl/tables/table22.xml",
+    "xl/tables/_rels/table22.xml.rels",
+    "xl/queryTables/queryTable21.xml",
+    "xl/worksheets/_rels/sheet25.xml.rels",
+    "xl/tables/table23.xml",
+    "xl/tables/_rels/table23.xml.rels",
+    "xl/queryTables/queryTable22.xml",
+    "xl/worksheets/_rels/sheet26.xml.rels",
+    "xl/tables/table24.xml",
+    "xl/tables/_rels/table24.xml.rels",
+    "xl/queryTables/queryTable23.xml",
+    "xl/worksheets/_rels/sheet27.xml.rels",
+    "xl/tables/table25.xml",
+    "xl/tables/_rels/table25.xml.rels",
+    "xl/queryTables/queryTable24.xml"
+  ],
+  "MetadataUnchanged": true
+}

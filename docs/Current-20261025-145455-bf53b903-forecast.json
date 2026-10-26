@@ -1,0 +1,119 @@
+{
+  "TotalSeconds": 326.1454784,
+  "Durations": {
+    "BD/Role:AIN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:57:49.3124219+00:00",
+      "Seconds": 198.0159192
+    },
+    "BD/Role:AIN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:58:19.6639478+00:00",
+      "Seconds": 30.3218165
+    },
+    "BD/Role:AIN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:59:57.5089145+00:00",
+      "Seconds": 97.8077427
+    },
+    "BD/Role:RN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:58:13.1353417+00:00",
+      "Seconds": 40.9369112
+    },
+    "BD/Role:RN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:56:53.8269917+00:00",
+      "Seconds": 142.3041418
+    },
+    "BD/Role:EN/3": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:58:12.8773022+00:00",
+      "Seconds": 43.1977571
+    },
+    "BD/Role:EN/1": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:56:52.1122682+00:00",
+      "Seconds": 140.340751
+    },
+    "BD/Role:RN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:57:32.1609041+00:00",
+      "Seconds": 38.294531
+    },
+    "BD/Role:EN/2": {
+      "SourceRun": "20261025-134711-a1fa4702",
+      "Observed": "2026-10-25T02:57:29.6213667+00:00",
+      "Seconds": 37.4019928
+    }
+  },
+  "Complete": true,
+  "Rows": [
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:AIN/1",
+      "Finish": 198.0159192,
+      "Start": 0.0,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:RN/1",
+      "Finish": 142.3041418,
+      "Start": 0.0,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:EN/1",
+      "Finish": 140.340751,
+      "Start": 0.0,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:EN/2",
+      "Finish": 177.74274380000003,
+      "Start": 140.340751,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:RN/2",
+      "Finish": 180.5986728,
+      "Start": 142.3041418,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:EN/3",
+      "Finish": 220.94050090000002,
+      "Start": 177.74274380000003,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:RN/3",
+      "Finish": 221.535584,
+      "Start": 180.5986728,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:AIN/2",
+      "Finish": 228.33773570000002,
+      "Start": 198.0159192,
+      "Status": "Forecast"
+    },
+    {
+      "Attempt": 1,
+      "Id": "BD/Role:AIN/3",
+      "Finish": 326.1454784,
+      "Start": 228.33773570000002,
+      "Status": "Forecast"
+    }
+  ],
+  "Peak": 3,
+  "UnknownAdmission": "",
+  "Untimed": []
+}

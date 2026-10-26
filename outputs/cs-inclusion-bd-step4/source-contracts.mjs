@@ -1,0 +1,90 @@
+// Source contracts and installed Microsoft M-parser checks only; no M runtime or workbook access.
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import crypto from 'node:crypto';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+const scratch=path.dirname(fileURLToPath(import.meta.url));
+const repo=path.resolve(scratch,'../..');
+const relative='CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/1-AllocationExtracted.xlsx_PowerQuery.m';
+const source=fs.readFileSync(path.join(repo,relative),'utf8');
+const before=JSON.parse(fs.readFileSync(path.join(scratch,'legacy-contract-before.json'),'utf8'));
+const starts=[...source.matchAll(/^shared\s+(#"(?:[^"]|"")*"|[A-Za-z_][A-Za-z0-9_]*)\s*=/gm)];
+const defs=new Map(starts.map((m,i)=>[m[1].startsWith('#"')?m[1].slice(2,-1).replaceAll('""','"'):m[1],source.slice(m.index,starts[i+1]?.index??source.length)]));
+const names=[...defs.keys()];
+let contracts=0;
+const check=(condition,message)=>{contracts++;assert.ok(condition,message);};
+const query=(name)=>{check(defs.has(name),`Required query exists: ${name}`);return defs.get(name);};
+check(names.length===starts.length,'Shared query names are unique');
+check(JSON.stringify(names.filter(name=>before.queryNames.includes(name)))===JSON.stringify(before.queryNames),'All 22 original query names remain in their relative order');
+for(const name of ['INPUT MasterRosterWeek1Monday','MasterRosterWeek1Monday','IMPORT Master Roster','EXTRACT Master Roster Templates',
+    'CS Allocation Source Prepare','CS Allocation Role Mapping Prepare','CS Allocation Rows Prepare','CS Allocation Weeks Prepare',
+    'CS Allocation Dates Prepare','CS Allocation Aligned Prepare','Allocation Combined Prepare'])query(name);
+const anchor=query('MasterRosterWeek1Monday');
+check(anchor.includes('Column1')&&anchor.includes('MasterRosterWeek1Monday'),'Anchor supports one named cell or its explicit column');
+check(anchor.includes('Day.Monday')&&anchor.includes('Date.DayOfWeek'),'Anchor is checked against Monday');
+const input=query('INPUT MasterRosterWeek1Monday');
+check(input.includes('Excel.CurrentWorkbook()'),'Anchor uses the explicit local workbook input');
+check(!/Table\.(?:SelectRows|TransformColumns|TransformColumnTypes|SelectColumns)/.test(input),'Anchor INPUT lands unchanged');
+const masterImport=query('IMPORT Master Roster');
+check(masterImport.includes('File.Contents')&&masterImport.includes('Excel.Workbook'),'Master source is owned by a named import');
+check(!/Table\.(?:SelectRows|TransformColumns|TransformColumnTypes|SelectColumns)/.test(masterImport),'Master IMPORT performs no business transformation');
+const portfolio=query('Master Roster Portfolio Path');
+const separators=portfolio.match(/Text\.Split\(Text\.TrimEnd\(Unit1Path,\s*"([^"]+)"\),\s*"([^"]+)"\)/);
+check(separators?.[1]==='\\'&&separators?.[2]==='\\','M path splitting uses one literal backslash, not two');
+const combinedSeparator=portfolio.match(/Text\.Combine\(List\.FirstN\(Segments,\s*UnitsIndex\),\s*"([^"]+)"\)/);
+check(combinedSeparator?.[1]==='\\','M organisation path joins retain one literal separator');
+check(!masterImport.includes('\\\\'),'New relative Master import does not insert doubled separators');
+const rawExtract=query('EXTRACT Master Roster Templates');
+check(rawExtract.includes('Roster Templates')&&!/Table\.(?:PromoteHeaders|SelectRows|TransformColumns|TransformColumnTypes|SelectColumns)/.test(rawExtract),'Raw sheet EXTRACT navigates without transformation');
+const rows=query('CS Allocation Rows Prepare');
+check(rows.includes('CS')&&rows.includes('Code'),'CS allocation has explicit role and employee identity preparation');
+check(source.includes('Shift Net Length')&&source.includes('Break Length'),'Net hours and recorded break inputs remain explicit');
+const weeks=query('CS Allocation Weeks Prepare');
+check(weeks.includes('CS Allocation Source Prepare'),'Source week selection uses all scoped Master rows before assigned-CS filtering');
+const dates=query('CS Allocation Dates Prepare');
+check((dates.match(/Number\.Mod/g)??[]).length>=2&&/\+\s*14/.test(dates),'Negative fortnight offsets are normalised before selecting a source week');
+check(dates.includes('MasterRosterWeek1Monday'),'Supplement dates use the agreed source-week anchor');
+check(/SourceWeeks\s*=\s*Table\.RowCount\(#"CS Allocation Weeks Prepare"\)/.test(dates)
+    && /PublishedDates\s*=\s*if\s+SourceWeeks\s*=\s*2\s+then/.test(dates),'Date generation forces the complete source-week prerequisite even with no assigned CS rows');
+const identity=query('CS Allocation Identity Prepare');
+const nameKeys=identity.slice(identity.indexOf('NameKeys ='),identity.indexOf('PublishedNameKeys ='));
+const allNames=identity.slice(identity.indexOf('AllNames ='),identity.indexOf('NameCounts ='));
+check(nameKeys.includes('[MasterNameKey]')&&nameKeys.includes('[NameKey]')&&allNames.includes('MasterNames'),'Cross-source name collision checks include original Master names as well as resolved published names');
+check(/Table\.SelectRows\(CodeNameCounts,\s*each\s*\[Names\]\s*<>\s*1\)/.test(identity),'Every canonical code is checked for one exact resolved name');
+check(!source.includes('Settings Data.xlsx'),'No AllocationExtracted-to-Settings circular import was added');
+const aligned=query('CS Allocation Aligned Prepare');
+check(aligned.includes('Table.ColumnNames')&&aligned.includes('Table.FromRecords'),'CS rows align to the preserved published column contract');
+check(aligned.includes('Value.ReplaceType')&&aligned.includes('Value.Type(#"Allocation Prepare")'),'Aligned CS rows retain the original published table type');
+const combined=query('Allocation Combined Prepare');
+check(combined.includes('Table.Combine'),'One common append feeds downstream allocation interfaces');
+check(query('AllocationExtraction').includes('Allocation Combined Prepare'),'Existing allocation interface uses the common append');
+check(/\[Count\]\s*>=\s*2/.test(query('ResDoubleRoles')),'Multi-role naming covers two or more roles');
+const proportions=query('ResRolesProportion');
+check(proportions.includes('"AIN"')&&proportions.includes('"AINC4"')&&proportions.includes('Table.SelectRows'),'Legacy proportions are explicitly scoped to the legacy pair');
+for(const role of ['AllocatedStaffList','AllocationExtractedCheck','AllocationExtracted'])query(role);
+const sha=(file)=>crypto.createHash('sha256').update(fs.readFileSync(path.join(repo,file))).digest('hex').toUpperCase();
+check(sha('CLIENT/DATExx-Whiddon/1. Input/Demand-MasterRoster Manual Read.xlsx_PowerQuery.m')===before.masterDemandSourceSHA256,'Organisation demand source remains unchanged by Area 4');
+check(sha('CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/2-DemandExtract.xlsx_PowerQuery.m')===before.bdDemandSourceSHA256,'BD demand source remains unchanged by Area 4');
+
+const require=createRequire(import.meta.url);
+const bundlePath=process.argv[2];
+if(!bundlePath)throw new Error('Pass the installed Microsoft Power Query parser server bundle path.');
+let bundle=fs.readFileSync(bundlePath,'utf8');
+const entry='var l=t(1422);module.exports=l';
+if(!bundle.includes(entry))throw new Error('Unrecognised installed parser bundle.');
+bundle=bundle.replace(entry,'module.exports=t(9833)');
+const sandbox={module:{exports:{}},require,console,process,Buffer,setTimeout,clearTimeout,setImmediate,clearImmediate};
+vm.runInNewContext(bundle,sandbox,{filename:bundlePath});
+const pq=sandbox.module.exports;
+const parsed=await pq.TaskUtils.tryLexParse(pq.DefaultSettings,source);
+if(pq.TaskUtils.isError(parsed))throw new Error(JSON.stringify(parsed.error.innerError??{message:parsed.error.message}));
+const reference=JSON.parse(fs.readFileSync(path.join(scratch,'reference-summary.json'),'utf8'));
+const summary={status:'Passed offline source contracts and syntax',source:relative,sourceSHA256:sha(relative),sourceContracts:contracts,
+    preservedLegacyQueries:before.queryNames.length,sharedQueries:names.length,syntax:'Passed',parser:'Installed Microsoft Power Query extension parser',
+    referenceAssertions:reference.referenceAssertions,nativeEvaluationPerformed:false,productionMExecuted:false,
+    limitation:'Source contracts, syntax and independent reference arithmetic do not execute production M or verify workbook bindings, live data or refresh.'};
+fs.writeFileSync(path.join(scratch,'offline-summary.json'),JSON.stringify(summary,null,2));
+console.log(JSON.stringify(summary,null,2));

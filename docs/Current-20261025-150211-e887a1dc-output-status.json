@@ -1,0 +1,120 @@
+{
+  "RunId": "20261025-150211-e887a1dc",
+  "RunStatus": "PartialOrFailed",
+  "CheckedAtUtc": "2026-10-25T04:05:09.0596989Z",
+  "AllVerified": false,
+  "Rows": [
+    {
+      "Id": "JH-RY/Capacity",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:02:23.9933271Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "JH-RY/Effort",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:02:40.1784277Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "Org/StaffAll",
+      "RelativePath": "2. Calculations/E-O-I/StafMasterList-All.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:02:26.0034542Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "Org/EffortAll",
+      "RelativePath": "2. Calculations/E-O-I/Effort-All.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:03:35.4281847Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "Org/Outcomes",
+      "RelativePath": "2. Calculations/E-O-I/EffortOutcomes.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:03:45.6622169Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "RelativePath": "2. Calculations/E-O-I/Inefficiencies.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:04:04.8035154Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "Org/Reporting",
+      "RelativePath": "2. Calculations/Tableau Connection.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:04:18.1256694Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    },
+    {
+      "Id": "Org/LeaveBalanceStats",
+      "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:04:41.1887016Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    },
+    {
+      "Id": "Org/LeaveBalanceReduction",
+      "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-25T04:04:55.1155172Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    },
+    {
+      "Id": "Org/LeaveBalanceReporting",
+      "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+      "RunStatus": "Failed",
+      "OutputStatus": "NotUpdated",
+      "LastSavedUtc": "2026-10-22T01:30:43.7798702Z",
+      "Reason": "Not updated by this run (Failed). Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'Headcount Details/Headcount_Details' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table.",
+      "RootCauses": [
+        "Org/LeaveBalanceReporting: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'Headcount Details/Headcount_Details' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table."
+      ],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  ]
+}

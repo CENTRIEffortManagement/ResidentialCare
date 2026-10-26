@@ -1,0 +1,35 @@
+{
+  "status": "Passed source contracts and Microsoft M parser",
+  "source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Capacity.xlsx_PowerQuery.m",
+  "sourceSHA256": "0004EB1889BAEE2D64D4DC7C772CB74CF8EB4CDF83DF739C31A4FAC654C577A3",
+  "sourceContracts": 73,
+  "baselineQueries": 24,
+  "currentQueries": 35,
+  "changedOriginalQueryExpressions": [
+    "LINKRole",
+    "Role1",
+    "Role2",
+    "Role3",
+    "Capacity",
+    "AvailabilityDeveloped"
+  ],
+  "unchangedOriginalQueryExpressions": 18,
+  "newQueryNames": [
+    "Capacity Enabled Roles Prepare",
+    "IMPORT Role A1",
+    "IMPORT Role A2",
+    "IMPORT Role B",
+    "EXTRACT Role Capacity Table",
+    "Capacity Stage Prepare",
+    "Capacity Role Inputs Prepare",
+    "Capacity Calendar Prepare",
+    "Capacity Calendar Match Prepare",
+    "Capacity Final Inputs Prepare",
+    "Capacity Reporting Inputs Prepare"
+  ],
+  "syntax": "Passed",
+  "nativeEvaluationPerformed": false,
+  "productionMExecuted": false,
+  "timingMeasured": false,
+  "limitation": "Parser and source contracts do not execute M, measure physical file reads or verify saved workbook data/bindings."
+}

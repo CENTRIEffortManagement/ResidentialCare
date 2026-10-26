@@ -1,0 +1,96 @@
+{
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+  "Source": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx_PowerQuery.m",
+  "WorkbookSHA256": "DA4F2C9D188B9EB0A52482EBF15E6939E944D60DB00E55B286019361E1B6357A",
+  "SourceSHA256": "B9470F1805C10B75C4DE616F378C4E1A6E134212E1DAF8751BC9BFF8B77D5AFE",
+  "SavedWorkbookChanges": false,
+  "ProductionMChanges": false,
+  "Scope": "BD CS A.1 only; tests read-only, close without save",
+  "MatchedApiComparison": [
+    {
+      "Visible": true,
+      "Events": true,
+      "ExplicitPrecalculation": true,
+      "Alerts": true,
+      "Log": "native-probe-20261026-111547.log",
+      "Result": "Parent watchdog timeout while reading connection states",
+      "BackgroundRefresh": true
+    },
+    {
+      "Result": "Completed",
+      "Events": true,
+      "ExplicitPrecalculation": true,
+      "Alerts": true,
+      "Log": "native-probe-20261026-113212.log",
+      "Seconds": 51.071,
+      "BackgroundRefresh": false,
+      "Visible": true
+    }
+  ],
+  "MatchedRibbonComparison": [
+    {
+      "Visible": true,
+      "Events": true,
+      "ExplicitPrecalculation": false,
+      "Alerts": true,
+      "Log": "native-probe-20261026-105710.log",
+      "Result": "Parent watchdog timeout after ExecuteMso returned",
+      "BackgroundRefresh": true
+    },
+    {
+      "Result": "Completed",
+      "Events": true,
+      "ExplicitPrecalculation": false,
+      "Alerts": true,
+      "Log": "native-probe-20261026-113608.log",
+      "Seconds": 53.745,
+      "BackgroundRefresh": false,
+      "Visible": true
+    }
+  ],
+  "RespondingSnapshots": [
+    {
+      "BackgroundRefresh": true,
+      "Visible": true,
+      "Responding": false,
+      "Alerts": false,
+      "Log": "native-probe-20261026-112511.log"
+    },
+    {
+      "BackgroundRefresh": false,
+      "Visible": true,
+      "Responding": true,
+      "Alerts": true,
+      "Log": "native-probe-20261026-113212.log"
+    },
+    {
+      "BackgroundRefresh": false,
+      "Visible": true,
+      "Responding": true,
+      "Alerts": true,
+      "Log": "native-probe-20261026-113608.log"
+    }
+  ],
+  "TestOnlySettingChange": "OLEDBConnection.BackgroundQuery=false for 89 connections; QueryTable.BackgroundQuery=false for 14 tables; in owned diagnostic session memory only",
+  "OutputRows": {
+    "CapacityDiagnostics_SUMMARY": 40,
+    "ResPeriodCapPrioritised": 271,
+    "Demand_Prepare": 84,
+    "ResPeriodAllocationTABLE": 432,
+    "ResPeriodShiftNWDTABLE": 933,
+    "C__ResSingleShiftDayTABLE": 890,
+    "ResourcePeriodTABLE_empty": 2856,
+    "A1SpareDayChoices_Prepare": 952,
+    "ResPeriodAvailabilityTABLE": 2698,
+    "ResPeriodWDTABLE": 1923,
+    "MultiDayPeriod_Remove": 968,
+    "CapacityDiagnostics_DETAILS": 83,
+    "RolePathTABLE": 7
+  },
+  "RemainingDiagnosticFailures": {
+    "ExistingAllocatedClustersOverFiveDays": 7,
+    "UnmatchedAllocationNames": 2,
+    "SkippedAllocationRecords": 76
+  },
+  "Conclusion": "Background refresh is the isolated trigger in these visible-session comparisons. Disabling it completed both API and actual ribbon refresh. The exact internal blocking dependency is not proven."
+}

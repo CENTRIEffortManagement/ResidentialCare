@@ -6,12 +6,13 @@
     # Units and then the organisation release chain through Leave Balance Stats.
     RunAllUnits = @('BD', 'TE', 'JH-RY')
     RunAllIncludeOrg = $true
-    # Current facility Units use EN. Existing Unit1/Unit2 roles are unchanged
-    # and remain available for explicit selections.
+    # Current facility Units use EN and CS. Existing Unit1/Unit2 roles are unchanged
+    # and remain available for explicit selections. These facilities reconcile
+    # worker membership inside Availability, so C1 runs Availability then Staff.
     AdditionalUnits = @(
-        @{ Folder = 'BD'; Roles = @('AIN', 'EN', 'RN') }
-        @{ Folder = 'TE'; Roles = @('AIN', 'EN', 'RN') }
-        @{ Folder = 'JH-RY'; Roles = @('AIN', 'EN', 'RN') }
+        @{ Folder = 'BD'; Roles = @('AIN', 'EN', 'RN', 'CS'); UseWorkerReconciliation = $false }
+        @{ Folder = 'TE'; Roles = @('AIN', 'EN', 'RN', 'CS'); UseWorkerReconciliation = $false }
+        @{ Folder = 'JH-RY'; Roles = @('AIN', 'EN', 'RN', 'CS'); UseWorkerReconciliation = $false }
     )
     # These Unit jobs now share one Date-level workbook, refreshed once per run.
     # Unit1 and Unit2 retain their existing Unit-level demand masters.

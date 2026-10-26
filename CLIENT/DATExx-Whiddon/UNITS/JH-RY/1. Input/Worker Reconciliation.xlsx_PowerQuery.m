@@ -1,7 +1,3 @@
-// Power Query from: Worker Reconciliation.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\1. Input\Worker Reconciliation.xlsx
-// Extracted: 2026-10-22T07:20:14.284Z
-
 section Section1;
 
 // Query: IMPORT CentriSyncPaths
@@ -163,34 +159,65 @@ in
 // Inputs: LeaveBalance/Workflows/LeaveBalance/Analysis/1.Input/Leave Balances Report.xlsx beneath PortfolioPath.
 shared #"IMPORT Leave Balances" = let
     SourcePath = PortfolioPath & "\LeaveBalance\Workflows\LeaveBalance\Analysis\1.Input\Leave Balances Report.xlsx",
-    Navigation = Excel.Workbook(Binary.Buffer(File.Contents(SourcePath)), null, true)
+    Navigation = Excel.Workbook(Binary.Buffer(File.Contents(SourcePath)), null, true),
+    Sheet1_Sheet = Navigation{[Item="Sheet1",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee Code", Int64.Type}, {"Facility", type text}, {"Position Description", type text}, {"Employee Status Description", type text}, {"Annual Leave Table Code", type text}, {"Department Description", type text}, {"AL Units Available", type number}, {"AL Total Liability", type number}, {"LS Units Available", type number}, {"LS Total Liability", type number}})
 in
-    Navigation;
+    #"Changed Type";
 
 // Query: LeaveBalances_Prepare
-// Purpose: Prepare leave worker identity without filtering facilities.
-// Inputs: Table2 from IMPORT Leave Balances.
-// Output: Employee Code, Facility, Role and the existing two-character Facility-Abbrev key.
+// Purpose: Prepare leave worker identity and restrict leave membership to the approved analysis facilities.
+// Inputs: Table2 from IMPORT Leave Balances and AnalysisFacilityCodes.
+// Output: Employee Code, Facility, Role and the existing two-character Facility-Abbrev key for analysis sites.
+// Notes: Both hard-coded CS exclusions remain; downstream leave-identity checks apply to this scoped population.
 shared LeaveBalances_Prepare = let
     Source = #"IMPORT Leave Balances",
-    LeaveTable = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
-    #"Promoted Headers" = Table.PromoteHeaders(LeaveTable, [PromoteAllScalars=true]),
-    Selected = Table.SelectColumns(#"Promoted Headers", {"Employee Code", "Facility", "Position Description"}),
-    Typed = Table.TransformColumnTypes(Selected, {{"Employee Code", type text}, {"Facility", type text}, {"Position Description", type text}}),
+
+    Selected = Table.SelectColumns(
+        Source,
+        {"Employee Code", "Facility", "Position Description"}
+    ),
+
+    Typed = Table.TransformColumnTypes(Selected, {
+        {"Employee Code", type text},
+        {"Facility", type text},
+        {"Position Description", type text}
+    }),
+
     CleanText = (value as nullable text) as nullable text =>
         let
             Trimmed = if value = null then null else Text.Trim(value),
             Output = if Trimmed = "" then null else Trimmed
         in
             Output,
+
     Normalized = Table.TransformColumns(Typed, {
         {"Employee Code", CleanText, type nullable text},
         {"Facility", CleanText, type nullable text},
-        {"Position Description", CleanText, type nullable text}}),
-    RenamedRole = Table.RenameColumns(Normalized, {{"Position Description", "Role"}}),
-    WithFacilityAbbrev = Table.AddColumn(RenamedRole, "Facility-Abbrev", each
-        if [Facility] = null then null else Text.Upper(Text.Start([Facility], 2)), type nullable text),
-    BufferedLeaveWorkers = Table.Buffer(WithFacilityAbbrev)
+        {"Position Description", CleanText, type nullable text}
+    }),
+
+    RenamedRole = Table.RenameColumns(
+        Normalized,
+        {{"Position Description", "Role"}}
+    ),
+
+    WithFacilityAbbrev = Table.AddColumn(
+        RenamedRole,
+        "Facility-Abbrev",
+        each if [Facility] = null then null
+            else Text.Upper(Text.Start([Facility], 2)),
+        type nullable text
+    ),
+
+    #"Filter LOCATIONS" = Table.SelectRows(WithFacilityAbbrev, each
+        List.Contains(AnalysisFacilityCodes, [#"Facility-Abbrev"], Comparer.Ordinal)
+            and [Facility] <> "CS: Community Serv Beaudesert"
+            and [Facility] <> "CS: Community Services Narrabr"
+    ),
+
+    BufferedLeaveWorkers = Table.Buffer(#"Filter LOCATIONS")
 in
     BufferedLeaveWorkers;
 
@@ -1059,10 +1086,10 @@ in
     #"Buffered Diagnostic Output";
 
 // Query: OutsideAnalysisFacilities_DIAGNOSTICS
-// Purpose: Expose roster or availability worker facilities and locations outside the approved analysis facilities.
+// Purpose: Expose any retained worker or membership location outside the approved analysis facilities.
 // Inputs: EmployeesTABLE_Prepare and AnalysisFacilityCodes.
 // Output: Blocking employee/facility rows with the offending membership fields and original location labels.
-// Notes: Balance membership may include any facility. Balance locations and Records home locations do not establish analysis scope.
+// Notes: Records home location is enrichment context and is deliberately excluded from analysis-membership scope checks.
 shared OutsideAnalysisFacilities_DIAGNOSTICS = let
     Source = EmployeesTABLE_Prepare,
     IsAnalysisLocation = (location as nullable text) as logical =>
@@ -1074,19 +1101,20 @@ shared OutsideAnalysisFacilities_DIAGNOSTICS = let
         in
             IsAllowed,
     #"Checked Worker Facility" = Table.AddColumn(Source, "Analysis Facility Valid", each
-        if [In Allocation] or [In Records] then
-            List.Contains(AnalysisFacilityCodes, [#"Facility-Abbrev"], Comparer.Ordinal)
-        else true, type logical),
+        List.Contains(AnalysisFacilityCodes, [#"Facility-Abbrev"], Comparer.Ordinal), type logical),
     #"Checked Roster Location" = Table.AddColumn(#"Checked Worker Facility", "Roster Location Valid", each
         if [In Allocation] then IsAnalysisLocation([Roster Location]) else true, type logical),
     #"Checked Availability Location" = Table.AddColumn(#"Checked Roster Location", "Availability Location Valid", each
         if [In Records] then IsAnalysisLocation([Availabilities Location]) else true, type logical),
-    #"Added Scope Details" = Table.AddColumn(#"Checked Availability Location", "Outside Analysis Scope", each
+    #"Checked Leave Location" = Table.AddColumn(#"Checked Availability Location", "Leave Location Valid", each
+        if [In Leave Balances] then IsAnalysisLocation([Leave Balance Location]) else true, type logical),
+    #"Added Scope Details" = Table.AddColumn(#"Checked Leave Location", "Outside Analysis Scope", each
         let
             FieldLabels = {
                 if [Analysis Facility Valid] then null else "Facility-Abbrev",
                 if [Roster Location Valid] then null else "Roster Location",
-                if [Availability Location Valid] then null else "Availabilities Location"
+                if [Availability Location Valid] then null else "Availabilities Location",
+                if [Leave Location Valid] then null else "Leave Balance Location"
             },
             InvalidFields = List.RemoveNulls(FieldLabels),
             Details = Text.Combine(InvalidFields, ", ")
@@ -1215,8 +1243,8 @@ shared WorkerReconciliation_CHECK = let
         "Valid leave balance source identity", InvalidLeaveIdentityCount,
         "Leave Table2 must have complete employee/facility identity and one unambiguous role/location identity per employee ID."),
     AnalysisFacilityCheck = CheckResult(
-        "Roster and availability facilities in analysis scope", OutsideAnalysisFacilityCount,
-        "Workers with roster or availability membership must have analysis facilities and source locations. Balance membership may include other facilities; Balance and Records home locations do not restrict analysis scope."),
+        "Only analysis facilities published", OutsideAnalysisFacilityCount,
+        "Worker facility and roster, availability and leave membership locations must belong to AnalysisFacilityCodes; Records home location is enrichment context."),
     RequiredChecks = {
         UniqueWorkerCheck, CompleteIdentityCheck, ValidMembershipCheck, CompleteWorkerMatchCheck,
         UnambiguousWorkerCheck, NoTerminatedWorkersCheck, ValidLeaveIdentityCheck, AnalysisFacilityCheck},
@@ -1227,9 +1255,9 @@ in
     #"Buffered Check Output";
 
 // Query: Employees-TABLE
-// Purpose: Publish validated reconciled workers with source membership and separate employee home-location context.
+// Purpose: Publish validated analysis-site workers with source membership and separate employee home-location context.
 // Inputs: EmployeesTABLE_Prepare and WorkerReconciliation_CHECK.
-// Output: One employee/facility row with Balance Only flag; Location compares analysis memberships, Records Home Location retains the full HR label, Contracted FN Hours is last.
+// Output: One employee/facility row; Location compares analysis memberships, Records Home Location retains the full HR label, Contracted FN Hours is last.
 // Notes: Source includes the Worker's Report as Records; Location and Locations Match compare only roster, availability and leave analysis memberships.
 shared #"Employees-TABLE" = let
     Source = EmployeesTABLE_Prepare,
@@ -1243,10 +1271,7 @@ shared #"Employees-TABLE" = let
         {"In Allocation", "In Roster"}}),
     #"Added In Records" = Table.AddColumn(#"Named Source Membership Flags", "In Records", each
         not [Current Worker Match Missing], type logical),
-    // Keep Balance-only workers visible here and flag them for exclusion at the next availability preparation stage.
-    #"Added Balance Only" = Table.AddColumn(#"Added In Records", "Balance Only", each
-        [In Leave Balances] and not ([In Records] or [In Roster] or [In Availabilities]), type logical),
-    #"Added Source" = Table.AddColumn(#"Added Balance Only", "Source", each
+    #"Added Source" = Table.AddColumn(#"Added In Records", "Source", each
         let
             SourceLabels = {
                 if [In Records] then "Records" else null,

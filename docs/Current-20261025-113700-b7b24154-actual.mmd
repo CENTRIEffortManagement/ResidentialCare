@@ -1,0 +1,31 @@
+gantt
+    title Current 20261025-113700-b7b24154 Completed - elapsed 00 12 18 - peak 3
+    dateFormat YYYY-MM-DD HH:mm:ss.SSS
+    axisFormat %H:%M:%S
+    todayMarker off
+    section BD/C2 AIN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role AIN/1 attempt 1 Completed :done, task1, 2000-01-01 00:00:01.934, 2000-01-01 00:03:54.388
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/1
+    BD/Role AIN/2 attempt 1 Completed :done, task2, 2000-01-01 00:03:54.418, 2000-01-01 00:05:25.818
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:AIN/2
+    BD/Role AIN/3 attempt 1 Completed :done, task3, 2000-01-01 00:05:25.839, 2000-01-01 00:09:52.049
+    section BD/C2 RN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role RN/1 attempt 1 Completed :done, task4, 2000-01-01 00:00:02.020, 2000-01-01 00:02:24.270
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/1
+    BD/Role RN/2 attempt 1 Completed :done, task5, 2000-01-01 00:02:24.308, 2000-01-01 00:03:44.473
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:RN/2
+    BD/Role RN/3 attempt 1 Completed :done, task6, 2000-01-01 00:03:44.503, 2000-01-01 00:05:17.155
+    section BD/C2 EN
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings
+    BD/Role EN/1 attempt 1 Completed :done, task7, 2000-01-01 00:00:02.107, 2000-01-01 00:02:29.219
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/1
+    BD/Role EN/2 attempt 1 Completed :done, task8, 2000-01-01 00:02:29.250, 2000-01-01 00:03:51.637
+    %% Predecessors: BD/Demand, BD/Staff, BD/Availability, BD/ShiftAverage, BD/Settings, BD/Role:EN/2
+    BD/Role EN/3 attempt 1 Completed :done, task9, 2000-01-01 00:03:51.660, 2000-01-01 00:05:21.708
+    section BD/U4
+    %% Predecessors: BD/Role:AIN/3, BD/Role:EN/3, BD/Role:RN/3, BD/Demand, BD/Staff, BD/Availability, BD/Settings
+    BD/Capacity attempt 1 Completed :done, task10, 2000-01-01 00:09:52.073, 2000-01-01 00:11:04.920
+    %% Predecessors: BD/Capacity, BD/Demand, BD/Allocation, BD/Distribution, BD/MultiRole, BD/Staff, BD/Settings
+    BD/Effort attempt 1 Completed :done, task11, 2000-01-01 00:11:04.943, 2000-01-01 00:12:18.045

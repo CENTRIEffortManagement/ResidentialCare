@@ -1,0 +1,178 @@
+{
+  "Profiles": [
+    {
+      "Profile": "Current",
+      "DefaultJobs": 90,
+      "Batches": 43,
+      "C1": [
+        {
+          "Id": "BD/Availability",
+          "Dependencies": [
+            "BD/AllocationInput",
+            "BD/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\whiddon_availability_leave_extraction.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "BD/Staff",
+          "Dependencies": [
+            "BD/Availability",
+            "BD/AllocationInput",
+            "BD/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "TE/Availability",
+          "Dependencies": [
+            "TE/AllocationInput",
+            "TE/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\whiddon_availability_leave_extraction.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "TE/Staff",
+          "Dependencies": [
+            "TE/Availability",
+            "TE/AllocationInput",
+            "TE/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "JH-RY/Availability",
+          "Dependencies": [
+            "JH-RY/AllocationInput",
+            "JH-RY/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\whiddon_availability_leave_extraction.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "JH-RY/Staff",
+          "Dependencies": [
+            "JH-RY/Availability",
+            "JH-RY/AllocationInput",
+            "JH-RY/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx"
+          ]
+        }
+      ],
+      "RetiredWorkers": 0,
+      "RetiredWorkerReads": 0,
+      "CSJobs": 9
+    },
+    {
+      "Profile": "ParallelInputs-Unit1Priority",
+      "DefaultJobs": 90,
+      "Batches": 43,
+      "C1": [
+        {
+          "Id": "BD/Availability",
+          "Dependencies": [
+            "BD/AllocationInput",
+            "BD/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\whiddon_availability_leave_extraction.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "BD/Staff",
+          "Dependencies": [
+            "BD/Availability",
+            "BD/AllocationInput",
+            "BD/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "TE/Availability",
+          "Dependencies": [
+            "TE/AllocationInput",
+            "TE/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\whiddon_availability_leave_extraction.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "TE/Staff",
+          "Dependencies": [
+            "TE/Availability",
+            "TE/AllocationInput",
+            "TE/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "JH-RY/Availability",
+          "Dependencies": [
+            "JH-RY/AllocationInput",
+            "JH-RY/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\whiddon_availability_leave_extraction.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx"
+          ]
+        },
+        {
+          "Id": "JH-RY/Staff",
+          "Dependencies": [
+            "JH-RY/Availability",
+            "JH-RY/AllocationInput",
+            "JH-RY/Settings"
+          ],
+          "Reads": [
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx",
+            "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx"
+          ]
+        }
+      ],
+      "RetiredWorkers": 0,
+      "RetiredWorkerReads": 0,
+      "CSJobs": 9
+    }
+  ],
+  "WorkbooksUnchanged": 6,
+  "MSourcesUnchanged": 6,
+  "Refreshed": false,
+  "Synchronized": false
+}
