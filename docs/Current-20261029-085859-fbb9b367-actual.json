@@ -1,0 +1,99 @@
+{
+  "PeakConcurrency": 1,
+  "Rows": [
+    {
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Attempt": 1,
+      "Id": "Org/Reporting",
+      "Finish": 15.4464498,
+      "Start": 1.5449387,
+      "Status": "Completed"
+    },
+    {
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Attempt": 1,
+      "Id": "Org/LeaveBalanceStats",
+      "Finish": 75.7765949,
+      "Start": 15.4688054,
+      "Status": "Completed"
+    },
+    {
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Attempt": 1,
+      "Id": "Org/LeaveBalanceReduction",
+      "Finish": 92.446337,
+      "Start": 75.7960504,
+      "Status": "Completed"
+    },
+    {
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Attempt": 1,
+      "Id": "Org/LeaveBalanceReporting",
+      "Finish": 108.2280102,
+      "Start": 92.4642709,
+      "Status": "Completed"
+    }
+  ],
+  "SavedIntermediates": [],
+  "GapSeconds": 2,
+  "Status": "Completed",
+  "ElapsedSeconds": 108.2352997,
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "Untimed": [],
+  "RunId": "20261029-085859-fbb9b367",
+  "IncompleteAttempts": [],
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ActiveIntervalSeconds": 106.6233265,
+  "OutputStatus": {
+    "RunId": "20261029-085859-fbb9b367",
+    "RunStatus": "Completed",
+    "CheckedAtUtc": "2026-10-28T22:00:48.0540508Z",
+    "AllVerified": true,
+    "Rows": [
+      {
+        "Id": "Org/Reporting",
+        "RelativePath": "2. Calculations/Tableau Connection.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:59:12.1726574Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/LeaveBalanceStats",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T22:00:12.0300924Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReduction",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T22:00:29.1517609Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReporting",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T22:00:45.2401497Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      }
+    ]
+  }
+}

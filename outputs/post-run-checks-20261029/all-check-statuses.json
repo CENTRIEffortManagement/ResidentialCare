@@ -1,0 +1,805 @@
+[
+  {
+    "id": "BD/AllocationInput",
+    "table": "CS_Allocation_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 5
+    }
+  },
+  {
+    "id": "BD/Availability",
+    "table": "AllocationRoleShares_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 2
+    }
+  },
+  {
+    "id": "BD/Availability",
+    "table": "AvailabilityRules_TEST",
+    "column": "Status",
+    "counts": {
+      "Pass": 24
+    }
+  },
+  {
+    "id": "BD/Availability",
+    "table": "ResDayShift_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 16
+    }
+  },
+  {
+    "id": "BD/Availability",
+    "table": "ReconciledWorkers_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 7
+    }
+  },
+  {
+    "id": "BD/DemandInput",
+    "table": "Distributed_Demand_FTE_Checks_Scope",
+    "column": "Severity",
+    "counts": {
+      "Pass": 8
+    }
+  },
+  {
+    "id": "BD/DemandInput",
+    "table": "Demand_Calendar_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 4
+    }
+  },
+  {
+    "id": "BD/DemandInput",
+    "table": "DemandExtraction_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 10
+    }
+  },
+  {
+    "id": "BD/Role:AIN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 39,
+      "Fail": 1
+    }
+  },
+  {
+    "id": "BD/Role:AIN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 15,
+      "Fail": 3
+    }
+  },
+  {
+    "id": "BD/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:AIN/3",
+    "table": "BFinalCap_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 40,
+      "Fail": 34
+    }
+  },
+  {
+    "id": "BD/Role:CS/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 37,
+      "Fail": 3
+    }
+  },
+  {
+    "id": "BD/Role:CS/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 15,
+      "Fail": 3
+    }
+  },
+  {
+    "id": "BD/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:CS/3",
+    "table": "BFinalCap_CHECK",
+    "column": "Status",
+    "counts": {
+      "Fail": 26,
+      "Pass": 8
+    }
+  },
+  {
+    "id": "BD/Role:EN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 36,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "BD/Role:EN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "BD/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:RN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 38,
+      "Fail": 2
+    }
+  },
+  {
+    "id": "BD/Role:RN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "BD/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "BD/Staff",
+    "table": "ResourceContract_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 11
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "RoleDemand_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 8
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MinuteWorkersFTE_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Warning": 22,
+      "Pass": 1275
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_Input_Check",
+    "column": "Severity",
+    "counts": {
+      "Warning": 22
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_Fortnight_Hours_Check",
+    "column": "Severity",
+    "counts": {
+      "Pass": 6
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_Daily_Allocation_Check",
+    "column": "Severity",
+    "counts": {
+      "Pass": 378
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_Publication_Check",
+    "column": "Severity",
+    "counts": {
+      "Warning": 22,
+      "Pass": 1266
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MinuteWorkersFTE_HISTORICAL_DAY_CHECK",
+    "column": "HistoricalCoverageStatus",
+    "counts": {
+      "PASS": 294
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MinuteWorkersFTE_HISTORICAL_DAY_CHECK",
+    "column": "RoleDayTargetStatus",
+    "counts": {
+      "PASS": 294
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_PreAllocation_Check",
+    "column": "Severity",
+    "counts": {
+      "Warning": 22
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MinuteWorkersFTE_WEEKLY_DISTRIBUTION_CHECK",
+    "column": "Status",
+    "counts": {
+      "PASS": 294
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MinuteWorkersFTE_CATEGORY_DAILY_CHECK",
+    "column": "Status",
+    "counts": {
+      "PASS": 84
+    }
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_Distribution_Check",
+    "column": "Severity",
+    "counts": {}
+  },
+  {
+    "id": "Date/DemandMaster",
+    "table": "MW_FTE_Profile_Alignment_Check",
+    "column": "Severity",
+    "counts": {
+      "Pass": 882
+    }
+  },
+  {
+    "id": "JH-RY/AllocationInput",
+    "table": "CS_Allocation_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 5
+    }
+  },
+  {
+    "id": "JH-RY/Availability",
+    "table": "AllocationRoleShares_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 2
+    }
+  },
+  {
+    "id": "JH-RY/Availability",
+    "table": "AvailabilityRules_TEST",
+    "column": "Status",
+    "counts": {
+      "Pass": 24
+    }
+  },
+  {
+    "id": "JH-RY/Availability",
+    "table": "ResDayShift_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 16
+    }
+  },
+  {
+    "id": "JH-RY/Availability",
+    "table": "ReconciledWorkers_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 7
+    }
+  },
+  {
+    "id": "JH-RY/DemandInput",
+    "table": "Distributed_Demand_FTE_Checks_Scope",
+    "column": "Severity",
+    "counts": {
+      "Pass": 8
+    }
+  },
+  {
+    "id": "JH-RY/DemandInput",
+    "table": "Demand_Calendar_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 4
+    }
+  },
+  {
+    "id": "JH-RY/DemandInput",
+    "table": "DemandExtraction_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 10
+    }
+  },
+  {
+    "id": "JH-RY/Role:AIN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 36,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "JH-RY/Role:AIN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "JH-RY/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:CS/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 39,
+      "Fail": 1
+    }
+  },
+  {
+    "id": "JH-RY/Role:CS/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 15,
+      "Fail": 3
+    }
+  },
+  {
+    "id": "JH-RY/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:CS/3",
+    "table": "BFinalCap_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 8,
+      "Fail": 12
+    }
+  },
+  {
+    "id": "JH-RY/Role:EN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 38,
+      "Fail": 2
+    }
+  },
+  {
+    "id": "JH-RY/Role:EN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "JH-RY/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:RN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 38,
+      "Fail": 2
+    }
+  },
+  {
+    "id": "JH-RY/Role:RN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "JH-RY/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "JH-RY/Staff",
+    "table": "ResourceContract_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 11
+    }
+  },
+  {
+    "id": "Org/EffortAll",
+    "table": "ResourceContractOverage",
+    "column": "Status",
+    "counts": {
+      "Fail": 1,
+      "Pass": 3
+    }
+  },
+  {
+    "id": "Org/EffortAll",
+    "table": "ResourceContractOverage_CHECK",
+    "column": "Status",
+    "counts": {
+      "Fail": 1,
+      "Pass": 3
+    }
+  },
+  {
+    "id": "TE/AllocationInput",
+    "table": "CS_Allocation_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 5
+    }
+  },
+  {
+    "id": "TE/Availability",
+    "table": "AllocationRoleShares_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 2
+    }
+  },
+  {
+    "id": "TE/Availability",
+    "table": "AvailabilityRules_TEST",
+    "column": "Status",
+    "counts": {
+      "Pass": 24
+    }
+  },
+  {
+    "id": "TE/Availability",
+    "table": "ResDayShift_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 16
+    }
+  },
+  {
+    "id": "TE/Availability",
+    "table": "ReconciledWorkers_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 7
+    }
+  },
+  {
+    "id": "TE/DemandInput",
+    "table": "Distributed_Demand_FTE_Checks_Scope",
+    "column": "Severity",
+    "counts": {
+      "Pass": 8
+    }
+  },
+  {
+    "id": "TE/DemandInput",
+    "table": "Demand_Calendar_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 4
+    }
+  },
+  {
+    "id": "TE/DemandInput",
+    "table": "DemandExtraction_CHECK",
+    "column": "Severity",
+    "counts": {
+      "Pass": 10
+    }
+  },
+  {
+    "id": "TE/Role:AIN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 38,
+      "Fail": 2
+    }
+  },
+  {
+    "id": "TE/Role:AIN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "TE/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:AIN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:CS/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 40
+    }
+  },
+  {
+    "id": "TE/Role:CS/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 18
+    }
+  },
+  {
+    "id": "TE/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:CS/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:CS/3",
+    "table": "BFinalCap_CHECK",
+    "column": "Status",
+    "counts": {
+      "Fail": 9,
+      "Pass": 12
+    }
+  },
+  {
+    "id": "TE/Role:EN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 40
+    }
+  },
+  {
+    "id": "TE/Role:EN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 18
+    }
+  },
+  {
+    "id": "TE/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:EN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:RN/1",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 38,
+      "Fail": 2
+    }
+  },
+  {
+    "id": "TE/Role:RN/2",
+    "table": "CapacityDiagnostics_SUMMARY",
+    "column": "Status",
+    "counts": {
+      "Pass": 14,
+      "Fail": 4
+    }
+  },
+  {
+    "id": "TE/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2Stage1MetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityMetadataStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Role:RN/3",
+    "table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "column": "A2EligibilityDayStatus",
+    "counts": {}
+  },
+  {
+    "id": "TE/Staff",
+    "table": "ResourceContract_CHECK",
+    "column": "Status",
+    "counts": {
+      "Pass": 10,
+      "Warning": 1
+    }
+  }
+]

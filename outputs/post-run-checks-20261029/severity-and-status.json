@@ -1,0 +1,669 @@
+[
+  {
+    "Id": "BD/AllocationInput",
+    "Table": "CS_Allocation_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 5
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/DemandInput",
+    "Table": "Distributed_Demand_FTE_Checks_Scope",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 8
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/DemandInput",
+    "Table": "Demand_Calendar_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 4
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/DemandInput",
+    "Table": "DemandExtraction_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 10
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "BD/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "RoleDemand_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 8
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MinuteWorkersFTE_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 1275
+      },
+      {
+        "Name": "Warning",
+        "Count": 22
+      }
+    ],
+    "Nonpass": [
+      {
+        "excel_row": 2,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'MU: Mudgee' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 3,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'CA: Casino' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 4,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'EP: Arthur Webb Court' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      }
+    ]
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_Input_Check",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Warning",
+        "Count": 22
+      }
+    ],
+    "Nonpass": [
+      {
+        "excel_row": 2,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'MU: Mudgee' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 3,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'CA: Casino' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 4,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'EP: Arthur Webb Court' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      }
+    ]
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_Fortnight_Hours_Check",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 6
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_Daily_Allocation_Check",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 378
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_Publication_Check",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 1266
+      },
+      {
+        "Name": "Warning",
+        "Count": 22
+      }
+    ],
+    "Nonpass": [
+      {
+        "excel_row": 2,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'MU: Mudgee' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 3,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'CA: Casino' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 4,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'EP: Arthur Webb Court' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      }
+    ]
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MinuteWorkersFTE_HISTORICAL_DAY_CHECK",
+    "Column": "HistoricalCoverageStatus",
+    "Counts": [
+      {
+        "Name": "PASS",
+        "Count": 294
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MinuteWorkersFTE_HISTORICAL_DAY_CHECK",
+    "Column": "RoleDayTargetStatus",
+    "Counts": [
+      {
+        "Name": "PASS",
+        "Count": 294
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_PreAllocation_Check",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Warning",
+        "Count": 22
+      }
+    ],
+    "Nonpass": [
+      {
+        "excel_row": 2,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'MU: Mudgee' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 3,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'CA: Casino' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      },
+      {
+        "excel_row": 4,
+        "Check": "Master Roster Location is outside configured Units",
+        "Severity": "Warning",
+        "Facility": null,
+        "MinuteCategory": null,
+        "Role": null,
+        "Actual": 0,
+        "Expected": 0,
+        "Message": "Master Roster Location 'EP: Arthur Webb Court' is not listed in EXTRACT Units and is excluded from MinuteWorker analysis."
+      }
+    ]
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_Distribution_Check",
+    "Column": "Severity",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Table": "MW_FTE_Profile_Alignment_Check",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 882
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/AllocationInput",
+    "Table": "CS_Allocation_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 5
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/DemandInput",
+    "Table": "Distributed_Demand_FTE_Checks_Scope",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 8
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/DemandInput",
+    "Table": "Demand_Calendar_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 4
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/DemandInput",
+    "Table": "DemandExtraction_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 10
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "JH-RY/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/AllocationInput",
+    "Table": "CS_Allocation_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 5
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/DemandInput",
+    "Table": "Distributed_Demand_FTE_Checks_Scope",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 8
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/DemandInput",
+    "Table": "Demand_Calendar_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 4
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/DemandInput",
+    "Table": "DemandExtraction_CHECK",
+    "Column": "Severity",
+    "Counts": [
+      {
+        "Name": "Pass",
+        "Count": 10
+      }
+    ],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:AIN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:CS/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:EN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2Stage1MetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityMetadataStatus",
+    "Counts": [],
+    "Nonpass": []
+  },
+  {
+    "Id": "TE/Role:RN/3",
+    "Table": "CapacityDistribB_AVAILABILITY_LINEAGE_CHECK",
+    "Column": "A2EligibilityDayStatus",
+    "Counts": [],
+    "Nonpass": []
+  }
+]

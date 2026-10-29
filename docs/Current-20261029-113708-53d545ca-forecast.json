@@ -1,0 +1,107 @@
+{
+  "Peak": 1,
+  "Durations": {
+    "Org/LeaveBalanceReporting": {
+      "Observed": "2026-10-29T00:32:32.2313507+00:00",
+      "Seconds": 19.1617087,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/StaffAll": {
+      "Observed": "2026-10-29T00:26:33.9335564+00:00",
+      "Seconds": 49.5147039,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/Inefficiencies": {
+      "Observed": "2026-10-29T00:30:40.9489317+00:00",
+      "Seconds": 20.4915328,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/LeaveBalanceStats": {
+      "Observed": "2026-10-29T00:31:55.7613495+00:00",
+      "Seconds": 62.0696361,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/Outcomes": {
+      "Observed": "2026-10-29T00:30:20.4372019+00:00",
+      "Seconds": 10.2060032,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/LeaveBalanceReduction": {
+      "Observed": "2026-10-29T00:32:13.0504330+00:00",
+      "Seconds": 17.2695097,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/EffortAll": {
+      "Observed": "2026-10-29T00:30:10.2097787+00:00",
+      "Seconds": 69.4781531,
+      "SourceRun": "20261029-112032-c23ce099"
+    },
+    "Org/Reporting": {
+      "Observed": "2026-10-29T00:30:53.6731334+00:00",
+      "Seconds": 12.7037142,
+      "SourceRun": "20261029-112032-c23ce099"
+    }
+  },
+  "TotalSeconds": 260.89496170000007,
+  "Complete": true,
+  "Rows": [
+    {
+      "Status": "Forecast",
+      "Finish": 49.5147039,
+      "Id": "Org/StaffAll",
+      "Attempt": 1,
+      "Start": 0.0
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 118.992857,
+      "Id": "Org/EffortAll",
+      "Attempt": 1,
+      "Start": 49.5147039
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 129.1988602,
+      "Id": "Org/Outcomes",
+      "Attempt": 1,
+      "Start": 118.992857
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 149.69039300000003,
+      "Id": "Org/Inefficiencies",
+      "Attempt": 1,
+      "Start": 129.1988602
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 162.39410720000004,
+      "Id": "Org/Reporting",
+      "Attempt": 1,
+      "Start": 149.69039300000003
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 224.46374330000003,
+      "Id": "Org/LeaveBalanceStats",
+      "Attempt": 1,
+      "Start": 162.39410720000004
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 241.73325300000005,
+      "Id": "Org/LeaveBalanceReduction",
+      "Attempt": 1,
+      "Start": 224.46374330000003
+    },
+    {
+      "Status": "Forecast",
+      "Finish": 260.89496170000007,
+      "Id": "Org/LeaveBalanceReporting",
+      "Attempt": 1,
+      "Start": 241.73325300000005
+    }
+  ],
+  "UnknownAdmission": "",
+  "Untimed": []
+}

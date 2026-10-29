@@ -1,0 +1,1065 @@
+[
+  {
+    "Run": "20261029-074441-a2fe3870",
+    "Status": "PartialOrFailed",
+    "Rows": [
+      {
+        "Id": "Date/DemandMaster",
+        "RelativePath": "1. Input/Demand-MasterRoster Manual Read.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:50:34.1379954Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/AllocationInput",
+        "RelativePath": "UNITS/BD/1. Input/1-AllocationExtracted.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:46:33.0197538Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "BD/Settings",
+        "RelativePath": "UNITS/BD/2. Calculations/Settings Data.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:46:55.2445011Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/DemandInput",
+        "RelativePath": "UNITS/BD/1. Input/2-DemandExtract.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:50:56.9720052Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Availability",
+        "RelativePath": "UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:48:16.2977038Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Staff",
+        "RelativePath": "UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:48:35.6020481Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Intervals",
+        "RelativePath": "UNITS/BD/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:51:14.3549890Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/DemandIntervals",
+        "RelativePath": "UNITS/BD/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:53:16.5458095Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Demand",
+        "RelativePath": "UNITS/BD/2. Calculations/Demand.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:53:40.3920213Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Shifts",
+        "RelativePath": "UNITS/BD/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:54:45.6836440Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/ShiftAverage",
+        "RelativePath": "UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:56:26.8905666Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Allocation",
+        "RelativePath": "UNITS/BD/2. Calculations/Allocation.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:57:18.6707040Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Distribution",
+        "RelativePath": "UNITS/BD/2. Calculations/Shift-StaffDistribution.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:57:57.7560145Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:AIN/1",
+        "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:00:22.3372506Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:AIN/2",
+        "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:00:57.5273898Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:AIN/3",
+        "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:02:30.1875673Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:RN/1",
+        "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:08.4670594Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:RN/2",
+        "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:42.5789036Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:RN/3",
+        "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:00:26.2259400Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:EN/1",
+        "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:10.5858581Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:EN/2",
+        "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:46.3444974Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:EN/3",
+        "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:00:26.4554039Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:CS/1",
+        "RelativePath": "UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:04.8496943Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:CS/2",
+        "RelativePath": "UNITS/BD/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:44.0690984Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Role:CS/3",
+        "RelativePath": "UNITS/BD/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:00:55.8610203Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Capacity",
+        "RelativePath": "UNITS/BD/2. Calculations/Capacity.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:03:06.8074302Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "BD/Effort",
+        "RelativePath": "UNITS/BD/2. Calculations/Effort.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:03:23.1850170Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/AllocationInput",
+        "RelativePath": "UNITS/TE/1. Input/1-AllocationExtracted.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:45:44.3953979Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "TE/Settings",
+        "RelativePath": "UNITS/TE/2. Calculations/Settings Data.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:46:04.2202300Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/DemandInput",
+        "RelativePath": "UNITS/TE/1. Input/2-DemandExtract.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:51:00.3380471Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Availability",
+        "RelativePath": "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "ChangedAfterRun",
+        "LastSavedUtc": "2026-10-28T22:13:44.6781555Z",
+        "Reason": "The output differs from the confirmed run receipt; later changes are unverified.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Staff",
+        "RelativePath": "UNITS/TE/2. Calculations/StaffListMaster.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:47:19.9584645Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Intervals",
+        "RelativePath": "UNITS/TE/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:51:19.3252948Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/DemandIntervals",
+        "RelativePath": "UNITS/TE/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:53:52.9189776Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Demand",
+        "RelativePath": "UNITS/TE/2. Calculations/Demand.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:54:15.4326772Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Shifts",
+        "RelativePath": "UNITS/TE/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:52:43.4948420Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/ShiftAverage",
+        "RelativePath": "UNITS/TE/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:53:52.2957674Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Allocation",
+        "RelativePath": "UNITS/TE/2. Calculations/Allocation.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:54:12.6053956Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Distribution",
+        "RelativePath": "UNITS/TE/2. Calculations/Shift-StaffDistribution.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:54:37.0189121Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Role:AIN/1",
+        "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:57:02.5612741Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:AIN/2",
+        "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:58:12.0408303Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:AIN/3",
+        "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T21:00:11.3481971Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:RN/1",
+        "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:56:03.1820336Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:RN/2",
+        "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:57:03.4024334Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:RN/3",
+        "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:58:23.7452320Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:EN/1",
+        "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:55:58.7279509Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:EN/2",
+        "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:56:59.5974712Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:EN/3",
+        "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:58:18.7549551Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:CS/1",
+        "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:55:39.7607850Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:CS/2",
+        "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:56:22.1427334Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Role:CS/3",
+        "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:58:21.7235435Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "TE/Capacity",
+        "RelativePath": "UNITS/TE/2. Calculations/Capacity.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "ChangedAfterRun",
+        "LastSavedUtc": "2026-10-28T22:33:04.1493235Z",
+        "Reason": "The output differs from the confirmed run receipt; later changes are unverified.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "TE/Effort",
+        "RelativePath": "UNITS/TE/2. Calculations/Effort.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T21:01:08.5794842Z",
+        "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Capacity.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": false
+      },
+      {
+        "Id": "JH-RY/AllocationInput",
+        "RelativePath": "UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:45:49.9192701Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "JH-RY/Settings",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:46:10.6855433Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/DemandInput",
+        "RelativePath": "UNITS/JH-RY/1. Input/2-DemandExtract.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:51:01.9532611Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Availability",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:47:09.7816610Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Staff",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/StaffListMaster.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:47:29.9274249Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Intervals",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Intervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:51:20.6496045Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/DemandIntervals",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/DemandIntervals.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:54:33.6258844Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Demand",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Demand.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:55:04.6141757Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Shifts",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:53:33.6669141Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/ShiftAverage",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AllocationByShiftAverage.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:54:48.8362001Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Allocation",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Allocation.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:55:13.7481970Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Distribution",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Shift-StaffDistribution.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:55:46.3794010Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:AIN/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:58:06.8955764Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:AIN/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:02.9949137Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:AIN/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:00:59.5273422Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:RN/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:57:31.9227865Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:RN/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:58:22.2386444Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:RN/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:12.4517669Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:EN/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:57:29.2663185Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:EN/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:58:29.6145038Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:EN/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:18.7640377Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:CS/1",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:56:59.1967637Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:CS/2",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:58:42.2296758Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Role:CS/3",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T20:59:51.5882535Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Capacity",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:01:31.1491429Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "JH-RY/Effort",
+        "RelativePath": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:01:48.0024766Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/StaffAll",
+        "RelativePath": "2. Calculations/E-O-I/StafMasterList-All.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T20:48:51.6742047Z",
+        "Reason": "Declared producer TE/Staff is not verified: Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/StaffListMaster.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/EffortAll",
+        "RelativePath": "2. Calculations/E-O-I/Effort-All.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T21:04:27.9204097Z",
+        "Reason": "Declared producer TE/Effort is not verified: Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "UNITS/TE/2. Calculations/Effort.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/Outcomes",
+        "RelativePath": "2. Calculations/E-O-I/EffortOutcomes.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T21:04:38.2223477Z",
+        "Reason": "Declared producer Org/StaffAll is not verified: Declared producer TE/Staff is not verified: Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "2. Calculations/E-O-I/StafMasterList-All.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/Inefficiencies",
+        "RelativePath": "2. Calculations/E-O-I/Inefficiencies.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "InputsChanged",
+        "LastSavedUtc": "2026-10-28T21:04:59.7655512Z",
+        "Reason": "Declared producer Org/Outcomes is not verified: Declared producer Org/StaffAll is not verified: Declared producer TE/Staff is not verified: Declared input files changed or are missing after the confirmed refresh.",
+        "RootCauses": [],
+        "ChangedInputs": [
+          "2. Calculations/E-O-I/EffortOutcomes.xlsx"
+        ],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/Reporting",
+        "RelativePath": "2. Calculations/Tableau Connection.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "ChangedAfterRun",
+        "LastSavedUtc": "2026-10-28T21:59:12.1726574Z",
+        "Reason": "File modified after this run; its refresh is unverified. Historical run status remains Blocked.",
+        "RootCauses": [
+          "Org/Cost: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'TargetRatebyDate/Table_TargetRatebyDate' failed foreground refresh: [DataSource.NotFound] File or Folder: Could not find a part of the path 'C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\Unit1\\2. Calculations\\Settings Data.xlsx'.",
+          "Org/History: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'Effort+OutcomesXY/EffortOutcomesAG0' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/LeaveBalanceStats",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "ChangedAfterRun",
+        "LastSavedUtc": "2026-10-28T22:00:12.0300924Z",
+        "Reason": "File modified after this run; its refresh is unverified. Historical run status remains Blocked.",
+        "RootCauses": [
+          "Org/Cost: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'TargetRatebyDate/Table_TargetRatebyDate' failed foreground refresh: [DataSource.NotFound] File or Folder: Could not find a part of the path 'C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\Unit1\\2. Calculations\\Settings Data.xlsx'.",
+          "Org/History: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'Effort+OutcomesXY/EffortOutcomesAG0' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReduction",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "ChangedAfterRun",
+        "LastSavedUtc": "2026-10-28T22:00:29.1517609Z",
+        "Reason": "File modified after this run; its refresh is unverified. Historical run status remains Blocked.",
+        "RootCauses": [
+          "Org/Cost: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'TargetRatebyDate/Table_TargetRatebyDate' failed foreground refresh: [DataSource.NotFound] File or Folder: Could not find a part of the path 'C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\Unit1\\2. Calculations\\Settings Data.xlsx'.",
+          "Org/History: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'Effort+OutcomesXY/EffortOutcomesAG0' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReporting",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+        "RunStatus": "Blocked",
+        "OutputStatus": "ChangedAfterRun",
+        "LastSavedUtc": "2026-10-28T22:00:45.2401497Z",
+        "Reason": "File modified after this run; its refresh is unverified. Historical run status remains Blocked.",
+        "RootCauses": [
+          "Org/Cost: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'TargetRatebyDate/Table_TargetRatebyDate' failed foreground refresh: [DataSource.NotFound] File or Folder: Could not find a part of the path 'C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\Unit1\\2. Calculations\\Settings Data.xlsx'.",
+          "Org/History: Worker exit 1; phase Refreshing; save confirmed: False; Required worksheet query 'Effort+OutcomesXY/EffortOutcomesAG0' failed foreground refresh: [Expression.Error] The key didn't match any rows in the table."
+        ],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      }
+    ]
+  },
+  {
+    "Run": "20261029-085859-fbb9b367",
+    "Status": "Completed",
+    "Rows": [
+      {
+        "Id": "Org/Reporting",
+        "RelativePath": "2. Calculations/Tableau Connection.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T21:59:12.1726574Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/LeaveBalanceStats",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T22:00:12.0300924Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReduction",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T22:00:29.1517609Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReporting",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-28T22:00:45.2401497Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      }
+    ]
+  }
+]

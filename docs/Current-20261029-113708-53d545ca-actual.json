@@ -1,0 +1,191 @@
+{
+  "Comparison": "Historical illustrative baseline only; not evidence of performance improvement.",
+  "ElapsedSeconds": 215.2121817,
+  "OriginalIllustrativeBaselineSeconds": 1043,
+  "ActiveIntervalSeconds": 214.00384590000002,
+  "Untimed": [],
+  "Rows": [
+    {
+      "Id": "Org/StaffAll",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 15.9975304,
+      "Attempt": 1,
+      "Start": 1.0551941,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/EffortAll",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 81.7846601,
+      "Attempt": 1,
+      "Start": 16.0232921,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/Outcomes",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 92.1500657,
+      "Attempt": 1,
+      "Start": 81.8067842,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/Inefficiencies",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 112.4491992,
+      "Attempt": 1,
+      "Start": 92.1699862,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/Reporting",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 125.6133925,
+      "Attempt": 1,
+      "Start": 112.4706647,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/LeaveBalanceStats",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 182.0348809,
+      "Attempt": 1,
+      "Start": 125.632218,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/LeaveBalanceReduction",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 199.0310254,
+      "Attempt": 1,
+      "Start": 182.0530307,
+      "Status": "Completed"
+    },
+    {
+      "Id": "Org/LeaveBalanceReporting",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Finish": 215.2035418,
+      "Attempt": 1,
+      "Start": 199.0492801,
+      "Status": "Completed"
+    }
+  ],
+  "RunId": "20261029-113708-53d545ca",
+  "PeakConcurrency": 1,
+  "IncompleteAttempts": [],
+  "SavedIntermediates": [
+    {
+      "Id": "Org/Cost",
+      "Batch": "O3",
+      "RelativePath": "2. Calculations/Cost/Cost..xlsx"
+    },
+    {
+      "Id": "Org/History",
+      "Batch": "O4",
+      "RelativePath": "2. Calculations/EOW/EffortOutcomeLogXY.xlsx"
+    },
+    {
+      "Id": "Org/HistoryRead",
+      "Batch": "O4",
+      "RelativePath": "2. Calculations/EOW/2DRead.xlsx"
+    }
+  ],
+  "OutputStatus": {
+    "RunId": "20261029-113708-53d545ca",
+    "RunStatus": "Completed",
+    "CheckedAtUtc": "2026-10-29T00:40:43.8926618Z",
+    "AllVerified": true,
+    "Rows": [
+      {
+        "Id": "Org/StaffAll",
+        "RelativePath": "2. Calculations/E-O-I/StafMasterList-All.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:37:21.3139859Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/EffortAll",
+        "RelativePath": "2. Calculations/E-O-I/Effort-All.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:38:27.3502278Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/Outcomes",
+        "RelativePath": "2. Calculations/E-O-I/EffortOutcomes.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:38:37.4352283Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/Inefficiencies",
+        "RelativePath": "2. Calculations/E-O-I/Inefficiencies.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:38:57.7912014Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/Reporting",
+        "RelativePath": "2. Calculations/Tableau Connection.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:39:11.3993578Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": true
+      },
+      {
+        "Id": "Org/LeaveBalanceStats",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:40:07.5620404Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReduction",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:40:24.3964966Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      },
+      {
+        "Id": "Org/LeaveBalanceReporting",
+        "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+        "RunStatus": "Completed",
+        "OutputStatus": "Verified",
+        "LastSavedUtc": "2026-10-29T00:40:40.9452691Z",
+        "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+        "RootCauses": [],
+        "ChangedInputs": [],
+        "SavedAfterDeclaredInputs": null
+      }
+    ]
+  },
+  "Status": "Completed",
+  "GapSeconds": 1
+}

@@ -1,0 +1,2903 @@
+[
+  {
+    "Id": "BD/Allocation",
+    "Path": "UNITS/BD/2. Calculations/Allocation.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:30.7017897Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "305040:639288178386707040",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx": "2313330:639288171930197538",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011"
+      },
+      "Directory": "job-011\\attempt-1",
+      "Finished": "2026-10-28T20:57:24.1673419Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Allocation",
+      "RelativePath": "UNITS/BD/2. Calculations/Allocation.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:57:18.6707040Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/AllocationInput",
+    "Path": "UNITS/BD/1. Input/1-AllocationExtracted.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:44:45.8444239Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2313330:639288171930197538",
+      "Inputs": {},
+      "Directory": "job-001\\attempt-1",
+      "Finished": "2026-10-28T20:46:36.1369417Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/AllocationInput",
+      "RelativePath": "UNITS/BD/1. Input/1-AllocationExtracted.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:46:33.0197538Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  },
+  {
+    "Id": "BD/Availability",
+    "Path": "UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:46:58.732566Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "6092337:639288172962977038",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx": "2313330:639288171930197538",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\whiddon_availability_leave_extraction.xlsx": "3773936:639279896424405171",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011"
+      },
+      "Directory": "job-004\\attempt-1",
+      "Finished": "2026-10-28T20:48:21.4931686Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Availability",
+      "RelativePath": "UNITS/BD/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:48:16.2977038Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Capacity",
+    "Path": "UNITS/BD/2. Calculations/Capacity.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:02:33.147813Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2246975:639288181868074302",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx": "279254:639288180558610203",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\RN\\CapacityDistrib(B)-shifts.xlsx": "214418:639288180262259400",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\EN\\CapacityDistrib(B)-shifts.xlsx": "217283:639288180264554039",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AIN\\CapacityDistrib(B)-shifts.xlsx": "428526:639288181501875673",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-025\\attempt-1",
+      "Finished": "2026-10-28T21:03:09.5737075Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Capacity",
+      "RelativePath": "UNITS/BD/2. Calculations/Capacity.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:03:06.8074302Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Demand",
+    "Path": "UNITS/BD/2. Calculations/Demand.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:53:19.89546Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2146764:639288176203920213",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\DemandIntervals.xlsx": "806213:639288175965458095"
+      },
+      "Directory": "job-008\\attempt-1",
+      "Finished": "2026-10-28T20:53:43.8785696Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Demand",
+      "RelativePath": "UNITS/BD/2. Calculations/Demand.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:53:40.3920213Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/DemandInput",
+    "Path": "UNITS/BD/1. Input/2-DemandExtract.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:50:38.2645418Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "103497:639288174569720052",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\1. Input\\Demand-MasterRoster Manual Read.xlsx": "1841045:639288174341379954",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011"
+      },
+      "Directory": "job-003\\attempt-1",
+      "Finished": "2026-10-28T20:51:00.7666309Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/DemandInput",
+      "RelativePath": "UNITS/BD/1. Input/2-DemandExtract.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:50:56.9720052Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/DemandIntervals",
+    "Path": "UNITS/BD/2. Calculations/DemandIntervals.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:17.9755979Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "806213:639288175965458095",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Intervals.xlsx": "528368:639288174743549890",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\2-DemandExtract.xlsx": "103497:639288174569720052"
+      },
+      "Directory": "job-007\\attempt-1",
+      "Finished": "2026-10-28T20:53:19.8579003Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/DemandIntervals",
+      "RelativePath": "UNITS/BD/2. Calculations/DemandIntervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:53:16.5458095Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Distribution",
+    "Path": "UNITS/BD/2. Calculations/Shift-StaffDistribution.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:24.2210301Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "5725057:639288178777560145",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Allocation.xlsx": "305040:639288178386707040"
+      },
+      "Directory": "job-012\\attempt-1",
+      "Finished": "2026-10-28T20:58:02.0903174Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Distribution",
+      "RelativePath": "UNITS/BD/2. Calculations/Shift-StaffDistribution.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:57:57.7560145Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Effort",
+    "Path": "UNITS/BD/2. Calculations/Effort.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:03:09.6129142Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1802651:639288182031850170",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Shift-StaffDistribution.xlsx": "5725057:639288178777560145",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity.xlsx": "2246975:639288181868074302",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Allocation.xlsx": "305040:639288178386707040"
+      },
+      "Directory": "job-026\\attempt-1",
+      "Finished": "2026-10-28T21:03:26.3406054Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Effort",
+      "RelativePath": "UNITS/BD/2. Calculations/Effort.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:03:23.1850170Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Intervals",
+    "Path": "UNITS/BD/2. Calculations/Intervals.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:00.7937163Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "528368:639288174743549890",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx": "2313330:639288171930197538",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\2-DemandExtract.xlsx": "103497:639288174569720052"
+      },
+      "Directory": "job-006\\attempt-1",
+      "Finished": "2026-10-28T20:51:17.9436227Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Intervals",
+      "RelativePath": "UNITS/BD/2. Calculations/Intervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:51:14.3549890Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:AIN/1",
+    "Path": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:30.8299966Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1099077:639288180223372506",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213"
+      },
+      "Directory": "job-013\\attempt-1",
+      "Finished": "2026-10-28T21:00:30.5794748Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:AIN/1",
+      "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:00:22.3372506Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:AIN/2",
+    "Path": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:00:30.6213004Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1253271:639288180575273898",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AIN\\CapacityDistrib(A.1)-shifts.xlsx": "1099077:639288180223372506",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-014\\attempt-1",
+      "Finished": "2026-10-28T21:01:01.1550087Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:AIN/2",
+      "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:00:57.5273898Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:AIN/3",
+    "Path": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:01:01.1883773Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "428526:639288181501875673",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AIN\\CapacityDistrib(A.2)-shifts.xlsx": "1253271:639288180575273898",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-015\\attempt-1",
+      "Finished": "2026-10-28T21:02:33.1099302Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:AIN/3",
+      "RelativePath": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:02:30.1875673Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:CS/1",
+    "Path": "UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:06.576315Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "698788:639288179448496943",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213"
+      },
+      "Directory": "job-022\\attempt-1",
+      "Finished": "2026-10-28T20:59:11.3527433Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:CS/1",
+      "RelativePath": "UNITS/BD/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:04.8496943Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:CS/2",
+    "Path": "UNITS/BD/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:11.4223489Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "636384:639288179840690984",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx": "698788:639288179448496943",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-023\\attempt-1",
+      "Finished": "2026-10-28T20:59:48.1061688Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:CS/2",
+      "RelativePath": "UNITS/BD/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:44.0690984Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:CS/3",
+    "Path": "UNITS/BD/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:48.1752686Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "279254:639288180558610203",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx": "636384:639288179840690984",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-024\\attempt-1",
+      "Finished": "2026-10-28T21:00:59.662151Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:CS/3",
+      "RelativePath": "UNITS/BD/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:00:55.8610203Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:EN/1",
+    "Path": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:31.166672Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "454691:639288179505858581",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213"
+      },
+      "Directory": "job-019\\attempt-1",
+      "Finished": "2026-10-28T20:59:20.7427264Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:EN/1",
+      "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:10.5858581Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:EN/2",
+    "Path": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:20.7968089Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "419376:639288179863444974",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\EN\\CapacityDistrib(A.1)-shifts.xlsx": "454691:639288179505858581",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-020\\attempt-1",
+      "Finished": "2026-10-28T20:59:49.9568682Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:EN/2",
+      "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:46.3444974Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:EN/3",
+    "Path": "UNITS/BD/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:50.0070392Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "217283:639288180264554039",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\EN\\CapacityDistrib(A.2)-shifts.xlsx": "419376:639288179863444974",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-021\\attempt-1",
+      "Finished": "2026-10-28T21:00:32.1623907Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:EN/3",
+      "RelativePath": "UNITS/BD/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:00:26.4554039Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:RN/1",
+    "Path": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:31.0150276Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "456224:639288179484670594",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213"
+      },
+      "Directory": "job-016\\attempt-1",
+      "Finished": "2026-10-28T20:59:19.4882734Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:RN/1",
+      "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:08.4670594Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:RN/2",
+    "Path": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:19.5454548Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "405223:639288179825789036",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\RN\\CapacityDistrib(A.1)-shifts.xlsx": "456224:639288179484670594",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-017\\attempt-1",
+      "Finished": "2026-10-28T20:59:46.1395474Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:RN/2",
+      "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:42.5789036Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Role:RN/3",
+    "Path": "UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:46.2751602Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "214418:639288180262259400",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Demand.xlsx": "2146764:639288176203920213",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\AllocationByShiftAverage.xlsx": "13511843:639288177868905666",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\RN\\CapacityDistrib(A.2)-shifts.xlsx": "405223:639288179825789036",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038"
+      },
+      "Directory": "job-018\\attempt-1",
+      "Finished": "2026-10-28T21:00:31.2123979Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Role:RN/3",
+      "RelativePath": "UNITS/BD/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:00:26.2259400Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Settings",
+    "Path": "UNITS/BD/2. Calculations/Settings Data.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:46:36.1654285Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "72934:639288172152445011",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx": "2313330:639288171930197538"
+      },
+      "Directory": "job-002\\attempt-1",
+      "Finished": "2026-10-28T20:46:58.6458445Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Settings",
+      "RelativePath": "UNITS/BD/2. Calculations/Settings Data.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:46:55.2445011Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/ShiftAverage",
+    "Path": "UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:50.3814706Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "13511843:639288177868905666",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Shifts.xlsx": "6441003:639288176856836440",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011"
+      },
+      "Directory": "job-010\\attempt-1",
+      "Finished": "2026-10-28T20:56:30.6667843Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/ShiftAverage",
+      "RelativePath": "UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:56:26.8905666Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Shifts",
+    "Path": "UNITS/BD/2. Calculations/Shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:18.0525696Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "6441003:639288176856836440",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx": "2313330:639288171930197538",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Intervals.xlsx": "528368:639288174743549890",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011"
+      },
+      "Directory": "job-009\\attempt-1",
+      "Finished": "2026-10-28T20:54:50.3499438Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Shifts",
+      "RelativePath": "UNITS/BD/2. Calculations/Shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:54:45.6836440Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "BD/Staff",
+    "Path": "UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:48:21.5193921Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "100078:639288173156020481",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\1-AllocationExtracted.xlsx": "2313330:639288171930197538",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "6092337:639288172962977038",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011"
+      },
+      "Directory": "job-005\\attempt-1",
+      "Finished": "2026-10-28T20:48:38.5095326Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "BD/Staff",
+      "RelativePath": "UNITS/BD/2. Calculations/StaffListMaster.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:48:35.6020481Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "Date/DemandMaster",
+    "Path": "1. Input/Demand-MasterRoster Manual Read.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:46:58.6725226Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1841045:639288174341379954",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-000\\attempt-1",
+      "Finished": "2026-10-28T20:50:38.2417816Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "Date/DemandMaster",
+      "RelativePath": "1. Input/Demand-MasterRoster Manual Read.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:50:34.1379954Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Allocation",
+    "Path": "UNITS/JH-RY/2. Calculations/Allocation.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:52.0978523Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "286330:639288177137481970",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx": "2227962:639288171499192701",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-063\\attempt-1",
+      "Finished": "2026-10-28T20:55:18.2533439Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Allocation",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Allocation.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:55:13.7481970Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/AllocationInput",
+    "Path": "UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:44:46.0430495Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2227962:639288171499192701",
+      "Inputs": {},
+      "Directory": "job-053\\attempt-1",
+      "Finished": "2026-10-28T20:45:53.1680568Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/AllocationInput",
+      "RelativePath": "UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:45:49.9192701Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  },
+  {
+    "Id": "JH-RY/Availability",
+    "Path": "UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:46:14.0663621Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "405865:639288172297816610",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx": "2227962:639288171499192701",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\whiddon_availability_leave_extraction.xlsx": "3773936:639279896424405171"
+      },
+      "Directory": "job-056\\attempt-1",
+      "Finished": "2026-10-28T20:47:15.8534715Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Availability",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:47:09.7816610Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Capacity",
+    "Path": "UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:01:02.8501849Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1453197:639288180911491429",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AIN\\CapacityDistrib(B)-shifts.xlsx": "344378:639288180595273422",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx": "230918:639288179915882535",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\RN\\CapacityDistrib(B)-shifts.xlsx": "178693:639288179524517669",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\EN\\CapacityDistrib(B)-shifts.xlsx": "162153:639288179587640377"
+      },
+      "Directory": "job-077\\attempt-1",
+      "Finished": "2026-10-28T21:01:34.0659498Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Capacity",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Capacity.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:01:31.1491429Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Demand",
+    "Path": "UNITS/JH-RY/2. Calculations/Demand.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:38.9049119Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2712125:639288177046141757",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\DemandIntervals.xlsx": "1018670:639288176736258844",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-060\\attempt-1",
+      "Finished": "2026-10-28T20:55:08.0632688Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Demand",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Demand.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:55:04.6141757Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/DemandInput",
+    "Path": "UNITS/JH-RY/1. Input/2-DemandExtract.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:50:38.485539Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "104110:639288174619532611",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\1. Input\\Demand-MasterRoster Manual Read.xlsx": "1841045:639288174341379954",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-055\\attempt-1",
+      "Finished": "2026-10-28T20:51:05.5322997Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/DemandInput",
+      "RelativePath": "UNITS/JH-RY/1. Input/2-DemandExtract.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:51:01.9532611Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/DemandIntervals",
+    "Path": "UNITS/JH-RY/2. Calculations/DemandIntervals.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:24.3572183Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1018670:639288176736258844",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\2-DemandExtract.xlsx": "104110:639288174619532611",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Intervals.xlsx": "553197:639288174806496045"
+      },
+      "Directory": "job-059\\attempt-1",
+      "Finished": "2026-10-28T20:54:38.8721045Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/DemandIntervals",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/DemandIntervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:54:33.6258844Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Distribution",
+    "Path": "UNITS/JH-RY/2. Calculations/Shift-StaffDistribution.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:55:18.3061269Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "5111623:639288177463794010",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Allocation.xlsx": "286330:639288177137481970",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-064\\attempt-1",
+      "Finished": "2026-10-28T20:55:49.638007Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Distribution",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Shift-StaffDistribution.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:55:46.3794010Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Effort",
+    "Path": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:01:34.1082316Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2028216:639288181080024766",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Allocation.xlsx": "286330:639288177137481970",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity.xlsx": "1453197:639288180911491429",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Shift-StaffDistribution.xlsx": "5111623:639288177463794010"
+      },
+      "Directory": "job-078\\attempt-1",
+      "Finished": "2026-10-28T21:01:50.8321735Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Effort",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:01:48.0024766Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Intervals",
+    "Path": "UNITS/JH-RY/2. Calculations/Intervals.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:05.5600667Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "553197:639288174806496045",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx": "2227962:639288171499192701",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\2-DemandExtract.xlsx": "104110:639288174619532611",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-058\\attempt-1",
+      "Finished": "2026-10-28T20:51:24.3279344Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Intervals",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Intervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:51:20.6496045Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:AIN/1",
+    "Path": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:55:08.1118168Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "938482:639288178868955764",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249"
+      },
+      "Directory": "job-065\\attempt-1",
+      "Finished": "2026-10-28T20:58:20.4818955Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:AIN/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:58:06.8955764Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:AIN/2",
+    "Path": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:58:20.5382567Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "958108:639288179429949137",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AIN\\CapacityDistrib(A.1)-shifts.xlsx": "938482:639288178868955764"
+      },
+      "Directory": "job-066\\attempt-1",
+      "Finished": "2026-10-28T20:59:08.024919Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:AIN/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:02.9949137Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:AIN/3",
+    "Path": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:59:08.0855568Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "344378:639288180595273422",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AIN\\CapacityDistrib(A.2)-shifts.xlsx": "958108:639288179429949137",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-067\\attempt-1",
+      "Finished": "2026-10-28T21:01:02.8043525Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:AIN/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T21:00:59.5273422Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:CS/1",
+    "Path": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:55:08.5683745Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "496971:639288178191967637",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249"
+      },
+      "Directory": "job-074\\attempt-1",
+      "Finished": "2026-10-28T20:57:10.3189182Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:CS/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:56:59.1967637Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:CS/2",
+    "Path": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:58:02.1536936Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "426175:639288179222296758",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx": "496971:639288178191967637",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-075\\attempt-1",
+      "Finished": "2026-10-28T20:58:46.3742066Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:CS/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:58:42.2296758Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:CS/3",
+    "Path": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:58:46.4280625Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "230918:639288179915882535",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx": "426175:639288179222296758",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-076\\attempt-1",
+      "Finished": "2026-10-28T20:59:56.1559768Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:CS/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:51.5882535Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:EN/1",
+    "Path": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:55:08.4802655Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "248133:639288178492663185",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249"
+      },
+      "Directory": "job-071\\attempt-1",
+      "Finished": "2026-10-28T20:57:44.6196163Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:EN/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:57:29.2663185Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:EN/2",
+    "Path": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:44.6799286Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "181440:639288179096145038",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\EN\\CapacityDistrib(A.1)-shifts.xlsx": "248133:639288178492663185",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-072\\attempt-1",
+      "Finished": "2026-10-28T20:58:34.2335862Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:EN/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:58:29.6145038Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:EN/3",
+    "Path": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:58:34.3477016Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "162153:639288179587640377",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\EN\\CapacityDistrib(A.2)-shifts.xlsx": "181440:639288179096145038",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-073\\attempt-1",
+      "Finished": "2026-10-28T20:59:24.7743888Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:EN/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:18.7640377Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:RN/1",
+    "Path": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:55:08.269665Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "311765:639288178519227865",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249"
+      },
+      "Directory": "job-068\\attempt-1",
+      "Finished": "2026-10-28T20:57:39.9164851Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:RN/1",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:57:31.9227865Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:RN/2",
+    "Path": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:39.9789355Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "251837:639288179022386444",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\RN\\CapacityDistrib(A.1)-shifts.xlsx": "311765:639288178519227865",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-069\\attempt-1",
+      "Finished": "2026-10-28T20:58:27.6271502Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:RN/2",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:58:22.2386444Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Role:RN/3",
+    "Path": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:58:27.7796043Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "178693:639288179524517669",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\RN\\CapacityDistrib(A.2)-shifts.xlsx": "251837:639288179022386444",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\AllocationByShiftAverage.xlsx": "12190613:639288176888362001",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Demand.xlsx": "2712125:639288177046141757"
+      },
+      "Directory": "job-070\\attempt-1",
+      "Finished": "2026-10-28T20:59:18.0080266Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Role:RN/3",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:59:12.4517669Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Settings",
+    "Path": "UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:45:53.1932986Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "73373:639288171706855433",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx": "2227962:639288171499192701"
+      },
+      "Directory": "job-054\\attempt-1",
+      "Finished": "2026-10-28T20:46:14.0364948Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Settings",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:46:10.6855433Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/ShiftAverage",
+    "Path": "UNITS/JH-RY/2. Calculations/AllocationByShiftAverage.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:53:37.5634632Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "12190613:639288176888362001",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Shifts.xlsx": "5719009:639288176136669141",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-062\\attempt-1",
+      "Finished": "2026-10-28T20:54:52.0581256Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/ShiftAverage",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/AllocationByShiftAverage.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:54:48.8362001Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Shifts",
+    "Path": "UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:24.4526283Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "5719009:639288176136669141",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx": "2227962:639288171499192701",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Intervals.xlsx": "553197:639288174806496045"
+      },
+      "Directory": "job-061\\attempt-1",
+      "Finished": "2026-10-28T20:53:37.5231497Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Shifts",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:53:33.6669141Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "JH-RY/Staff",
+    "Path": "UNITS/JH-RY/2. Calculations/StaffListMaster.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:47:15.8849378Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "88937:639288172499274249",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\1-AllocationExtracted.xlsx": "2227962:639288171499192701",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "405865:639288172297816610",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433"
+      },
+      "Directory": "job-057\\attempt-1",
+      "Finished": "2026-10-28T20:47:32.8984396Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "JH-RY/Staff",
+      "RelativePath": "UNITS/JH-RY/2. Calculations/StaffListMaster.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:47:29.9274249Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "Org/EffortAll",
+    "Path": "2. Calculations/E-O-I/Effort-All.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:03:26.3722767Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "13583698:639288182679204097",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Effort.xlsx": "2028216:639288181080024766",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Effort.xlsx": "1802651:639288182031850170",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\StafMasterList-All.xlsx": "241746:639288173316742047",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Effort.xlsx": "1135769:639288180685794842",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\Change\\AllocationChange.xlsx": "40995:639274520068855333"
+      },
+      "Directory": "job-080\\attempt-1",
+      "Finished": "2026-10-28T21:04:30.9707541Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "Org/EffortAll",
+      "RelativePath": "2. Calculations/E-O-I/Effort-All.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T21:04:27.9204097Z",
+      "Reason": "Declared producer TE/Effort is not verified: Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Effort.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "Org/Inefficiencies",
+    "Path": "2. Calculations/E-O-I/Inefficiencies.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:04:41.600348Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "4186603:639288182997655512",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\EffortOutcomes.xlsx": "237732:639288182782223477"
+      },
+      "Directory": "job-082\\attempt-1",
+      "Finished": "2026-10-28T21:05:03.2943286Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "Org/Inefficiencies",
+      "RelativePath": "2. Calculations/E-O-I/Inefficiencies.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T21:04:59.7655512Z",
+      "Reason": "Declared producer Org/Outcomes is not verified: Declared producer Org/EffortAll is not verified: Declared producer TE/Effort is not verified: Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "2. Calculations/E-O-I/EffortOutcomes.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "Org/LeaveBalanceReduction",
+    "Path": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+    "Run": "20261029-085859-fbb9b367",
+    "Record": {
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Started": "2026-10-28T22:00:15.5379409Z",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Directory": "job-002\\attempt-1",
+      "Inputs": {},
+      "ExitCode": 0,
+      "Finished": "2026-10-28T22:00:32.1882275Z",
+      "OutputStamp": "122113:639288216291517609",
+      "Attempt": 1
+    },
+    "Metadata": {
+      "Id": "Org/LeaveBalanceReduction",
+      "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBReduction.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T22:00:29.1517609Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  },
+  {
+    "Id": "Org/LeaveBalanceReporting",
+    "Path": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+    "Run": "20261029-085859-fbb9b367",
+    "Record": {
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Started": "2026-10-28T22:00:32.2061614Z",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Directory": "job-003\\attempt-1",
+      "Inputs": {},
+      "ExitCode": 0,
+      "Finished": "2026-10-28T22:00:47.9699007Z",
+      "OutputStamp": "8362467:639288216452401497",
+      "Attempt": 1
+    },
+    "Metadata": {
+      "Id": "Org/LeaveBalanceReporting",
+      "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/TableauConnect-LB.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T22:00:45.2401497Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  },
+  {
+    "Id": "Org/LeaveBalanceStats",
+    "Path": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+    "Run": "20261029-085859-fbb9b367",
+    "Record": {
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Started": "2026-10-28T21:59:15.2106959Z",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Directory": "job-001\\attempt-1",
+      "Inputs": {},
+      "ExitCode": 0,
+      "Finished": "2026-10-28T22:00:15.5184854Z",
+      "OutputStamp": "9972385:639288216120300924",
+      "Attempt": 1
+    },
+    "Metadata": {
+      "Id": "Org/LeaveBalanceStats",
+      "RelativePath": "../../../LeaveBalance/Workflows/LeaveBalance/Analysis/2.Calulations/LBStats.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T22:00:12.0300924Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  },
+  {
+    "Id": "Org/Outcomes",
+    "Path": "2. Calculations/E-O-I/EffortOutcomes.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:04:31.0016626Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "237732:639288182782223477",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\StafMasterList-All.xlsx": "241746:639288173316742047",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\Effort-All.xlsx": "13583698:639288182679204097"
+      },
+      "Directory": "job-081\\attempt-1",
+      "Finished": "2026-10-28T21:04:41.5727893Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "Org/Outcomes",
+      "RelativePath": "2. Calculations/E-O-I/EffortOutcomes.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T21:04:38.2223477Z",
+      "Reason": "Declared producer Org/EffortAll is not verified: Declared producer TE/Effort is not verified: Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "2. Calculations/E-O-I/Effort-All.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "Org/Reporting",
+    "Path": "2. Calculations/Tableau Connection.xlsx",
+    "Run": "20261029-085859-fbb9b367",
+    "Record": {
+      "Status": "Completed",
+      "NeedsInspection": false,
+      "Started": "2026-10-28T21:59:01.2868292Z",
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "Directory": "job-000\\attempt-1",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\Cost\\Cost..xlsx": "261407:639280964307880626",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\EOW\\2DRead.xlsx": "824435:639280964230523163",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\E-O-I\\Inefficiencies.xlsx": "4186603:639288182997655512"
+      },
+      "ExitCode": 0,
+      "Finished": "2026-10-28T21:59:15.1883403Z",
+      "OutputStamp": "2431523:639288215521726574",
+      "Attempt": 1
+    },
+    "Metadata": {
+      "Id": "Org/Reporting",
+      "RelativePath": "2. Calculations/Tableau Connection.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T21:59:12.1726574Z",
+      "Reason": "Declared producer Org/Inefficiencies is not verified: Declared producer Org/Outcomes is not verified: Declared producer Org/EffortAll is not verified: Declared producer TE/Effort is not verified: Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "2. Calculations/E-O-I/Inefficiencies.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "Org/StaffAll",
+    "Path": "2. Calculations/E-O-I/StafMasterList-All.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:48:38.5367606Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "241746:639288173316742047",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\StaffListMaster.xlsx": "100078:639288173156020481",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\StaffListMaster.xlsx": "88937:639288172499274249",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645"
+      },
+      "Directory": "job-079\\attempt-1",
+      "Finished": "2026-10-28T20:48:54.5743972Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "Org/StaffAll",
+      "RelativePath": "2. Calculations/E-O-I/StafMasterList-All.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:48:51.6742047Z",
+      "Reason": "Declared producer TE/Staff is not verified: Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/StaffListMaster.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Allocation",
+    "Path": "UNITS/TE/2. Calculations/Allocation.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:53:56.2294968Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "236937:639288176526053956",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx": "2172655:639288171443953979",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674"
+      },
+      "Directory": "job-037\\attempt-1",
+      "Finished": "2026-10-28T20:54:16.2922653Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Allocation",
+      "RelativePath": "UNITS/TE/2. Calculations/Allocation.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:54:12.6053956Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/AllocationInput",
+    "Path": "UNITS/TE/1. Input/1-AllocationExtracted.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:44:45.950162Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2172655:639288171443953979",
+      "Inputs": {},
+      "Directory": "job-027\\attempt-1",
+      "Finished": "2026-10-28T20:45:47.65791Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/AllocationInput",
+      "RelativePath": "UNITS/TE/1. Input/1-AllocationExtracted.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:45:44.3953979Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": null
+    }
+  },
+  {
+    "Id": "TE/Availability",
+    "Path": "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:46:07.2870386Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "396154:639288172161752981",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx": "2172655:639288171443953979",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\whiddon_availability_leave_extraction.xlsx": "3773936:639279896424405171",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-030\\attempt-1",
+      "Finished": "2026-10-28T20:47:01.9064619Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Availability",
+      "RelativePath": "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "ChangedAfterRun",
+      "LastSavedUtc": "2026-10-28T22:13:44.6781555Z",
+      "Reason": "The output differs from the confirmed run receipt; later changes are unverified.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Capacity",
+    "Path": "UNITS/TE/2. Calculations/Capacity.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:00:14.8766766Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1366136:639288180475051259",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(B)-shifts.xlsx": "231196:639288179017235435",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AIN\\CapacityDistrib(B)-shifts.xlsx": "326374:639288180113481971",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\EN\\CapacityDistrib(B)-shifts.xlsx": "157927:639288178987549551",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\RN\\CapacityDistrib(B)-shifts.xlsx": "180756:639288179037452320",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-051\\attempt-1",
+      "Finished": "2026-10-28T21:00:50.6615226Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Capacity",
+      "RelativePath": "UNITS/TE/2. Calculations/Capacity.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "ChangedAfterRun",
+      "LastSavedUtc": "2026-10-28T22:33:04.1493235Z",
+      "Reason": "The output differs from the confirmed run receipt; later changes are unverified.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Demand",
+    "Path": "UNITS/TE/2. Calculations/Demand.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:53:56.033736Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "2409204:639288176554326772",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\DemandIntervals.xlsx": "896935:639288176329189776",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-034\\attempt-1",
+      "Finished": "2026-10-28T20:54:18.8806818Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Demand",
+      "RelativePath": "UNITS/TE/2. Calculations/Demand.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:54:15.4326772Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/DemandInput",
+    "Path": "UNITS/TE/1. Input/2-DemandExtract.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:50:38.3247202Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "102647:639288174603380471",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\1. Input\\Demand-MasterRoster Manual Read.xlsx": "1841045:639288174341379954",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-029\\attempt-1",
+      "Finished": "2026-10-28T20:51:04.211181Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/DemandInput",
+      "RelativePath": "UNITS/TE/1. Input/2-DemandExtract.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:51:00.3380471Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/DemandIntervals",
+    "Path": "UNITS/TE/2. Calculations/DemandIntervals.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:23.1582464Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "896935:639288176329189776",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\2-DemandExtract.xlsx": "102647:639288174603380471",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Intervals.xlsx": "499245:639288174793252948",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-033\\attempt-1",
+      "Finished": "2026-10-28T20:53:55.9962126Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/DemandIntervals",
+      "RelativePath": "UNITS/TE/2. Calculations/DemandIntervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:53:52.9189776Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Distribution",
+    "Path": "UNITS/TE/2. Calculations/Shift-StaffDistribution.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:16.3430518Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "3617729:639288176770189121",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Allocation.xlsx": "236937:639288176526053956"
+      },
+      "Directory": "job-038\\attempt-1",
+      "Finished": "2026-10-28T20:54:40.9222592Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Distribution",
+      "RelativePath": "UNITS/TE/2. Calculations/Shift-StaffDistribution.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:54:37.0189121Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Effort",
+    "Path": "UNITS/TE/2. Calculations/Effort.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T21:00:50.7064619Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "1135769:639288180685794842",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity.xlsx": "1366136:639288180475051259",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Shift-StaffDistribution.xlsx": "3617729:639288176770189121",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Allocation.xlsx": "236937:639288176526053956"
+      },
+      "Directory": "job-052\\attempt-1",
+      "Finished": "2026-10-28T21:01:12.1860673Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Effort",
+      "RelativePath": "UNITS/TE/2. Calculations/Effort.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T21:01:08.5794842Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Intervals",
+    "Path": "UNITS/TE/2. Calculations/Intervals.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:04.2372283Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "499245:639288174793252948",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\2-DemandExtract.xlsx": "102647:639288174603380471",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx": "2172655:639288171443953979",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-032\\attempt-1",
+      "Finished": "2026-10-28T20:51:23.1323766Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Intervals",
+      "RelativePath": "UNITS/TE/2. Calculations/Intervals.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:51:19.3252948Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Role:AIN/1",
+    "Path": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:18.9155614Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "875733:639288178225612741",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674"
+      },
+      "Directory": "job-039\\attempt-1",
+      "Finished": "2026-10-28T20:57:16.6130435Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:AIN/1",
+      "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:57:02.5612741Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:AIN/2",
+    "Path": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:16.6756356Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "872050:639288178920408303",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AIN\\CapacityDistrib(A.1)-shifts.xlsx": "875733:639288178225612741",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-040\\attempt-1",
+      "Finished": "2026-10-28T20:58:17.5314988Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:AIN/2",
+      "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:58:12.0408303Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:AIN/3",
+    "Path": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:58:17.6588889Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "326374:639288180113481971",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AIN\\CapacityDistrib(A.2)-shifts.xlsx": "872050:639288178920408303",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-041\\attempt-1",
+      "Finished": "2026-10-28T21:00:14.8285765Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:AIN/3",
+      "RelativePath": "UNITS/TE/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T21:00:11.3481971Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:CS/1",
+    "Path": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:19.4378317Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "502689:639288177397607850",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674"
+      },
+      "Directory": "job-048\\attempt-1",
+      "Finished": "2026-10-28T20:55:44.3953903Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:CS/1",
+      "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:55:39.7607850Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:CS/2",
+    "Path": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:55:44.4660096Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "432235:639288177821427334",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(A.1)-shifts.xlsx": "502689:639288177397607850",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-049\\attempt-1",
+      "Finished": "2026-10-28T20:56:27.0936214Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:CS/2",
+      "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:56:22.1427334Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:CS/3",
+    "Path": "UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:27.1421092Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "231196:639288179017235435",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\CS\\CapacityDistrib(A.2)-shifts.xlsx": "432235:639288177821427334",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-050\\attempt-1",
+      "Finished": "2026-10-28T20:58:27.9914596Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:CS/3",
+      "RelativePath": "UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:58:21.7235435Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:EN/1",
+    "Path": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:19.1721211Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "233934:639288177587279509",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674"
+      },
+      "Directory": "job-045\\attempt-1",
+      "Finished": "2026-10-28T20:56:10.3077571Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:EN/1",
+      "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:55:58.7279509Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:EN/2",
+    "Path": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:10.3555555Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "162786:639288178195974712",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\EN\\CapacityDistrib(A.1)-shifts.xlsx": "233934:639288177587279509",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-046\\attempt-1",
+      "Finished": "2026-10-28T20:57:06.5099504Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:EN/2",
+      "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:56:59.5974712Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:EN/3",
+    "Path": "UNITS/TE/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:10.3864023Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "157927:639288178987549551",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\EN\\CapacityDistrib(A.2)-shifts.xlsx": "162786:639288178195974712",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-047\\attempt-1",
+      "Finished": "2026-10-28T20:58:28.9420551Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:EN/3",
+      "RelativePath": "UNITS/TE/2. Calculations/EN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:58:18.7549551Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:RN/1",
+    "Path": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:54:19.0404919Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "324123:639288177631820336",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674"
+      },
+      "Directory": "job-042\\attempt-1",
+      "Finished": "2026-10-28T20:56:09.5108912Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:RN/1",
+      "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.1)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:56:03.1820336Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:RN/2",
+    "Path": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:56:09.5538672Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "259947:639288178234024334",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\RN\\CapacityDistrib(A.1)-shifts.xlsx": "324123:639288177631820336",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-043\\attempt-1",
+      "Finished": "2026-10-28T20:57:09.6723686Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:RN/2",
+      "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(A.2)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:57:03.4024334Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Role:RN/3",
+    "Path": "UNITS/TE/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:57:09.7319228Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "180756:639288179037452320",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\StaffListMaster.xlsx": "88350:639288172399584645",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\RN\\CapacityDistrib(A.2)-shifts.xlsx": "259947:639288178234024334",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Demand.xlsx": "2409204:639288176554326772",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\AllocationByShiftAverage.xlsx": "8930564:639288176322957674",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981"
+      },
+      "Directory": "job-044\\attempt-1",
+      "Finished": "2026-10-28T20:58:30.3346121Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Role:RN/3",
+      "RelativePath": "UNITS/TE/2. Calculations/RN/CapacityDistrib(B)-shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:58:23.7452320Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  },
+  {
+    "Id": "TE/Settings",
+    "Path": "UNITS/TE/2. Calculations/Settings Data.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:45:47.6928439Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "73054:639288171642202300",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx": "2172655:639288171443953979"
+      },
+      "Directory": "job-028\\attempt-1",
+      "Finished": "2026-10-28T20:46:07.2583434Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Settings",
+      "RelativePath": "UNITS/TE/2. Calculations/Settings Data.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:46:04.2202300Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/ShiftAverage",
+    "Path": "UNITS/TE/2. Calculations/AllocationByShiftAverage.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:52:47.549679Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "8930564:639288176322957674",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Shifts.xlsx": "4134149:639288175634948420",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-036\\attempt-1",
+      "Finished": "2026-10-28T20:53:56.1991885Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/ShiftAverage",
+      "RelativePath": "UNITS/TE/2. Calculations/AllocationByShiftAverage.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:53:52.2957674Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Shifts",
+    "Path": "UNITS/TE/2. Calculations/Shifts.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:51:23.2658398Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "4134149:639288175634948420",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx": "2172655:639288171443953979",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Intervals.xlsx": "499245:639288174793252948",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-035\\attempt-1",
+      "Finished": "2026-10-28T20:52:47.5132891Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Shifts",
+      "RelativePath": "UNITS/TE/2. Calculations/Shifts.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "Verified",
+      "LastSavedUtc": "2026-10-28T20:52:43.4948420Z",
+      "Reason": "Confirmed run output and all recorded declared input metadata still match.",
+      "RootCauses": [],
+      "ChangedInputs": [],
+      "SavedAfterDeclaredInputs": true
+    }
+  },
+  {
+    "Id": "TE/Staff",
+    "Path": "UNITS/TE/2. Calculations/StaffListMaster.xlsx",
+    "Run": "20261029-074441-a2fe3870",
+    "Record": {
+      "Attempt": 1,
+      "Status": "Completed",
+      "Started": "2026-10-28T20:47:01.9367716Z",
+      "NeedsInspection": false,
+      "Message": "Worker exit 0; phase Complete; save confirmed: True",
+      "OutputStamp": "88350:639288172399584645",
+      "Inputs": {
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\1-AllocationExtracted.xlsx": "2172655:639288171443953979",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Capacity-ShiftAvailability.xlsx": "396154:639288172161752981",
+        "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300"
+      },
+      "Directory": "job-031\\attempt-1",
+      "Finished": "2026-10-28T20:47:23.5681139Z",
+      "ExitCode": 0
+    },
+    "Metadata": {
+      "Id": "TE/Staff",
+      "RelativePath": "UNITS/TE/2. Calculations/StaffListMaster.xlsx",
+      "RunStatus": "Completed",
+      "OutputStatus": "InputsChanged",
+      "LastSavedUtc": "2026-10-28T20:47:19.9584645Z",
+      "Reason": "Declared input files changed or are missing after the confirmed refresh.",
+      "RootCauses": [],
+      "ChangedInputs": [
+        "UNITS/TE/2. Calculations/Capacity-ShiftAvailability.xlsx"
+      ],
+      "SavedAfterDeclaredInputs": false
+    }
+  }
+]

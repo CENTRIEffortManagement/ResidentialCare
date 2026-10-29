@@ -1,0 +1,2756 @@
+{
+  "status_counts": {
+    "Pass": 889,
+    "Fail": 143,
+    "PASS": 378,
+    "Warning": 1
+  },
+  "error_locations": [
+    {
+      "id": "Date/DemandMaster",
+      "counts": [
+        {
+          "sheet": "BD RN Historical FTE",
+          "error": "#REF!",
+          "table": "(outside Excel tables)",
+          "count": 48
+        }
+      ]
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "counts": [
+        {
+          "sheet": "FILEPATH",
+          "error": "#VALUE!",
+          "table": "(outside Excel tables)",
+          "count": 3
+        },
+        {
+          "sheet": "3Pool-EF-AG1.1",
+          "error": "#VALUE!",
+          "table": "EffortOutcomesAG1_1DayShiftEF",
+          "count": 3123
+        },
+        {
+          "sheet": "3Pool-EF-AG1.1",
+          "error": "#DIV/0!",
+          "table": "EffortOutcomesAG1_1DayShiftEF",
+          "count": 66
+        },
+        {
+          "sheet": "3Pool-IN-AG1.1",
+          "error": "#VALUE!",
+          "table": "EffortOutcomesAG1_1DayShiftIN",
+          "count": 19737
+        }
+      ]
+    },
+    {
+      "id": "Org/Outcomes",
+      "counts": [
+        {
+          "sheet": "FILEPATH-EffortALL",
+          "error": "#VALUE!",
+          "table": "(outside Excel tables)",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "Org/Reporting",
+      "counts": [
+        {
+          "sheet": "FILEPATH",
+          "error": "#VALUE!",
+          "table": "(outside Excel tables)",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "Org/StaffAll",
+      "counts": [
+        {
+          "sheet": "FILEPATH-EffortALL",
+          "error": "#VALUE!",
+          "table": "(outside Excel tables)",
+          "count": 3
+        }
+      ]
+    }
+  ],
+  "error_samples": [
+    {
+      "id": "Date/DemandMaster",
+      "sheet": "BD RN Historical FTE",
+      "cell": "B43",
+      "formula": "_xlfn.LET(_xlpm.m,($N$2:$N$886=$B$15)*IF($B$16=\"(All)\",1,--($O$2:$O$886=$B$16))*IF($B$17=\"(All)\",1,--($P$2:$P$886=$B$17))*--($S$2:$S$886=1),_xlpm.master,SUMPRODUCT(_xlpm.m,$T$2:$T$886),_xlpm.dist,SUMPRODUCT(_xlpm.m,$U$2:$U$886),IF(_xlpm.master=0,\"N/A\",_xlpm.dist/_xlpm.master))",
+      "error": "#REF!"
+    },
+    {
+      "id": "Date/DemandMaster",
+      "sheet": "BD RN Historical FTE",
+      "cell": "B44",
+      "formula": "_xlfn.LET(_xlpm.m,($N$2:$N$886=$B$15)*IF($B$16=\"(All)\",1,--($O$2:$O$886=$B$16))*IF($B$17=\"(All)\",1,--($P$2:$P$886=$B$17))*--($S$2:$S$886=2),_xlpm.master,SUMPRODUCT(_xlpm.m,$T$2:$T$886),_xlpm.dist,SUMPRODUCT(_xlpm.m,$U$2:$U$886),IF(_xlpm.master=0,\"N/A\",_xlpm.dist/_xlpm.master))",
+      "error": "#REF!"
+    },
+    {
+      "id": "Date/DemandMaster",
+      "sheet": "BD RN Historical FTE",
+      "cell": "B46",
+      "formula": "_xlfn.LET(_xlpm.m,($N$2:$N$886=$B$15)*IF($B$16=\"(All)\",1,--($O$2:$O$886=$B$16))*IF($B$17=\"(All)\",1,--($P$2:$P$886=$B$17)),_xlpm.bad,SUMPRODUCT(_xlpm.m,--($Y$2:$Y$886<>1))+SUMPRODUCT(_xlpm.m,--($Z$2:$Z$886<>1))+SUMPRODUCT(_xlpm.m,--($AA$2:$AA$886<>1))+SUMPRODUCT(_xlpm.m,--($AB$2:$AB$886<>1)),IF(_xlpm.bad=0,\"PASS\",\"REVIEW\"))",
+      "error": "#REF!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "FILEPATH",
+      "cell": "B15",
+      "formula": "LEFT(CELL(\"filename\",B9),FIND(Client,CELL(\"filename\",B9),1)-1)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "FILEPATH",
+      "cell": "C15",
+      "formula": "LEN(B15)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "FILEPATH",
+      "cell": "C20",
+      "formula": "SUM(C15:C19)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "3Pool-EF-AG1.1",
+      "cell": "Z258",
+      "formula": "IF(EffortOutcomesAG1_1DayShiftEF[[#This Row],[D]]=0,\n    IF(EffortOutcomesAG1_1DayShiftEF[Cs]=0,\n       0,\n       IF(EffortOutcomesAG1_1DayShiftEF[[#This Row],[A]]=EffortOutcomesAG1_1DayShiftEF[[#This Row],[Cs]],\n          EffortOutcomesAG1_1DayShiftEF[[#This Row],[A]]/EffortOutcomesAG1_1DayShiftEF[[#This Row],[Cs]]-EFGoal,\n          0)\n    ),\n    IF(AND(EffortOutcomesAG1_1DayShiftEF[[#This Row],[D]]<>0, EffortOutcomesAG1_1DayShiftEF[[#This Row],[Cs]]=0, EffortOutcomesAG1_1DayShiftEF[[#This Row],[A]]>=EFGoal),\n       1-SUM(EffortOutcomesAG1_1DayShiftEF[[#This Row],[POTENTIAL SHORTFALL (OVER-ALLOCATED)]:[ALLOCATED SLACK]]),\n       0\n    )\n)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "3Pool-EF-AG1.1",
+      "cell": "AA258",
+      "formula": "IF(SUM(EffortOutcomesAG1_1DayShiftEF[[#This Row],[POTENTIAL SHORTFALL (OVER-ALLOCATED)]:[UNALLOCATED SLACK]])>0,                   0,IF(SUM(EffortOutcomesAG1_1DayShiftEF[[#This Row],[LATENT]:[LATENT.OVERALLOCATED]])>0,1,0))",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "3Pool-EF-AG1.1",
+      "cell": "AB258",
+      "formula": "SUM($Q258:$AA258)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "3Pool-IN-AG1.1",
+      "cell": "G8",
+      "formula": null,
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "3Pool-IN-AG1.1",
+      "cell": "H8",
+      "formula": "IF(EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=12310, EffortOutcomesAG1_1DayShiftIN[[#This Row],[Iin]]-INGoal, IF(OR(EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=22312, EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=22311,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32322,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32332,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32311,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32312,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=22322), EffortOutcomesAG1_1DayShiftIN[[#This Row],[Iin]]-EffortOutcomesAG1_1DayShiftIN[[#This Row],[Ipx]],     0))",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Inefficiencies",
+      "sheet": "3Pool-IN-AG1.1",
+      "cell": "I8",
+      "formula": "IF(OR(EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=21121,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=21222,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=22221,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=31121,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32121,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32221,,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=33120),EffortOutcomesAG1_1DayShiftIN[[#This Row],[Ipx]]-INCap,     IF(OR(EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=31131,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32131,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32132),EffortOutcomesAG1_1DayShiftIN[[#This Row],[Ipx]]-EffortOutcomesAG1_1DayShiftIN[[#This Row],[Ipn]],IF(OR(EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32222,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=32232,EffortOutcomesAG1_1DayShiftIN[[#This Row],[Block]]=22222),EffortOutcomesAG1_1DayShiftIN[[#This Row],[Ipx]]-EffortOutcomesAG1_1DayShiftIN[[#This Row],[Iin]],0)))",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Outcomes",
+      "sheet": "FILEPATH-EffortALL",
+      "cell": "B15",
+      "formula": "LEFT(CELL(\"filename\",B9),FIND(Client,CELL(\"filename\",B9),1)-1)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Outcomes",
+      "sheet": "FILEPATH-EffortALL",
+      "cell": "C15",
+      "formula": "LEN(B15)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Outcomes",
+      "sheet": "FILEPATH-EffortALL",
+      "cell": "C20",
+      "formula": "SUM(C15:C19)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Reporting",
+      "sheet": "FILEPATH",
+      "cell": "B15",
+      "formula": "LEFT(CELL(\"filename\",B9),FIND(Client,CELL(\"filename\",B9),1)-1)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Reporting",
+      "sheet": "FILEPATH",
+      "cell": "C15",
+      "formula": "LEN(B15)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/Reporting",
+      "sheet": "FILEPATH",
+      "cell": "C20",
+      "formula": "SUM(C15:C19)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/StaffAll",
+      "sheet": "FILEPATH-EffortALL",
+      "cell": "B15",
+      "formula": "LEFT(CELL(\"filename\",B9),FIND(Client,CELL(\"filename\",B9),1)-1)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/StaffAll",
+      "sheet": "FILEPATH-EffortALL",
+      "cell": "C15",
+      "formula": "LEN(B15)",
+      "error": "#VALUE!"
+    },
+    {
+      "id": "Org/StaffAll",
+      "sheet": "FILEPATH-EffortALL",
+      "cell": "C20",
+      "formula": "SUM(C15:C19)",
+      "error": "#VALUE!"
+    }
+  ],
+  "nonempty_diagnostics_without_status": [
+    {
+      "id": "BD/AllocationInput",
+      "name": "CS_Allocation_CHECK",
+      "rows": 5,
+      "columns": [
+        "Check",
+        "Severity",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "BD/AllocationInput",
+      "name": "Table_AllocationExtractedCheck",
+      "rows": 4,
+      "columns": [
+        "Role",
+        "Days",
+        "AllocationTime",
+        "AllocatedEffort"
+      ]
+    },
+    {
+      "id": "BD/Demand",
+      "name": "Table_Table_ShiftDemandUnitINTERVALCheck",
+      "rows": 4,
+      "columns": [
+        "Facility",
+        "Role",
+        "CareDemandEffortRoster",
+        "CareDemandHRSWeeklyCheck"
+      ]
+    },
+    {
+      "id": "BD/Demand",
+      "name": "Table_CareDemandHRSWeeklyCheck",
+      "rows": 8,
+      "columns": [
+        "Facility",
+        "Role",
+        "CareDemandHRSRoster",
+        "CareDemandHRSWeekly"
+      ]
+    },
+    {
+      "id": "BD/DemandInput",
+      "name": "Distributed_Demand_FTE_Checks_Scope",
+      "rows": 8,
+      "columns": [
+        "Severity",
+        "Check",
+        "Facility",
+        "Role",
+        "Message"
+      ]
+    },
+    {
+      "id": "BD/DemandInput",
+      "name": "Demand_Calendar_CHECK",
+      "rows": 4,
+      "columns": [
+        "Severity",
+        "Role",
+        "ExpectedPeriods",
+        "ActualRows",
+        "DistinctPeriods",
+        "MissingPeriods",
+        "DuplicateRows",
+        "MissingPeriodIDs",
+        "DuplicatePeriodIDs",
+        "Message"
+      ]
+    },
+    {
+      "id": "BD/DemandInput",
+      "name": "DemandExtraction_CHECK",
+      "rows": 10,
+      "columns": [
+        "Severity",
+        "Check",
+        "Message",
+        "Actual"
+      ]
+    },
+    {
+      "id": "BD/DemandIntervals",
+      "name": "Table_ShiftDemandUnitINTERVALCheck",
+      "rows": 4,
+      "columns": [
+        "Role",
+        "Facility",
+        "DemandHrsPerRoster",
+        "DemandHrsPerWeek"
+      ]
+    },
+    {
+      "id": "BD/DemandIntervals",
+      "name": "Table_Table_ShiftDemandHRSCheck",
+      "rows": 4,
+      "columns": [
+        "Facility",
+        "Role",
+        "DemandHrsRoster",
+        "DemandHrsWeek",
+        "CareDemandHrsPer WeekApprox"
+      ]
+    },
+    {
+      "id": "BD/Role:AIN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 33,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "BD/Role:AIN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 166,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "BD/Role:CS/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 83,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "BD/Role:CS/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 80,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "BD/Role:EN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 72,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "BD/Role:EN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 58,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "BD/Role:RN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 8,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "BD/Role:RN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 43,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "RoleDemand_CHECK",
+      "rows": 8,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MinuteWorkersFTE_CHECK",
+      "rows": 1297,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MW_Input_Check",
+      "rows": 22,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MW_Fortnight_Hours_Check",
+      "rows": 6,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MW_Daily_Allocation_Check",
+      "rows": 378,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MW_Publication_Check",
+      "rows": 1288,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MinuteWorkersFTE_HISTORICAL_DAY_CHECK",
+      "rows": 294,
+      "columns": [
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Week No",
+        "FortnightWeek",
+        "DayOfWeek",
+        "Week Day",
+        "FortnightDayIndex",
+        "FortnightDay",
+        "HistoricalDailyRosterFTE",
+        "HistoricalAMRosterFTE",
+        "HistoricalPMRosterFTE",
+        "HistoricalNSRosterFTE",
+        "HistoricalCoverageStatus",
+        "InvalidRosterRowCount",
+        "HistoricalDailyDistinctWorkers",
+        "HistoricalRowsMissingEmployeeCode",
+        "TargetDailyFTEShiftTotal",
+        "TargetAMFTE",
+        "TargetPMFTE",
+        "TargetNSFTE",
+        "RoleDailyTargetMinutes",
+        "TargetDailyProductiveMinutes",
+        "TargetVsHistoricalRosterFTE",
+        "RoleDayTargetStatus"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MW_PreAllocation_Check",
+      "rows": 22,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MinuteWorkersFTE_PivotSource",
+      "rows": 230,
+      "columns": [
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "QFR Category",
+        "Direct Care %",
+        "DayOfWeek",
+        "Week Day",
+        "Shift",
+        "ShiftIndex",
+        "WeekdayShift",
+        "HistoricalRosterHours",
+        "RoleHistoricalRosterHours",
+        "HistoricalMinuteHours",
+        "CategoryHistoricalMinuteHours",
+        "RoleHistoryDistribution%",
+        "LocRoleDayShift%",
+        "CategoryDailyTargetMinutes",
+        "CategoryTargetMinutes",
+        "RoleDailyTargetMinutes",
+        "RoleTargetMinutes",
+        "WeekdayShiftTargetMinutes",
+        "WeekdayShiftRosterMinutes",
+        "FTE",
+        "DailyEquivalentProductiveMinutes",
+        "Visible"
+      ]
+    },
+    {
+      "id": "Date/DemandMaster",
+      "name": "MW_FTE_Profile_Alignment_Check",
+      "rows": 882,
+      "columns": [
+        "Check",
+        "Severity",
+        "Facility",
+        "MinuteCategory",
+        "Role",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "JH-RY/AllocationInput",
+      "name": "CS_Allocation_CHECK",
+      "rows": 5,
+      "columns": [
+        "Check",
+        "Severity",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "JH-RY/AllocationInput",
+      "name": "Table_AllocationExtractedCheck",
+      "rows": 4,
+      "columns": [
+        "Role",
+        "Days",
+        "AllocationTime",
+        "AllocatedEffort"
+      ]
+    },
+    {
+      "id": "JH-RY/Demand",
+      "name": "Table_Table_ShiftDemandUnitINTERVALCheck",
+      "rows": 4,
+      "columns": [
+        "Facility",
+        "Role",
+        "CareDemandEffortRoster",
+        "CareDemandHRSWeeklyCheck"
+      ]
+    },
+    {
+      "id": "JH-RY/Demand",
+      "name": "Table_CareDemandHRSWeeklyCheck",
+      "rows": 8,
+      "columns": [
+        "Facility",
+        "Role",
+        "CareDemandHRSRoster",
+        "CareDemandHRSWeekly"
+      ]
+    },
+    {
+      "id": "JH-RY/DemandInput",
+      "name": "Distributed_Demand_FTE_Checks_Scope",
+      "rows": 8,
+      "columns": [
+        "Severity",
+        "Check",
+        "Facility",
+        "Role",
+        "Message"
+      ]
+    },
+    {
+      "id": "JH-RY/DemandInput",
+      "name": "Demand_Calendar_CHECK",
+      "rows": 4,
+      "columns": [
+        "Severity",
+        "Role",
+        "ExpectedPeriods",
+        "ActualRows",
+        "DistinctPeriods",
+        "MissingPeriods",
+        "DuplicateRows",
+        "MissingPeriodIDs",
+        "DuplicatePeriodIDs",
+        "Message"
+      ]
+    },
+    {
+      "id": "JH-RY/DemandInput",
+      "name": "DemandExtraction_CHECK",
+      "rows": 10,
+      "columns": [
+        "Severity",
+        "Check",
+        "Message",
+        "Actual"
+      ]
+    },
+    {
+      "id": "JH-RY/DemandIntervals",
+      "name": "Table_ShiftDemandUnitINTERVALCheck",
+      "rows": 4,
+      "columns": [
+        "Role",
+        "Facility",
+        "DemandHrsPerRoster",
+        "DemandHrsPerWeek"
+      ]
+    },
+    {
+      "id": "JH-RY/DemandIntervals",
+      "name": "Table_Table_ShiftDemandHRSCheck",
+      "rows": 4,
+      "columns": [
+        "Facility",
+        "Role",
+        "DemandHrsRoster",
+        "DemandHrsWeek",
+        "CareDemandHrsPer WeekApprox"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:AIN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 143,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:AIN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 156,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:CS/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 2,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:CS/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 109,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:EN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 1,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:EN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 5,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:RN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 11,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "JH-RY/Role:RN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 30,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "TE/AllocationInput",
+      "name": "CS_Allocation_CHECK",
+      "rows": 5,
+      "columns": [
+        "Check",
+        "Severity",
+        "Actual",
+        "Expected",
+        "Message"
+      ]
+    },
+    {
+      "id": "TE/AllocationInput",
+      "name": "Table_AllocationExtractedCheck",
+      "rows": 4,
+      "columns": [
+        "Role",
+        "Days",
+        "AllocationTime",
+        "AllocatedEffort"
+      ]
+    },
+    {
+      "id": "TE/Demand",
+      "name": "Table_Table_ShiftDemandUnitINTERVALCheck",
+      "rows": 4,
+      "columns": [
+        "Facility",
+        "Role",
+        "CareDemandEffortRoster",
+        "CareDemandHRSWeeklyCheck"
+      ]
+    },
+    {
+      "id": "TE/Demand",
+      "name": "Table_CareDemandHRSWeeklyCheck",
+      "rows": 8,
+      "columns": [
+        "Facility",
+        "Role",
+        "CareDemandHRSRoster",
+        "CareDemandHRSWeekly"
+      ]
+    },
+    {
+      "id": "TE/DemandInput",
+      "name": "Distributed_Demand_FTE_Checks_Scope",
+      "rows": 8,
+      "columns": [
+        "Severity",
+        "Check",
+        "Facility",
+        "Role",
+        "Message"
+      ]
+    },
+    {
+      "id": "TE/DemandInput",
+      "name": "Demand_Calendar_CHECK",
+      "rows": 4,
+      "columns": [
+        "Severity",
+        "Role",
+        "ExpectedPeriods",
+        "ActualRows",
+        "DistinctPeriods",
+        "MissingPeriods",
+        "DuplicateRows",
+        "MissingPeriodIDs",
+        "DuplicatePeriodIDs",
+        "Message"
+      ]
+    },
+    {
+      "id": "TE/DemandInput",
+      "name": "DemandExtraction_CHECK",
+      "rows": 10,
+      "columns": [
+        "Severity",
+        "Check",
+        "Message",
+        "Actual"
+      ]
+    },
+    {
+      "id": "TE/DemandIntervals",
+      "name": "Table_ShiftDemandUnitINTERVALCheck",
+      "rows": 4,
+      "columns": [
+        "Role",
+        "Facility",
+        "DemandHrsPerRoster",
+        "DemandHrsPerWeek"
+      ]
+    },
+    {
+      "id": "TE/DemandIntervals",
+      "name": "Table_Table_ShiftDemandHRSCheck",
+      "rows": 4,
+      "columns": [
+        "Facility",
+        "Role",
+        "DemandHrsRoster",
+        "DemandHrsWeek",
+        "CareDemandHrsPer WeekApprox"
+      ]
+    },
+    {
+      "id": "TE/Role:AIN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 20,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "TE/Role:AIN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 107,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "TE/Role:CS/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 115,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "TE/Role:EN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 4,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    },
+    {
+      "id": "TE/Role:RN/1",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 4,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action"
+      ]
+    },
+    {
+      "id": "TE/Role:RN/2",
+      "name": "CapacityDiagnostics_DETAILS",
+      "rows": 17,
+      "columns": [
+        "Stage",
+        "Check",
+        "Resource",
+        "Role",
+        "Name",
+        "Date",
+        "Period",
+        "Reason",
+        "Action",
+        "Day",
+        "PlannedCluster",
+        "PreviousCluster",
+        "WorkedDays",
+        "OffDays",
+        "Origin",
+        "CellAmount",
+        "ResourceBudget",
+        "PeriodBudget",
+        "ResourceAcceptedRemoval",
+        "PeriodAcceptedRemoval",
+        "AcceptanceOrder"
+      ]
+    }
+  ],
+  "allocation_exceptions": [],
+  "capacity_failures": [
+    {
+      "id": "BD/Role:AIN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 33,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:AIN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 33,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 33,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 33,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:AIN/3",
+      "table": "BFinalCap_CHECK",
+      "failures": [
+        {
+          "excel_row": 3,
+          "Resource": 2,
+          "AllocatedSlots": 12,
+          "OptionalSlots": 0,
+          "TotalSlots": 12,
+          "Effective Shift Cap": 5,
+          "RequiredReduction": 7,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 4,
+          "Resource": 114,
+          "AllocatedSlots": 15,
+          "OptionalSlots": 0,
+          "TotalSlots": 15,
+          "Effective Shift Cap": 11,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 5,
+          "Resource": 15,
+          "AllocatedSlots": 7,
+          "OptionalSlots": 0,
+          "TotalSlots": 7,
+          "Effective Shift Cap": 4,
+          "RequiredReduction": 3,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 9,
+          "Resource": 120,
+          "AllocatedSlots": 21,
+          "OptionalSlots": 0,
+          "TotalSlots": 21,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 12,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 11,
+          "Resource": 5,
+          "AllocatedSlots": 11,
+          "OptionalSlots": 0,
+          "TotalSlots": 11,
+          "Effective Shift Cap": 7,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 16,
+          "Resource": 10,
+          "AllocatedSlots": 17,
+          "OptionalSlots": 0,
+          "TotalSlots": 17,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 17,
+          "Resource": 128,
+          "AllocatedSlots": 10,
+          "OptionalSlots": 0,
+          "TotalSlots": 10,
+          "Effective Shift Cap": 5,
+          "RequiredReduction": 5,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 18,
+          "Resource": 11,
+          "AllocatedSlots": 22,
+          "OptionalSlots": 0,
+          "TotalSlots": 22,
+          "Effective Shift Cap": 20,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 21,
+          "Resource": 147,
+          "AllocatedSlots": 19,
+          "OptionalSlots": 0,
+          "TotalSlots": 19,
+          "Effective Shift Cap": 7,
+          "RequiredReduction": 12,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 23,
+          "Resource": 18,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 13,
+          "RequiredReduction": 3,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 25,
+          "Resource": 21,
+          "AllocatedSlots": 14,
+          "OptionalSlots": 0,
+          "TotalSlots": 14,
+          "Effective Shift Cap": 13,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 27,
+          "Resource": 90,
+          "AllocatedSlots": 17,
+          "OptionalSlots": 0,
+          "TotalSlots": 17,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 28,
+          "Resource": 26,
+          "AllocatedSlots": 18,
+          "OptionalSlots": 0,
+          "TotalSlots": 18,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 3,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 29,
+          "Resource": 28,
+          "AllocatedSlots": 11,
+          "OptionalSlots": 0,
+          "TotalSlots": 11,
+          "Effective Shift Cap": 7,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 30,
+          "Resource": 94,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 13,
+          "RequiredReduction": 3,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 31,
+          "Resource": 30,
+          "AllocatedSlots": 18,
+          "OptionalSlots": 0,
+          "TotalSlots": 18,
+          "Effective Shift Cap": 17,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 34,
+          "Resource": 34,
+          "AllocatedSlots": 14,
+          "OptionalSlots": 0,
+          "TotalSlots": 14,
+          "Effective Shift Cap": 13,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 36,
+          "Resource": 38,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 40,
+          "Resource": 45,
+          "AllocatedSlots": 14,
+          "OptionalSlots": 0,
+          "TotalSlots": 14,
+          "Effective Shift Cap": 5,
+          "RequiredReduction": 9,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 42,
+          "Resource": 52,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 43,
+          "Resource": 56,
+          "AllocatedSlots": 20,
+          "OptionalSlots": 0,
+          "TotalSlots": 20,
+          "Effective Shift Cap": 19,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 44,
+          "Resource": 129,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 47,
+          "Resource": 66,
+          "AllocatedSlots": 10,
+          "OptionalSlots": 0,
+          "TotalSlots": 10,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 51,
+          "Resource": 106,
+          "AllocatedSlots": 10,
+          "OptionalSlots": 0,
+          "TotalSlots": 10,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 52,
+          "Resource": 76,
+          "AllocatedSlots": 8,
+          "OptionalSlots": 0,
+          "TotalSlots": 8,
+          "Effective Shift Cap": 7,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 55,
+          "Resource": 82,
+          "AllocatedSlots": 18,
+          "OptionalSlots": 0,
+          "TotalSlots": 18,
+          "Effective Shift Cap": 17,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 62,
+          "Resource": 121,
+          "AllocatedSlots": 10,
+          "OptionalSlots": 0,
+          "TotalSlots": 10,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 63,
+          "Resource": 108,
+          "AllocatedSlots": 17,
+          "OptionalSlots": 0,
+          "TotalSlots": 17,
+          "Effective Shift Cap": 11,
+          "RequiredReduction": 6,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 64,
+          "Resource": 113,
+          "AllocatedSlots": 6,
+          "OptionalSlots": 0,
+          "TotalSlots": 6,
+          "Effective Shift Cap": 5,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 65,
+          "Resource": 117,
+          "AllocatedSlots": 20,
+          "OptionalSlots": 0,
+          "TotalSlots": 20,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 5,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 70,
+          "Resource": 127,
+          "AllocatedSlots": 12,
+          "OptionalSlots": 0,
+          "TotalSlots": 12,
+          "Effective Shift Cap": 11,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 71,
+          "Resource": 133,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 11,
+          "RequiredReduction": 5,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 73,
+          "Resource": 139,
+          "AllocatedSlots": 19,
+          "OptionalSlots": 0,
+          "TotalSlots": 19,
+          "Effective Shift Cap": 17,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 75,
+          "Resource": 144,
+          "AllocatedSlots": 10,
+          "OptionalSlots": 0,
+          "TotalSlots": 10,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:CS/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 7,
+          "Stage": "A.1",
+          "Check": "Allocation names map to exactly one Resource",
+          "Status": "Fail",
+          "Failures": 2,
+          "Details": "Unresolved allocations are skipped and retained in A1AllocationIdentity_EXCEPTIONS; other Resources continue."
+        },
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 40,
+          "Stage": "A.1",
+          "Check": "Skipped allocation records",
+          "Status": "Fail",
+          "Failures": 76,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:CS/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:CS/3",
+      "table": "BFinalCap_CHECK",
+      "failures": [
+        {
+          "excel_row": 2,
+          "Resource": 4,
+          "AllocatedSlots": 40,
+          "OptionalSlots": 0,
+          "TotalSlots": 40,
+          "Effective Shift Cap": 12,
+          "RequiredReduction": 28,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 4,
+          "Resource": 12,
+          "AllocatedSlots": 20,
+          "OptionalSlots": 0,
+          "TotalSlots": 20,
+          "Effective Shift Cap": 19,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 6,
+          "Resource": 71,
+          "AllocatedSlots": 23,
+          "OptionalSlots": 0,
+          "TotalSlots": 23,
+          "Effective Shift Cap": 19,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 8,
+          "Resource": 17,
+          "AllocatedSlots": 14,
+          "OptionalSlots": 0,
+          "TotalSlots": 14,
+          "Effective Shift Cap": 11,
+          "RequiredReduction": 3,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 10,
+          "Resource": 19,
+          "AllocatedSlots": 22,
+          "OptionalSlots": 0,
+          "TotalSlots": 22,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 8,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 12,
+          "Resource": 78,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 13,
+          "Resource": 25,
+          "AllocatedSlots": 40,
+          "OptionalSlots": 0,
+          "TotalSlots": 40,
+          "Effective Shift Cap": 17,
+          "RequiredReduction": 23,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 14,
+          "Resource": 35,
+          "AllocatedSlots": 8,
+          "OptionalSlots": 0,
+          "TotalSlots": 8,
+          "Effective Shift Cap": 7,
+          "RequiredReduction": 1,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 15,
+          "Resource": 84,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 16,
+          "Resource": 36,
+          "AllocatedSlots": 20,
+          "OptionalSlots": 0,
+          "TotalSlots": 20,
+          "Effective Shift Cap": 15,
+          "RequiredReduction": 5,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 17,
+          "Resource": 39,
+          "AllocatedSlots": 40,
+          "OptionalSlots": 0,
+          "TotalSlots": 40,
+          "Effective Shift Cap": 19,
+          "RequiredReduction": 21,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 18,
+          "Resource": 40,
+          "AllocatedSlots": 24,
+          "OptionalSlots": 0,
+          "TotalSlots": 24,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 15,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 20,
+          "Resource": 48,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 12,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 21,
+          "Resource": 53,
+          "AllocatedSlots": 24,
+          "OptionalSlots": 0,
+          "TotalSlots": 24,
+          "Effective Shift Cap": 9,
+          "RequiredReduction": 15,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 22,
+          "Resource": 58,
+          "AllocatedSlots": 6,
+          "OptionalSlots": 0,
+          "TotalSlots": 6,
+          "Effective Shift Cap": 4,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 23,
+          "Resource": 110,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 12,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 25,
+          "Resource": 73,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 4,
+          "RequiredReduction": 12,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 26,
+          "Resource": 98,
+          "AllocatedSlots": 18,
+          "OptionalSlots": 0,
+          "TotalSlots": 18,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 4,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 28,
+          "Resource": 102,
+          "AllocatedSlots": 40,
+          "OptionalSlots": 0,
+          "TotalSlots": 40,
+          "Effective Shift Cap": 19,
+          "RequiredReduction": 21,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 29,
+          "Resource": 79,
+          "AllocatedSlots": 20,
+          "OptionalSlots": 0,
+          "TotalSlots": 20,
+          "Effective Shift Cap": 11,
+          "RequiredReduction": 9,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 30,
+          "Resource": 89,
+          "AllocatedSlots": 6,
+          "OptionalSlots": 0,
+          "TotalSlots": 6,
+          "Effective Shift Cap": 4,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 31,
+          "Resource": 109,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 32,
+          "Resource": 103,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 6,
+          "RequiredReduction": 10,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 33,
+          "Resource": 135,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 2,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 34,
+          "Resource": 136,
+          "AllocatedSlots": 32,
+          "OptionalSlots": 0,
+          "TotalSlots": 32,
+          "Effective Shift Cap": 12,
+          "RequiredReduction": 20,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 35,
+          "Resource": 138,
+          "AllocatedSlots": 38,
+          "OptionalSlots": 0,
+          "TotalSlots": 38,
+          "Effective Shift Cap": 18,
+          "RequiredReduction": 20,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:EN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 7,
+          "Stage": "A.1",
+          "Check": "Allocation names map to exactly one Resource",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": "Unresolved allocations are skipped and retained in A1AllocationIdentity_EXCEPTIONS; other Resources continue."
+        },
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 40,
+          "Stage": "A.1",
+          "Check": "Skipped allocation records",
+          "Status": "Fail",
+          "Failures": 65,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:EN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 7,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:RN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 8,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 5,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "BD/Role:RN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 8,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 5,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 8,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 8,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:AIN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 7,
+          "Stage": "A.1",
+          "Check": "Allocation names map to exactly one Resource",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": "Unresolved allocations are skipped and retained in A1AllocationIdentity_EXCEPTIONS; other Resources continue."
+        },
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 39,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 31,
+          "Details": null
+        },
+        {
+          "excel_row": 40,
+          "Stage": "A.1",
+          "Check": "Skipped allocation records",
+          "Status": "Fail",
+          "Failures": 104,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:AIN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 39,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 31,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 39,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 39,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:CS/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 2,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:CS/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 2,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 2,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 2,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:CS/3",
+      "table": "BFinalCap_CHECK",
+      "failures": [
+        {
+          "excel_row": 3,
+          "Resource": 28,
+          "AllocatedSlots": 26,
+          "OptionalSlots": 0,
+          "TotalSlots": 26,
+          "Effective Shift Cap": 10,
+          "RequiredReduction": 16,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 7,
+          "Resource": 5,
+          "AllocatedSlots": 38,
+          "OptionalSlots": 0,
+          "TotalSlots": 38,
+          "Effective Shift Cap": 20,
+          "RequiredReduction": 18,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 9,
+          "Resource": 31,
+          "AllocatedSlots": 38,
+          "OptionalSlots": 0,
+          "TotalSlots": 38,
+          "Effective Shift Cap": 16,
+          "RequiredReduction": 22,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 10,
+          "Resource": 18,
+          "AllocatedSlots": 42,
+          "OptionalSlots": 0,
+          "TotalSlots": 42,
+          "Effective Shift Cap": 16,
+          "RequiredReduction": 26,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 11,
+          "Resource": 24,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 10,
+          "RequiredReduction": 6,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 12,
+          "Resource": 44,
+          "AllocatedSlots": 22,
+          "OptionalSlots": 0,
+          "TotalSlots": 22,
+          "Effective Shift Cap": 8,
+          "RequiredReduction": 14,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 14,
+          "Resource": 37,
+          "AllocatedSlots": 42,
+          "OptionalSlots": 0,
+          "TotalSlots": 42,
+          "Effective Shift Cap": 20,
+          "RequiredReduction": 22,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 17,
+          "Resource": 47,
+          "AllocatedSlots": 32,
+          "OptionalSlots": 0,
+          "TotalSlots": 32,
+          "Effective Shift Cap": 16,
+          "RequiredReduction": 16,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 18,
+          "Resource": 49,
+          "AllocatedSlots": 30,
+          "OptionalSlots": 0,
+          "TotalSlots": 30,
+          "Effective Shift Cap": 13,
+          "RequiredReduction": 17,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 19,
+          "Resource": 50,
+          "AllocatedSlots": 32,
+          "OptionalSlots": 0,
+          "TotalSlots": 32,
+          "Effective Shift Cap": 16,
+          "RequiredReduction": 16,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 20,
+          "Resource": 55,
+          "AllocatedSlots": 38,
+          "OptionalSlots": 0,
+          "TotalSlots": 38,
+          "Effective Shift Cap": 16,
+          "RequiredReduction": 22,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 21,
+          "Resource": 80,
+          "AllocatedSlots": 38,
+          "OptionalSlots": 0,
+          "TotalSlots": 38,
+          "Effective Shift Cap": 13,
+          "RequiredReduction": 25,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:EN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:EN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 1,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:RN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 11,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 8,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "JH-RY/Role:RN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 11,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 8,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 11,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 11,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "TE/Role:AIN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 20,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 19,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "TE/Role:AIN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 20,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 19,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 20,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 20,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "TE/Role:CS/3",
+      "table": "BFinalCap_CHECK",
+      "failures": [
+        {
+          "excel_row": 2,
+          "Resource": 8,
+          "AllocatedSlots": 32,
+          "OptionalSlots": 0,
+          "TotalSlots": 32,
+          "Effective Shift Cap": 16,
+          "RequiredReduction": 16,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 6,
+          "Resource": 27,
+          "AllocatedSlots": 32,
+          "OptionalSlots": 0,
+          "TotalSlots": 32,
+          "Effective Shift Cap": 14,
+          "RequiredReduction": 18,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 14,
+          "Resource": 48,
+          "AllocatedSlots": 16,
+          "OptionalSlots": 0,
+          "TotalSlots": 16,
+          "Effective Shift Cap": 3,
+          "RequiredReduction": 13,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 15,
+          "Resource": 52,
+          "AllocatedSlots": 36,
+          "OptionalSlots": 0,
+          "TotalSlots": 36,
+          "Effective Shift Cap": 18,
+          "RequiredReduction": 18,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 16,
+          "Resource": 62,
+          "AllocatedSlots": 36,
+          "OptionalSlots": 0,
+          "TotalSlots": 36,
+          "Effective Shift Cap": 18,
+          "RequiredReduction": 18,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 17,
+          "Resource": 67,
+          "AllocatedSlots": 24,
+          "OptionalSlots": 0,
+          "TotalSlots": 24,
+          "Effective Shift Cap": 18,
+          "RequiredReduction": 6,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 19,
+          "Resource": 75,
+          "AllocatedSlots": 36,
+          "OptionalSlots": 0,
+          "TotalSlots": 36,
+          "Effective Shift Cap": 18,
+          "RequiredReduction": 18,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 20,
+          "Resource": 78,
+          "AllocatedSlots": 14,
+          "OptionalSlots": 0,
+          "TotalSlots": 14,
+          "Effective Shift Cap": 8,
+          "RequiredReduction": 6,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        },
+        {
+          "excel_row": 22,
+          "Resource": 83,
+          "AllocatedSlots": 18,
+          "OptionalSlots": 0,
+          "TotalSlots": 18,
+          "Effective Shift Cap": 12,
+          "RequiredReduction": 6,
+          "Status": "Fail",
+          "Origin": "Preexisting allocations"
+        }
+      ]
+    },
+    {
+      "id": "TE/Role:RN/1",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 37,
+          "Stage": "A.1",
+          "Check": "Existing allocated calendar respects five worked days",
+          "Status": "Fail",
+          "Failures": 4,
+          "Details": null
+        },
+        {
+          "excel_row": 38,
+          "Stage": "A.1",
+          "Check": "Resources excluded from spare calculations",
+          "Status": "Fail",
+          "Failures": 3,
+          "Details": null
+        }
+      ]
+    },
+    {
+      "id": "TE/Role:RN/2",
+      "table": "CapacityDiagnostics_SUMMARY",
+      "failures": [
+        {
+          "excel_row": 8,
+          "Stage": "A.2",
+          "Check": "Saved eligibility plan calendar",
+          "Status": "Fail",
+          "Failures": 4,
+          "Details": null
+        },
+        {
+          "excel_row": 13,
+          "Stage": "A.2",
+          "Check": "Resources excluded from optional spare",
+          "Status": "Fail",
+          "Failures": 3,
+          "Details": null
+        },
+        {
+          "excel_row": 17,
+          "Stage": "A.2",
+          "Check": "C# maximum five worked days per planned cluster",
+          "Status": "Fail",
+          "Failures": 4,
+          "Details": null
+        },
+        {
+          "excel_row": 19,
+          "Stage": "A.2",
+          "Check": "Preexisting allocation calendar breaches",
+          "Status": "Fail",
+          "Failures": 4,
+          "Details": null
+        }
+      ]
+    }
+  ]
+}

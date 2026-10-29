@@ -364,10 +364,10 @@ shared A1AvailabilityPeriods_Prepare = let
 in
     Table.Buffer(AddedAvailability);
 
-// Query: A1AllocationEvidence_Prepare
-// Purpose: Preserve any positive mapped allocation as evidence, including values below the existing 0.2/0.7 thresholds.
-// Output: One evidence flag per Role, Resource and Period; it does not change allocation quantities.
-shared A1AllocationEvidence_Prepare = let
+// Query: A1PositiveAllocationEvidence_Prepare
+// Purpose: Retain every positive mapped allocation period so adjacent-shift overflow cannot become candidate spare.
+// Output: Unique Role, Resource and Period keys; original allocation quantities remain unchanged in the allocation preparation.
+shared A1PositiveAllocationEvidence_Prepare = let
     UniqueIdentities = Table.SelectRows(A1AllocationIdentity_Prepare, each [MatchCount] = 1 and [Resource] <> null),
     PositiveWork = Table.SelectRows(UniqueIdentities, each
         (try A1AllocationValueIsUsable([ResShiftFTE]) and [ResShiftFTE] > 0 otherwise false)),
@@ -375,7 +375,17 @@ shared A1AllocationEvidence_Prepare = let
         {"Date", "Shifts", "RolesList"}, "PeriodLookup", JoinKind.LeftOuter),
     ExpandedPeriods = Table.ExpandTableColumn(JoinedPeriods, "PeriodLookup", {"Period"}, {"Period"}),
     MatchedPeriods = Table.SelectRows(ExpandedPeriods, each [Period] <> null),
-    Keys = Table.Distinct(Table.SelectColumns(MatchedPeriods, {"Role", "Resource", "Period"})),
+    Keys = Table.Distinct(Table.SelectColumns(MatchedPeriods, {"Role", "Resource", "Period"}))
+in
+    Table.Buffer(Keys);
+
+// Query: A1AllocationEvidence_Prepare
+// Purpose: Qualify allocated-shift capacity and cap slots using grouped allocation above NotShiftThreshold.
+// Output: The existing HasAllocationEvidence flag at unique Role, Resource and Period grain for the A.2/B handoff.
+// Notes: ResPeriodAllocationTABLE applies the strict threshold after grouping; smaller positive facts still exclude spare through A1PositiveAllocationEvidence_Prepare.
+shared A1AllocationEvidence_Prepare = let
+    QualifyingPeriods = Table.SelectRows(ResPeriodAllocationTABLE, each [Period] <> null),
+    Keys = Table.Distinct(Table.SelectColumns(QualifyingPeriods, {"Role", "Resource", "Period"})),
     EvidenceFlag = Table.AddColumn(Keys, "HasAllocationEvidence", each true, type logical)
 in
     Table.Buffer(EvidenceFlag);
@@ -713,8 +723,8 @@ in
     #"Filtered Rows";
 
 // Query: A1AllocatedShiftSlots_Prepare
-// Purpose: Count each positive mapped allocation cell once across the configured roster for the shift-slot cap.
-// Notes: Includes unavailable cells and positive allocation evidence below the legacy shift thresholds; quantities remain unchanged.
+// Purpose: Count each qualifying allocated shift once across the configured roster for the shift-slot cap.
+// Notes: Includes qualifying shifts without availability; positive overflow at or below NotShiftThreshold is not another slot.
 shared A1AllocatedShiftSlots_Prepare = let
     AllocatedCells = Table.Distinct(Table.SelectColumns(A1AllocationEvidence_Prepare, {"Resource", "Period"})),
     ResourceSlotCounts = Table.Group(AllocatedCells, {"Resource"}, {{"AllocatedShiftSlots", each Table.RowCount(_), Int64.Type}})
@@ -1514,9 +1524,10 @@ in
 // Query: A1OptionalShiftChoices_Prepare
 // Purpose: Select one available shift on a genuinely unallocated day before calendar eligibility is calculated.
 // Notes: Retain the existing lowest raw capacity/demand preference; Period provides a stable tie-break.
+// Notes: Any positive allocation excludes its Resource/day from spare, including overflow below the allocated-shift threshold.
 shared A1OptionalShiftChoices_Prepare = let
     AvailableCells = Table.SelectRows(ResDayPeriodAvailabilityTABLE, each [Availability] > 0 and [SpareCalculationAllowed] = true),
-    EvidenceDaysJoined = Table.NestedJoin(A1AllocationEvidence_Prepare, {"Period"}, #"PeriodShiftDay B", {"Period"}, "Calendar", JoinKind.LeftOuter),
+    EvidenceDaysJoined = Table.NestedJoin(A1PositiveAllocationEvidence_Prepare, {"Period"}, #"PeriodShiftDay B", {"Period"}, "Calendar", JoinKind.LeftOuter),
     EvidenceDaysExpanded = Table.ExpandTableColumn(EvidenceDaysJoined, "Calendar", {"Day"}),
     EvidenceDays = Table.Distinct(Table.SelectColumns(EvidenceDaysExpanded, {"Resource", "Day"})),
     UnallocatedDaysJoined = Table.NestedJoin(AvailableCells, {"Resource", "Day"}, EvidenceDays, {"Resource", "Day"}, "ExistingWork", JoinKind.LeftAnti),
@@ -1952,7 +1963,7 @@ in
     #"Removed Columns2";
 
 // Query: C' ResSingleShiftDayTABLE
-// Purpose: Publish preserved allocated availability and the one chosen shift on each jointly eligible spare day.
+// Purpose: Publish qualifying allocated availability and the one chosen shift on each jointly eligible spare day.
 // Notes: Cap targets use this prepared set; raw availability cannot bypass calendar or shift selection.
 shared #"C' ResSingleShiftDayTABLE" = let
     JoinedDayChoices = Table.NestedJoin(ResDayPeriodAvailabilityTABLE, {"Resource", "Day"}, A1SpareDayChoices_Prepare,
