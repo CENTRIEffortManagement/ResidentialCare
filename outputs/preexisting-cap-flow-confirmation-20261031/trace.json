@@ -1,0 +1,210 @@
+{
+  "scope": "81 cap-check rows recorded on 29 October; trace against current saved workbooks on 31 October",
+  "original_cap_rows": 81,
+  "groups": [
+    {
+      "unit": "BD",
+      "role": "AIN",
+      "original_cap_rows": 34,
+      "resources_in_saved_unit_allocation": 34,
+      "missing_resources": [],
+      "allocation_rows": 498,
+      "allocation_FTE_sum": 481.5311267103164,
+      "resource_periods": 498,
+      "organization_resource_period_differences": [],
+      "downstream_allocation_comparisons": {
+        "EffortAll": {
+          "keys": 84,
+          "differences": []
+        },
+        "Outcomes": {
+          "keys": 84,
+          "differences": []
+        },
+        "InefficienciesInput": {
+          "keys": 84,
+          "differences": []
+        },
+        "InefficienciesFinal": {
+          "keys": 84,
+          "differences": []
+        }
+      },
+      "current_statuses": {
+        "Fail": 33,
+        "Pass": 1
+      },
+      "current_origins": {
+        "Preexisting allocations": 33,
+        "null": 1
+      }
+    },
+    {
+      "unit": "BD",
+      "role": "CS",
+      "original_cap_rows": 26,
+      "resources_in_saved_unit_allocation": 26,
+      "missing_resources": [],
+      "allocation_rows": 564,
+      "allocation_FTE_sum": 340.7894736842105,
+      "resource_periods": 564,
+      "organization_resource_period_differences": [],
+      "downstream_allocation_comparisons": {
+        "EffortAll": {
+          "keys": 60,
+          "differences": []
+        },
+        "Outcomes": {
+          "keys": 60,
+          "differences": []
+        },
+        "InefficienciesInput": {
+          "keys": 60,
+          "differences": []
+        },
+        "InefficienciesFinal": {
+          "keys": 60,
+          "differences": []
+        }
+      },
+      "current_statuses": {
+        "Fail": 26
+      },
+      "current_origins": {
+        "Preexisting allocations": 26
+      }
+    },
+    {
+      "unit": "JH-RY",
+      "role": "CS",
+      "original_cap_rows": 12,
+      "resources_in_saved_unit_allocation": 12,
+      "missing_resources": [],
+      "allocation_rows": 394,
+      "allocation_FTE_sum": 223.5998202336962,
+      "resource_periods": 394,
+      "organization_resource_period_differences": [],
+      "downstream_allocation_comparisons": {
+        "EffortAll": {
+          "keys": 58,
+          "differences": []
+        },
+        "Outcomes": {
+          "keys": 58,
+          "differences": []
+        },
+        "InefficienciesInput": {
+          "keys": 58,
+          "differences": []
+        },
+        "InefficienciesFinal": {
+          "keys": 58,
+          "differences": []
+        }
+      },
+      "current_statuses": {
+        "Fail": 10,
+        "Pass": 2
+      },
+      "current_origins": {
+        "Preexisting allocations": 10,
+        "null": 2
+      }
+    },
+    {
+      "unit": "TE",
+      "role": "CS",
+      "original_cap_rows": 9,
+      "resources_in_saved_unit_allocation": 9,
+      "missing_resources": [],
+      "allocation_rows": 244,
+      "allocation_FTE_sum": 128.1578947368421,
+      "resource_periods": 244,
+      "organization_resource_period_differences": [],
+      "downstream_allocation_comparisons": {
+        "EffortAll": {
+          "keys": 56,
+          "differences": []
+        },
+        "Outcomes": {
+          "keys": 56,
+          "differences": []
+        },
+        "InefficienciesInput": {
+          "keys": 56,
+          "differences": []
+        },
+        "InefficienciesFinal": {
+          "keys": 56,
+          "differences": []
+        }
+      },
+      "current_statuses": {
+        "Pass": 5,
+        "Fail": 4
+      },
+      "current_origins": {
+        "null": 5,
+        "Preexisting allocations": 4
+      }
+    }
+  ],
+  "groups_with_lineage_differences": [],
+  "evidence": [
+    {
+      "path": "UNITS/BD/2. Calculations/Effort.xlsx",
+      "sha256": "f8dd41603a869d7ea91d32127d5dc6139819dcf322bf59bb76e6121319bee200",
+      "unchanged": true
+    },
+    {
+      "path": "UNITS/TE/2. Calculations/Effort.xlsx",
+      "sha256": "bb7fab4659af0898c9ba38f5e39e73657880fe0586a7a865447c109789bad14e",
+      "unchanged": true
+    },
+    {
+      "path": "UNITS/JH-RY/2. Calculations/Effort.xlsx",
+      "sha256": "c1ffdd88df8d5a12edba1ec63437bf51d2e5fc0e7e3129503fadb4f2deda83a9",
+      "unchanged": true
+    },
+    {
+      "path": "2. Calculations/E-O-I/Effort-All.xlsx",
+      "sha256": "2aa0af2e2994e41868a472aed4663c71572767ca2c6f53639dbfb164a42e0612",
+      "unchanged": true
+    },
+    {
+      "path": "2. Calculations/E-O-I/EffortOutcomes.xlsx",
+      "sha256": "1e1eda05eda3ef4630f8ffcbc65374d7c3421b5328077e3f69b8870ada68afd5",
+      "unchanged": true
+    },
+    {
+      "path": "2. Calculations/E-O-I/Inefficiencies.xlsx",
+      "sha256": "25fcaf940cea06c998d633de8f8ab2ef682c8b94e228ac49d0899c2d9afc7d5b",
+      "unchanged": true
+    },
+    {
+      "path": "UNITS/BD/2. Calculations/AIN/CapacityDistrib(B)-shifts.xlsx",
+      "sha256": "e8b4c819b07a55f692d373268b970bc6012774cbe3dc8a4b76318ac3a349649b",
+      "unchanged": true
+    },
+    {
+      "path": "UNITS/BD/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "sha256": "8323c92bc448b72acf478e3bdfed7baf3e95d6fb0de8a40026d6fe801f357e0b",
+      "unchanged": true
+    },
+    {
+      "path": "UNITS/JH-RY/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "sha256": "bfb7ee5c8cb0341bc7d55c7fb3724cd191c26bdffaf82d8214133885f27184a7",
+      "unchanged": true
+    },
+    {
+      "path": "UNITS/TE/2. Calculations/CS/CapacityDistrib(B)-shifts.xlsx",
+      "sha256": "06c137f5d37ec4b50e645bc9c251e2f528c017155df0c11f2fc9805ad6633a67",
+      "unchanged": true
+    }
+  ],
+  "limitations": [
+    "Current files have changed since the original audit.",
+    "Cap excess is a Resource/roster measure; inefficiency classifications use aggregated demand/capacity/allocation.",
+    "No workbook was opened in Excel, refreshed, saved or changed."
+  ]
+}
