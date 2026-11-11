@@ -1,0 +1,120 @@
+{
+  "StartedAt": "2026-11-09T14:06:46.7681121+11:00",
+  "FinishedAt": "2026-11-09T14:06:57.1659891+11:00",
+  "Files": [
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Shifts.xlsx",
+      "Users": []
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Intervals.xlsx",
+      "Users": []
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/Settings Data.xlsx",
+      "Users": []
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/2. Calculations/OvertimeRosterChecks.xlsx",
+      "Users": []
+    },
+    {
+      "Path": "CLIENT/DATExx-Whiddon/UNITS/JH-RY/1. Input/1-AllocationExtracted.xlsx",
+      "Users": []
+    }
+  ],
+  "Processes": [
+    {
+      "ProcessId": 91228,
+      "ParentProcessId": 11988,
+      "Name": "EXCEL.EXE",
+      "KernelModeTime": 1244218750,
+      "UserModeTime": 1027812500,
+      "ReadTransferCount": 116352380,
+      "WriteTransferCount": 199106706,
+      "WorkingSetSize": 1503416320
+    },
+    {
+      "ProcessId": 41460,
+      "ParentProcessId": 91228,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "KernelModeTime": 192968750,
+      "UserModeTime": 2994843750,
+      "ReadTransferCount": 5137356577,
+      "WriteTransferCount": 12682319,
+      "WorkingSetSize": 261222400
+    },
+    {
+      "ProcessId": 93108,
+      "ParentProcessId": 91228,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "KernelModeTime": 161250000,
+      "UserModeTime": 2833437500,
+      "ReadTransferCount": 4876764322,
+      "WriteTransferCount": 6578055,
+      "WorkingSetSize": 263217152
+    },
+    {
+      "ProcessId": 87816,
+      "ParentProcessId": 91228,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "KernelModeTime": 162500000,
+      "UserModeTime": 2817968750,
+      "ReadTransferCount": 4837827498,
+      "WriteTransferCount": 4428011,
+      "WorkingSetSize": 261492736
+    },
+    {
+      "ProcessId": 71876,
+      "ParentProcessId": 91228,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "KernelModeTime": 31093750,
+      "UserModeTime": 440000000,
+      "ReadTransferCount": 563731093,
+      "WriteTransferCount": 10035,
+      "WorkingSetSize": 123998208
+    }
+  ],
+  "Deltas": [
+    {
+      "ProcessId": 91228,
+      "Name": "EXCEL.EXE",
+      "CPUSeconds": 8.984375,
+      "ReadBytesDelta": 2573655,
+      "WriteBytesDelta": 4179493,
+      "WorkingSetBytes": 1503416320
+    },
+    {
+      "ProcessId": 41460,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 10.375,
+      "ReadBytesDelta": 190364709,
+      "WriteBytesDelta": 118875,
+      "WorkingSetBytes": 261222400
+    },
+    {
+      "ProcessId": 93108,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 10.390625,
+      "ReadBytesDelta": 195701481,
+      "WriteBytesDelta": 116562,
+      "WorkingSetBytes": 263217152
+    },
+    {
+      "ProcessId": 87816,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 10.390625,
+      "ReadBytesDelta": 190612861,
+      "WriteBytesDelta": 131859,
+      "WorkingSetBytes": 261492736
+    },
+    {
+      "ProcessId": 71876,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "WorkingSetBytes": 123998208
+    }
+  ]
+}

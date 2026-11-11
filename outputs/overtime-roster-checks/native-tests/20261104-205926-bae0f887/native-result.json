@@ -1,0 +1,302 @@
+[
+  {
+    "ActivityId": "06070846-75fc-406b-9066-4586e8397d3e",
+    "DataSourceAnalysis": [],
+    "Details": "OvertimeRosterChecksNativeTests()",
+    "EndTime": "2026-11-04T20:59:31.9949293+00:00",
+    "Method": "PQTest.RunTest",
+    "Name": "fixtures.query.pq",
+    "StartTime": "2026-11-04T20:59:27.5685713+00:00",
+    "Output": [
+      {
+        "Case": "Daily exactly ten hours has no excess",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Daily eleven net hours has one excess hour",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "CS Hospitality exactly eight hours",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "CS Hospitality eight and one-quarter hours",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Conflicting roster and worker agreement streams remain unknown",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "CS Personal Care uses ten-hour limit",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unpaid meal is excluded once",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Required client availability during meal counts as work",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Known overtime clock segments never include an unpaid meal",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unknown meal timing preserves known daily excess quantity",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Seven hours fifty-nine minutes fails minimum rest",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exactly eight hours passes minimum rest but needs short-gap review",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exactly ten hours has no short-gap trigger",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "First observed shift does not invent a predecessor",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Cross-unit duty participates in rest chronology",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Casual short rest remains a roster breach",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Documented broken-shift exception affects overtime review only",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Four complete duty-free dates passes days-off check",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Three complete duty-free dates flags one day short",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing one unit's declared coverage leaves days off unknown",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Overnight duty occupies both touched calendar dates",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Monday fifteen to Wednesday twenty-two gives fifty-five elapsed gap hours",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Removed pre-night fields and trigger are absent from published outputs",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exactly seventy-six net hours has no fortnight excess",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Seventy-four plus six identifies four excess hours",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Daily overtime hours still enter the net fortnight counter once",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Daily and fortnight overlapping excess is counted once",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "A known boundary-crossing shift allocates two and six hours to adjacent fortnights",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unknown meal placement across a fortnight boundary is not prorated",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Invalid equal start and finish record cannot leave a mixed fortnight clear",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing start and finish record cannot disappear from mixed fortnight coverage",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exact duplicate source rows never double known net hours",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Overlapping cross-unit duties are explicitly unknown",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Conflicting worker rows cannot silently choose employment type",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing CS agreement stream remains unknown",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Invalid nonblank daily threshold is explicitly rejected",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Duplicate threshold title is explicitly rejected",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing required threshold title is explicitly rejected",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Empty Settings dates leave fortnight unknown without a roster-date fallback",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Settings minimum anchors the fortnight when every published shift starts later",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unordered duplicate Settings dates still derive the earliest date",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Anchor is the minimum across unit Settings even when one unit has no dates",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Invalid Settings calendar date is explicitly rejected",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing Settings calendar Date column is explicitly rejected",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Missing payroll eligibility remains explicit",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unresolved DST offset does not publish a known elapsed rest result",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Source shift keys are stable under reordered roster rows",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Duplicated roster publications do not create extra actual shift identities",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Worker and allocation codes retain separate identifier meanings",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Allocation code alone is not guessed to be a worker identifier",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Overtime exemption does not suppress the minimum-rest roster check",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Off-role duty still occupies a target employee's calendar day",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Resolver accepts CELL filename brackets at the approved nested target",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Resolver uses case-insensitive longest SharePoint prefix",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Resolver refuses a false local prefix boundary",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Resolver refuses an alternative workbook filename",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Resolver refuses the organisation calculation parent folder",
+        "Passed": true,
+        "Details": null
+      }
+    ],
+    "DiagnosticEvents": {},
+    "RowCount": 57,
+    "Status": "Passed",
+    "Type": "PQTest.Expression"
+  }
+]

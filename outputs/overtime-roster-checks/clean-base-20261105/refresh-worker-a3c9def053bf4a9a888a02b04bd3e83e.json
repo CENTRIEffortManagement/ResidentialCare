@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-11-05T09:17:30.7914341+11:00",
+  "detail": null,
+  "saved": false,
+  "phase": "ClearingPathSheet",
+  "error": {
+    "Message": "The term '//' is not recognized as a name of a cmdlet, function, script file, or executable program.\r\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again.",
+    "Position": "At C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\outputs\\overtime-roster-checks\\clean-base-20261105\\Prepare-CleanBase.ps1:62 char:5\r\n+     // All other saved names were local to the deleted sheets; retain …\r\n+     ~~",
+    "Phase": "ClearingPathSheet",
+    "Stack": "at <ScriptBlock>, C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\outputs\\overtime-roster-checks\\clean-base-20261105\\Prepare-CleanBase.ps1: line 62"
+  },
+  "excel": {
+    "startTicks": "639294274450426574",
+    "name": "EXCEL",
+    "id": 69308
+  }
+}

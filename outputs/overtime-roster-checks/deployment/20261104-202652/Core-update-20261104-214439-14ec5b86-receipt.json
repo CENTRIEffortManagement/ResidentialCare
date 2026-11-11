@@ -1,0 +1,31 @@
+{
+  "Target": "Core",
+  "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "SourceSHA256": "23F8DA4322DB02598D9581B743FE16C412A52407412AB98DDF7C5F00335AF882",
+  "WorkbookSHA256Before": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "WorkbookSHA256After": "BAEA098523551DFF55807B0139D6C7E5674719C7EB26435AD0406C42FAE5BB38",
+  "RemovedQueries": [],
+  "AddedQueries": [],
+  "UpdatedQueries": [
+    "OvertimeRosterChecks_ExcessSegments"
+  ],
+  "VerifiedQueryCount": 33,
+  "LoadedOutputs": [
+    "OvertimeRosterChecks_ShiftResults",
+    "OvertimeRosterChecks_FortnightResults",
+    "OvertimeRosterChecks_ExcessSegments"
+  ],
+  "LoadedOutputBindingsPreserved": true,
+  "ReExtractionMatches": true,
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false,
+  "Operation": "Formula-only integration fix",
+  "IntegrationFixReason": "Isolated excess-query correction: project11shift fields and buffer3-column fortnight status plus7-column parts before nested reuse;57native assertions passed",
+  "PreviousReceipt": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-sync-receipt.before-update-20261104-214439-14ec5b86.json",
+  "Backup": "outputs/overtime-roster-checks/deployment/20261104-202652/backups/Core.before-update-20261104-214439-14ec5b86.xlsx",
+  "ReExtractionSource": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-after-update-20261104-214439-14ec5b86.m",
+  "ReExtractionEvidence": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-after-update-20261104-214439-14ec5b86-extraction.json",
+  "RecordedAtUTC": "2026-11-04T21:44:45.3190871Z"
+}

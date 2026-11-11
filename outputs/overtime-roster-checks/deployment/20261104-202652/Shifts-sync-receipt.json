@@ -1,0 +1,30 @@
+{
+  "Target": "Shifts",
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/BD/Shifts.pq",
+  "SourceSHA256": "9CE0C5A838B8D8DBEE2FE41FC928D9411E29AD4F6A3CAAD06CC81E0DEA7EF8ED",
+  "WorkbookSHA256Before": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+  "WorkbookSHA256After": "20FA2C7996BDA89E41A788A42338B286331CE2D00FFE58EE6AC0E044A8DFA54B",
+  "RemovedQueries": [],
+  "UpdatedQueries": [
+    "StartNames",
+    "EndNames",
+    "NAMES+INTERVALS",
+    "StaffShifts",
+    "ShiftIndex"
+  ],
+  "AddedQueries": [
+    "IMPORT OvertimeRosterChecks",
+    "RosterShiftsWithChecks",
+    "LegacyShiftMeasures",
+    "OvertimeRosterChecks"
+  ],
+  "VerifiedQueryCount": 48,
+  "LoadedOutputs": [
+    "OvertimeRosterChecks"
+  ],
+  "ReExtractionMatches": true,
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false
+}

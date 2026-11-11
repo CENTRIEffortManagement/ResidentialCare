@@ -1,0 +1,24 @@
+{
+  "beforeSHA256": "24AC56297F790688CF2D565F0835EEEEF13D22CF6915F3FEC22AF6EE499DBBD3",
+  "afterSHA256": "A57AAE82C6154ACF016FBE696A79E09A11F2AA9FB020DA7F7608340B818C0533",
+  "retainedValues": {
+    "DailyHoursLimit": 10,
+    "CSHospitalityHoursLimit": 8,
+    "CSPersonalCareHoursLimit": 10,
+    "MinimumBreakHours": 8,
+    "ShortGapReviewHours": 10,
+    "MinimumFortnightDutyFreeDays": 4,
+    "FortnightHoursLimit": 76,
+    "FortnightLengthDays": 14
+  },
+  "retainedValueCount": 8,
+  "removedColumns": [
+    "DateValue"
+  ],
+  "removedTitles": [
+    "MinimumDutyFreeDaysBeforeNight",
+    "PayrollFortnightAnchor"
+  ],
+  "anchor": "Earliest Date in Settings Data PermutationDimensions",
+  "existingNumericValuesPreserved": true
+}

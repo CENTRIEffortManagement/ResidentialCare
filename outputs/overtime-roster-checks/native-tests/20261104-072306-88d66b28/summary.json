@@ -1,0 +1,14 @@
+{
+  "Status": "Built",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "Fixture": "Workflows/ResidentialCare/OvertimeRosterChecks/Tests/OvertimeRosterChecks_TEST.pq",
+  "SourceSHA256": "5D75E28C9A386624959BF1B9F6E242E35AA6BD73A12F84996AE8FDE80D2AE75E",
+  "FixtureSHA256": "FC2A682284A978D728E35ACF6C996245FCDF56B653534FBD355079D95AB36FC1",
+  "FixtureRows": 0,
+  "FailedRows": 0,
+  "DataSources": 0,
+  "TimeoutSeconds": 60,
+  "Scope": "Actual new RosterChecks M definitions with synthetic landed inputs only; no workbook or SharePoint access",
+  "RunFolder": "outputs/overtime-roster-checks/native-tests/20261104-072306-88d66b28",
+  "SourcesUnchanged": true
+}

@@ -1,0 +1,27 @@
+{
+  "Status": "Moved and path updated",
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/OvertimeRosterChecks.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "SourceSHA256": "A34178A4E090544DA47AE600B96203443AC3C5454279084E082F1D3FB87E8A56",
+  "WorkbookSHA256": "C18A9D831AE3C7B7C265BD20F3A2C0AF756BC97FF67E0AE4306D846DA84116A1",
+  "QueryCount": 10,
+  "Queries": [
+    "IMPORT Published Roster",
+    "IMPORT Workers",
+    "IMPORT Settings Data",
+    "IMPORT OvertimeRosterChecks Whiddon Lists",
+    "LINK OvertimeRosterChecks Roles",
+    "LINK OvertimeRosterChecks Facilities",
+    "LINK OvertimeRosterThreshold",
+    "IMPORT CentriSyncPaths",
+    "PathTABLE",
+    "Unit1Path"
+  ],
+  "ReExtractionMatches": true,
+  "FilePathUrl": "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\[OvertimeRosterChecks.xlsx]UnitPath",
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false,
+  "ExtractedM": "outputs/overtime-roster-checks/bd-reset-20261105/OvertimeRosterChecks.m",
+  "RecordedAtUTC": "2026-11-04T22:38:19.1809740Z"
+}

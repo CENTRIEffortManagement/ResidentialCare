@@ -1,6 +1,6 @@
 // Power Query from: Shifts.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Shifts.xlsx
-// Extracted: 2026-10-05T08:25:52.219Z
+// Extracted: 2026-11-09T02:29:46.324Z
 
 section Section1;
 
@@ -152,7 +152,7 @@ in
 
 shared StartNames = let
     Source = Table.NestedJoin(Table_Intervals, {"StartInterval", "Role"}, #"EXTRACT Table_StartTime_Duration", {"StartDateTime", "Role"}, "StartTime+Duration", JoinKind.LeftOuter),
-    #"Expanded StartTime+Duration" = Table.ExpandTableColumn(Source, "StartTime+Duration", {"Name"}, {"Name"}),
+    #"Expanded StartTime+Duration" = Table.ExpandTableColumn(Source, "StartTime+Duration", {"Employee Code", "Name"}, {"Employee Code", "Name"}),
     STARTLABEL = Table.AddColumn(#"Expanded StartTime+Duration", "TimeType", each "Start"),
     #"Renamed Columns" = Table.RenameColumns(STARTLABEL,{{"StartInterval", "Date"}}),
     #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"EndPrecise", "EndInterval"}),
@@ -164,7 +164,7 @@ shared EndNames = let
     Source = Table.NestedJoin(Table_Intervals, {"EndPrecise", "Role"}, #"EXTRACT Table_StartTime_Duration", {"EndDateTime", "Role"}, "StartTime+Duration", JoinKind.LeftOuter),
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"EndInterval", type datetime}}),
     #"Sorted Rows1" = Table.Sort(#"Changed Type",{{"EndInterval", Order.Ascending}}),
-    #"Expanded StartTime+Duration" = Table.ExpandTableColumn(#"Sorted Rows1", "StartTime+Duration", {"Name"}, {"Name"}),
+    #"Expanded StartTime+Duration" = Table.ExpandTableColumn(#"Sorted Rows1", "StartTime+Duration", {"Employee Code", "Name"}, {"Employee Code", "Name"}),
     #"Renamed Columns" = Table.RenameColumns(#"Expanded StartTime+Duration",{{"EndInterval", "Date"}}),
     #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"StartInterval", "EndPrecise"}),
     #"Added Custom" = Table.AddColumn(#"Removed Columns", "TimeType", each "ShiftEnd")
@@ -192,24 +192,24 @@ else [Added Index1.IntervalID]-[IntervalID]),
     BUFFER1 = Table.Buffer(#"Expanded AllocatedIntervals"),
     #"Merged INTERVALS" = Table.NestedJoin(BUFFER1, {"AllocatedIntervals", "Role"}, Table_Intervals, {"IntervalID", "Role"}, "Intervals", JoinKind.LeftOuter),
     #"Expanded Intervals" = Table.ExpandTableColumn(#"Merged INTERVALS", "Intervals", {"StartInterval", "IntervalID", "EndInterval", "Duration", "ShiftPeriod"}, {"StartInterval", "IntervalID.1", "EndInterval", "Duration.1", "ShiftPeriod"}),
-    #"Sorted Rows3" = Table.Sort(#"Expanded Intervals",{{"Name", Order.Ascending}, {"StartInterval", Order.Ascending}}),
-    #"Renamed Columns1" = Table.RenameColumns(#"Sorted Rows3",{{"Duration.1", "IntervalDurationTemp"}}),
-    #"Sorted Rows2" = Table.Sort(#"Renamed Columns1",{{"Date", Order.Ascending}, {"StartInterval", Order.Ascending}}),
-    #"Renamed Columns" = Table.RenameColumns(#"Sorted Rows2",{{"StartInterval", "IntervalStart"}, {"EndInterval", "IntervalEnd"}, {"IntervalID", "ShiftStartInterval"}}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Expanded Intervals",{{"Duration.1", "IntervalDurationTemp"}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Renamed Columns1",{{"StartInterval", "IntervalStart"}, {"EndInterval", "IntervalEnd"}, {"IntervalID", "ShiftStartInterval"}}),
     #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"Added Index1.IntervalID", "Interval Range", "Date", "Duration", "ShiftStartInterval"}),
     #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"IntervalStart", "IntervalEnd",  "Name", "AllocatedIntervals"}),
     #"Sorted Rows" = Table.Sort(#"Reordered Columns",{{"Name", Order.Ascending}, {"IntervalStart", Order.Ascending}}),
     #"Merged STAFFSHIFTS" = Table.NestedJoin(#"Sorted Rows", {"Name", "IntervalStart"}, StaffDoubleShifts, {"Name", "DateTime"}, "StaffDoubleShifts", JoinKind.LeftOuter),
-    #"Expanded StaffDoubleShifts" = Table.ExpandTableColumn(#"Merged STAFFSHIFTS", "StaffDoubleShifts", {"Double Shift", "Effective Duration", "RealDuration", "ShiftType"}, {"Double Shift", "Effective Duration", "RealDuration", "ShiftType"}),
-    #"Filled Down" = Table.FillDown(#"Expanded StaffDoubleShifts",{"Effective Duration", "ShiftType", "RealDuration"}),
-    #"Sorted Rows1" = Table.Sort(#"Filled Down",{{"IntervalStart", Order.Ascending}}),
-    BUFFER2 = Table.Buffer(#"Sorted Rows1")
+    #"Expanded StaffDoubleShifts" = Table.ExpandTableColumn(#"Merged STAFFSHIFTS", "StaffDoubleShifts", {"Double Shift", "Effective Duration", "RealDuration"}, {"Double Shift", "Effective Duration", "RealDuration"}),
+    #"Merged Queries" = Table.NestedJoin(#"Expanded StaffDoubleShifts", {"DayDate", "Employee Code", "ShiftPeriod"}, #"IMPORT OvertimeRosterChecks", {"Date", "Employee Code", "Shift"}, "IMPORT OvertimeRosterChecks", JoinKind.LeftOuter),
+    #"Expanded IMPORT OvertimeRosterChecks" = Table.ExpandTableColumn(#"Merged Queries", "IMPORT OvertimeRosterChecks", {"ShiftType"}, {"ShiftType"}),
+    #"Filled Down" = Table.FillDown(#"Expanded IMPORT OvertimeRosterChecks",{"Effective Duration", "RealDuration"})
 in
-    BUFFER2;
+    #"Filled Down";
 
 shared #"NAMES+INTERVALSLIST" = let
     Source = #"NAMES+INTERVALS",
-    BUFFER1 = Table.Buffer(Source),
+    #"Replaced NULL X" = Table.ReplaceValue(Source,"x",null,Replacer.ReplaceValue,{"Name"}),
+    #"Filtered NAMES ONLY" = Table.SelectRows(#"Replaced NULL X", each ([Name] <> null)),
+    BUFFER1 = Table.Buffer(#"Filtered NAMES ONLY"),
     #"Merged Queries" = Table.NestedJoin(BUFFER1, {"IntervalStart", "Role"}, #"Table Intervals-IntervalAssocShift", {"StartInterval", "Role"}, "Table Intervals-IntervalAssocShift", JoinKind.LeftOuter),
     #"Expanded Table Intervals-IntervalAssocShift" = Table.ExpandTableColumn(#"Merged Queries", "Table Intervals-IntervalAssocShift", {"IntervalAssociatedShift"}, {"IntervalAssociatedShift"}),
     #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Expanded Table Intervals-IntervalAssocShift", {"IntervalStart", "IntervalEnd"}, "Attribute", "Value"),
@@ -227,21 +227,19 @@ else  DateTime.Date([TimeDate])),
     SORTEDDATETIME = Table.Sort(BUFFER,{{"TimeDate", Order.Ascending}}),
     ROLESALL = Table.AddColumn(SORTEDDATETIME, "Role1", each RolesList),
     #"Expanded RoleList" = Table.ExpandListColumn(ROLESALL, "Role1"),
-    STAFFCOUNT = Table.AddColumn(#"Expanded RoleList", "StaffCount", each if [Role1] = [Role] then 1 else 0),
-    #"Replaced NULL X" = Table.ReplaceValue(STAFFCOUNT,"x",null,Replacer.ReplaceValue,{"Name"}),
-    #"Filtered NAMES ONLY" = Table.SelectRows(#"Replaced NULL X", each ([Name] <> null))
+    STAFFCOUNT = Table.AddColumn(#"Expanded RoleList", "StaffCount", each if [Role1] = [Role] then 1 else 0)
 in
-    #"Filtered NAMES ONLY";
+    STAFFCOUNT;
 
 shared StaffShifts = let
     Source = #"EXTRACT Table_StartTime_Duration",
-    #"Removed Other Columns" = Table.SelectColumns(Source,{"Name", "Role", "StartDateTime", "EndDateTime", "Duration", "Shift"}),
+    #"Removed Other Columns" = Table.SelectColumns(Source,{"Employee Code", "Role", "Name", "StartDateTime", "EndDateTime", "Duration", "Shift"}),
     #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"StartDateTime", "StartOutter"}, {"EndDateTime", "EndOutter"}}),
     STARTOUTTER = Table.AddColumn(#"Renamed Columns", "StartInner", each [StartOutter] + #duration(0,0,1,0)),
     ENDINNER = Table.AddColumn(STARTOUTTER, "EndInner", each [EndOutter]-#duration(0,0,1,0)),
     #"Reordered Columns" = Table.ReorderColumns(ENDINNER,{"Name", "Role",  "StartOutter", "StartInner", "EndOutter", "Duration", "Shift"}),
     #"Changed Type" = Table.TransformColumnTypes(#"Reordered Columns",{{"StartInner", type datetime}, {"EndInner", type datetime}}),
-    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Changed Type", {"Name", "Role",  "Duration", "Shift"}, "Attribute", "Value"),
+    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Changed Type", {"Name", "Role",  "Duration", "Shift","Employee Code"}, "Attribute", "Value"),
     #"Renamed Columns1" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "IntervalPoint"}, {"Value", "DateTime"}}),
     STAFFCOUNT = Table.AddColumn(#"Renamed Columns1", "StaffCount", each if [IntervalPoint] = "StartOuter" then 0 else if [IntervalPoint] = "StartInner" then 1 else if [IntervalPoint] = "EndInner" then 1 else 0),
     BUFFER = Table.Buffer(STAFFCOUNT)
@@ -293,23 +291,91 @@ shared ShiftPeriod = let
 in
     #"Changed Type";
 
-shared ShiftGapIndices = let
+shared ShiftGapIndices = // Query: ShiftGapIndices
+// Purpose: Create per-employee indexes for matching each shift to the next shift.
+let
     Source = #"EXTRACT Table_StartTime_Duration",
-    #"Removed Other Columns" = Table.SelectColumns(Source,{"Name", "Role", "StartDateTime", "EndDateTime", "Duration", "Shift"}),
-    #"Sorted Rows" = Table.Sort(#"Removed Other Columns",{{"Name", Order.Ascending}, {"StartDateTime", Order.Ascending}}),
-    #"Changed Type" = Table.TransformColumnTypes(#"Sorted Rows",{{"StartDateTime", type number}}),
-    #"Grouped Rows" = Table.Group(#"Changed Type", {"Name"}, {{"Count", each _, type table [Name=text, Role=nullable text, WARD=nullable text, StartDateTime=datetime, EndDateTime=nullable datetime, Duration=number, Shift=text]}}),
-    #"Added Custom" = Table.AddColumn(#"Grouped Rows", "Custom", each Table.AddIndexColumn([Count],"Index",0,1)),
-    #"Removed Columns" = Table.RemoveColumns(#"Added Custom",{"Count"}),
-    #"Expanded Custom" = Table.ExpandTableColumn(#"Removed Columns", "Custom", {"Role", "WARD", "StartDateTime", "EndDateTime", "Duration", "Shift", "Index"}, {"Custom.Role", "Custom.WARD", "Custom.StartDateTime", "Custom.EndDateTime", "Custom.Duration", "Custom.Shift", "Custom.Index"}),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded Custom",{{"Custom.StartDateTime", type datetime}}),
-    #"Grouped Rows1" = Table.Group(#"Changed Type1", {"Name"}, {{"Count2", each _, type table [Name=text, Custom.Role=text, Custom.WARD=text, Custom.StartDateTime=datetime, Custom.EndDateTime=datetime, Custom.Duration=number, Custom.Shift=text, Custom.Index=number]}}),
-    #"Added Custom1" = Table.AddColumn(#"Grouped Rows1", "Index2", each Table.AddIndexColumn([Count2],"Index2",1,1)),
-    #"Expanded Index2" = Table.ExpandTableColumn(#"Added Custom1", "Index2", {"Custom.Role", "Custom.WARD", "Custom.StartDateTime", "Custom.EndDateTime", "Custom.Duration", "Custom.Shift", "Custom.Index", "Index2"}, {"Index2.Custom.Role", "Index2.Custom.WARD", "Index2.Custom.StartDateTime", "Index2.Custom.EndDateTime", "Index2.Custom.Duration", "Index2.Custom.Shift", "Index2.Custom.Index", "Index2.Index2"}),
-    #"Removed Columns1" = Table.RemoveColumns(#"Expanded Index2",{"Count2", "Index2.Custom.WARD"}),
-    #"Changed Type2" = Table.TransformColumnTypes(#"Removed Columns1",{{"Index2.Custom.StartDateTime", type number}})
+
+    SelectedShiftColumns = Table.SelectColumns(
+        Source,
+        {"Name", "Role", "StartDateTime", "EndDateTime", "Duration", "Shift"}
+    ),
+
+    GroupedShifts = Table.Group(
+        SelectedShiftColumns,
+        {"Name"},
+        {
+            {
+                "IndexedShifts",
+                each
+                    let
+                        SortedShifts = Table.Sort(
+                            _,
+                            {{"StartDateTime", Order.Ascending}}
+                        ),
+                        ShiftIndex = Table.AddIndexColumn(
+                            SortedShifts,
+                            "Index",
+                            0,
+                            1,
+                            type number
+                        ),
+                        // Match this offset to the next shift's zero-based index.
+                        NextShiftIndex = Table.AddColumn(
+                            ShiftIndex,
+                            "Index2",
+                            each [Index] + 1,
+                            type number
+                        )
+                    in
+                        NextShiftIndex,
+                type table [
+                    Name = text,
+                    Role = nullable text,
+                    StartDateTime = datetime,
+                    EndDateTime = nullable datetime,
+                    Duration = number,
+                    Shift = text,
+                    Index = number,
+                    Index2 = number
+                ]
+            }
+        }
+    ),
+
+    ExpandedShiftIndexes = Table.ExpandTableColumn(
+        GroupedShifts,
+        "IndexedShifts",
+        {
+            "Role", "StartDateTime", "EndDateTime",
+            "Duration", "Shift", "Index", "Index2"
+        },
+        {
+            "Index2.Custom.Role",
+            "Index2.Custom.StartDateTime",
+            "Index2.Custom.EndDateTime",
+            "Index2.Custom.Duration",
+            "Index2.Custom.Shift",
+            "Index2.Custom.Index",
+            "Index2.Index2"
+        }
+    ),
+
+    // Preserve the numeric start-time interface used by downstream queries.
+    NumericStartDateTime = Table.TransformColumnTypes(
+        ExpandedShiftIndexes,
+        {{"Index2.Custom.StartDateTime", type number}}
+    ),
+
+    SortedOutput = Table.Sort(
+        NumericStartDateTime,
+        {
+            {"Name", Order.Ascending},
+            {"Index2.Custom.StartDateTime", Order.Ascending}
+        }
+    )
 in
-    #"Changed Type2";
+    SortedOutput;
 
 shared ShiftGap = let
     Source = Table.NestedJoin(ShiftGapIndices, {"Name", "Index2.Index2"}, ShiftGapIndices, {"Name", "Index2.Custom.Index"}, "StaffShifts (2)", JoinKind.LeftOuter),
@@ -375,9 +441,9 @@ shared StaffDoubleShifts = let
     #"Merged Queries" = Table.NestedJoin(#"Filled Down", {"Name", "EffectiveShift.1.DateTime"}, DoubleShifts, {"Name", "Index2.Custom.StartDateTime"}, "DoubleShifts", JoinKind.LeftOuter),
     #"Expanded DoubleShifts" = Table.ExpandTableColumn(#"Merged Queries", "DoubleShifts", {"Double Shift", "Effective Duration", "RealDuration"}, {"Double Shift", "Effective Duration", "RealDuration"}),
     #"Removed Columns" = Table.RemoveColumns(#"Expanded DoubleShifts",{"EffectiveShift.1.DateTime"}),
-    SHIFTTYPE = Table.AddColumn(#"Removed Columns", "ShiftType", each if [RealDuration] <= 2/24 then "0-4Hrs" else if [RealDuration] <= 7.5/24 then "4-7.5Hrs" else if [RealDuration] <= 8.5/24 then "7.5-8.5Hrs" else if [RealDuration] <= 10/24 then "8.5-10Hrs" else if [RealDuration] <= 12/24 then "10-12Hrs" else ">12Hrs")
+    #"Inserted Date" = Table.AddColumn(#"Removed Columns", "Date", each DateTime.Date([DateTime]), type date)
 in
-    SHIFTTYPE;
+    #"Inserted Date";
 
 shared AMP = let
     Source = ShiftPeriod,
@@ -508,3 +574,11 @@ shared #"NAMES+INTERVALSMATRIX" = let
     #"Pivoted Column1" = Table.Pivot(#"Removed Columns", List.Distinct(#"Removed Columns"[Merged]), "Merged", "Allocated")
 in
     #"Pivoted Column1";
+
+shared #"IMPORT OvertimeRosterChecks" = let
+
+    Source = Excel.Workbook(File.Contents(#"FilePath - 2Calculations" & "\OvertimeRosterChecks.xlsx"), null, true),
+    Overtime_BreakSufficiency_Table = Source{[Item="Overtime_BreakSufficiency",Kind="Table"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(Overtime_BreakSufficiency_Table,{{"Employee Code", Int64.Type}, {"Date", type date}, {"Role", type text}, {"HrsBackToBack", type number}, {"BackToBack", type logical}, {"ShiftType", type text}, {"Shift", type text}, {"Overtime", type number}, {"OTx1.5", Int64.Type}, {"OTx2", Int64.Type}})
+in
+    #"Changed Type";

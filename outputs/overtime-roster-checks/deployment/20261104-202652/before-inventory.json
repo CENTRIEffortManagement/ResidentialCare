@@ -1,0 +1,1333 @@
+[
+  {
+    "Id": "Core",
+    "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+    "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+    "Sheets": [
+      "UnitPath",
+      "Availabilities-Employees-AVAIL",
+      "Employees-AlignCHECK",
+      "LeakedTerminatedWorkers_DIAGNOS",
+      "InvalidWorkerMembership_DIAGNOS",
+      "AmbiguousCurrentWorkers_DIAGNOS",
+      "UnmatchedCurrentWorkers_DIAGNOS",
+      "IncompleteWorkerIdentity_DIAGNO",
+      "DuplicateWorkers_DIAGNOSTICS",
+      "EmployeesTABLE_Prepare",
+      "CurrentWorkers_Reconciled",
+      "RosterStartDate",
+      "Employees-ALL (3)",
+      "TerminatedWorkers_DIAGNOSTICS",
+      "WorkerReconciliation_CHECK",
+      "WorkerSourceAttributes_SUMMARY",
+      "WorkerReconciliation_ISSUES",
+      "IMPORT Combined Roster",
+      "IMPORT Combined Availabilities",
+      "EXTRACT Leave Balances = Raw Sa",
+      "EXTRACT Leave Balances = Ra (2)",
+      "IMPORT Leave Balances",
+      "IMPORT Current_Workers",
+      "Employees-TABLE",
+      "Availabilities",
+      "Roster Blank AGENCY",
+      "Sheet1"
+    ],
+    "Tables": [
+      {
+        "Name": "PathTABLE",
+        "Range": "A3:B8",
+        "Type": "queryTable",
+        "Columns": [
+          "Variable Name",
+          "Value"
+        ]
+      },
+      {
+        "Name": "Availabilities_Employees_AVAIL",
+        "Range": "A1:I2",
+        "Type": "queryTable",
+        "Columns": [
+          "Payroll Code",
+          "Employee Name",
+          "Site Name",
+          "Date From",
+          "Date To",
+          "Type",
+          "Availability or Leave Reason",
+          "Facility-Abbrev",
+          "Available"
+        ]
+      },
+      {
+        "Name": "Employees_AlignCHECK",
+        "Range": "A1:Q1134",
+        "Type": null,
+        "Columns": [
+          "Site Name",
+          "AvailID",
+          "Department",
+          "Location",
+          "Department.1",
+          "Area",
+          "Employee Roster Name",
+          "Employment Type",
+          "RoleX",
+          "RosterID",
+          "Facility-AbbrevX",
+          "AssignedAvailID",
+          "WorkerID",
+          "Position Description",
+          "Employee Status Status Type",
+          "Contracted FN Hours",
+          "Facility-Abbrev.1"
+        ]
+      },
+      {
+        "Name": "LeakedTerminatedWorkers_DIAGNOSTICS",
+        "Range": "A1:X2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Allocation Employee Name",
+          "Records Employee Name",
+          "Employee Roster Name",
+          "EmploymentType",
+          "Role",
+          "Records Location",
+          "Roster Location",
+          "Availabilities Location",
+          "Leave Balance Location",
+          "In Allocation",
+          "In Records",
+          "In Leave Balances",
+          "Worker Membership",
+          "Current Worker Match Missing",
+          "Current Worker Record Ambiguous",
+          "Current Worker Row Count",
+          "Current Worker Eligible Row Count",
+          "Contracted FN Hours",
+          "Start Date",
+          "Termination Date",
+          "Terminated Before Roster",
+          "Excluded Termination Date"
+        ]
+      },
+      {
+        "Name": "InvalidWorkerMembership_DIAGNOSTICS",
+        "Range": "A1:H2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Employee Roster Name",
+          "Role",
+          "Worker Membership",
+          "In Allocation",
+          "In Records",
+          "In Leave Balances"
+        ]
+      },
+      {
+        "Name": "AmbiguousCurrentWorkers_DIAGNOSTICS",
+        "Range": "A1:G2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Employee Roster Name",
+          "Role",
+          "Worker Membership",
+          "Current Worker Row Count",
+          "Current Worker Eligible Row Count"
+        ]
+      },
+      {
+        "Name": "UnmatchedCurrentWorkers_DIAGNOSTICS",
+        "Range": "A1:H2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Employee Roster Name",
+          "Role",
+          "Worker Membership",
+          "In Allocation",
+          "In Records",
+          "In Leave Balances"
+        ]
+      },
+      {
+        "Name": "IncompleteWorkerIdentity_DIAGNOSTICS",
+        "Range": "A1:F2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Employee Roster Name",
+          "Role",
+          "Worker Membership",
+          "Missing Fields"
+        ]
+      },
+      {
+        "Name": "DuplicateWorkers_DIAGNOSTICS",
+        "Range": "A1:F2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Candidate Count",
+          "Employee Roster Name",
+          "Role",
+          "Worker Membership"
+        ]
+      },
+      {
+        "Name": "EmployeesTABLE_Prepare",
+        "Range": "A1:W345",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Allocation Employee Name",
+          "Records Employee Name",
+          "Employee Roster Name",
+          "EmploymentType",
+          "Role",
+          "Records Location",
+          "Roster Location",
+          "Availabilities Location",
+          "Leave Balance Location",
+          "In Allocation",
+          "In Records",
+          "In Leave Balances",
+          "Worker Membership",
+          "Current Worker Match Missing",
+          "Current Worker Record Ambiguous",
+          "Current Worker Row Count",
+          "Current Worker Eligible Row Count",
+          "Contracted FN Hours",
+          "Start Date",
+          "Termination Date",
+          "Terminated Before Roster"
+        ]
+      },
+      {
+        "Name": "CurrentWorkers_Reconciled",
+        "Range": "A1:K4331",
+        "Type": "queryTable",
+        "Columns": [
+          "Employee Code",
+          "Facility-Abbrev",
+          "Location Description",
+          "Position Description",
+          "Employee Status Description",
+          "Start Date",
+          "Termination Date",
+          "Termination Reason Description",
+          "Contracted FN Hours",
+          "Current Worker Row Count",
+          "Current Worker Eligible Row Count"
+        ]
+      },
+      {
+        "Name": "RosterStartDate",
+        "Range": "A1:A2",
+        "Type": "queryTable",
+        "Columns": [
+          "RosterStartDate"
+        ]
+      },
+      {
+        "Name": "Employees_ALL",
+        "Range": "A1:AJ382",
+        "Type": "queryTable",
+        "Columns": [
+          "Payroll Code",
+          "Facility-AbbrevZ",
+          "Records Employee Name",
+          "Availabilities Location",
+          "In Records Source",
+          "Department",
+          "Employee Roster Name",
+          "Employment Type",
+          "Employee Code",
+          "RoleX",
+          "Facility-AbbrevX",
+          "In Allocation Source",
+          "Roster Location",
+          "In Records",
+          "In Allocation",
+          "AssignedAvailID",
+          "Join Facility-Abbrev",
+          "Leave Balance Role",
+          "Leave Balance Location",
+          "In Leave Balances Source",
+          "In Leave Balances",
+          "Worker Membership",
+          "Employee Code.1",
+          "Facility-AbbrevY",
+          "Position Description",
+          "Employee Status Description",
+          "Contracted FN Hours",
+          "Start Date",
+          "Termination Date",
+          "Termination Reason Description",
+          "Current Worker Row Count",
+          "Current Worker Eligible Row Count",
+          "Records Location",
+          "Current Worker Match Missing",
+          "Current Worker Record Ambiguous",
+          "Terminated Before Roster"
+        ]
+      },
+      {
+        "Name": "TerminatedWorkers_DIAGNOSTICS",
+        "Range": "A1:H2",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Employee Roster Name",
+          "Termination Date",
+          "Termination Reason Description",
+          "In Allocation",
+          "In Records",
+          "Worker Membership"
+        ]
+      },
+      {
+        "Name": "WorkerReconciliation_CHECK",
+        "Range": "A1:D9",
+        "Type": "queryTable",
+        "Columns": [
+          "Check",
+          "Status",
+          "Failures",
+          "Details"
+        ]
+      },
+      {
+        "Name": "WorkerSourceAttributes_SUMMARY",
+        "Range": "A1:D19",
+        "Type": "queryTable",
+        "Columns": [
+          "Roster",
+          "Availabilities",
+          "Worker's Report",
+          "Leave Balances"
+        ]
+      },
+      {
+        "Name": "IMPORT_Combined_Roster",
+        "Range": "A1:W18601",
+        "Type": "queryTable",
+        "Columns": [
+          "Location",
+          "Pay Company",
+          "Department",
+          "Area",
+          "Employee Roster Name",
+          "Employment Type",
+          "Role",
+          "Employee Code",
+          "Date",
+          "Day Of Week",
+          "Shift Type",
+          "Start Time",
+          "End Time",
+          "Break Length Minutes",
+          "Shift Length",
+          "Shift Net Length",
+          "Rate",
+          "Published",
+          "Published At",
+          "Published By",
+          "Non Attended",
+          "Status",
+          "Employee_Code"
+        ]
+      },
+      {
+        "Name": "IMPORT_Combined_Availabilities",
+        "Range": "A1:G111511",
+        "Type": "queryTable",
+        "Columns": [
+          "Column1",
+          "Column2",
+          "Column3",
+          "Column4",
+          "Column5",
+          "Column6",
+          "Column7"
+        ]
+      },
+      {
+        "Name": "Availabilities_Prepare",
+        "Range": "A1:I66885",
+        "Type": "queryTable",
+        "Columns": [
+          "Payroll Code",
+          "Employee Name",
+          "Site Name",
+          "Date From",
+          "Date To",
+          "Type",
+          "Availability or Leave Reason",
+          "Facility-Abbrev",
+          "Available"
+        ]
+      },
+      {
+        "Name": "Roster_Blank_AGENCY",
+        "Range": "A1:D2",
+        "Type": "queryTable",
+        "Columns": [
+          "Location",
+          "Employment Type",
+          "Role",
+          "Employee Code"
+        ]
+      },
+      {
+        "Name": "EXTRACT_Leave_Balances___Raw_Sample",
+        "Range": "A1:V498",
+        "Type": null,
+        "Columns": [
+          "Employee Code",
+          "Facility",
+          "Position Description",
+          "Employee Status",
+          "Annual Leave Type",
+          "Service Leave Type",
+          "AL Balance Units - 30 Sep 25",
+          "AL $ Liability - 30 Sep 25",
+          "LSL Balance Units - 30 Sep 25",
+          "LSL $ Liability - 30 Sep 25",
+          "Balance Units - 31 Dec 25",
+          "$ Liability - 31 Dec 25",
+          "LSL Balance Units - 31/12/25",
+          "LSL $ Liability - 31/12/2025",
+          "Balance Units - 31 Mar 26",
+          "$ Liability - 31 Mar 26",
+          "LSL Balance Units - 31/03/2026",
+          "LSL $ Liability - 31/03/2026",
+          "Balance Units - 30/06/2026",
+          "$ Liability - 30/06/2026",
+          "LSL Balance Units - 30/06/2026",
+          "LSL $ Liability - 30/06/2026"
+        ]
+      },
+      {
+        "Name": "IMPORT_Leave_Balances",
+        "Range": "A1:J3157",
+        "Type": "queryTable",
+        "Columns": [
+          "Employee Code",
+          "Facility",
+          "Position Description",
+          "Employee Status Description",
+          "Annual Leave Table Code",
+          "Department Description",
+          "AL Units Available",
+          "AL Total Liability",
+          "LS Units Available",
+          "LS Total Liability"
+        ]
+      },
+      {
+        "Name": "EXTRACT_Leave_Balances___Raw_Sample_1",
+        "Range": "A1:V498",
+        "Type": null,
+        "Columns": [
+          "Employee Code",
+          "Facility",
+          "Position Description",
+          "Employee Status",
+          "Annual Leave Type",
+          "Service Leave Type",
+          "AL Balance Units - 30 Sep 25",
+          "AL $ Liability - 30 Sep 25",
+          "LSL Balance Units - 30 Sep 25",
+          "LSL $ Liability - 30 Sep 25",
+          "Balance Units - 31 Dec 25",
+          "$ Liability - 31 Dec 25",
+          "LSL Balance Units - 31/12/25",
+          "LSL $ Liability - 31/12/2025",
+          "Balance Units - 31 Mar 26",
+          "$ Liability - 31 Mar 26",
+          "LSL Balance Units - 31/03/2026",
+          "LSL $ Liability - 31/03/2026",
+          "Balance Units - 30/06/2026",
+          "$ Liability - 30/06/2026",
+          "LSL Balance Units - 30/06/2026",
+          "LSL $ Liability - 30/06/2026"
+        ]
+      },
+      {
+        "Name": "IMPORT_Current_Workers",
+        "Range": "A1:L4331",
+        "Type": "queryTable",
+        "Columns": [
+          "Employee Code",
+          "Period Description",
+          "Position Description",
+          "Employee Status Description",
+          "Start Date",
+          "Termination Date",
+          "Termination Reason Description",
+          "Age",
+          "Contracted FN Hours",
+          "Location Description",
+          "Site Description",
+          "Department Description"
+        ]
+      },
+      {
+        "Name": "Employees_TABLE",
+        "Range": "A1:P345",
+        "Type": "queryTable",
+        "Columns": [
+          "EmployeeID",
+          "Facility-Abbrev",
+          "Employee Roster Name",
+          "EmploymentType",
+          "Role",
+          "In Roster",
+          "In Availabilities",
+          "In Leave Balances",
+          "Start Date",
+          "Termination Date",
+          "In Records",
+          "Source",
+          "Records Home Location",
+          "Location",
+          "Locations Match",
+          "Contracted FN Hours"
+        ]
+      }
+    ],
+    "Connections": [
+      {
+        "Name": "Query - AmbiguousCurrentWorkers_DIAGNOSTICS",
+        "Id": "1",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities - Not in Roster",
+        "Id": "2",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities (3)",
+        "Id": "3",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities Prepare",
+        "Id": "4",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities-Employees",
+        "Id": "5",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities-Employees-AVAIL",
+        "Id": "6",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities-EmployeesDates",
+        "Id": "7",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities-EmployeesDates1",
+        "Id": "8",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Availabilities-EmployeesLIST",
+        "Id": "9",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - AvailabilitiesSTATS",
+        "Id": "10",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - CurrentWorkers_Prepare",
+        "Id": "11",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - CurrentWorkers_Reconciled",
+        "Id": "12",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - DuplicateWorkers_DIAGNOSTICS",
+        "Id": "13",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Employees-ALL",
+        "Id": "14",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Employees-ALL(1)",
+        "Id": "15",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Employees-MergedAvail+Roster",
+        "Id": "16",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EmployeeSourceMembership",
+        "Id": "17",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Employees-TABLE",
+        "Id": "18",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EmployeesTABLE_Prepare",
+        "Id": "19",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Combined Availabilities",
+        "Id": "20",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Combined Roster",
+        "Id": "21",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Current_Workers",
+        "Id": "22",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Leave Balances",
+        "Id": "23",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IncompleteWorkerIdentity_DIAGNOSTICS",
+        "Id": "24",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - InvalidWorkerMembership_DIAGNOSTICS",
+        "Id": "25",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - LeakedTerminatedWorkers_DIAGNOSTICS",
+        "Id": "26",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - LeaveBalances_DIAGNOSTICS",
+        "Id": "27",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - LeaveBalances_NotInEmployees_DIAGNOSTICS",
+        "Id": "28",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - LeaveBalances_Prepare",
+        "Id": "29",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - LeaveBalances_Workers",
+        "Id": "30",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - OutsideAnalysisFacilities_DIAGNOSTICS",
+        "Id": "31",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - PathTABLE",
+        "Id": "32",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Roster Blank AGENCY",
+        "Id": "33",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Roster Prepare",
+        "Id": "34",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RosteredEmployeeOnlyShifts",
+        "Id": "35",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RosteredEmployeeShiftsCOUNT",
+        "Id": "36",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RosteredEmployeesTABLE",
+        "Id": "37",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RosterStartDate",
+        "Id": "38",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - TerminatedWorkers_DIAGNOSTICS",
+        "Id": "39",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - UnmatchedCurrentWorkers_DIAGNOSTICS",
+        "Id": "40",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - WorkerReconciliation_CHECK",
+        "Id": "41",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - WorkerReconciliation_ISSUES",
+        "Id": "42",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - WorkerSourceAttributes_SUMMARY",
+        "Id": "43",
+        "Type": "5"
+      }
+    ]
+  },
+  {
+    "Id": "Shifts",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+    "SHA256": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+    "Sheets": [
+      "Unit1Path",
+      "IMPORT Table_AllocationExtracte",
+      "StaffDoubleShifts",
+      "IntervalsList",
+      "LINK Role Analysis",
+      "NAMES+INTERVALSLIST",
+      "ShiftsDayTime"
+    ],
+    "Tables": [
+      {
+        "Name": "StaffDoubleShifts",
+        "Range": "A1:K6913",
+        "Type": "queryTable",
+        "Columns": [
+          "Name",
+          "Role",
+          "Duration",
+          "Shift",
+          "IntervalPoint",
+          "DateTime",
+          "StaffCount",
+          "Double Shift",
+          "Effective Duration",
+          "RealDuration",
+          "ShiftType"
+        ]
+      },
+      {
+        "Name": "IntervalsList",
+        "Range": "A1:J3409",
+        "Type": "queryTable",
+        "Columns": [
+          "IntervalID",
+          "DayDate",
+          "TimeDate",
+          "Role",
+          "Time",
+          "IntervalAssociatedShift",
+          "Duration",
+          "ShiftPeriod",
+          "Attribute",
+          "ShiftDate"
+        ]
+      },
+      {
+        "Name": "LINK_Role_Analysis",
+        "Range": "A1:A5",
+        "Type": "queryTable",
+        "Columns": [
+          "ROLES"
+        ]
+      },
+      {
+        "Name": "NAMES_INTERVALSLIST",
+        "Range": "A1:R83153",
+        "Type": "queryTable",
+        "Columns": [
+          "DayDate",
+          "Name",
+          "TimeType",
+          "AllocatedIntervals",
+          "IntervalID.1",
+          "ShiftPeriod",
+          "Role",
+          "TimeDate",
+          "IntervalDurationTemp",
+          "Double Shift",
+          "RealDuration",
+          "Effective Duration",
+          "IntervalAssociatedShift",
+          "Attribute",
+          "ShiftType",
+          "ShiftDate",
+          "Role1",
+          "StaffCount"
+        ]
+      },
+      {
+        "Name": "ShiftsDayTime",
+        "Range": "A1:D43",
+        "Type": null,
+        "Columns": [
+          "DateTime",
+          "Shift",
+          "TimeType",
+          "DayDate"
+        ]
+      },
+      {
+        "Name": "UnitL1PathTABLE",
+        "Range": "A3:B9",
+        "Type": "queryTable",
+        "Columns": [
+          "Variable Name",
+          "Value"
+        ]
+      },
+      {
+        "Name": "IMPORT_Table_AllocationExtracted",
+        "Range": "A1:Z1729",
+        "Type": "queryTable",
+        "Columns": [
+          "Location",
+          "Pay Company",
+          "Department",
+          "Area",
+          "Employment Type",
+          "RoleShift",
+          "Employee Code",
+          "Date",
+          "Day Of Week",
+          "Shift Type",
+          "Start",
+          "End",
+          "Break",
+          "Shift Length",
+          "Hours",
+          "Rate",
+          "Published",
+          "Published At",
+          "Published By",
+          "Non Attended",
+          "Status",
+          "Code",
+          "Facility-Abbrev",
+          "Role",
+          "Unit",
+          "Name"
+        ]
+      }
+    ],
+    "Connections": [
+      {
+        "Name": "Query - 15OT",
+        "Id": "1",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - 20OT",
+        "Id": "2",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - AMP",
+        "Id": "3",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - DoubleShifts",
+        "Id": "4",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EffectiveDuration",
+        "Id": "5",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EndNames",
+        "Id": "6",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EndNames(1)",
+        "Id": "7",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT MealBreak",
+        "Id": "8",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT PermutationDimensions",
+        "Id": "9",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT Table Intervals",
+        "Id": "10",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT Table_IntervalsList",
+        "Id": "11",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT Table_StartTime_Duration",
+        "Id": "12",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - FilePath - 1Input",
+        "Id": "13",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - FilePath - 2Calculations",
+        "Id": "14",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Intervals",
+        "Id": "15",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Settings Data",
+        "Id": "16",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Table_AllocationExtracted",
+        "Id": "17",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Intervals(1)",
+        "Id": "18",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IntervalsList",
+        "Id": "19",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - LINK Role Analysis",
+        "Id": "20",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - MANUAL Shifts",
+        "Id": "21",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - MealBreakStart",
+        "Id": "22",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - MealBreakTime",
+        "Id": "23",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - MinHrs",
+        "Id": "24",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - MinShiftGap",
+        "Id": "25",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - NAMES+INTERVALS",
+        "Id": "26",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - NAMES+INTERVALSLIST",
+        "Id": "27",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - NAMES+INTERVALSMATRIX",
+        "Id": "28",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - NIGHTP",
+        "Id": "29",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - PMP",
+        "Id": "30",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Roles(1)",
+        "Id": "31",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RolesList",
+        "Id": "32",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShiftGap",
+        "Id": "33",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShiftGapIndices",
+        "Id": "34",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShiftIndex",
+        "Id": "35",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShiftLength",
+        "Id": "36",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShiftPeriod",
+        "Id": "37",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShiftPoints",
+        "Id": "38",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ShortHrs",
+        "Id": "39",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - StaffDoubleShifts",
+        "Id": "40",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - StaffList",
+        "Id": "41",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - StaffShifts",
+        "Id": "42",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - StartNames",
+        "Id": "43",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - StdHrs",
+        "Id": "44",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Table Intervals-IntervalAssocShift",
+        "Id": "45",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Table_Intervals",
+        "Id": "46",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - UnitL1PathTABLE",
+        "Id": "47",
+        "Type": "5"
+      }
+    ]
+  },
+  {
+    "Id": "Allocation",
+    "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+    "SHA256": "F925EBD3E60C9A5D8790F114DF1F58240C8A54CEA26EAEFBDB9FCE32398A16FB",
+    "Sheets": [
+      "Unit1Path",
+      "EXTRACT NAMES_INTERVALSLIST",
+      "IMPORT Shifts",
+      "ResourceShiftAllocation - less ",
+      "RoleShiftsDayTime",
+      "NAMES_INTERVALSLIST",
+      "ResourceIntervalAllocation",
+      "ResourceShiftAllocation",
+      "RoleShiftAllocation"
+    ],
+    "Tables": [
+      {
+        "Name": "UnitL1PathTABLE",
+        "Range": "A3:B9",
+        "Type": "queryTable",
+        "Columns": [
+          "Variable Name",
+          "Value"
+        ]
+      },
+      {
+        "Name": "EXTRACT_NAMES_INTERVALSLIST",
+        "Range": "A1:R83153",
+        "Type": "queryTable",
+        "Columns": [
+          "DayDate",
+          "Name",
+          "TimeType",
+          "AllocatedIntervals",
+          "IntervalID.1",
+          "ShiftPeriod",
+          "Role",
+          "TimeDate",
+          "IntervalDurationTemp",
+          "Double Shift",
+          "RealDuration",
+          "Effective Duration",
+          "IntervalAssociatedShift",
+          "Attribute",
+          "ShiftType",
+          "ShiftDate",
+          "Role1",
+          "StaffCount"
+        ]
+      },
+      {
+        "Name": "IMPORT_Shifts",
+        "Range": "A1:D25",
+        "Type": "queryTable",
+        "Columns": [
+          "Name",
+          "Item",
+          "Kind",
+          "Hidden"
+        ]
+      },
+      {
+        "Name": "ResourceShiftAllocation___less_Intervals",
+        "Range": "A1:E2175",
+        "Type": "queryTable",
+        "Columns": [
+          "ShiftPeriod",
+          "Name",
+          "Role",
+          "TimeDate",
+          "ResShiftFTE"
+        ]
+      },
+      {
+        "Name": "RoleShiftsDayTime",
+        "Range": "A1:D169",
+        "Type": "queryTable",
+        "Columns": [
+          "DateTime",
+          "Shift",
+          "DayDate",
+          "Roles.Role"
+        ]
+      },
+      {
+        "Name": "ResourceShiftAllocationY",
+        "Range": "A1:S83153",
+        "Type": "queryTable",
+        "Columns": [
+          "DayDate",
+          "Name",
+          "AllocatedIntervals",
+          "IntervalID.1",
+          "ShiftPeriod",
+          "Role",
+          "TimeDate",
+          "IntervalDuration",
+          "Double Shift",
+          "RealDuration",
+          "Effective Duration",
+          "IntervalAssociatedShift",
+          "Attribute",
+          "ShiftType",
+          "ShiftDate",
+          "Role1",
+          "StaffCount",
+          "ResEffectiveRatio-FTE",
+          "ResEffectiveIntervalEffort"
+        ]
+      },
+      {
+        "Name": "ResourceShiftAllocation",
+        "Range": "A1:J10385",
+        "Type": "queryTable",
+        "Columns": [
+          "ShiftDate",
+          "ShiftPeriod",
+          "IntervalAssociatedShift",
+          "Name",
+          "Role",
+          "TimeDate",
+          "Attribute",
+          "ResShiftEffort",
+          "ResShiftEffectiveRatio",
+          "ResShiftFTE"
+        ]
+      },
+      {
+        "Name": "Table_RoleShiftIntervalAllocation",
+        "Range": "A1:G285",
+        "Type": "queryTable",
+        "Columns": [
+          "ShiftDate",
+          "ShiftPeriod",
+          "Role",
+          "Attribute",
+          "RoleShiftEffort",
+          "DurationOfShifts",
+          "RoleShiftFTE"
+        ]
+      }
+    ],
+    "Connections": [
+      {
+        "Name": "Query - AMP",
+        "Id": "1",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT NAMES_INTERVALSLIST",
+        "Id": "2",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - EXTRACT ShiftsDayTime",
+        "Id": "3",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - FilePath",
+        "Id": "4",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT ShiftDuration",
+        "Id": "5",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT ShiftPeriod",
+        "Id": "6",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - IMPORT Shifts",
+        "Id": "7",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ResourceIntervalAllocation",
+        "Id": "8",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ResourceShiftAllocation",
+        "Id": "9",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ResourceShiftAllocation - less Intervals",
+        "Id": "10",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - ResourceShiftAllocation(2)",
+        "Id": "11",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - Roles",
+        "Id": "12",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RoleShiftAllocation",
+        "Id": "13",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RoleShiftEffortFTE",
+        "Id": "14",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RoleShiftIntervalAllocation",
+        "Id": "15",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - RoleShiftsDayTime",
+        "Id": "16",
+        "Type": "5"
+      },
+      {
+        "Name": "Query - UnitL1PathTABLE",
+        "Id": "17",
+        "Type": "5"
+      }
+    ]
+  }
+]

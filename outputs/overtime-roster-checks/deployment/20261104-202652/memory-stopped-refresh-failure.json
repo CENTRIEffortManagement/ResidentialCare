@@ -1,0 +1,14 @@
+{
+  "Status": "Failed",
+  "Message": "Targeted refresh failed at Core; downstream targets were not started.",
+  "CompletedOrAttempted": [
+    {
+      "Target": "Core",
+      "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+      "Status": "Failed",
+      "ExitCode": 3,
+      "Log": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-refresh.log"
+    }
+  ],
+  "FailedAtUTC": "2026-11-04T21:22:29.8805201Z"
+}

@@ -1,0 +1,46 @@
+{
+  "CapturedAtUTC": "2026-11-04T21:22:19.8351304Z",
+  "Reason": "Agent stopped its own unsaved core attempt after rising private commit and no completed output",
+  "Processes": [
+    {
+      "Name": "EXCEL",
+      "PID": 69672,
+      "CPUTotalSeconds": null,
+      "WorkingSetMB": 1639.4,
+      "PrivateMB": 1568.2,
+      "PeakWorkingSetMB": 1742.5
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 21168,
+      "CPUTotalSeconds": 1258.78125,
+      "WorkingSetMB": 252.0,
+      "PrivateMB": 5479.7,
+      "PeakWorkingSetMB": 256.1
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 22136,
+      "CPUTotalSeconds": 1230.03125,
+      "WorkingSetMB": 255.9,
+      "PrivateMB": 5513.7,
+      "PeakWorkingSetMB": 256.0
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 30208,
+      "CPUTotalSeconds": 1265.234375,
+      "WorkingSetMB": 256.0,
+      "PrivateMB": 8969.0,
+      "PeakWorkingSetMB": 256.0
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 56028,
+      "CPUTotalSeconds": 1228.03125,
+      "WorkingSetMB": 255.2,
+      "PrivateMB": 5278.8,
+      "PeakWorkingSetMB": 256.1
+    }
+  ]
+}

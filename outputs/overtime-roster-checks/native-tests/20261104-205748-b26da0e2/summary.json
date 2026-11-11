@@ -1,0 +1,15 @@
+{
+  "Status": "Failed",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "Fixture": "Workflows/ResidentialCare/OvertimeRosterChecks/Tests/OvertimeRosterChecks_TEST.pq",
+  "SourceSHA256": "31B28974A1B2D111A367DE2D16954E2361A84A759B7EF1243C64BAA55CA4E66C",
+  "FixtureSHA256": "A9EF49DCFF5B7D2AC2F4BDD25381FBFC90782EA970F6E62288C5272B99F0E841",
+  "FixtureRows": 0,
+  "FailedRows": 0,
+  "DataSources": 0,
+  "TimeoutSeconds": 60,
+  "Scope": "Actual new OvertimeRosterChecks M definitions with synthetic landed inputs only; no workbook or SharePoint access",
+  "RunFolder": "outputs/overtime-roster-checks/native-tests/20261104-205748-b26da0e2",
+  "Error": "No native JSON results returned; inspect native-result.json and native-stderr.txt.",
+  "SourcesUnchanged": true
+}

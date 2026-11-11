@@ -1,0 +1,22 @@
+{
+  "Status": "Failed",
+  "Sources": {
+    "Baseline": "outputs/overtime-roster-checks/source-gate/BD-Shifts.before.m",
+    "Shifts": "Workflows/ResidentialCare/OvertimeRosterChecks/BD/Shifts.pq",
+    "Consumer": "outputs/overtime-roster-checks/source-gate/BD-AllocationByShiftAverage.before.m",
+    "Fixture": "Workflows/ResidentialCare/OvertimeRosterChecks/Tests/ShiftsIntegration.pq"
+  },
+  "SHA256": {
+    "Baseline": "09ABE5F6CE1B40AF25C8502D52C64741464A58CED2A8F77BDF01BBF1D9DF8F98",
+    "Shifts": "BB51AC9F268E5F06D837797F3F9F5F108E00983AE083E8DEB4A429EB0C0827CA",
+    "Consumer": "36A725D2D6CC8DF72F03C3EA0321706B68559846C6A9DDE9E927271A4A386A05",
+    "Fixture": "CC7DDFC740ADB0DF9CAB9B83A73C20D2F868B5E20DAB40C1A5634E76886D9049"
+  },
+  "FixtureRows": 0,
+  "FailedRows": 0,
+  "DataSources": 0,
+  "Scope": "Actual baseline/new Shifts expressions and existing ResourceIntervalAllocation with synthetic inputs; no workbook or SharePoint access",
+  "RunFolder": "outputs/overtime-roster-checks/shifts-native-tests/20261104-071424-e611ab09",
+  "Error": "No native JSON results returned.",
+  "SourcesUnchanged": true
+}

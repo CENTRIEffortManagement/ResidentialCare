@@ -1,0 +1,33 @@
+{
+  "Status": "Prepared",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+  "SourceSHA256": "2A4A91A187AA02D9CEAE4597F6EE9F35CAE511EA71B5D52E4D18BB1A83A109D3",
+  "WorkbookSHA256": "6EBC7968091655D582161B4C48343790091B8259274BAC77F7D1EC3F6079901A",
+  "QueryCount": 10,
+  "Queries": [
+    "IMPORT OvertimeRosterChecks CentriSyncPaths",
+    "INPUT OvertimeRosterChecks FilePathUrl",
+    "OvertimeRosterChecks_Path",
+    "IMPORT Published Roster",
+    "IMPORT Workers",
+    "IMPORT Settings Data",
+    "IMPORT OvertimeRosterChecks Whiddon Lists",
+    "LINK OvertimeRosterChecks Roles",
+    "LINK OvertimeRosterChecks Facilities",
+    "LINK OvertimeRosterThreshold"
+  ],
+  "Worksheet": "UnitPath",
+  "Connections": 0,
+  "ReExtractionMatches": true,
+  "ExtractedM": "outputs/overtime-roster-checks/clean-base-20261105/OvertimeRosterChecks.m",
+  "ArchivedSource": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks-attempt1.pq",
+  "ArchivedWorkbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks-attempt1.xlsx",
+  "ArchivesUnchanged": true,
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false,
+  "BDWorkbooksChangedDuringReset": false,
+  "Donor": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+  "RecordedAtUTC": "2026-11-04T22:18:27.2787753Z"
+}

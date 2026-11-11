@@ -1,0 +1,33 @@
+{
+  "Target": "Core",
+  "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "SourceSHA256": "60032DA82D68178C37BF34429B4E3B4524AF9106E519FEC1BF1AD0BD59F2B8DC",
+  "WorkbookSHA256Before": "BAEA098523551DFF55807B0139D6C7E5674719C7EB26435AD0406C42FAE5BB38",
+  "WorkbookSHA256After": "3BDFA9E1A87C17E1ECF199242BEB8BB0FEC7D28FFCE655B7C55555EE1F94B26B",
+  "RemovedQueries": [],
+  "AddedQueries": [],
+  "UpdatedQueries": [
+    "OvertimeRosterChecks_ShiftPrepare",
+    "OvertimeRosterChecks_FortnightParts",
+    "OvertimeRosterChecks_ExcessSegments"
+  ],
+  "VerifiedQueryCount": 33,
+  "LoadedOutputs": [
+    "OvertimeRosterChecks_ShiftResults",
+    "OvertimeRosterChecks_FortnightResults",
+    "OvertimeRosterChecks_ExcessSegments"
+  ],
+  "LoadedOutputBindingsPreserved": true,
+  "ReExtractionMatches": true,
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false,
+  "Operation": "Formula-only integration fix",
+  "IntegrationFixReason": "Structural simplification: early exact-copy collapse, one-time period settings, record-based chronology/counters, flat position expansion;57combined native assertions passed",
+  "PreviousReceipt": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-sync-receipt.before-update-20261104-220354-d449c3a2.json",
+  "Backup": "outputs/overtime-roster-checks/deployment/20261104-202652/backups/Core.before-update-20261104-220354-d449c3a2.xlsx",
+  "ReExtractionSource": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-after-update-20261104-220354-d449c3a2.m",
+  "ReExtractionEvidence": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-after-update-20261104-220354-d449c3a2-extraction.json",
+  "RecordedAtUTC": "2026-11-04T22:04:01.4944683Z"
+}

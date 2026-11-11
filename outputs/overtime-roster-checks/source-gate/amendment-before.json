@@ -1,0 +1,31 @@
+{
+  "Scope": "Remove pre-night check and derive roster fortnight anchor from Settings Data PermutationDimensions",
+  "BaselineCoreSHA256": "CC412569F088A830FAF159783BDDA8F427A0FE91F1E8A0B14A9C902F9CE54019",
+  "BaselineShiftsSHA256": "B772F98AC6247A4BDB2BDDCCF5129C93D27D0306008FCC8AFA2D87E1736CB862",
+  "BaselineThresholdSHA256": "24AC56297F790688CF2D565F0835EEEEF13D22CF6915F3FEC22AF6EE499DBBD3",
+  "ThresholdLock": "An open file prevented ordinary hash access; shared read verified unchanged bytes. Do not overwrite while open.",
+  "Workbooks": [
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+      "SHA256": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+      "MatchesApprovedGate": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "SHA256": "F925EBD3E60C9A5D8790F114DF1F58240C8A54CEA26EAEFBDB9FCE32398A16FB",
+      "MatchesApprovedGate": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "MatchesApprovedGate": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "MatchesApprovedGate": true
+    }
+  ],
+  "Synchronised": false,
+  "Refreshed": false
+}

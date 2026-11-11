@@ -1,0 +1,21 @@
+{
+  "Status": "Clean Overtime base moved to BD and path updated; Shifts rolled back",
+  "CoreSource": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "CoreSHA256": "A34178A4E090544DA47AE600B96203443AC3C5454279084E082F1D3FB87E8A56",
+  "CoreSharedQueries": 10,
+  "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/OvertimeRosterChecks.xlsx",
+  "WorkbookSHA256": "C18A9D831AE3C7B7C265BD20F3A2C0AF756BC97FF67E0AE4306D846DA84116A1",
+  "Synchronised": true,
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false,
+  "ReExtractionMatches": true,
+  "ExtractedM": "outputs/overtime-roster-checks/bd-reset-20261105/OvertimeRosterChecks.m",
+  "PathStyle": "Worker Reconciliation PathTABLE and Unit1Path, adapted to2. Calculations",
+  "BDShiftsRolledBack": true,
+  "ShiftsSource": "Workflows/ResidentialCare/OvertimeRosterChecks/BD/Shifts.pq",
+  "ShiftsWorkbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+  "ShiftsOriginalWorkbookSHA256": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+  "ShiftsRollbackReceipt": "outputs/overtime-roster-checks/bd-reset-20261105/Shifts-rollback-receipt.json",
+  "Receipt": "outputs/overtime-roster-checks/bd-reset-20261105/Overtime-path-receipt.json"
+}

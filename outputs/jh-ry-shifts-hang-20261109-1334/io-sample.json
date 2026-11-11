@@ -1,0 +1,131 @@
+{
+  "StartedAt": "2026-11-09T13:37:24.3153441+11:00",
+  "FinishedAt": "2026-11-09T13:37:34.6729816+11:00",
+  "ElapsedSeconds": 10.3576375,
+  "Deltas": [
+    {
+      "ProcessId": 16632,
+      "Name": "Spotify.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 784,
+      "WriteBytesDelta": 784,
+      "MemoryBytes": 230809600
+    },
+    {
+      "ProcessId": 3088,
+      "Name": "EXCEL.EXE",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 629579776
+    },
+    {
+      "ProcessId": 62860,
+      "Name": "FoxitProxyServer_Socket_PH.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 16662528
+    },
+    {
+      "ProcessId": 68628,
+      "Name": "splwow64.exe",
+      "CPUSeconds": 0.015625,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 14172160
+    },
+    {
+      "ProcessId": 11396,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 74764288
+    },
+    {
+      "ProcessId": 22296,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.015625,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 74055680
+    },
+    {
+      "ProcessId": 55896,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 74268672
+    },
+    {
+      "ProcessId": 76112,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 73568256
+    },
+    {
+      "ProcessId": 65124,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.015625,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 102600704
+    },
+    {
+      "ProcessId": 49820,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 268308480
+    },
+    {
+      "ProcessId": 59244,
+      "Name": "Microsoft.Mashup.Container.Loader.exe",
+      "CPUSeconds": 0.0,
+      "ReadBytesDelta": 0,
+      "WriteBytesDelta": 0,
+      "MemoryBytes": 70635520
+    }
+  ],
+  "WaitedProcess": [
+    {
+      "ProcessId": 68628,
+      "ParentProcessId": 3088,
+      "Name": "splwow64.exe",
+      "CreationDate": "2026-11-09T13:31:45.397757+11:00",
+      "ExecutablePath": "C:\\WINDOWS\\splwow64.exe"
+    }
+  ],
+  "PowerQueryRootEntries": [
+    {
+      "Name": "Cache",
+      "LastWriteTime": "2026-08-26T09:00:27.06836+10:00",
+      "Length": null,
+      "PSIsContainer": true
+    },
+    {
+      "Name": "ExtensionCache",
+      "LastWriteTime": "2026-10-19T17:32:37.3369781+11:00",
+      "Length": null,
+      "PSIsContainer": true
+    },
+    {
+      "Name": "WebViewsDesktopUI",
+      "LastWriteTime": "2026-10-12T06:26:59.9108432+11:00",
+      "Length": null,
+      "PSIsContainer": true
+    },
+    {
+      "Name": "User.zip",
+      "LastWriteTime": "2026-11-09T13:24:16.9132679+11:00",
+      "Length": 27588,
+      "PSIsContainer": false
+    }
+  ],
+  "RecentTraceFiles": []
+}

@@ -1,0 +1,8 @@
+
+Unhandled Exception: System.ArgumentException: We expected to find the file 'C:\Users\Alex\AppData\Local\Temp\ResidentialCare-StaffList-PQTest-2.155.2\package\tools\Mashup\Microsoft.Data.Mashup.DLL'.
+Parameter name: directory
+   at Microsoft.Data.Mashup.MashupConnection.SetProcessContainerDirectory(String directory, Boolean copyFiles)
+   at PQTest.Common.Commands.ConfigureMashupEnvironmentAndRun[T](Configuration configuration, Func`1 action, Action`1 outputToConsole)
+   at PQTest.Console.Program.RunQueryEvaluationCommand(CommandLineApplication app, CommandLineApplication command, Func`2 invoke)
+   at Microsoft.Extensions.CommandLineUtils.CommandLineApplication.Execute(String[] args)
+   at PQTest.Console.Program.Main(String[] args)

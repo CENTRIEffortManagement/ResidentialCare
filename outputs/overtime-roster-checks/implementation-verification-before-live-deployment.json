@@ -1,0 +1,68 @@
+{
+  "Status": "Passed amended source implementation and synthetic native validation; deployment pending",
+  "AmendmentLocalDate": "2026-11-05",
+  "Changes": [
+    "Removed pre-night check and all its output fields/triggers",
+    "Removed pre-night threshold and manual date-anchor settings; template now eight numeric rows",
+    "Derived common fortnight start from earliest Settings Data PermutationDimensions Date across BD, TE and JH-RY"
+  ],
+  "CoreSource": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "CoreSHA256": "27EC5B8E127707EF800318E63FA074D0633F078316D7B6EAB3C23516AC64F2FD",
+  "CoreSharedQueries": 33,
+  "ShiftsSource": "Workflows/ResidentialCare/OvertimeRosterChecks/BD/Shifts.pq",
+  "ShiftsSHA256": "9CE0C5A838B8D8DBEE2FE41FC928D9411E29AD4F6A3CAAD06CC81E0DEA7EF8ED",
+  "NewShiftsQueries": [
+    "IMPORT OvertimeRosterChecks",
+    "RosterShiftsWithChecks",
+    "LegacyShiftMeasures",
+    "OvertimeRosterChecks"
+  ],
+  "NativeCases": 86,
+  "NativeFailures": 0,
+  "NativeDataSources": 0,
+  "CoreTestReceipt": "outputs/overtime-roster-checks/native-tests/20261104-200051-d4579d5d/summary.json",
+  "ShiftsTestReceipt": "outputs/overtime-roster-checks/shifts-native-tests/20261104-200151-3935c4ad/summary.json",
+  "FortnightAnchorSource": "Minimum Date across configured Settings Data PermutationDimensions tables; no manual setting and no Published Roster fallback",
+  "PreNightCheckRemoved": true,
+  "ThresholdWorkbook": "docs/OvertimeRosterCheck/OvertimeRosterThreshold.xlsx",
+  "ThresholdSHA256": "A57AAE82C6154ACF016FBE696A79E09A11F2AA9FB020DA7F7608340B818C0533",
+  "ThresholdColumns": [
+    "Title",
+    "Value",
+    "Unit",
+    "Notes"
+  ],
+  "ThresholdRows": 8,
+  "ThresholdVerification": "outputs/overtime-roster-checks/thresholds-verification.json",
+  "SourceWorkbooks": [
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+      "SHA256": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "SHA256": "F925EBD3E60C9A5D8790F114DF1F58240C8A54CEA26EAEFBDB9FCE32398A16FB",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "UnchangedSinceReadOnlyExtraction": true
+    }
+  ],
+  "Synchronised": false,
+  "Refreshed": false,
+  "NewCalculationWorkbookState": "Copied donor shell; new query definitions and output loads not installed",
+  "SharePointChanges": false,
+  "TableauChanges": false,
+  "CostChanges": false,
+  "Performance": "Structural review complete; calendar Date column narrowed before minimum; settings reads may repeat across independent outputs; no full-volume refresh/memory profiling",
+  "PreviousVerification": "outputs/overtime-roster-checks/implementation-verification-before-20261105-amendment.json",
+  "CompletedAtUTC": "2026-11-04T20:03:31.7194575Z"
+}

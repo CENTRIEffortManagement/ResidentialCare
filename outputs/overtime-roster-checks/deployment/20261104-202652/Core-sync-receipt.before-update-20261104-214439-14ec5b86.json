@@ -1,0 +1,31 @@
+{
+  "Target": "Core",
+  "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "SourceSHA256": "AB3868C13B052B0D1925CAF54592EFBB68598F6B98A2A0732AC93FDC9E3142A8",
+  "WorkbookSHA256Before": "52D74BFC74790B6A00543C263FA445E7CBB395739877C489B2DACDF51B6080B7",
+  "WorkbookSHA256After": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "RemovedQueries": [],
+  "AddedQueries": [],
+  "UpdatedQueries": [
+    "OvertimeRosterChecks_ShiftPrepare"
+  ],
+  "VerifiedQueryCount": 33,
+  "LoadedOutputs": [
+    "OvertimeRosterChecks_ShiftResults",
+    "OvertimeRosterChecks_FortnightResults",
+    "OvertimeRosterChecks_ExcessSegments"
+  ],
+  "LoadedOutputBindingsPreserved": true,
+  "ReExtractionMatches": true,
+  "Saved": true,
+  "Closed": true,
+  "Refreshed": false,
+  "Operation": "Formula-only integration fix",
+  "IntegrationFixReason": "Targeted memory reduction: buffer narrow reused inputs and remove nested lookup columns before physical grouping;57core and29consumer native assertions passed",
+  "PreviousReceipt": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-sync-receipt.before-update-20261104-212415-a92b4653.json",
+  "Backup": "outputs/overtime-roster-checks/deployment/20261104-202652/backups/Core.before-update-20261104-212415-a92b4653.xlsx",
+  "ReExtractionSource": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-after-update-20261104-212415-a92b4653.m",
+  "ReExtractionEvidence": "outputs/overtime-roster-checks/deployment/20261104-202652/Core-after-update-20261104-212415-a92b4653-extraction.json",
+  "RecordedAtUTC": "2026-11-04T21:24:21.4338396Z"
+}

@@ -1,0 +1,50 @@
+{
+  "error": {
+    "Phase": "Refreshing",
+    "Message": "Required worksheet query 'ExcessSegments/OvertimeRosterChecks_ExcessSegments' failed foreground refresh: The remote procedure call failed. (0x800706BE)"
+  },
+  "saved": false,
+  "excel": {
+    "id": 38372,
+    "startTicks": "639294255470038782",
+    "name": "EXCEL"
+  },
+  "phase": "Refreshing",
+  "detail": null,
+  "updatedAt": "2026-11-05T08:57:00.4203544+11:00",
+  "fileSnapshot": {
+    "Target": "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\OvertimeRosterChecks\\OvertimeRosterChecks.xlsx",
+    "TargetStamp": "391090:639294254848327255",
+    "Inputs": {
+      "C:\\Users\\Public\\Public Scripts\\CentriSyncPaths.xlsx": "11829:639233871151916445",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\Worker's Report.xlsx": "326543:639285179438927260",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\Worker's Report.xlsx": "321007:639275203860000000",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\Allocation\\Published Roster.xlsx": "1908745:639274558910000000",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\1. Input\\Allocation\\Published Roster.xlsx": "1908745:639274558910000000",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\2. Calculations\\Settings Data.xlsx": "72934:639288172152445011",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\1. Input\\Worker's Report.xlsx": "321007:639275203860000000",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\TE\\2. Calculations\\Settings Data.xlsx": "73054:639288171642202300",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\JH-RY\\2. Calculations\\Settings Data.xlsx": "73373:639288171706855433",
+      "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\UNITS\\BD\\1. Input\\Allocation\\Published Roster.xlsx": "1913957:639285179452709059"
+    }
+  },
+  "saveDiagnostics": [
+    {
+      "Point": "OpenedBeforeRefresh",
+      "CapturedAt": "2026-11-05T08:45:49.1149261+11:00",
+      "Saved": true,
+      "SavedType": "System.Boolean",
+      "SaveElapsedSeconds": -1.0,
+      "Errors": {},
+      "ReadOnly": false,
+      "FullName": "C:\\Users\\Alex\\CentriNOTSYNC\\ResidentialCare\\CLIENT\\DATExx-Whiddon\\2. Calculations\\OvertimeRosterChecks\\OvertimeRosterChecks.xlsx",
+      "ExcelReady": true,
+      "CalculationState": 0,
+      "CalculationMode": -4105,
+      "CalculateBeforeSave": true,
+      "EnableEvents": true,
+      "FileStamp": "391090:639294254848327255",
+      "ActiveRefreshes": []
+    }
+  ]
+}

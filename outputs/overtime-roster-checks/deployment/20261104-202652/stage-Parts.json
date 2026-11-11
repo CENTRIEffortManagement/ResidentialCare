@@ -1,0 +1,33 @@
+{
+  "Stage": "Parts",
+  "ReadOnlySucceeded": true,
+  "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "SourceSHA256": "AB3868C13B052B0D1925CAF54592EFBB68598F6B98A2A0732AC93FDC9E3142A8",
+  "WorkbookSHA256Before": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "WorkbookSHA256After": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "WorkbookUnchanged": true,
+  "CanonicalSourceUnchanged": true,
+  "ElapsedSeconds": 65.2625064,
+  "RowCount": 17809,
+  "Aggregates": [
+    {
+      "GroupBy": "IdentityStatus",
+      "GroupValue": "Unknown",
+      "RowCount": 14673,
+      "ColumnNames": "SourceShiftID | EmployeeKey | EmployeeID | EmployerKey | PayrollFortnightStart | PayrollFortnightEnd | PartStart | PartFinish | PartNetStartHours | PartNetEndHours | NetPartHours | DailyHoursLimit | EligibilityStatus | RosterScopeStatus | DutyStatus | IdentityStatus | MatchStatus | MealTreatmentStatus | CoverageStatus | ExportCoverageStart | ExportCoverageEnd | OverlapStatus | FortnightHoursBefore | FortnightHoursAfter | FortnightExcessHours"
+    },
+    {
+      "GroupBy": "IdentityStatus",
+      "GroupValue": "Verified",
+      "RowCount": 3136,
+      "ColumnNames": "SourceShiftID | EmployeeKey | EmployeeID | EmployerKey | PayrollFortnightStart | PayrollFortnightEnd | PartStart | PartFinish | PartNetStartHours | PartNetEndHours | NetPartHours | DailyHoursLimit | EligibilityStatus | RosterScopeStatus | DutyStatus | IdentityStatus | MatchStatus | MealTreatmentStatus | CoverageStatus | ExportCoverageStart | ExportCoverageEnd | OverlapStatus | FortnightHoursBefore | FortnightHoursAfter | FortnightExcessHours"
+    }
+  ],
+  "Saved": false,
+  "Closed": true,
+  "TimeoutSeconds": 180,
+  "SupervisorRequiresSaved": true,
+  "ExpectedSupervisorExitCode": 1,
+  "RecordedAtUTC": "2026-11-04T21:41:09.4829437Z"
+}

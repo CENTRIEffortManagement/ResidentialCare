@@ -1,0 +1,72 @@
+{
+  "Status": "Stopped by user; synchronized sources saved; live refresh incomplete",
+  "AmendmentLocalDate": "2026-11-05",
+  "Changes": [
+    "Removed pre-night check and all its output fields/triggers",
+    "Removed pre-night threshold and manual date-anchor settings; template now eight numeric rows",
+    "Derived common fortnight start from earliest Settings Data PermutationDimensions Date across BD, TE and JH-RY"
+  ],
+  "CoreSource": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "CoreSHA256": "60032DA82D68178C37BF34429B4E3B4524AF9106E519FEC1BF1AD0BD59F2B8DC",
+  "CoreSharedQueries": 33,
+  "ShiftsSource": "Workflows/ResidentialCare/OvertimeRosterChecks/BD/Shifts.pq",
+  "ShiftsSHA256": "9CE0C5A838B8D8DBEE2FE41FC928D9411E29AD4F6A3CAAD06CC81E0DEA7EF8ED",
+  "NewShiftsQueries": [
+    "IMPORT OvertimeRosterChecks",
+    "RosterShiftsWithChecks",
+    "LegacyShiftMeasures",
+    "OvertimeRosterChecks"
+  ],
+  "NativeCases": 86,
+  "NativeFailures": 0,
+  "NativeDataSources": 0,
+  "CoreTestReceipt": "outputs/overtime-roster-checks/native-tests/20261104-220304-c33225d9/summary.json",
+  "ShiftsTestReceipt": "outputs/overtime-roster-checks/shifts-native-tests/20261104-212345-d2d0c4cb/summary.json",
+  "FortnightAnchorSource": "Minimum Date across configured Settings Data PermutationDimensions tables; no manual setting and no Published Roster fallback",
+  "PreNightCheckRemoved": true,
+  "ThresholdWorkbook": "docs/OvertimeRosterCheck/OvertimeRosterThreshold.xlsx",
+  "ThresholdSHA256": "A57AAE82C6154ACF016FBE696A79E09A11F2AA9FB020DA7F7608340B818C0533",
+  "ThresholdColumns": [
+    "Title",
+    "Value",
+    "Unit",
+    "Notes"
+  ],
+  "ThresholdRows": 8,
+  "ThresholdVerification": "outputs/overtime-roster-checks/thresholds-verification.json",
+  "SourceWorkbooks": [
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+      "SHA256": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+      "UnchangedSinceReadOnlyExtraction": false
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "SHA256": "F925EBD3E60C9A5D8790F114DF1F58240C8A54CEA26EAEFBDB9FCE32398A16FB",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "UnchangedSinceReadOnlyExtraction": false
+    }
+  ],
+  "Synchronised": true,
+  "Refreshed": false,
+  "NewCalculationWorkbookState": "33 installed queries and three named output loads; source re-extraction verified",
+  "SharePointChanges": false,
+  "TableauChanges": false,
+  "CostChanges": false,
+  "Performance": "Bounded real-data probes:53118enrichment rows12.96sec;17639physical shifts12.24sec;17639chronological shifts41.04sec;17809parts65.26sec;15162employee-fortnight rows66.40sec. Excess composition identified as bottleneck; final live retry outcome pending.",
+  "PreviousVerification": "outputs/overtime-roster-checks/implementation-verification-before-20261105-amendment.json",
+  "CompletedAtUTC": "2026-11-04T20:03:31.7194575Z",
+  "DeploymentFolder": "outputs/overtime-roster-checks/deployment/20261104-202652",
+  "IntegrationFix": "Facilities exposes Location, not Title, in the live SharePoint connector. Updated the downstream mapping and aligned its native fixture;57 core assertions passed. Threshold columns and settings are unchanged.",
+  "LiveRefreshState": "User stopped work. Latest bounded excess probe exceeded25seconds total and closed unsaved. No successful live refresh; no downstream refresh. All owned Excel and Mashup processes closed; saved core hash matches synchronization receipt.",
+  "MemoryManagementChange": "Buffered narrow reused maps/roster/physical match facts; removed nested lookup columns early; excess query projects11shift fields, buffers3-column fortnight status and7-column parts before nested reuse. No new queries or business-rule/output changes."
+}

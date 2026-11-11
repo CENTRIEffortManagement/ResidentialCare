@@ -1,0 +1,24 @@
+{
+  "Stage": "Physical",
+  "EvaluationCompleted": true,
+  "ElapsedSeconds": 12.2368698,
+  "RowCount": 17639,
+  "Aggregates": [
+    {
+      "GroupBy": "IdentityStatus",
+      "GroupValue": "Unknown",
+      "RowCount": 14535,
+      "ColumnNames": "SourceShiftID | SourceRecordCount | SourceFactCount | SourceUnits | SourceExportUnit | SourceRow | WorkerEmployeeID | AllocationCode | EmployerKey | SourceName | SourceRole | Location | SourceDate | BreakMinutes | NetRosterHours | SourceShiftType | SourceEmploymentType | Non Attended | Status | Published | MealAvailabilityRequired | CoverageStart | CoverageEnd | SourceFile | ShiftStart | ShiftFinish | GrossHours | MealStartDateTime | MealFinishDateTime | SourceRecordID | Role | Facility | SourceUnit | WorkerMatchCount | Start Date | Termination Date | EmployeeID | AliasWorkerCount | IdentityStatus | EmployeeKey | EmploymentType | AgreementStream | Grade | OvertimeExempt | BrokenShiftException | PolicyStatus | PublicationStatus | DutyStatus | RosterScopeStatus | EligibilityStatus | DailyHoursLimit | ShiftMatchKey"
+    },
+    {
+      "GroupBy": "IdentityStatus",
+      "GroupValue": "Verified",
+      "RowCount": 3104,
+      "ColumnNames": "SourceShiftID | SourceRecordCount | SourceFactCount | SourceUnits | SourceExportUnit | SourceRow | WorkerEmployeeID | AllocationCode | EmployerKey | SourceName | SourceRole | Location | SourceDate | BreakMinutes | NetRosterHours | SourceShiftType | SourceEmploymentType | Non Attended | Status | Published | MealAvailabilityRequired | CoverageStart | CoverageEnd | SourceFile | ShiftStart | ShiftFinish | GrossHours | MealStartDateTime | MealFinishDateTime | SourceRecordID | Role | Facility | SourceUnit | WorkerMatchCount | Start Date | Termination Date | EmployeeID | AliasWorkerCount | IdentityStatus | EmployeeKey | EmploymentType | AgreementStream | Grade | OvertimeExempt | BrokenShiftException | PolicyStatus | PublicationStatus | DutyStatus | RosterScopeStatus | EligibilityStatus | DailyHoursLimit | ShiftMatchKey"
+    }
+  ],
+  "Saved": false,
+  "SourceSHA256": "AB3868C13B052B0D1925CAF54592EFBB68598F6B98A2A0732AC93FDC9E3142A8",
+  "WorkbookSHA256Before": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "RecordedAtUTC": "2026-11-04T21:37:31.0291804Z"
+}

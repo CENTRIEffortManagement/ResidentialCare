@@ -1,0 +1,52 @@
+{
+  "Status": "Passed source implementation and synthetic native validation; deployment pending",
+  "CoreSource": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "CoreSHA256": "CC412569F088A830FAF159783BDDA8F427A0FE91F1E8A0B14A9C902F9CE54019",
+  "CoreSharedQueries": 34,
+  "ShiftsSource": "Workflows/ResidentialCare/OvertimeRosterChecks/BD/Shifts.pq",
+  "ShiftsSHA256": "B772F98AC6247A4BDB2BDDCCF5129C93D27D0306008FCC8AFA2D87E1736CB862",
+  "NewShiftsQueries": [
+    "IMPORT OvertimeRosterChecks",
+    "RosterShiftsWithChecks",
+    "LegacyShiftMeasures",
+    "OvertimeRosterChecks"
+  ],
+  "NativeCases": 82,
+  "NativeFailures": 0,
+  "NativeDataSources": 0,
+  "CoreTestReceipt": "outputs/overtime-roster-checks/native-tests/20261104-085722-ba99734a/summary.json",
+  "ShiftsTestReceipt": "outputs/overtime-roster-checks/shifts-native-tests/20261104-083038-dde77038/summary.json",
+  "ThresholdWorkbook": "docs/OvertimeRosterCheck/OvertimeRosterThreshold.xlsx",
+  "ThresholdSHA256": "24AC56297F790688CF2D565F0835EEEEF13D22CF6915F3FEC22AF6EE499DBBD3",
+  "ThresholdVerification": "outputs/overtime-roster-checks/thresholds-verification.json",
+  "SourceWorkbooks": [
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/Shifts.xlsx",
+      "SHA256": "12D08340E8D96474102DD8635688C3405CBEEAC68CABFA443286B92165EE5B65",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/2. Calculations/AllocationByShiftAverage.xlsx",
+      "SHA256": "F925EBD3E60C9A5D8790F114DF1F58240C8A54CEA26EAEFBDB9FCE32398A16FB",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/UNITS/BD/1. Input/Worker Reconciliation.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "UnchangedSinceReadOnlyExtraction": true
+    },
+    {
+      "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+      "SHA256": "60832746CAA9885D7B425C7B879F14943459B8BBA66BA8E18883B10EF8DEC64C",
+      "UnchangedSinceReadOnlyExtraction": true
+    }
+  ],
+  "Synchronised": false,
+  "Refreshed": false,
+  "NewCalculationWorkbookState": "Copied donor shell; new query definitions and output loads not installed",
+  "SharePointChanges": false,
+  "TableauChanges": false,
+  "CostChanges": false,
+  "Performance": "Structural review complete; no full-volume refresh or memory profiling",
+  "CompletedAtUTC": "2026-11-04T09:00:38.2600735Z"
+}

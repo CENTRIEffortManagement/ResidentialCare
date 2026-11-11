@@ -1,0 +1,122 @@
+[
+  {
+    "ActivityId": "e42118d9-6f6f-4d9e-af2e-714a860e18ce",
+    "DataSourceAnalysis": [],
+    "Details": "OvertimeShiftsIntegrationNativeTests()",
+    "EndTime": "2026-11-04T07:45:42.5979026+00:00",
+    "Method": "PQTest.RunTest",
+    "Name": "fixtures.query.pq",
+    "StartTime": "2026-11-04T07:45:41.5880212+00:00",
+    "Output": [
+      {
+        "Case": "Five source shifts retain exactly four plotting points each",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "All eleven legacy plotting columns preserve exact baseline values",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "SourceShiftID and checks copied to all four points",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Different shifts of same employee retain independent statuses",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Same-time different employees retain independent status",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Nullable flags are preserved without fill-down",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Unmatched Master row stays as four unknown plotting points",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Ambiguous match retains one prepared row with unknown checks",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Ambiguous match causes no plotting or interval row growth",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "NAMES+INTERVALSLIST legacy keys and values preserve baseline",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "NAMES+INTERVALSLIST carries all new checks before endpoint and Role1 expansion",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Interval rows preserve status by source shift without fill-down",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Actual ResourceIntervalAllocation keeps all old metrics and row grain",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Actual ResourceIntervalAllocation retains added check columns",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Published OvertimeRosterChecks exposes five plotting fields and metadata",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Wide source provenance is not repeated on plotting or interval rows",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exact five-part key rejects changed SourceUnit",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exact five-part key rejects changed AllocationCode",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exact five-part key rejects changed Role",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exact five-part key rejects changed ShiftStart",
+        "Passed": true,
+        "Details": null
+      },
+      {
+        "Case": "Exact five-part key rejects changed ShiftFinish",
+        "Passed": true,
+        "Details": null
+      }
+    ],
+    "DiagnosticEvents": {},
+    "RowCount": 21,
+    "Status": "Passed",
+    "Type": "PQTest.Expression"
+  }
+]

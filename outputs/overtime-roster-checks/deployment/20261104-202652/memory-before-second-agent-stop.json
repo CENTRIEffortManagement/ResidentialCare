@@ -1,0 +1,36 @@
+{
+  "CapturedAtUTC": "2026-11-04T21:32:01.9723175Z",
+  "Reason": "Targeted buffers did not resolve private-memory growth; stop unsaved retry to isolate stages",
+  "Processes": [
+    {
+      "Name": "EXCEL",
+      "PID": 79672,
+      "CPUTotalSeconds": null,
+      "PrivateMB": 1993.7
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 21824,
+      "CPUTotalSeconds": 306.84375,
+      "PrivateMB": 1906.4
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 22080,
+      "CPUTotalSeconds": 389.671875,
+      "PrivateMB": 22792.8
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 41620,
+      "CPUTotalSeconds": 238.90625,
+      "PrivateMB": 2037.5
+    },
+    {
+      "Name": "Microsoft.Mashup.Container.Loader",
+      "PID": 76868,
+      "CPUTotalSeconds": 336.671875,
+      "PrivateMB": 2061.6
+    }
+  ]
+}

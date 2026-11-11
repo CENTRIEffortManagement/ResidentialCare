@@ -1,0 +1,18 @@
+[
+  {
+    "Source": "Navigation",
+    "Columns": "odata.type | odata.id | odata.etag | odata.editLink | Items@odata.navigationLinkUrl | Id | Title | Items | IsLeaf | ItemKind | ItemName"
+  },
+  {
+    "Source": "Threshold",
+    "Columns": "Title | Value | Unit | Notes | Color Tag | Compliance Asset Id | ID | Content Type | Modified | Created | Created By | Modified By | Version | Attachments | Edit | Type | Item Child Count | Folder Child Count | Label setting | Retention label | Retention label Applied | Label applied by | Item is a Record | App Created By | App Modified By"
+  },
+  {
+    "Source": "Roles",
+    "Columns": "Role Group | Roster Roles | DC Category | DC Role | Direct Care % | Leave Roles | Color Tag | Compliance Asset Id | ID | Content Type | Modified | Created | Created By | Modified By | Version | Attachments | Edit | Type | Item Child Count | Folder Child Count | Label setting | Retention label | Retention label Applied | Label applied by | Item is a Record | App Created By | App Modified By"
+  },
+  {
+    "Source": "Facilities",
+    "Columns": "Location | Facility-Abbrev | Note | FacilityShort | Color Tag | Compliance Asset Id | ID | Content Type | Modified | Created | Created By | Modified By | Version | Attachments | Edit | Type | Item Child Count | Folder Child Count | Label setting | Retention label | Retention label Applied | Label applied by | Item is a Record | App Created By | App Modified By"
+  }
+]

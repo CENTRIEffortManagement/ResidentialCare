@@ -1,0 +1,33 @@
+{
+  "Stage": "Chronology",
+  "ReadOnlySucceeded": true,
+  "Workbook": "CLIENT/DATExx-Whiddon/2. Calculations/OvertimeRosterChecks/OvertimeRosterChecks.xlsx",
+  "Source": "Workflows/ResidentialCare/OvertimeRosterChecks/OvertimeRosterChecks.pq",
+  "SourceSHA256": "AB3868C13B052B0D1925CAF54592EFBB68598F6B98A2A0732AC93FDC9E3142A8",
+  "WorkbookSHA256Before": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "WorkbookSHA256After": "CE5E73C7C0F3CBFE4399DF68D266BB3FFBC96592DEA45E7DBB5A552D5916AF71",
+  "WorkbookUnchanged": true,
+  "CanonicalSourceUnchanged": true,
+  "ElapsedSeconds": 41.0356156,
+  "RowCount": 17639,
+  "Aggregates": [
+    {
+      "GroupBy": "IdentityStatus",
+      "GroupValue": "Unknown",
+      "RowCount": 14535,
+      "ColumnNames": "SourceShiftID | SourceRecordCount | SourceFactCount | SourceUnits | SourceExportUnit | SourceRow | WorkerEmployeeID | AllocationCode | EmployerKey | SourceName | SourceRole | Location | SourceDate | BreakMinutes | NetRosterHours | SourceShiftType | SourceEmploymentType | Non Attended | Status | Published | MealAvailabilityRequired | CoverageStart | CoverageEnd | SourceFile | ShiftStart | ShiftFinish | GrossHours | MealStartDateTime | MealFinishDateTime | SourceRecordID | Role | Facility | SourceUnit | WorkerMatchCount | Start Date | Termination Date | EmployeeID | AliasWorkerCount | IdentityStatus | EmployeeKey | EmploymentType | AgreementStream | Grade | OvertimeExempt | BrokenShiftException | PolicyStatus | PublicationStatus | DutyStatus | RosterScopeStatus | EligibilityStatus | DailyHoursLimit | ShiftMatchKey | MatchKeyCount | MatchStatus | NetHoursStatus | MealTreatmentStatus | QualifyingNetHours | RosterShiftPeriod | ExportCoverageStart | ExportCoverageEnd | CoverageStatus | EmployeeShiftIndex | PreviousSourceShiftID | PreviousShiftFinish | PreviousDutyStatus | NextShiftStart | GapWallHours | OverlapStatus | GapElapsedStatus | GapHours | GapStatus | MinimumBreakFlag | MinBreakStatus | ShortGapReviewFlag | ShortGapStatus | DailyExcessHours | DailyStatus | DailyHoursFlag | ClockStatus"
+    },
+    {
+      "GroupBy": "IdentityStatus",
+      "GroupValue": "Verified",
+      "RowCount": 3104,
+      "ColumnNames": "SourceShiftID | SourceRecordCount | SourceFactCount | SourceUnits | SourceExportUnit | SourceRow | WorkerEmployeeID | AllocationCode | EmployerKey | SourceName | SourceRole | Location | SourceDate | BreakMinutes | NetRosterHours | SourceShiftType | SourceEmploymentType | Non Attended | Status | Published | MealAvailabilityRequired | CoverageStart | CoverageEnd | SourceFile | ShiftStart | ShiftFinish | GrossHours | MealStartDateTime | MealFinishDateTime | SourceRecordID | Role | Facility | SourceUnit | WorkerMatchCount | Start Date | Termination Date | EmployeeID | AliasWorkerCount | IdentityStatus | EmployeeKey | EmploymentType | AgreementStream | Grade | OvertimeExempt | BrokenShiftException | PolicyStatus | PublicationStatus | DutyStatus | RosterScopeStatus | EligibilityStatus | DailyHoursLimit | ShiftMatchKey | MatchKeyCount | MatchStatus | NetHoursStatus | MealTreatmentStatus | QualifyingNetHours | RosterShiftPeriod | ExportCoverageStart | ExportCoverageEnd | CoverageStatus | EmployeeShiftIndex | PreviousSourceShiftID | PreviousShiftFinish | PreviousDutyStatus | NextShiftStart | GapWallHours | OverlapStatus | GapElapsedStatus | GapHours | GapStatus | MinimumBreakFlag | MinBreakStatus | ShortGapReviewFlag | ShortGapStatus | DailyExcessHours | DailyStatus | DailyHoursFlag | ClockStatus"
+    }
+  ],
+  "Saved": false,
+  "Closed": true,
+  "TimeoutSeconds": 180,
+  "SupervisorRequiresSaved": true,
+  "ExpectedSupervisorExitCode": 1,
+  "RecordedAtUTC": "2026-11-04T21:38:55.5960345Z"
+}

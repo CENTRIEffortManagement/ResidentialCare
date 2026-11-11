@@ -1,0 +1,6 @@
+# Private test dependencies and encrypted per-run credentials are not source artifacts.
+test-runtime/
+node_modules/
+**/credentials.bin
+**/fixture-credentials.bin
+**/*.mez
