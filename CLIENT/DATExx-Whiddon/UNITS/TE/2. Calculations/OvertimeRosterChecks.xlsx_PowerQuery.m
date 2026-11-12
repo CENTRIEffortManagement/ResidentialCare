@@ -1,6 +1,6 @@
 // Power Query from: OvertimeRosterChecks.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\OvertimeRosterChecks.xlsx
-// Extracted: 2026-11-11T03:09:19.721Z
+// Extracted: 2026-11-12T20:54:34.741Z
 
 section Section1;
 
@@ -332,7 +332,7 @@ shared #"Overtime+BreakSufficiency" = let
 and [Start]  < [#"PM-Start"] - #"EXTRACT ShiftBoundardyTolerance" )
 or 
 ([End] > [#"AM-Start"] +  #"EXTRACT ShiftBoundardyTolerance"
-and [End]  < [#"PM-Start"] - #"EXTRACT ShiftBoundardyTolerance") 
+and [End]  < [#"PM-Start"] + #"EXTRACT ShiftBoundardyTolerance") 
 then "AM"
 
 else if

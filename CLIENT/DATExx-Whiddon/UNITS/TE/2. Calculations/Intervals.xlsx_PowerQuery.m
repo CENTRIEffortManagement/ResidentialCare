@@ -1,11 +1,9 @@
 // Power Query from: Intervals.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\TE\2. Calculations\Intervals.xlsx
-// Extracted: 2026-09-24T08:43:11.727Z
+// Extracted: 2026-11-12T22:08:49.731Z
 
 section Section1;
 
-// Query: UnitL1PathTABLE
-// Purpose: Resolve this workbook's calculation folder through canonical FilePathUrl and CentriSyncPaths.
 shared UnitL1PathTABLE = // Version 25.02 flexible ResidentialCare
 let
     FilePathUrl =
@@ -234,7 +232,8 @@ in
 
 shared #"StartTime+Duration" = let
     Source = Table_AllocationExtracted,
-    FILTERROLES = Table.SelectRows(Source, each true),
+    #"Removed Columns" = Table.RemoveColumns(Source,{"Location", "RoleShift", "Day Of Week", "Shift Type", "Published At", "Published By", "Non Attended", "Status"}),
+    FILTERROLES = Table.SelectRows(#"Removed Columns", each true),
     #"Changed Type1" = Table.TransformColumnTypes(FILTERROLES,{{"Start", type time}, {"End", type time}, {"Date", type date}}),
     #"Inserted Merged Date and Time" = Table.AddColumn(#"Changed Type1", "StartDateTime", each [Date] & [Start], type datetime),
     #"Inserted Merged Date and Time1" = Table.AddColumn(#"Inserted Merged Date and Time", "EndDateTime", each if [End]<[Start]
@@ -250,10 +249,10 @@ else [End]-[Start])*24 */),
     #"Changed Type" = Table.TransformColumnTypes(DURATION,{{"EndDateTime", type datetime}, {"Start", type number}, {"End", type number}, {"Duration", type number}}),
     SHIFT = Table.AddColumn(#"Changed Type", "Shift", each if [Start] >= Start_AM 
 and 
-[Start] < StartPM 
+[Start]+0.001 < StartPM 
 then "AM"
 
-else if [Start]>= StartPM 
+else if [Start] +0.001 >= StartPM
 and 
 [Start]< StartNIGHT 
 then "PM"

@@ -1,3 +1,7 @@
+// Power Query from: 1-AllocationExtracted.xlsx
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\1. Input\1-AllocationExtracted.xlsx
+// Extracted: 2026-11-07T22:21:37.602Z
+
 section Section1;
 
 // Query: UnitL1PathTABLE
@@ -218,13 +222,21 @@ shared AllocationExtraction = let
 in
     #"Added UNITBLANK";
 
+// Query: AllocationExtracted
+// Purpose: Publish allocations with the existing role-suffixed worker names from one local allocation snapshot.
+// Notes: All source columns are published. Reuse this snapshot for the narrow naming lookup and final rows.
 shared AllocationExtracted = let
-    Source = AllocationExtraction,
+    Source = Table.Buffer(AllocationExtraction),
+    NameRoles = Table.SelectColumns(Source, {"Name", "Role"}),
+    DistinctNameRoles = Table.Distinct(NameRoles),
+    WorkerRoleCounts = Table.Group(DistinctNameRoles, {"Name"}, {{"Count", each Table.RowCount(_), Int64.Type}}),
+    MultiRoleNames = Table.SelectRows(WorkerRoleCounts, each [Count] >= 2),
+    MultiRoleLookup = Table.AddColumn(MultiRoleNames, "MultiRole", each "MultiRole", type text),
 
     #"Merged ResDoubleRoles" = Table.NestedJoin(
         Source,
         {"Name"},
-        ResDoubleRoles,
+        MultiRoleLookup,
         {"Name"},
         "ResDoubleRoles",
         JoinKind.LeftOuter
@@ -435,24 +447,33 @@ in
 
 // Query: CS Allocation Facility Mapping Prepare
 // Purpose: Resolve source locations to the existing current-unit location and facility labels.
+// Notes: Equivalent location aliases mapping to the same facility are joined once; conflicting facilities still fail.
 shared #"CS Allocation Facility Mapping Prepare" =
 let
     Definitions = Table.SelectColumns(#"LINK Facilities", {"Title", "Facility-Abbrev"}),
-    WithKey = Table.AddColumn(Definitions, "SourceLocationKey", each
-        if [Title] = null then null else Text.Upper(Text.Trim([Title])), type nullable text),
-    UnitRows = Table.SelectRows(WithKey, each [#"Facility-Abbrev"] <> null
+    TrimmedTitles = Table.TransformColumns(Definitions, {{"Title", Text.Trim, type nullable text}}),
+    WithKey = Table.AddColumn(TrimmedTitles, "SourceLocationKey", each
+        if [Title] = null then null else Text.Upper([Title]), type nullable text),
+
+    // Keep different facility assignments so the conflict check can reject them.
+    UniqueMappings = Table.Distinct(WithKey, {"SourceLocationKey", "Facility-Abbrev"}),
+    UnitRows = Table.SelectRows(UniqueMappings, each [#"Facility-Abbrev"] <> null
         and Text.Upper(Text.Trim([#"Facility-Abbrev"])) = Text.Upper(Unit)),
     Invalid = Table.SelectRows(UnitRows, each [SourceLocationKey] = null or [SourceLocationKey] = "" or [#"Facility-Abbrev"] <> Unit),
-    Keys = List.Buffer(List.Distinct(UnitRows[SourceLocationKey])),
-    Relevant = Table.SelectRows(WithKey, each List.Contains(Keys, [SourceLocationKey])),
+    DistinctKeys = List.Distinct(UnitRows[SourceLocationKey]),
+    Keys = List.Buffer(DistinctKeys),
+    Relevant = Table.SelectRows(UniqueMappings, each List.Contains(Keys, [SourceLocationKey])),
     Counts = Table.Group(Relevant, {"SourceLocationKey"}, {{"Definitions", each Table.RowCount(_), Int64.Type}}),
+    ConflictingMappings = Table.SelectRows(Counts, each [Definitions] <> 1),
     Validated = if Table.IsEmpty(UnitRows) or not Table.IsEmpty(Invalid)
-            or not Table.IsEmpty(Table.SelectRows(Counts, each [Definitions] <> 1)) then
+            or not Table.IsEmpty(ConflictingMappings) then
             error "Master CS locations require unique Facilities mappings to the complete current Unit."
         else UnitRows,
-    Result = Table.RenameColumns(Table.SelectColumns(Validated, {"SourceLocationKey", "Title", "Facility-Abbrev"}), {{"Title", "Location"}})
+    MappingColumns = Table.SelectColumns(Validated, {"SourceLocationKey", "Title", "Facility-Abbrev"}),
+    Result = Table.RenameColumns(MappingColumns, {{"Title", "Location"}}),
+    BufferedResult = Table.Buffer(Result)
 in
-    Table.Buffer(Result);
+    BufferedResult;
 
 // Query: CS Allocation Source Prepare
 // Purpose: Prepare all current-unit Master rows before choosing CS employees or source weeks.
@@ -593,31 +614,52 @@ in
 // Notes: Net hours are copied unchanged. Missing publication/employment metadata is typed null.
 shared #"CS Allocation Aligned Prepare" =
 let
-    JoinedDates = Table.NestedJoin(#"CS Allocation Identity Prepare", {"FortnightWeek", "DayOfWeek"},
-        #"CS Allocation Dates Prepare", {"FortnightWeek", "DayOfWeek"}, "PlanningDates", JoinKind.Inner),
+    Source = #"CS Allocation Identity Prepare",
+    PlanningDates = #"CS Allocation Dates Prepare",
+    JoinedDates = Table.NestedJoin(Source, {"FortnightWeek", "DayOfWeek"},
+        PlanningDates, {"FortnightWeek", "DayOfWeek"}, "PlanningDates", JoinKind.Inner),
     Dated = Table.ExpandTableColumn(JoinedDates, "PlanningDates", {"Date"}),
-    UniqueKeys = Table.Distinct(Table.SelectColumns(Dated, {"MasterSourceRow", "Date"})),
-    Validated = if Table.RowCount(UniqueKeys) = Table.RowCount(Dated) then Dated
+    SourceDateKeys = Table.SelectColumns(Dated, {"MasterSourceRow", "Date"}),
+    UniqueKeys = Table.Distinct(SourceDateKeys),
+    UniqueKeyCount = Table.RowCount(UniqueKeys),
+    DatedRowCount = Table.RowCount(Dated),
+    Validated = if UniqueKeyCount = DatedRowCount then Dated
         else error "A Master CS source position was expanded more than once for the same date.",
-    Records = List.Transform(Table.ToRecords(Validated), each [
-        Location = [Location], #"Pay Company" = null, Department = [Department], Area = [Area], Name = [Name],
-        #"Employment Type" = null, RoleShift = [RoleShift], #"Employee Code" = [MasterEmployeeID], Date = [Date],
-        #"Day Of Week" = Date.DayOfWeekName([Date], "en-AU"), #"Shift Type" = [Shift Type],
-        Start = [Start Time], Finish = [End Time], Break = Int64.From([Break Length]),
-        #"Shift Length" = Duration.TotalHours([End Time] - [Start Time]) + (if [End Time] < [Start Time] then 24 else 0),
-        Hours = [Shift Net Length], Rate = null, Published = null, #"Published At" = null, #"Published By" = null,
-        #"Non Attended" = [Non Attended], Status = null, Code = [Code], #"Facility-Abbrev" = [#"Facility-Abbrev"]]),
-    PublishedColumns = Table.ColumnNames(#"Allocation Prepare"),
-    Aligned = Table.FromRecords(Records, PublishedColumns, MissingField.UseNull),
+    SelectedSourceColumns = Table.SelectColumns(Validated, {"Location", "Department", "Area", "Name", "RoleShift",
+        "MasterEmployeeID", "Date", "Shift Type", "Start Time", "End Time", "Break Length", "Shift Net Length",
+        "Non Attended", "Code", "Facility-Abbrev"}),
+    RenamedSourceColumns = Table.RenameColumns(SelectedSourceColumns, {{"MasterEmployeeID", "Employee Code"},
+        {"Start Time", "Start"}, {"End Time", "Finish"}, {"Break Length", "Break"}, {"Shift Net Length", "Hours"}}),
+    ConvertedBreak = Table.TransformColumns(RenamedSourceColumns, {{"Break", Int64.From}}),
+    WithDayOfWeek = Table.AddColumn(ConvertedBreak, "Day Of Week", each Date.DayOfWeekName([Date], "en-AU")),
+    WithShiftDuration = Table.AddColumn(WithDayOfWeek, "ShiftDuration", each [Finish] - [Start]),
+    WithClockHours = Table.AddColumn(WithShiftDuration, "ShiftClockHours", each Duration.TotalHours([ShiftDuration])),
+    // Overnight shifts retain the existing 24-hour adjustment; net roster hours are unchanged.
+    WithOvernightAdjustment = Table.AddColumn(WithClockHours, "ShiftOvernightHours", each if [Finish] < [Start] then 24 else 0),
+    WithShiftLength = Table.AddColumn(WithOvernightAdjustment, "Shift Length", each [ShiftClockHours] + [ShiftOvernightHours]),
+    WithoutShiftCalculations = Table.RemoveColumns(WithShiftLength, {"ShiftDuration", "ShiftClockHours", "ShiftOvernightHours"}),
+    WithPayCompany = Table.AddColumn(WithoutShiftCalculations, "Pay Company", each null),
+    WithEmploymentType = Table.AddColumn(WithPayCompany, "Employment Type", each null),
+    WithRate = Table.AddColumn(WithEmploymentType, "Rate", each null),
+    WithPublished = Table.AddColumn(WithRate, "Published", each null),
+    WithPublishedAt = Table.AddColumn(WithPublished, "Published At", each null),
+    WithPublishedBy = Table.AddColumn(WithPublishedAt, "Published By", each null),
+    WithStatus = Table.AddColumn(WithPublishedBy, "Status", each null),
+    PublishedPreparation = #"Allocation Prepare",
+    PublishedColumns = Table.ColumnNames(PublishedPreparation),
+    // Select the published contract, dropping intermediate calculations and filling other columns with null.
+    Aligned = Table.SelectColumns(WithStatus, PublishedColumns, MissingField.UseNull),
     Typed = Table.TransformColumnTypes(Aligned, {{"Location", type text}, {"Pay Company", type text}, {"Department", type text},
         {"Area", type text}, {"Name", type text}, {"Employment Type", type text}, {"RoleShift", type text},
         {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text},
         {"Start", type time}, {"Finish", type time}, {"Break", Int64.Type}, {"Shift Length", type number}, {"Hours", type number},
         {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text},
         {"Non Attended", type logical}, {"Status", type text}, {"Code", Int64.Type}}),
-    Result = Value.ReplaceType(Typed, Value.Type(#"Allocation Prepare"))
+    PublishedType = Value.Type(PublishedPreparation),
+    Result = Value.ReplaceType(Typed, PublishedType),
+    BufferedResult = Table.Buffer(Result)
 in
-    Table.Buffer(Result);
+    BufferedResult;
 
 // Query: CS Allocation Reconciliation Prepare
 // Purpose: Compare dated row/hour totals with the filled source pattern repeated over the published date range.
@@ -640,44 +682,25 @@ in
 
 // Query: Allocation Combined Prepare
 // Purpose: Append the reconciled CS supplement before the existing role-analysis and multi-role processing.
-// Inputs: Published allocations, enabled CS role mappings, CS reconciliation and aligned CS allocations.
-// Output: The existing published allocation schema, including reconciled CS rows when enabled.
 // Notes: Published CS triggers an explicit source-cutover decision; never count both sources silently.
 shared #"Allocation Combined Prepare" =
 let
     Published = #"Allocation Prepare",
-    CSRoleMapping = #"CS Allocation Role Mapping Prepare",
-    CSIsEnabled = not Table.IsEmpty(CSRoleMapping),
-
-    // Keep the CS branch unevaluated when CS is disabled, including its role-column requirement.
-    PublishedRoleLabels = if CSIsEnabled then Table.SelectColumns(Published, {"RoleShift"}) else null,
-    PublishedRoleKeys = if CSIsEnabled then
-        Table.AddColumn(PublishedRoleLabels, "RosterRoleKey", each
-            if [RoleShift] = null then null else Text.Upper(Text.Trim([RoleShift])), type nullable text)
-        else null,
-    PublishedCSRows = if CSIsEnabled then
-        Table.NestedJoin(PublishedRoleKeys, {"RosterRoleKey"}, CSRoleMapping, {"RosterRoleKey"}, "CSMapping", JoinKind.Inner)
-        else null,
-
-    // Require an explicit source-cutover decision before combining overlapping CS sources.
-    CSReconciliation = if not CSIsEnabled then null
-        else if not Table.IsEmpty(PublishedCSRows) then
-            error "Published Roster now contains CS. Review the Master-to-Published CS cutover before combining allocation sources."
-        else #"CS Allocation Reconciliation Prepare",
-    FailedCSChecks = if CSIsEnabled then
-        Table.SelectRows(CSReconciliation, each Number.Abs([Actual] - [Expected]) > 0.0000001)
-        else null,
-
-    // Only expose CS allocations after their dated rows and net hours reconcile.
-    ValidatedCSAllocations = if not CSIsEnabled then null
-        else if not Table.IsEmpty(FailedCSChecks) then
-            error "Master CS allocation row/hour reconciliation failed. Inspect CS Allocation_CHECK."
-        else #"CS Allocation Aligned Prepare",
-    PublishedTableType = Value.Type(Published),
-    CombinedAllocations = if not CSIsEnabled then Published
-        else Table.Combine({Published, ValidatedCSAllocations}, PublishedTableType)
+    Mapping = #"CS Allocation Role Mapping Prepare",
+    Result = if Table.IsEmpty(Mapping) then Published else
+        let
+            WithRoleKey = Table.AddColumn(Table.SelectColumns(Published, {"RoleShift"}), "RosterRoleKey", each
+                if [RoleShift] = null then null else Text.Upper(Text.Trim([RoleShift])), type nullable text),
+            ExistingCS = Table.NestedJoin(WithRoleKey, {"RosterRoleKey"}, Mapping, {"RosterRoleKey"}, "CSMapping", JoinKind.Inner),
+            Reconciliation = if not Table.IsEmpty(ExistingCS) then
+                    error "Published Roster now contains CS. Review the Master-to-Published CS cutover before combining allocation sources."
+                else #"CS Allocation Reconciliation Prepare",
+            Failures = Table.SelectRows(Reconciliation, each Number.Abs([Actual] - [Expected]) > 0.0000001),
+            Combined = if not Table.IsEmpty(Failures) then error "Master CS allocation row/hour reconciliation failed. Inspect CS Allocation_CHECK."
+                else Table.Combine({Published, #"CS Allocation Aligned Prepare"}, Value.Type(Published))
+        in Combined
 in
-    CombinedAllocations;
+    Result;
 
 // Query: CS Allocation_CHECK
 // Purpose: Expose the source-period filled/unfilled counts and dated allocation conservation for manual BD acceptance.

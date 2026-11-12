@@ -1,6 +1,6 @@
 // Power Query from: 1-AllocationExtracted.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\1. Input\1-AllocationExtracted.xlsx
-// Extracted: 2026-10-25T09:53:39.589Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\1. Input\1-AllocationExtracted.xlsx
+// Extracted: 2026-11-07T22:21:37.602Z
 
 section Section1;
 
@@ -614,31 +614,52 @@ in
 // Notes: Net hours are copied unchanged. Missing publication/employment metadata is typed null.
 shared #"CS Allocation Aligned Prepare" =
 let
-    JoinedDates = Table.NestedJoin(#"CS Allocation Identity Prepare", {"FortnightWeek", "DayOfWeek"},
-        #"CS Allocation Dates Prepare", {"FortnightWeek", "DayOfWeek"}, "PlanningDates", JoinKind.Inner),
+    Source = #"CS Allocation Identity Prepare",
+    PlanningDates = #"CS Allocation Dates Prepare",
+    JoinedDates = Table.NestedJoin(Source, {"FortnightWeek", "DayOfWeek"},
+        PlanningDates, {"FortnightWeek", "DayOfWeek"}, "PlanningDates", JoinKind.Inner),
     Dated = Table.ExpandTableColumn(JoinedDates, "PlanningDates", {"Date"}),
-    UniqueKeys = Table.Distinct(Table.SelectColumns(Dated, {"MasterSourceRow", "Date"})),
-    Validated = if Table.RowCount(UniqueKeys) = Table.RowCount(Dated) then Dated
+    SourceDateKeys = Table.SelectColumns(Dated, {"MasterSourceRow", "Date"}),
+    UniqueKeys = Table.Distinct(SourceDateKeys),
+    UniqueKeyCount = Table.RowCount(UniqueKeys),
+    DatedRowCount = Table.RowCount(Dated),
+    Validated = if UniqueKeyCount = DatedRowCount then Dated
         else error "A Master CS source position was expanded more than once for the same date.",
-    Records = List.Transform(Table.ToRecords(Validated), each [
-        Location = [Location], #"Pay Company" = null, Department = [Department], Area = [Area], Name = [Name],
-        #"Employment Type" = null, RoleShift = [RoleShift], #"Employee Code" = [MasterEmployeeID], Date = [Date],
-        #"Day Of Week" = Date.DayOfWeekName([Date], "en-AU"), #"Shift Type" = [Shift Type],
-        Start = [Start Time], Finish = [End Time], Break = Int64.From([Break Length]),
-        #"Shift Length" = Duration.TotalHours([End Time] - [Start Time]) + (if [End Time] < [Start Time] then 24 else 0),
-        Hours = [Shift Net Length], Rate = null, Published = null, #"Published At" = null, #"Published By" = null,
-        #"Non Attended" = [Non Attended], Status = null, Code = [Code], #"Facility-Abbrev" = [#"Facility-Abbrev"]]),
-    PublishedColumns = Table.ColumnNames(#"Allocation Prepare"),
-    Aligned = Table.FromRecords(Records, PublishedColumns, MissingField.UseNull),
+    SelectedSourceColumns = Table.SelectColumns(Validated, {"Location", "Department", "Area", "Name", "RoleShift",
+        "MasterEmployeeID", "Date", "Shift Type", "Start Time", "End Time", "Break Length", "Shift Net Length",
+        "Non Attended", "Code", "Facility-Abbrev"}),
+    RenamedSourceColumns = Table.RenameColumns(SelectedSourceColumns, {{"MasterEmployeeID", "Employee Code"},
+        {"Start Time", "Start"}, {"End Time", "Finish"}, {"Break Length", "Break"}, {"Shift Net Length", "Hours"}}),
+    ConvertedBreak = Table.TransformColumns(RenamedSourceColumns, {{"Break", Int64.From}}),
+    WithDayOfWeek = Table.AddColumn(ConvertedBreak, "Day Of Week", each Date.DayOfWeekName([Date], "en-AU")),
+    WithShiftDuration = Table.AddColumn(WithDayOfWeek, "ShiftDuration", each [Finish] - [Start]),
+    WithClockHours = Table.AddColumn(WithShiftDuration, "ShiftClockHours", each Duration.TotalHours([ShiftDuration])),
+    // Overnight shifts retain the existing 24-hour adjustment; net roster hours are unchanged.
+    WithOvernightAdjustment = Table.AddColumn(WithClockHours, "ShiftOvernightHours", each if [Finish] < [Start] then 24 else 0),
+    WithShiftLength = Table.AddColumn(WithOvernightAdjustment, "Shift Length", each [ShiftClockHours] + [ShiftOvernightHours]),
+    WithoutShiftCalculations = Table.RemoveColumns(WithShiftLength, {"ShiftDuration", "ShiftClockHours", "ShiftOvernightHours"}),
+    WithPayCompany = Table.AddColumn(WithoutShiftCalculations, "Pay Company", each null),
+    WithEmploymentType = Table.AddColumn(WithPayCompany, "Employment Type", each null),
+    WithRate = Table.AddColumn(WithEmploymentType, "Rate", each null),
+    WithPublished = Table.AddColumn(WithRate, "Published", each null),
+    WithPublishedAt = Table.AddColumn(WithPublished, "Published At", each null),
+    WithPublishedBy = Table.AddColumn(WithPublishedAt, "Published By", each null),
+    WithStatus = Table.AddColumn(WithPublishedBy, "Status", each null),
+    PublishedPreparation = #"Allocation Prepare",
+    PublishedColumns = Table.ColumnNames(PublishedPreparation),
+    // Select the published contract, dropping intermediate calculations and filling other columns with null.
+    Aligned = Table.SelectColumns(WithStatus, PublishedColumns, MissingField.UseNull),
     Typed = Table.TransformColumnTypes(Aligned, {{"Location", type text}, {"Pay Company", type text}, {"Department", type text},
         {"Area", type text}, {"Name", type text}, {"Employment Type", type text}, {"RoleShift", type text},
         {"Employee Code", Int64.Type}, {"Date", type date}, {"Day Of Week", type text}, {"Shift Type", type text},
         {"Start", type time}, {"Finish", type time}, {"Break", Int64.Type}, {"Shift Length", type number}, {"Hours", type number},
         {"Rate", type number}, {"Published", type logical}, {"Published At", type datetime}, {"Published By", type text},
         {"Non Attended", type logical}, {"Status", type text}, {"Code", Int64.Type}}),
-    Result = Value.ReplaceType(Typed, Value.Type(#"Allocation Prepare"))
+    PublishedType = Value.Type(PublishedPreparation),
+    Result = Value.ReplaceType(Typed, PublishedType),
+    BufferedResult = Table.Buffer(Result)
 in
-    Table.Buffer(Result);
+    BufferedResult;
 
 // Query: CS Allocation Reconciliation Prepare
 // Purpose: Compare dated row/hour totals with the filled source pattern repeated over the published date range.

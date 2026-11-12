@@ -1,6 +1,6 @@
 // Power Query from: Shifts.xlsx
-// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\BD\2. Calculations\Shifts.xlsx
-// Extracted: 2026-11-09T02:29:46.324Z
+// Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\2. Calculations\Shifts.xlsx
+// Extracted: 2026-11-12T20:58:27.519Z
 
 section Section1;
 
@@ -441,9 +441,12 @@ shared StaffDoubleShifts = let
     #"Merged Queries" = Table.NestedJoin(#"Filled Down", {"Name", "EffectiveShift.1.DateTime"}, DoubleShifts, {"Name", "Index2.Custom.StartDateTime"}, "DoubleShifts", JoinKind.LeftOuter),
     #"Expanded DoubleShifts" = Table.ExpandTableColumn(#"Merged Queries", "DoubleShifts", {"Double Shift", "Effective Duration", "RealDuration"}, {"Double Shift", "Effective Duration", "RealDuration"}),
     #"Removed Columns" = Table.RemoveColumns(#"Expanded DoubleShifts",{"EffectiveShift.1.DateTime"}),
-    #"Inserted Date" = Table.AddColumn(#"Removed Columns", "Date", each DateTime.Date([DateTime]), type date)
+    #"Inserted Date" = Table.AddColumn(#"Removed Columns", "Date", each DateTime.Date([DateTime]), type date),
+    #"Merged Queries1" = Table.NestedJoin(#"Inserted Date", {"Employee Code", "Date", "Shift"}, #"IMPORT OvertimeRosterChecks", {"Employee Code", "Date", "Shift"}, "IMPORT OvertimeRosterChecks", JoinKind.LeftOuter),
+    #"Expanded IMPORT OvertimeRosterChecks" = Table.ExpandTableColumn(#"Merged Queries1", "IMPORT OvertimeRosterChecks", {"Employee Code", "Date", "ShiftType", "Shift"}, {"Employee Code.1", "Date.1", "ShiftType", "Shift.1"}),
+    #"Sorted Rows1" = Table.Sort(#"Expanded IMPORT OvertimeRosterChecks",{{"Employee Code.1", Order.Ascending}})
 in
-    #"Inserted Date";
+    #"Sorted Rows1";
 
 shared AMP = let
     Source = ShiftPeriod,
@@ -578,7 +581,6 @@ in
 shared #"IMPORT OvertimeRosterChecks" = let
 
     Source = Excel.Workbook(File.Contents(#"FilePath - 2Calculations" & "\OvertimeRosterChecks.xlsx"), null, true),
-    Overtime_BreakSufficiency_Table = Source{[Item="Overtime_BreakSufficiency",Kind="Table"]}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(Overtime_BreakSufficiency_Table,{{"Employee Code", Int64.Type}, {"Date", type date}, {"Role", type text}, {"HrsBackToBack", type number}, {"BackToBack", type logical}, {"ShiftType", type text}, {"Shift", type text}, {"Overtime", type number}, {"OTx1.5", Int64.Type}, {"OTx2", Int64.Type}})
+    Overtime_BreakSufficiency_Table = Source{[Item="Overtime_BreakSufficiency",Kind="Table"]}[Data]
 in
-    #"Changed Type";
+    Overtime_BreakSufficiency_Table;

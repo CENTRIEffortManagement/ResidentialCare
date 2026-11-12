@@ -1,6 +1,6 @@
 // Power Query from: Intervals.xlsx
 // Pathname: c:\Users\Alex\CentriNOTSYNC\ResidentialCare\CLIENT\DATExx-Whiddon\UNITS\JH-RY\2. Calculations\Intervals.xlsx
-// Extracted: 2026-11-11T03:04:23.417Z
+// Extracted: 2026-11-12T22:09:10.630Z
 
 section Section1;
 
